@@ -50,11 +50,17 @@
 #  \author Tomas Gonzalo
 #          (tomas.gonzalo@monash.edu)
 #  \date 2016 Apr, Dec
+#  \date 2017 Nov
+#  \date 2019 June
 #  \date 2020 Apr
 #
 #  \author James McKay
 #          (j.mckay14@imperial.ac.uk)
 #  \date 2016 Aug
+#
+#  \author Sanjay Bloor
+#          (sanjay.bloor12@imperial.ac.uk)
+#  \date 2017 May
 #
 #  \author Ankit Beniwal
 #      (ankit.beniwal@adelaide.edu.au)
@@ -660,6 +666,7 @@ if(NOT ditched_${name}_${model}_${ver})
   set_as_default_version("backend model" ${name} ${ver} ${model})
 endif()
 
+
 # MontePythonLike
 set(name "montepythonlike")
 set(ver "3.3.0")
@@ -711,7 +718,6 @@ set(lib "libpythia8")
 set(dl "http://home.thep.lu.se/~torbjorn/pythia8/pythia8212.tgz")
 set(md5 "0886d1b2827d8f0cd2ae69b925045f40")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
-set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}.dif")
 
 # - Add additional compiler-specific optimisation flags and suppress some warnings from -Wextra.
 set(pythia_CXXFLAGS "${BACKEND_CXX_FLAGS}")
@@ -750,54 +756,35 @@ endif()
 # - Set include directories
 set(pythia_CXXFLAGS "${pythia_CXXFLAGS} -I${Boost_INCLUDE_DIR} -I${PROJECT_SOURCE_DIR}/contrib/slhaea/include")
 
+# - Setup HepMC-specific additions
+if(EXCLUDE_HEPMC)
+  set(pythia_depends_on "")
+  set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}_nohepmc.dif")
+  set(EXTRA_CONFIG "")
+  set(BOSS_suffix "nohepmc")
+else()
+  set(pythia_depends_on "hepmc")
+  set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}.dif")
+  set(pythia_CXXFLAGS "${pythia_CXXFLAGS} -I${HEPMC_PATH}/local/include -I${HEPMC_PATH}/interfaces/pythia8/include")
+  set(pythia_CXX_SHARED_FLAGS "${pythia_CXX_SHARED_FLAGS}  -L${HEPMC_LIB} -Wl,-rpath ${HEPMC_LIB} -lHepMC3")
+  set(EXTRA_CONFIG "--with-hepmc3=${HEPMC_PATH}/local")
+  set(BOSS_suffix "")
+endif()
+
 # - Actual configure and compile commands
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
+    DEPENDS ${pythia_depends_on}
     DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
     PATCH_COMMAND patch -p1 < ${patch}
-    CONFIGURE_COMMAND ./configure --enable-shared --cxx="${CMAKE_CXX_COMPILER}" --cxx-common="${pythia_CXXFLAGS}" --cxx-shared="${pythia_CXX_SHARED_FLAGS}" --cxx-soname="${pythia_CXX_SONAME_FLAGS}" --lib-suffix=".so"
+    CONFIGURE_COMMAND ./configure ${EXTRA_CONFIG} --enable-shared --cxx="${CMAKE_CXX_COMPILER}" --cxx-common="${pythia_CXXFLAGS}" --cxx-shared="${pythia_CXX_SHARED_FLAGS}" --cxx-soname="${pythia_CXX_SONAME_FLAGS}" --lib-suffix=".so"
     BUILD_COMMAND ${MAKE_PARALLEL} CXX="${CMAKE_CXX_COMPILER}" lib/${lib}.so
     INSTALL_COMMAND ""
   )
-  BOSS_backend(${name} ${ver})
-  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} distclean)
-  set_as_default_version("backend" ${name} ${ver})
-endif()
-
-# Pythia external model (EM)
-set(model "em")
-set(name "pythia_${model}")
-set(ver "8.212")
-set(lib "libpythia8")
-set(dl "http://home.thep.lu.se/~torbjorn/pythia8/pythia8212.tgz")
-set(md5 "0886d1b2827d8f0cd2ae69b925045f40")
-set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
-set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}.dif")
-set(ext_model_dir "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/ExternalModel")
-check_ditch_status(${name} ${ver} ${dir})
-if(NOT ditched_${name}_${ver})
-  ExternalProject_Add(${name}_${ver}
-    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
-    SOURCE_DIR ${dir}
-    BUILD_IN_SOURCE 1
-    PATCH_COMMAND patch -p1 < ${patch}
-    CONFIGURE_COMMAND ./configure --enable-shared --cxx="${CMAKE_CXX_COMPILER}" --cxx-common="${pythia_CXXFLAGS}" --cxx-shared="${pythia_CXX_SHARED_FLAGS}" --cxx-soname="${pythia_CXX_SONAME_FLAGS}" --lib-suffix=".so"
-    BUILD_COMMAND ${MAKE_PARALLEL} CXX="${CMAKE_CXX_COMPILER}" lib/${lib}.so
-    INSTALL_COMMAND ""
-  )
-  ExternalProject_Add_Step(${name}_${ver} add_external_Pythia_model
-    COMMAND ${CMAKE_COMMAND} -E copy ${ext_model_dir}/ProcessContainer.cc ${dir}/src/
-    COMMAND ${CMAKE_COMMAND} -E copy ${ext_model_dir}/Index.xml  ${dir}/share/Pythia8/xmldoc/
-    COMMAND ${CMAKE_COMMAND} -E copy ${ext_model_dir}/UserModel.xml ${dir}/share/Pythia8/xmldoc/
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${ext_model_dir}/src ${dir}/src/
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${ext_model_dir}/include ${dir}/include/
-    DEPENDEES download
-    DEPENDERS patch
-  )
-  BOSS_backend(${name} ${ver})
+  BOSS_backend(${name} ${ver} ${BOSS_suffix})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} distclean)
   set_as_default_version("backend" ${name} ${ver})
 endif()
@@ -1235,7 +1222,6 @@ if(NOT ditched_${name}_${ver})
   set_as_default_version("backend" ${name} ${ver})
 endif()
 
-
 # gm2calc
 set(name "gm2calc")
 set(ver "1.3.0")
@@ -1297,6 +1283,118 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
 endif()
 
+# Minuit2
+set(name "minuit2")
+set(ver "5.34.14")
+set(md5 "7fc00378a2ed1f731b719d4837d62d6a")
+set(dl "https://www.cern.ch/mathlibs/sw/5_34_14/Minuit2/Minuit2-5.34.14.tar.gz")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+    ExternalProject_Add(${name}_${ver}
+            DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+            SOURCE_DIR ${dir}
+            BUILD_IN_SOURCE 1
+            CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=-fPIC ./configure --prefix=${dir} --disable-openmp --with-pic
+            BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
+            INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} install
+            )
+    add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+endif()
+
+# phc
+set(name "phc")
+set(ver "2.4.58")
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set(dl "http://www.math.uic.edu/~jan/mactel64y_phcv24p.tar.gz")
+  #set(md5 "2e347b1794201d7ca462d2e4b5630147")
+  set(md5 "none")
+else()
+  set(dl "http://www.math.uic.edu/~jan/x86_64phcv24p.tar.gz")
+  #set(md5 "7b589002b78037c40a8c52269bf39c0e")
+  set(md5 "none")
+endif()
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+          DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+          SOURCE_DIR ${dir}
+          BUILD_IN_SOURCE 1
+          CONFIGURE_COMMAND ""
+          BUILD_COMMAND ""
+          INSTALL_COMMAND ""
+          )
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+  set_as_default_version("backend" ${name} ${ver})
+
+endif()
+
+# hom4ps
+set(name "hom4ps")
+set(ver "2.0")
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set(dl "http://www.math.nsysu.edu.tw/~leetsung/works/HOM4PS_soft_files/HOM4PS2_MacOSX.tar.gz")
+  set(md5 "daa880bd51fc166a9a2f85332b025fae")
+else()
+  set(dl "http://www.math.nsysu.edu.tw/~leetsung/works/HOM4PS_soft_files/HOM4PS2_64-bit.tar.gz")
+  set(md5 "134a2539faf2c0596eaf039e7ccc1677")
+endif()
+
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+          DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+          SOURCE_DIR ${dir}
+          BUILD_IN_SOURCE 1
+          CONFIGURE_COMMAND ""
+          BUILD_COMMAND ""
+          INSTALL_COMMAND ""
+          )
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean) # FIGURE THIS OUT
+  set_as_default_version("backend" ${name} ${ver})
+
+endif()
+
+# Vevacious
+set(name "vevacious")
+set(ver "1.0")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+set(patchdir "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}")
+set(Minuit_name "minuit2")
+set(Minuit_lib_name "Minuit2")
+set(Minuit_ver "5.34.14")
+set(phc_ver "2.4.58")
+set(hom4ps_ver "2.0")
+set(dl "null")
+set(Minuit_include "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/include/")
+set(Minuit_lib "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/lib/")
+set(VPP_CMAKE_FLAGS -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DEIGEN3_INCLUDE_DIR=${EIGEN3_INCLUDE_DIR} -DBoost_INCLUDE_DIR=${Boost_INCLUDE_DIR} -DWITHIN_GAMBIT=True -DMinuit_name=${Minuit_name} -DMinuit_lib_name=${Minuit_lib_name} -DMinuit_ver=${Minuit_ver} -DMinuit_include=${Minuit_include} -DMinuit_lib=${Minuit_lib})
+set(VPP_FLAGS "${BACKEND_CXX_FLAGS} -Wno-unused-local-typedefs -I./include/ -I./include/LHPC/ -I${Boost_INCLUDE_DIR} -I${EIGEN3_INCLUDE_DIR} -I${Minuit_include}")
+set(BOSSregex "s#cpp)#cpp   source/BOSS_factory_VevaciousPlusPlus.cpp       source/BOSS_wrapperutils.cpp        source/BOSS_VevaciousPlusPlus.cpp)#g")
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+          DEPENDS ${Minuit_name}_${Minuit_ver}
+          DEPENDS phc_${phc_ver}
+          DEPENDS hom4ps_${hom4ps_ver}
+          SOURCE_DIR ${dir}
+          GIT_REPOSITORY https://github.com/JoseEliel/VevaciousPlusPlus_Development.git
+          UPDATE_COMMAND  sed ${dashi} -e "${BOSSregex}" ${dir}/CMakeLists.txt
+          CONFIGURE_COMMAND ${CMAKE_COMMAND} ${VPP_CMAKE_FLAGS} ${dir}
+          BINARY_DIR "${dir}"
+          BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} ${CMAKE_MAKE_PROGRAM} CC=${CMAKE_CXX_COMPILER} CCFLAGS=${VPP_FLAGS} MINUITLIBDIR=${Minuit_lib} MINUITLIBNAME=${Minuit_lib_name} VevaciousPlusPlus-lib
+                COMMAND ${CMAKE_COMMAND} -E make_directory ${patchdir}/VevaciousPlusPlus/ModelFiles/
+                COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/VevaciousPlusPlus/ModelFiles/ ${dir}/ModelFiles/
+          INSTALL_COMMAND ""
+          )
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+  set_as_default_version("backend" ${name} ${ver})
+  BOSS_backend(${name} ${ver})
+endif()
+
 # SUSYHD
 set(name "susyhd")
 set(ver "1.0.2")
@@ -1319,6 +1417,55 @@ if(NOT ditched_${name}_${ver})
   set_as_default_version("backend" ${name} ${ver})
 endif()
 
+
+# CalcHEP
+set(name "calchep")
+set(ver "3.6.27")
+set(dl "http://theory.sinp.msu.ru/~pukhov/CALCHEP/calchep_3.6.27.tgz")
+set(md5 "7914181e15791fe03373bd37819ef638")
+set(lib "libcalchep")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+set(patchdir "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/")
+set(ditch_if_absent "X11")
+check_ditch_status(${name} ${ver} ${dir} ${ditch_if_absent})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+    SOURCE_DIR ${dir}
+    BUILD_IN_SOURCE 1
+    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E copy ${patchdir}/main.c ${dir}/c_source/dynamicME/main.c
+              COMMAND ${CMAKE_COMMAND} -E copy ${dir}/c_source/strfun/pdf_dummy.c ${dir}/c_source/num/pdf_dummy.c
+    PATCH_COMMAND patch -p0 < ${patchdir}/patch_${name}_${ver}.dif
+          COMMAND sed ${dashi} -e "s#GAMBITDIR#${PROJECT_SOURCE_DIR}#g" ${dir}/c_source/dynamicME/vp_dynam.c
+    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
+    INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/Models/ ${dir}/models/
+  )
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} "yes | clean")
+  set_as_default_version("backend" ${name} ${ver})
+endif()
+
+# Yoda
+set(name "yoda")
+set(ver "1.7.7")
+set(dl "https://yoda.hepforge.org/downloads/?f=YODA-1.7.7.tar.gz")
+set(md5 "9106b343cbf64319e117aafba663467a")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir}
+    SOURCE_DIR ${dir}
+    BUILD_IN_SOURCE 1
+    PATCH_COMMAND ""
+    CONFIGURE_COMMAND ./configure FC=${CMAKE_Fortran_COMPILER} FCFLAGS=${BACKEND_Fortran_FLAGS} FFLAGS=${BACKEND_Fortran_FLAGS} CC=${CMAKE_C_COMPILER} CFLAGS=${BACKEND_C_FLAGS} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${BACKEND_CXX_FLAGS} --prefix=${dir}/local --disable-pyext
+    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} CXX="${CMAKE_CXX_COMPILER}"
+    INSTALL_COMMAND ${CMAKE_INSTALL_PROGRAM}
+  )
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+  #set_as_default_version("backend" ${name} ${ver})
+endif()
+
+
 # cfitsio
 set(name "cfitsio")
 set(ver "3.390")
@@ -1339,6 +1486,53 @@ if(NOT ditched_${name}_${ver})
   )
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
   set_as_default_version("backend" ${name} ${ver})
+endif()
+
+
+# Fastjet
+set(name "fastjet")
+set(ver "3.3.2")
+set(dl "http://fastjet.fr/repo/fastjet-3.3.2.tar.gz")
+set(md5 "ca3708785c9194513717a54c1087bfb0")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir}
+    SOURCE_DIR ${dir}
+    BUILD_IN_SOURCE 1
+    PATCH_COMMAND ""
+    CONFIGURE_COMMAND ./configure FC=${CMAKE_Fortran_COMPILER} FCFLAGS=${BACKEND_Fortran_FLAGS} FFLAGS=${BACKEND_Fortran_FLAGS} CC=${CMAKE_C_COMPILER} CFLAGS=${BACKEND_C_FLAGS} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${BACKEND_CXX_FLAGS} --prefix=${dir}/local --enable-allcxxplugins
+    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} CXX="${CMAKE_CXX_COMPILER}"
+    INSTALL_COMMAND ${CMAKE_INSTALL_PROGRAM}
+  )
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+  #set_as_default_version("backend" ${name} ${ver})
+endif()
+
+# Fjcontrib
+set(name "fjcontrib")
+set(ver "1.041")
+set(dl "http://fastjet.hepforge.org/contrib/downloads/${name}-${ver}.tar.gz")
+set(md5 "b37674a8701af52b58ebced94a270877")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+set(fastjet_name "fastjet")
+set(fastjet_ver "3.3.2")
+set(fastjet_dir "${PROJECT_SOURCE_DIR}/Backends/installed/${fastjet_name}/${fastjet_ver}")
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+    DEPENDS ${fastjet_name}_${fastjet_ver}
+    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir}
+    SOURCE_DIR ${dir}
+    BUILD_IN_SOURCE 1
+    PATCH_COMMAND ""
+    CONFIGURE_COMMAND ./configure FC=${CMAKE_Fortran_COMPILER} FCFLAGS=${BACKEND_Fortran_FLAGS} FFLAGS=${BACKEND_Fortran_FLAGS} CC=${CMAKE_C_COMPILER} CFLAGS=${BACKEND_C_FLAGS} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${BACKEND_CXX_FLAGS} --fastjet-config=${fastjet_dir}/fastjet-config --prefix=${fastjet_dir}/local
+    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} CXX="${CMAKE_CXX_COMPILER}" fragile-shared-install
+    INSTALL_COMMAND ${CMAKE_INSTALL_PROGRAM}
+  )
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+  #set_as_default_version("backend" ${name} ${ver})
 endif()
 
 
@@ -1417,6 +1611,69 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
   set_as_default_version("backend" ${name} ${ver})
 endif()
+
+
+# Rivet
+set(name "rivet")
+set(ver "3.0.0")
+set(dl "https://rivet.hepforge.org/downloads/?f=Rivet-3.0.0.tar.gz")
+set(md5 "4b74187ce65ada1a387082457efd6092")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+set(yoda_name "yoda")
+set(yoda_ver "1.7.7")
+set(yoda_dir "${PROJECT_SOURCE_DIR}/Backends/installed/${yoda_name}/${yoda_ver}/local")
+set(hepmc_name "hepmc")
+set(hepmc_dir "${HEPMC_PATH}/local")
+set(fastjet_name "fastjet")
+set(fastjet_ver "3.3.2")
+set(fastjet_dir "${PROJECT_SOURCE_DIR}/Backends/installed/${fastjet_name}/${fastjet_ver}/local")
+set(fjcontrib_name "fjcontrib")
+set(fjcontrib_ver "1.041")
+set(ditch_if_absent "HepMC")
+check_ditch_status(${name} ${ver} ${dir} ${ditch_if_absent})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+    DEPENDS ${yoda_name}_${yoda_ver}
+    DEPENDS ${hepmc_name}
+    DEPENDS ${fjcontrib_name}_${fjcontrib_ver}
+    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir}
+    SOURCE_DIR ${dir}
+    BUILD_IN_SOURCE 1
+    PATCH_COMMAND ""
+    CONFIGURE_COMMAND ./configure FC=${CMAKE_Fortran_COMPILER} FCFLAGS=${BACKEND_Fortran_FLAGS} FFLAGS=${BACKEND_Fortran_FLAGS} CC=${CMAKE_C_COMPILER} CFLAGS=${BACKEND_C_FLAGS} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${BACKEND_CXX_FLAGS} --with-yoda=${yoda_dir} --with-hepmc3=${hepmc_dir} --with-fastjet=${fastjet_dir} --prefix=${dir}/local
+    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} CXX="${CMAKE_CXX_COMPILER}"
+    INSTALL_COMMAND ${CMAKE_INSTALL_PROGRAM}
+  )
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+  #set_as_default_version("backend" ${name} ${ver})
+endif()
+
+
+# Contur
+set(name "contur")
+set(ver "1.0.0")
+set(dl "https://bitbucket.org/heprivet/contur/get/8407e09eb161.zip")
+set(md5 2c1be84a0e518a8454f495f486f76114)
+set(rivet_name "rivet")
+set(rivet_ver "3.0.0")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+set(ditch_if_absent "HepMC")
+check_ditch_status(${name} ${ver} ${dir} ${ditch_if_absent})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+    DEPENDS ${rivet_name}_${rivet_ver}
+    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir}
+    SOURCE_DIR ${dir}
+    BUILD_IN_SOURCE 1
+    PATCH_COMMAND ""
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} CXX=${CMAKE_CXX_COMPILER}
+    INSTALL_COMMAND ""
+  )
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+  #set_as_default_version("backend" ${name} ${ver})
+endif()
+
 
 # classy
 set(name "classy")
@@ -1571,6 +1828,7 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
 endif()
 
+
 # DarkAges
 # Add correct symlink flags for OSX
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -1605,6 +1863,7 @@ if(NOT ditched_${name}_${ver})
   set_as_default_version("backend" ${name} ${ver})
 endif()
 
+
 #MultiModeCode
 set(name "multimodecode")
 set(ver "2.0.0")
@@ -1634,3 +1893,42 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
   set_as_default_version("backend" ${name} ${ver})
 endif()
+
+
+# Prospino
+set(name "prospino")
+set(ver "2.1")
+set(lib "libprospino")
+set(dl "https://www.thphys.uni-heidelberg.de/~plehn/includes/prospino/on_the_web_10_17_14.tar.gz")
+set(md5 "40e73d6b56a5008c134cc89c769e274c")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}.dif")
+# Prospino fails to compile with -openmp flags
+set(PROSPINO_Fortran_FLAGS "${BACKEND_Fortran_FLAGS}")
+string(REGEX REPLACE "-fopenmp" "" PROSPINO_Fortran_FLAGS "${PROSPINO_Fortran_FLAGS}")
+string(REGEX REPLACE "-qopenmp" "" PROSPINO_Fortran_FLAGS "${PROSPINO_Fortran_FLAGS}")
+# Some extra optimization for Intel
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+  # Options used in xsec project: -fast -xAVX -mkl -fno-alias -fomit-frame-pointer -O3 -finline-functions
+  set(PROSPINO_Fortran_FLAGS "${PROSPINO_Fortran_FLAGS} -fast -mkl -O3 -fno-alias -fomit-frame-pointer -finline-functions")
+endif()
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+    SOURCE_DIR ${dir}
+    BUILD_IN_SOURCE 1
+    PATCH_COMMAND patch -p1 < ${patch}
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} ${lib}.so COMP=${CMAKE_Fortran_COMPILER} OPTION=${PROSPINO_Fortran_FLAGS}
+    INSTALL_COMMAND ""
+  )
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} distclean)
+  set_as_default_version("backend" ${name} ${ver})
+endif()
+
+# Alternative download command for getting unreleased things from the gambit_internal repository.
+# If you don't know what that is, you don't need to tinker with these.
+#    DOWNLOAD_COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow --bold ${private_code_warning1}
+#             COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --red --bold ${private_code_warning2}
+#             COMMAND ${CMAKE_COMMAND} -E copy_directory ${loc} ${dir}

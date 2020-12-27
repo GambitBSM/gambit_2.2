@@ -99,7 +99,7 @@ namespace Gambit {
 //      // Integate spectrum
 //      // (the zero velocity limit of the differential annihilation
 //      // cross-section as function of individual final state photons)
-//      double AnnYieldint = (*Dep::GA_AnnYield)->
+//      double AnnYieldint = (*Dep::GA_Yield)->
 //        set("v", 0.)->gsl_integration("E", 1, 100)->set_epsabs(0)->set_epsrel(1e-3)->bind()->eval();
 //      logger() << "AnnYieldInt (1-100 GeV): " << AnnYieldint << EOM;
 //
@@ -149,10 +149,24 @@ namespace Gambit {
 
       // from 0.5 to 500 GeV
       std::vector<double> x = daFunk::logspace(-0.301, 2.699, 100);
-      x = daFunk::augmentSingl(x, (*Dep::GA_AnnYield)->set("v",0));
+      x = daFunk::augmentSingl(x, (*Dep::GA_Yield)->set("v",0));
 
-      std::vector<double> y = ((*Dep::GA_AnnYield)/8./M_PI*fraction*fraction)->
-        set("v", 0)->bind("E")->vect(x);
+      std::vector<double> y;
+
+      // Get the correct scaling in terms of rho for annihilation or decay processes.
+      std::string proc = *Dep::DM_process;
+      if (proc == "annihilation")
+      {
+        y = ((*Dep::GA_Yield)/8./M_PI*fraction*fraction)->set("v", 0)->bind("E")->vect(x);
+      }
+      else if (proc == "decay")
+      {
+        y = ((*Dep::GA_Yield)/4./M_PI*fraction)->bind("E")->vect(x);
+      }
+      else
+      {
+        DarkBit_error().raise(LOCAL_INFO, "Process type " + proc + " unknown.");
+      }
 
       result = BEreq::lnL(byVal(mode), x, y);
 
@@ -177,9 +191,24 @@ namespace Gambit {
 
       // from 230(265) GeV to 30 TeV
       std::vector<double> x = daFunk::logspace(2.36, 4.48, 100);
-      x = daFunk::augmentSingl(x, (*Dep::GA_AnnYield)->set("v",0));
-      std::vector<double> y = ((*Dep::GA_AnnYield)/8./M_PI*fraction*fraction)->
-        set("v", 0)->bind("E")->vect(x);
+      x = daFunk::augmentSingl(x, (*Dep::GA_Yield)->set("v",0));
+
+      std::vector<double> y;
+
+      // Get the correct scaling in terms of rho for annihilation or decay processes.
+      std::string proc = *Dep::DM_process;
+      if (proc == "annihilation")
+      {
+        y = ((*Dep::GA_Yield)/8./M_PI*fraction*fraction)->set("v", 0)->bind("E")->vect(x);
+      }
+      else if (proc == "decay")
+      {
+        y = ((*Dep::GA_Yield)/4./M_PI*fraction)->bind("E")->vect(x);
+      }
+      else
+      {
+        DarkBit_error().raise(LOCAL_INFO, "Process type " + proc + " unknown.");
+      }
 
       result = BEreq::lnL(byVal(mode), x, y);
 
@@ -195,9 +224,24 @@ namespace Gambit {
 
       // from 25 GeV to 10 TeV
       std::vector<double> x = daFunk::logspace(1.39, 4.00, 100);
-      x = daFunk::augmentSingl(x, (*Dep::GA_AnnYield)->set("v",0));
-      std::vector<double> y = ((*Dep::GA_AnnYield)/8./M_PI*fraction*fraction)->
-        set("v", 0)->bind("E")->vect(x);
+      x = daFunk::augmentSingl(x, (*Dep::GA_Yield)->set("v",0));
+
+      std::vector<double> y;
+
+      // Get the correct scaling in terms of rho for annihilation or decay processes.
+      std::string proc = *Dep::DM_process;
+      if (proc == "annihilation")
+      {
+        y = ((*Dep::GA_Yield)/8./M_PI*fraction*fraction)->set("v", 0)->bind("E")->vect(x);
+      }
+      else if (proc == "decay")
+      {
+        y = ((*Dep::GA_Yield)/4./M_PI*fraction)->bind("E")->vect(x);
+      }
+      else
+      {
+        DarkBit_error().raise(LOCAL_INFO, "Process type " + proc + " unknown.");
+      }
 
       result = BEreq::lnL(5, x, y);
 
@@ -224,9 +268,24 @@ namespace Gambit {
 
       // from 0.3 to 500 GeV
       std::vector<double> x = daFunk::logspace(-0.523, 2.699, 100);
-      x = daFunk::augmentSingl(x, (*Dep::GA_AnnYield)->set("v",0));
-      std::vector<double> y = ((*Dep::GA_AnnYield)/8./M_PI*fraction*fraction)->
-        set("v", 0)->bind("E")->vect(x);
+      x = daFunk::augmentSingl(x, (*Dep::GA_Yield)->set("v",0));
+
+      std::vector<double> y;
+
+      // Get the correct scaling in terms of rho for annihilation or decay processes.
+      std::string proc = *Dep::DM_process;
+      if (proc == "annihilation")
+      {
+        y = ((*Dep::GA_Yield)/8./M_PI*fraction*fraction)->set("v", 0)->bind("E")->vect(x);
+      }
+      else if (proc == "decay")
+      {
+        y = ((*Dep::GA_Yield)/4./M_PI*fraction)->bind("E")->vect(x);
+      }
+      else
+      {
+        DarkBit_error().raise(LOCAL_INFO, "Process type " + proc + " unknown.");
+      }
 
       result = BEreq::lnL(byVal(mode), x, y);
 
@@ -412,11 +471,10 @@ namespace Gambit {
     void dump_gammaSpectrum(double &result)
     {
       using namespace Pipes::dump_gammaSpectrum;
-      daFunk::Funk spectrum = (*Dep::GA_AnnYield)->set("v", 0.);
+      daFunk::Funk spectrum = (*Dep::GA_Yield)->set("v", 0.);
       // Option filename<string>: Filename for gamma-ray spectrum dump
       // (default: dNdE.dat)
-      std::string filename = runOptions->getValueOrDef<std::string>(
-          "dNdE.dat", "filename");
+      std::string filename = runOptions->getValueOrDef<std::string>("dNdE.dat", "filename");
       logger() << "FILENAME for gamma dump: " << filename << EOM;
       std::ofstream myfile (filename);
       if (myfile.is_open())

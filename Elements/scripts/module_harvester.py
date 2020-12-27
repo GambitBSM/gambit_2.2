@@ -97,7 +97,7 @@ def main(argv):
     exclude_types=set(["void"])
 
     # List of directory names to ignore when searching for headers
-    exclude_dirs=set([".git","build","doc","cmake","extras","config","contrib","runs","Logs","Printers","scratch","installed","scripts"])
+    exclude_dirs=set([".git","build","doc","cmake","extras","config","contrib","runs","Logs","Printers","scratch","installed","scripts","gum"])
 
     # If any variation of pybind11 is in the excluded_modules list, ditch all pybind11 dependent types
     if "pybind" in exclude_header or "pybind11" in exclude_header or "Pybind" in exclude_header or "Pybind11" in exclude_header :

@@ -210,6 +210,9 @@ namespace Gambit
       /// Raise the exception, i.e. throw it.
       virtual void raise(const std::string&);
 
+      /// Integer code used for exceptions
+      int invalidcode;
+
     private:
 
       /// What this exception is (for returning with what method).
@@ -245,8 +248,30 @@ namespace Gambit
       /// Retrieve pointer to the functor that threw the invalid point exception.
       functor* thrower();
 
-      /// Raise the exception, i.e. throw it.
-      virtual void raise(const std::string&);
+      /// Raise the exception, i.e. throw it. The default code is 1.
+      virtual void raise(const std::string&, int code = 1);
+
+  };
+
+  /// Gambit halt loop exception class.
+  class halt_loop_exception : public special_exception
+  {
+
+    public:
+
+      /// Constructor
+      halt_loop_exception();
+
+  };
+
+  /// Gambit invalid loop iteration exception class.
+  class invalid_loop_iteration_exception : public special_exception
+  {
+
+    public:
+
+      /// Constructor
+      invalid_loop_iteration_exception();
 
   };
 
