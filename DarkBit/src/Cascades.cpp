@@ -65,7 +65,7 @@ namespace Gambit
       // DecayTable.
       try
       {
-        table = DecayTable(*Dep::TH_ProcessCatalog, *Dep::SimYieldTable, disabled);
+        table = DecayTable(*Dep::TH_ProcessCatalog, *Dep::GA_SimYieldTable, disabled);
       }
       catch(Piped_exceptions::description err)
       {
@@ -467,10 +467,10 @@ namespace Gambit
               ignored = false;
             }
             // Check if tabulated spectra exist for this final state
-            else if((*Dep::SimYieldTable).hasChannel( (*it)->getpID(), *pit ))
+            else if((*Dep::GA_SimYieldTable).hasChannel( (*it)->getpID(), *pit ))
             {
               cascadeMC_sampleSimYield(
-                  *Dep::SimYieldTable, *it, *pit, *Dep::TH_ProcessCatalog,
+                  *Dep::GA_SimYieldTable, *it, *pit, *Dep::TH_ProcessCatalog,
                   histList, *Dep::cascadeMC_InitialState, weight,
                   cMC_numSpecSamples
                   );
@@ -497,11 +497,11 @@ namespace Gambit
                 std::endl;
 #endif
               // Check if tabulated spectra exist for this final state
-              if((*Dep::SimYieldTable).hasChannel(
+              if((*Dep::GA_SimYieldTable).hasChannel(
                     (*(*it))[0]->getpID() , (*(*it))[1]->getpID(), *pit ))
               {
                 hasTabulated = true;
-                cascadeMC_sampleSimYield(*Dep::SimYieldTable, *it, *pit,
+                cascadeMC_sampleSimYield(*Dep::GA_SimYieldTable, *it, *pit,
                     *Dep::TH_ProcessCatalog, histList,
                     *Dep::cascadeMC_InitialState, weight,
                     cMC_numSpecSamples
@@ -531,10 +531,10 @@ namespace Gambit
                   ignored = false;
                 }
                 // Check if tabulated spectra exist for this final state
-                else if((*Dep::SimYieldTable).hasChannel( child->getpID(),
+                else if((*Dep::GA_SimYieldTable).hasChannel( child->getpID(),
                       *pit))
                 {
-                  cascadeMC_sampleSimYield(*Dep::SimYieldTable, child, *pit,
+                  cascadeMC_sampleSimYield(*Dep::GA_SimYieldTable, child, *pit,
                       *Dep::TH_ProcessCatalog, histList,
                       *Dep::cascadeMC_InitialState, weight,
                       cMC_numSpecSamples

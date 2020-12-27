@@ -91,7 +91,9 @@
 #define MODULE DarkBit
 START_MODULE
 
-  /// Make sure LocalHalo model is initialized in DarkSUSY
+  // DarkSUSY-specific initialisation functions ========================
+
+  /// Make sure LocalHalo model is initialized in DarkSUSY5
   #define CAPABILITY DarkSUSY5_PointInit_LocalHalo
   START_CAPABILITY
     #define FUNCTION DarkSUSY5_PointInit_LocalHalo_func
@@ -102,10 +104,11 @@ START_MODULE
       BACKEND_REQ(dshmisodf, (ds5), DS_HMISODF)
       BACKEND_REQ(dshmframevelcom, (ds5), DS_HMFRAMEVELCOM)
       BACKEND_REQ(dshmnoclue, (ds5), DS_HMNOCLUE)
-      BACKEND_OPTION((DarkSUSY, 5.1.3), (ds5))  // Only for DarkSUSY5
+      BACKEND_OPTION((DarkSUSY, 5.1.3), (ds5))
     #undef FUNCTION
   #undef CAPABILITY
 
+  /// Make sure LocalHalo model is initialized in DarkSUSY6
   #define CAPABILITY DarkSUSY_PointInit_LocalHalo
   START_CAPABILITY
     #define FUNCTION DarkSUSY_PointInit_LocalHalo_func
@@ -116,8 +119,8 @@ START_MODULE
       BACKEND_REQ(dshmisodf, (ds6), DS_HMISODF)
       BACKEND_REQ(dshmframevelcom, (ds6), DS_HMFRAMEVELCOM)
       BACKEND_REQ(dshmnoclue, (ds6), DS_HMNOCLUE)
-      BACKEND_OPTION((DarkSUSY_MSSM, 6.1.1, 6.2.2), (ds6))  // Only DS6
-      BACKEND_OPTION((DarkSUSY_generic_wimp, 6.1.1, 6.2.2), (ds6))  // Only DS6
+      BACKEND_OPTION((DarkSUSY_MSSM, 6.1.1, 6.2.2), (ds6))
+      BACKEND_OPTION((DarkSUSY_generic_wimp, 6.1.1, 6.2.2), (ds6))
       FORCE_SAME_BACKEND(ds6)
     #undef FUNCTION
   #undef CAPABILITY
@@ -358,42 +361,6 @@ START_MODULE
   #undef CAPABILITY
 
 
-  // DarkSUSY-specific initialisation functions ========================
-
-  // Make sure LocalHalo model is initialized in DarkSUSY5
-  #define CAPABILITY DarkSUSY5_PointInit_LocalHalo
-  START_CAPABILITY
-    #define FUNCTION DarkSUSY5_PointInit_LocalHalo_func
-      START_FUNCTION(bool)
-      DEPENDENCY(RD_fraction, double)
-      DEPENDENCY(LocalHalo, LocalMaxwellianHalo)
-      BACKEND_REQ(dshmcom, (ds5), DS5_HMCOM)
-      BACKEND_REQ(dshmisodf, (ds5), DS_HMISODF)
-      BACKEND_REQ(dshmframevelcom, (ds5), DS_HMFRAMEVELCOM)
-      BACKEND_REQ(dshmnoclue, (ds5), DS_HMNOCLUE)
-      BACKEND_OPTION((DarkSUSY, 5.1.3), (ds5))
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  // Make sure LocalHalo model is initialized in DarkSUSY6
-  #define CAPABILITY DarkSUSY_PointInit_LocalHalo
-  START_CAPABILITY
-    #define FUNCTION DarkSUSY_PointInit_LocalHalo_func
-      START_FUNCTION(bool)
-      DEPENDENCY(RD_fraction, double)
-      DEPENDENCY(LocalHalo, LocalMaxwellianHalo)
-      BACKEND_REQ(dshmcom, (ds6), DS_HMCOM)
-      BACKEND_REQ(dshmisodf, (ds6), DS_HMISODF)
-      BACKEND_REQ(dshmframevelcom, (ds6), DS_HMFRAMEVELCOM)
-      BACKEND_REQ(dshmnoclue, (ds6), DS_HMNOCLUE)
-      BACKEND_OPTION((DarkSUSY_MSSM, 6.1.1, 6.2.2), (ds6))
-      BACKEND_OPTION((DarkSUSY_generic_wimp, 6.1.1, 6.2.2), (ds6))
-      BACKEND_OPTION((DarkSUSY_silveira_zee, 6.1.1, 6.2.2), (ds6))
-      FORCE_SAME_BACKEND(ds6)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-
   // Process catalogue =================================================
 
   #define CAPABILITY TH_ProcessCatalog
@@ -413,6 +380,8 @@ START_MODULE
       BACKEND_REQ(dsIBwwdxdy, (ds5), double, (int&, double&, double&))
       BACKEND_REQ(IBintvars, (ds5), DS_IBINTVARS)
       BACKEND_OPTION((DarkSUSY, 5.1.3), (ds5))  // Only for DarkSUSY5
+      FORCE_SAME_BACKEND(ds5)
+    #undef FUNCTION
 
     /// Process Catalogue from DarkSUSY6 (MSSM)
     #define FUNCTION TH_ProcessCatalog_DS_MSSM
@@ -1558,36 +1527,11 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY electron_SimYieldTable
-  START_CAPABILITY
-    #define FUNCTION electron_SimYieldTable_DarkSUSY
-    START_FUNCTION(SimYieldTable)
-    BACKEND_REQ(dsanyield_sim, (), double, (double&,double&,int&,char*,int&,int&,int&))
-    #undef FUNCTION
-    #define FUNCTION electron_SimYieldTable_DS5 // DS5 only
-    START_FUNCTION(SimYieldTable)
-    BACKEND_REQ(dshayield, (ds5), double, (double&,double&,int&,int&,int&))
-    BACKEND_OPTION((DarkSUSY, 5.1.3), (ds5))  // Only for DarkSUSY5
-    #undef FUNCTION
-    #define FUNCTION electron_SimYieldTable_MicrOmegas
-    START_FUNCTION(SimYieldTable)
-    BACKEND_REQ(dNdE, (), double, (double,double,int,int))
-    #undef FUNCTION
-    #define FUNCTION electron_SimYieldTable_PPPC
-    START_FUNCTION(SimYieldTable)
-    #undef FUNCTION
-  #undef CAPABILITY
-
   #define CAPABILITY positron_SimYieldTable
   START_CAPABILITY
     #define FUNCTION positron_SimYieldTable_DarkSUSY
     START_FUNCTION(SimYieldTable)
     BACKEND_REQ(dsanyield_sim, (), double, (double&,double&,int&,char*,int&,int&,int&))
-    #undef FUNCTION
-    #define FUNCTION positron_SimYieldTable_DS5 // DS5 only
-    START_FUNCTION(SimYieldTable)
-    BACKEND_REQ(dshayield, (ds5), double, (double&,double&,int&,int&,int&))
-    BACKEND_OPTION((DarkSUSY, 5.1.3), (ds5))  // Only for DarkSUSY5
     #undef FUNCTION
     #define FUNCTION positron_SimYieldTable_MicrOmegas
     START_FUNCTION(SimYieldTable)
@@ -1595,6 +1539,14 @@ START_MODULE
     #undef FUNCTION
     #define FUNCTION positron_SimYieldTable_PPPC
     START_FUNCTION(SimYieldTable)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY electron_SimYieldTable
+  START_CAPABILITY
+    #define FUNCTION electron_SimYieldTable_from_positron_SimYieldTable
+    START_FUNCTION(SimYieldTable)
+    DEPENDENCY(positron_SimYieldTable, SimYieldTable)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1643,28 +1595,6 @@ START_MODULE
     #define FUNCTION DarkMatterConj_ID_MSSM
     START_FUNCTION(std::string)
     DEPENDENCY(MSSM_spectrum, Spectrum)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  // --- Functions related to the local and global properties of the DM halo ---
-
-  #define CAPABILITY GalacticHalo
-  START_CAPABILITY
-    #define FUNCTION GalacticHalo_gNFW
-    START_FUNCTION(GalacticHaloProperties)
-    ALLOW_MODEL(Halo_gNFW)
-    #undef FUNCTION
-    #define FUNCTION GalacticHalo_Einasto
-    START_FUNCTION(GalacticHaloProperties)
-    ALLOW_MODEL(Halo_Einasto)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY LocalHalo
-  START_CAPABILITY
-    #define FUNCTION ExtractLocalMaxwellianHalo
-    START_FUNCTION(LocalMaxwellianHalo)
-    ALLOW_MODELS(Halo_gNFW, Halo_Einasto)
     #undef FUNCTION
   #undef CAPABILITY
 
