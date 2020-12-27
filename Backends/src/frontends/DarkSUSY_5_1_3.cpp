@@ -41,15 +41,12 @@
 #include "gambit/Utils/file_lock.hpp"
 #include "gambit/Utils/mpiwrapper.hpp"
 
-#define square(x) ((x) * (x))  // square a number
-
 //#define DARKSUSY_DEBUG
 
 // Some ad-hoc DarkSUSY global state.
 BE_NAMESPACE
 {
   const double min_DS_rwidth = 5.e-3; // 0.5%  to avoid numerical problems
-  // const std::vector<str> IBfinalstate = initVector<str>("e-","mu-","tau-","u","d","c","s","t","b","W+","H+");
   std::vector<double> DSparticle_mass;
   std::vector<double> GAMBITparticle_mass;
 }
@@ -88,9 +85,9 @@ BE_INI_FUNCTION
     scan_level = false;
 
   }
-  
-// Initialization function for a given MSSM point
-// (previous capaility DarkSUSY_PointInit)
+
+  // Initialization function for a given MSSM point
+  // (previous capability DarkSUSY_PointInit)
   bool mssm_result = false;
 
   // If the user provides a file list, just read in SLHA files for debugging
@@ -101,9 +98,8 @@ BE_INI_FUNCTION
     logger() << LogTags::debug <<
       "Initializing DarkSUSY via debug_SLHA_filenames option." << EOM;
 
-    std::vector<str> filenames =
-      /// Option debug_SLHA_filenames<std::vector<std::string>>: Optional override list of SLHA filenames used for backend initialization default
-      runOptions->getValue<std::vector<str> >("debug_SLHA_filenames");
+    /// Option debug_SLHA_filenames<std::vector<std::string>>: Optional override list of SLHA filenames used for backend initialization default
+    std::vector<str> filenames = runOptions->getValue<std::vector<str> >("debug_SLHA_filenames");
     const char * filename = filenames[counter].c_str();
     int len = filenames[counter].length();
     int flag = 15;
@@ -115,12 +111,9 @@ BE_INI_FUNCTION
     mssm_result = true;
   }
 
-  // CMSSM with DS-internal ISASUGRA (should be avoided, only for
-  // debugging)
-  else if (ModelInUse("CMSSM") and
+  // CMSSM with DS-internal ISASUGRA (should be avoided, only for debugging)
   /// Option use_DS_isasugra<bool>: Use DS internal isasugra for parameter running (false)
-      runOptions->getValueOrDef<bool>(false, "use_DS_isasugra")
-      )
+  else if (ModelInUse("CMSSM") and runOptions->getValueOrDef<bool>(false, "use_DS_isasugra"))
   {
     // Setup mSUGRA model from CMSSM parameters
     double am0    = *Param["M0"];     // m0
@@ -128,8 +121,7 @@ BE_INI_FUNCTION
     double aa0    = *Param["A0"];     // A0
     double asgnmu = *Param["SignMu"];  // sign(mu)
     double atanbe = *Param["TanBeta"];   // tan(beta)
-    logger() << "Initializing DarkSUSY via dsgive_model_isasugra:"
-      << EOM;
+    logger() << "Initializing DarkSUSY via dsgive_model_isasugra:" << EOM;
     logger() << "  m0        =" << am0    << std::endl;
     logger() << "  m_1/2     =" << amhf   << std::endl;
     logger() << "  A0        =" << aa0    << std::endl;
@@ -138,24 +130,28 @@ BE_INI_FUNCTION
     dsgive_model_isasugra(am0, amhf, aa0, asgnmu, atanbe);
     int unphys, hwarning;
     dssusy_isasugra(unphys, hwarning);
-    //mssm_result = (unphys == 0) && (hwarning == 0);
-    if (unphys < 0) {
-      backend_warning().raise(LOCAL_INFO,
-          "Model point is theoretically inconsistent (DarkSUSY).");
-  invalid_point().raise(
-          "Model point is theoretically inconsistent (DarkSUSY).");
+
+    if (unphys < 0)
+    {
+      backend_warning().raise(LOCAL_INFO, "Model point is theoretically inconsistent (DarkSUSY).");
+      invalid_point().raise("Model point is theoretically inconsistent (DarkSUSY).");
       mssm_result = false;
-    } else if (unphys > 0) {
-      backend_warning().raise(LOCAL_INFO,
-          "Neutralino is not the LSP (DarkSUSY).");
+    }
+    else if (unphys > 0)
+    {
+      backend_warning().raise(LOCAL_INFO, "Neutralino is not the LSP (DarkSUSY).");
       invalid_point().raise("Neutralino is not the LSP (DarkSUSY).");
       mssm_result = false;
-    } else if (hwarning != 0) {
+    }
+    else if (hwarning != 0)
+    {
       backend_warning().raise(LOCAL_INFO,
           "Radiative corrections in Higgs sector "
           "outside range of validity (DarkSUSY).");
       mssm_result = true;
-    } else {
+    }
+    else
+    {
       mssm_result = true;
     }
   }
@@ -167,20 +163,25 @@ BE_INI_FUNCTION
     bool use_dsSLHAread = runOptions->getValueOrDef<bool>(false, "use_dsSLHAread");
     int slha_version = 2;
     const Spectrum& mySpec = *Dep::MSSM_spectrum;
-    try{mySLHA = mySpec.getSLHAea(2);}
+    try
+    {
+      mySLHA = mySpec.getSLHAea(2);
+    }
     catch(Gambit::exception& e)
     {
         slha_version = 1;
         mySLHA = mySpec.getSLHAea(1);
         use_dsSLHAread = true;
     }
-     // Use an actual SLHA file.  DarkSUSY is on its own wrt (s)particle widths this way.
+
+    // Use an actual SLHA file.  DarkSUSY is on its own wrt (s)particle widths this way.
     if (use_dsSLHAread || slha_version == 1)
     {
       if (!use_dsSLHAread) {backend_error().raise(LOCAL_INFO,
-              "A SLHA1 spectrum requires use of the DarkSUSY SLHA reader rather than the diskless\n"
+              "An SLHA1 spectrum requires use of the DarkSUSY SLHA reader rather than the diskless\n"
               "GAMBIT DarkSUSY initialization. To enable the DarkSUSY SLHA reader, set the option\n"
               "use_dsSLHAread for the function DarkSUSY_PointInit_MSSM to true.");}
+
       int rank = 0;
       #ifdef WITH_MPI
         if(GMPI::Is_initialized())
@@ -189,7 +190,8 @@ BE_INI_FUNCTION
           rank = comm.Get_rank();
         }
       #endif
-       // Add model select block to inform DS about 6x6 mixing
+
+      // Add model select block to inform DS about 6x6 mixing
       if (slha_version == 2)
       {
           SLHAea::Block modsel_block("MODSEL");
@@ -197,14 +199,15 @@ BE_INI_FUNCTION
           modsel_block.push_back("6 3 # FV");
           mySLHA.push_back(modsel_block);
       }
-       // Set filename
+
+      // Set filename
       std::string fstr = "DarkBit_temp_";
       fstr += std::to_string(rank) + ".slha";
-       // Dump SLHA onto disk
+      // Dump SLHA onto disk
       std::ofstream ofs(fstr);
       ofs << mySLHA;
       ofs.close();
-       // Initialize SUSY spectrum from SLHA
+      // Initialize SUSY spectrum from SLHA
       int len = fstr.size();
       int flag = 15;
       const char * filename = fstr.c_str();
@@ -215,6 +218,7 @@ BE_INI_FUNCTION
       dsprep();
       mssm_result = true;
     }
+
     // Do pure diskless SLHA initialisation, including (s)particle widths from GAMBIT.
     else
     {
@@ -233,10 +237,9 @@ BE_INI_FUNCTION
         "DarkSUSY point initialization failed.");
     invalid_point().raise("DarkSUSY point initialization failed.");
   }
-    
+
 }
 END_BE_INI_FUNCTION
-
 
 
 // Convenience functions (definitions)
@@ -252,14 +255,12 @@ BE_NAMESPACE
     "then sort out your SLHA file so that it is readable by DarkSUSY!                      ");
   }
 
-  /// Function dsgenericwimp_nusetup sets DarkSUSY's internal common
-  /// blocks with all the properties required to compute neutrino
-  /// yields for a generic WIMP.
+  /// Sets DarkSUSY's internal common blocks with some of the properties required to compute neutrino
+  /// yields for a generic WIMP. Remaining internal variables are internal to this frontend.
   void dsgenericwimp_nusetup(const double (&annihilation_bf)[29], const double (&Higgs_decay_BFs_neutral)[29][3],
    const double (&Higgs_decay_BFs_charged)[15], const double (&Higgs_masses_neutral)[3], const double &Higgs_mass_charged,
    const double &mwimp)
   {
-
     // Transfer WIMP mass common block.
     wabranch->wamwimp = mwimp;
 
@@ -268,7 +269,6 @@ BE_NAMESPACE
     for (int i=1; i<=29; i++)
     {
       wabranch->wabr(i) = annihilation_bf[i-1];
-      // cout << "DDD: " << i << " " << annihilation_bf[i-1] << endl ; // JE TMP
     }
 
     // Transfer Higgs decay branching fractions (not widths) to Higgs decay common blocks.
@@ -281,6 +281,7 @@ BE_NAMESPACE
         wabranch->was0br(j,i) = Higgs_decay_BFs_neutral[j-1][i-1];
       }
     }
+
     for (int i=1; i<=15; i++)   // Loop over the known charged Higgs decay channels
     {
       wabranch->wascbr(i) = Higgs_decay_BFs_charged[i-1];
@@ -298,9 +299,9 @@ BE_NAMESPACE
 
   }
 
-  /// Function nuyield returns neutrino yields at the top of the
-  /// the atmosphere, in m^-2 GeV^-1 annihilation^-1.  Provided
-  /// here for interfacing with nulike.
+  /// Returns neutrino yields at the top of the atmosphere,
+  /// in m^-2 GeV^-1 annihilation^-1.  Provided here for
+  /// interfacing with nulike.
   ///   --> log10Enu log_10(neutrino energy/GeV)
   ///   --> p        p=1 for neutrino yield, p=2 for nubar yield
   ///   --> context  void pointer (ignored)
@@ -327,7 +328,6 @@ BE_NAMESPACE
       err << "Error from DarkSUSY::dswayield functions in neutrino flux calculation.  istat = " << istat;
       piped_errors.request(LOCAL_INFO, err.str());
     }
-    // cout << "AAA: nuyield DS5: " << result << endl; // JE TMP
     return result;
   }
 
@@ -513,7 +513,7 @@ BE_NAMESPACE
     // Quark masses as defined in SLHA2
     mspctm->mu2gev               = to<double>(mySLHA.at("SMINPUTS").at(22).at(1)); // up quark mass @ 2 GeV
     mspctm->md2gev               = to<double>(mySLHA.at("SMINPUTS").at(21).at(1)); // down quark mass @ 2 GeV
-    mspctm->ms2gev               = to<double>(mySLHA.at("SMINPUTS").at(23).at(1)); // stange mass @ 2 GeV
+    mspctm->ms2gev               = to<double>(mySLHA.at("SMINPUTS").at(23).at(1)); // strange mass @ 2 GeV
     mspctm->mcmc                 = to<double>(mySLHA.at("SMINPUTS").at(24).at(1)); // charm mass at m_c
     mspctm->mbmb                 = to<double>(mySLHA.at("SMINPUTS").at(5).at(1));  // bottom mass at m_b
     mspctm->mass(DSpart->kqu(3)) = to<double>(mySLHA.at("SMINPUTS").at(6).at(1));  // top pole mass
@@ -536,21 +536,21 @@ BE_NAMESPACE
     mssmpar->m1 = to<double>(mySLHA.at("MSOFT").at(1).at(1));
     mssmpar->m2 = to<double>(mySLHA.at("MSOFT").at(2).at(1));
     mssmpar->m3 = to<double>(mySLHA.at("MSOFT").at(3).at(1));
-    mssmpar->mass2l(1) = square(to<double>(mySLHA.at("MSOFT").at(31).at(1)));
-    mssmpar->mass2l(2) = square(to<double>(mySLHA.at("MSOFT").at(32).at(1)));
-    mssmpar->mass2l(3) = square(to<double>(mySLHA.at("MSOFT").at(33).at(1)));
-    mssmpar->mass2e(1) = square(to<double>(mySLHA.at("MSOFT").at(34).at(1)));
-    mssmpar->mass2e(2) = square(to<double>(mySLHA.at("MSOFT").at(35).at(1)));
-    mssmpar->mass2e(3) = square(to<double>(mySLHA.at("MSOFT").at(36).at(1)));
-    mssmpar->mass2q(1) = square(to<double>(mySLHA.at("MSOFT").at(41).at(1)));
-    mssmpar->mass2q(2) = square(to<double>(mySLHA.at("MSOFT").at(42).at(1)));
-    mssmpar->mass2q(3) = square(to<double>(mySLHA.at("MSOFT").at(43).at(1)));
-    mssmpar->mass2u(1) = square(to<double>(mySLHA.at("MSOFT").at(44).at(1)));
-    mssmpar->mass2u(2) = square(to<double>(mySLHA.at("MSOFT").at(45).at(1)));
-    mssmpar->mass2u(3) = square(to<double>(mySLHA.at("MSOFT").at(46).at(1)));
-    mssmpar->mass2d(1) = square(to<double>(mySLHA.at("MSOFT").at(47).at(1)));
-    mssmpar->mass2d(2) = square(to<double>(mySLHA.at("MSOFT").at(48).at(1)));
-    mssmpar->mass2d(3) = square(to<double>(mySLHA.at("MSOFT").at(49).at(1)));
+    mssmpar->mass2l(1) = pow(to<double>(mySLHA.at("MSOFT").at(31).at(1)),2);
+    mssmpar->mass2l(2) = pow(to<double>(mySLHA.at("MSOFT").at(32).at(1)),2);
+    mssmpar->mass2l(3) = pow(to<double>(mySLHA.at("MSOFT").at(33).at(1)),2);
+    mssmpar->mass2e(1) = pow(to<double>(mySLHA.at("MSOFT").at(34).at(1)),2);
+    mssmpar->mass2e(2) = pow(to<double>(mySLHA.at("MSOFT").at(35).at(1)),2);
+    mssmpar->mass2e(3) = pow(to<double>(mySLHA.at("MSOFT").at(36).at(1)),2);
+    mssmpar->mass2q(1) = pow(to<double>(mySLHA.at("MSOFT").at(41).at(1)),2);
+    mssmpar->mass2q(2) = pow(to<double>(mySLHA.at("MSOFT").at(42).at(1)),2);
+    mssmpar->mass2q(3) = pow(to<double>(mySLHA.at("MSOFT").at(43).at(1)),2);
+    mssmpar->mass2u(1) = pow(to<double>(mySLHA.at("MSOFT").at(44).at(1)),2);
+    mssmpar->mass2u(2) = pow(to<double>(mySLHA.at("MSOFT").at(45).at(1)),2);
+    mssmpar->mass2u(3) = pow(to<double>(mySLHA.at("MSOFT").at(46).at(1)),2);
+    mssmpar->mass2d(1) = pow(to<double>(mySLHA.at("MSOFT").at(47).at(1)),2);
+    mssmpar->mass2d(2) = pow(to<double>(mySLHA.at("MSOFT").at(48).at(1)),2);
+    mssmpar->mass2d(3) = pow(to<double>(mySLHA.at("MSOFT").at(49).at(1)),2);
 
     // Block HMIX
     mssmpar->mu = to<double>(mySLHA.at("HMIX").at(1).at(1));
@@ -610,7 +610,7 @@ BE_NAMESPACE
     // as given (read in earlier), and instead enforce the tree-level condition
     // by redefining sin^2 theta_W. That we do here:
     mspctm->mass(DSparticle_code("W+"))  = to<double>(mySLHA.at("MASS").at(24).at(1));    // W boson mass
-    smruseful->s2thw=1.0-square(mspctm->mass(DSparticle_code("W+")))/square(mspctm->mass(DSparticle_code("Z0")));
+    smruseful->s2thw=1.0-pow(mspctm->mass(DSparticle_code("W+"))/mspctm->mass(DSparticle_code("Z0")),2);
 
     // Higgs masses. Note h0_1 is the lightest CP-even neutral higgs, and h2_0 the heavier.
     mspctm->mass(DSparticle_code("h0_1")) = to<double>(mySLHA.at("MASS").at(25).at(1));
@@ -800,7 +800,8 @@ BE_NAMESPACE
       mssmwidths->hdwidth(i+1,1) = (h02.has_channel(chan) ? widths->width(DSparticle_code("h0_2")) * h02.BF(chan) : 0.0);
       mssmwidths->hdwidth(i+1,3) = (A0.has_channel(chan)  ? widths->width(DSparticle_code("A0"))   * A0.BF(chan)  : 0.0);
       if (neutral_channels[i] == sister_chan)
-      { // Add the missing W-H+ contributions.
+      {
+        // Add the missing W-H+ contributions.
         mssmwidths->hdwidth(i+1,2) = (h01.has_channel(missing_chan) ? widths->width(DSparticle_code("h0_1")) * h01.BF(missing_chan) : 0.0);
         mssmwidths->hdwidth(i+1,1) = (h02.has_channel(missing_chan) ? widths->width(DSparticle_code("h0_2")) * h02.BF(missing_chan) : 0.0);
         mssmwidths->hdwidth(i+1,3) = (A0.has_channel(missing_chan)  ? widths->width(DSparticle_code("A0"))   * A0.BF(missing_chan)  : 0.0);
@@ -885,27 +886,8 @@ BE_NAMESPACE
     return 0;  // everything OK (hah. maybe.)
   }
 
-  /// Function DD_couplings returns direct detection couplings gps,gns,gpa,gna
+  /// Returns direct detection couplings gps,gns,gpa,gna
   /// (proton/neutron scalar/axial four-couplings)
-  /// Provided here because the signature of the corresponding DarkSUSY 
-
-//  FIXME: Remove this once everything is known to be working.
-//  double* DD_couplings()
-//  {
-//    double gps,gns,gpa,gna;
-//    dsddgpgn(gps,gns,gpa,gna);
-//    cout << "gps " << gps << endl;
-//    double couplings[4];
-//    couplings[0]=gps;
-//    couplings[1]=gns;
-//    couplings[2]=gpa;
-//    couplings[3]=gna;
-//    cout << "couplings[0] " << couplings[0] << endl;
-//    double * result = couplings;
-//    cout << "result " << result << endl;
-//    return result;
-//  }
-
   std::vector<double> DD_couplings()
   {
     double gps,gns,gpa,gna;

@@ -27,6 +27,9 @@
 ///  \author Anders Kvellestad
 ///  \date 2020 Feb
 ///
+///  \author Ankit Beniwal
+///  \date 2020
+///
 ///  *********************************************
 
 #include "gambit/Elements/standalone_module.hpp"
@@ -37,7 +40,6 @@
 #include "gambit/Utils/util_functions.hpp"
 
 using namespace DarkBit::Functown;     // Functors wrapping the module's actual module functions
-using namespace DarkBit::Accessors;    // Helper functions that provide some info about the module
 using namespace BackendIniBit::Functown;    // Functors wrapping the backend initialisation functions
 
 QUICK_FUNCTION(DarkBit, decay_rates, NEW_CAPABILITY, createDecays, DecayTable, ())
@@ -95,11 +97,11 @@ int main(int argc, char* argv[])
   std::cout << "Welcome to the DarkBit MSSM standalone program!" << std::endl;
   std::cout << std::endl;
   std::cout << "********************************************************************************" << std::endl;
-  std::cout << "Usage: DarkBit_standalone_MSSM SLHA_file (spectrum) (data)" << std::endl;
+  std::cout << "Usage: DarkBit_standalone_MSSM SLHA_file (spectrum) (output)" << std::endl;
   std::cout << std::endl;
   std::cout << "SLHA_file: SLHA file used to intialise the program (required)" << std::endl;
   std::cout << "(spectrum): name of output file for gamma-ray spectrum (default: BACKENDNAME_dNdE.dat)" << std::endl;
-  std::cout << "(data): name of output file for observables and likelihoods (default: data.dat)" << std::endl;
+  std::cout << "(output): name of output file for observables and likelihoods (default: DarkBit_standalone_MSSM.out)" << std::endl;
   std::cout << std::endl;
   std::cout << "The SLHA files for the MSSM-7 benchmarks in the DarkBit paper are located in    " << std::endl;
   std::cout << "DarkBit/data/benchmarks/                                                        " << std::endl;
@@ -116,7 +118,7 @@ int main(int argc, char* argv[])
     std::string filename = argv[1];
     std::string outname_dNdE_spectrum = "dNdE.dat";
     if (argc >= 3) outname_dNdE_spectrum = argv[2];
-    std::string outname_data = "data.dat";
+    std::string outname_data = "DarkBit_standalone_MSSM.out";
     if (argc >= 4) outname_data = argv[3];
 
 
@@ -127,10 +129,8 @@ int main(int argc, char* argv[])
     model_warning().set_fatal(true);
 
     // ---- Check which backends are present ----
-    // if (not Backends::backendInfo().works["DarkSUSY_MSSM6.1.1"]) backend_error().raise(LOCAL_INFO, "DarkSUSY MSSM 6.1.1 is missing!");
-    // if (not Backends::backendInfo().works["MicrOmegas_MSSM3.6.9.2"]) backend_error().raise(LOCAL_INFO, "MicrOmegas 3.6.9.2 for MSSM is missing!");
     if (not Backends::backendInfo().works["gamLike1.0.1"]) backend_error().raise(LOCAL_INFO, "gamLike 1.0.1 is missing!");
-    if (not Backends::backendInfo().works["DDCalc2.0.0"]) backend_error().raise(LOCAL_INFO, "DDCalc 2.0.0 is missing!");
+    if (not Backends::backendInfo().works["DDCalc2.2.0"]) backend_error().raise(LOCAL_INFO, "DDCalc 2.2.0 is missing!");
     if (not Backends::backendInfo().works["nulike1.0.9"]) backend_error().raise(LOCAL_INFO, "nulike 1.0.9 is missing!");
 
     // ---- Useful variables ----
@@ -251,7 +251,6 @@ int main(int argc, char* argv[])
     // density is always the measured one (regardless of relic density results)
     RD_fraction_one.reset_and_calculate();
 
-
     //
     // ======= Initializations that can be done once =======
     //
@@ -312,12 +311,12 @@ int main(int argc, char* argv[])
       RD_spectrum_ordered_func.resolveDependency(&RD_spectrum_SUSY_DS5);
       RD_spectrum_ordered_func.reset_and_calculate();
 
-      RD_annrate_DS5prep_MSSM_func.resolveDependency(&RD_spectrum_SUSY_DS5);
-      RD_annrate_DS5prep_MSSM_func.resolveBackendReq(&Backends::DarkSUSY_5_1_3::Functown::rdmgev);
-      RD_annrate_DS5prep_MSSM_func.reset_and_calculate();
+      RD_annrate_DS5prep_func.resolveDependency(&RD_spectrum_SUSY_DS5);
+      RD_annrate_DS5prep_func.resolveBackendReq(&Backends::DarkSUSY_5_1_3::Functown::rdmgev);
+      RD_annrate_DS5prep_func.reset_and_calculate();
 
       RD_eff_annrate_DS_MSSM.notifyOfModel("MSSM30atQ");
-      RD_eff_annrate_DS_MSSM.resolveDependency(&RD_annrate_DS5prep_MSSM_func);
+      RD_eff_annrate_DS_MSSM.resolveDependency(&RD_annrate_DS5prep_func);
       RD_eff_annrate_DS_MSSM.resolveBackendReq(&Backends::DarkSUSY_5_1_3::Functown::dsanwx);
       RD_eff_annrate_DS_MSSM.reset_and_calculate();
 
@@ -386,34 +385,33 @@ int main(int argc, char* argv[])
       // The below calculates the DD couplings using the full 1 loop calculation of
       // Drees Nojiri Phys.Rev. D48 (1993) 3483
       DD_couplings_DarkSUSY_DS5.setOption<bool>("loop", true);
-      // When the calculation is done at tree level (loop = false), setting the below to false
-      // approximates the squark propagator as 1/m_sq^2 to avoid poles.
-      // DD_couplings_DarkSUSY_DS5.setOption<bool>("pole", false);
+      // Setting the below to false approximates the squark propagator as 1/m_sq^2 to avoid poles.
+      // To reproduce numbers in Tables 11/12 of DarkBit paper (https://arxiv.org/abs/1705.07920), set "pole" to true.
+      DD_couplings_DarkSUSY_DS5.setOption<bool>("pole", false);
       DD_couplings_DarkSUSY_DS5.reset_and_calculate();
 
       // Initialize DDCalc backend
-      Backends::DDCalc_2_0_0::Functown::DDCalc_CalcRates_simple.setStatus(2);
-      Backends::DDCalc_2_0_0::Functown::DDCalc_Experiment.setStatus(2);
-      Backends::DDCalc_2_0_0::Functown::DDCalc_LogLikelihood.setStatus(2);
-      DDCalc_2_0_0_init.resolveDependency(&ExtractLocalMaxwellianHalo);
-      DDCalc_2_0_0_init.resolveDependency(&RD_fraction_one);
-      DDCalc_2_0_0_init.resolveDependency(&mwimp_generic);
-      DDCalc_2_0_0_init.resolveDependency(&DD_couplings_DarkSUSY_DS5);
-      DDCalc_2_0_0_init.reset_and_calculate();
+      Backends::DDCalc_2_2_0::Functown::DDCalc_CalcRates_simple.setStatus(2);
+      Backends::DDCalc_2_2_0::Functown::DDCalc_Experiment.setStatus(2);
+      Backends::DDCalc_2_2_0::Functown::DDCalc_LogLikelihood.setStatus(2);
+      DDCalc_2_2_0_init.resolveDependency(&ExtractLocalMaxwellianHalo);
+      DDCalc_2_2_0_init.resolveDependency(&RD_fraction_one);
+      DDCalc_2_2_0_init.resolveDependency(&mwimp_generic);
+      DDCalc_2_2_0_init.resolveDependency(&DD_couplings_DarkSUSY_DS5);
+      DDCalc_2_2_0_init.reset_and_calculate();
 
       // Calculate direct detection rates for LUX 2016
-      LUX_2016_Calc.resolveBackendReq(&Backends::DDCalc_2_0_0::Functown::DDCalc_Experiment);
-      LUX_2016_Calc.resolveBackendReq(&Backends::DDCalc_2_0_0::Functown::DDCalc_CalcRates_simple);
+      LUX_2016_Calc.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_Experiment);
+      LUX_2016_Calc.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_CalcRates_simple);
       LUX_2016_Calc.reset_and_calculate();
 
       // Calculate direct detection likelihood for LUX 2016
       LUX_2016_GetLogLikelihood.resolveDependency(&LUX_2016_Calc);
-      LUX_2016_GetLogLikelihood.resolveBackendReq(&Backends::DDCalc_2_0_0::Functown::DDCalc_Experiment);
-      LUX_2016_GetLogLikelihood.resolveBackendReq(&Backends::DDCalc_2_0_0::Functown::DDCalc_LogLikelihood);
+      LUX_2016_GetLogLikelihood.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_Experiment);
+      LUX_2016_GetLogLikelihood.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_LogLikelihood);
       LUX_2016_GetLogLikelihood.reset_and_calculate();
       // Save the result
       results["LUX_2016_lnL"][current_backend] = LUX_2016_GetLogLikelihood(0);
-
 
       sigma_SI_p_simple.resolveDependency(&mwimp_generic);
       sigma_SI_p_simple.resolveDependency(&DD_couplings_DarkSUSY_DS5);
@@ -777,30 +775,29 @@ int main(int argc, char* argv[])
       // The below calculates the DD couplings using the full 1 loop calculation of
       // Drees Nojiri Phys.Rev. D48 (1993) 3483
       DD_couplings_DarkSUSY_MSSM.setOption<bool>("loop", true);
-      // When the calculation is done at tree level (loop = false), setting the below to false
-      // approximates the squark propagator as 1/m_sq^2 to avoid poles.
-      // DD_couplings_DarkSUSY_DS5.setOption<bool>("pole", false);
+      // Setting the below to false approximates the squark propagator as 1/m_sq^2 to avoid poles.
+      DD_couplings_DarkSUSY_MSSM.setOption<bool>("pole", false);
       DD_couplings_DarkSUSY_MSSM.reset_and_calculate();
 
       // Initialize DDCalc backend
-      Backends::DDCalc_2_0_0::Functown::DDCalc_CalcRates_simple.setStatus(2);
-      Backends::DDCalc_2_0_0::Functown::DDCalc_Experiment.setStatus(2);
-      Backends::DDCalc_2_0_0::Functown::DDCalc_LogLikelihood.setStatus(2);
-      DDCalc_2_0_0_init.resolveDependency(&ExtractLocalMaxwellianHalo);
-      DDCalc_2_0_0_init.resolveDependency(&RD_fraction_one);
-      DDCalc_2_0_0_init.resolveDependency(&mwimp_generic);
-      DDCalc_2_0_0_init.resolveDependency(&DD_couplings_DarkSUSY_MSSM);
-      DDCalc_2_0_0_init.reset_and_calculate();
+      Backends::DDCalc_2_2_0::Functown::DDCalc_CalcRates_simple.setStatus(2);
+      Backends::DDCalc_2_2_0::Functown::DDCalc_Experiment.setStatus(2);
+      Backends::DDCalc_2_2_0::Functown::DDCalc_LogLikelihood.setStatus(2);
+      DDCalc_2_2_0_init.resolveDependency(&ExtractLocalMaxwellianHalo);
+      DDCalc_2_2_0_init.resolveDependency(&RD_fraction_one);
+      DDCalc_2_2_0_init.resolveDependency(&mwimp_generic);
+      DDCalc_2_2_0_init.resolveDependency(&DD_couplings_DarkSUSY_MSSM);
+      DDCalc_2_2_0_init.reset_and_calculate();
 
       // Calculate direct detection rates for LUX 2016
-      LUX_2016_Calc.resolveBackendReq(&Backends::DDCalc_2_0_0::Functown::DDCalc_Experiment);
-      LUX_2016_Calc.resolveBackendReq(&Backends::DDCalc_2_0_0::Functown::DDCalc_CalcRates_simple);
+      LUX_2016_Calc.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_Experiment);
+      LUX_2016_Calc.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_CalcRates_simple);
       LUX_2016_Calc.reset_and_calculate();
 
       // Calculate direct detection likelihood for LUX 2016
       LUX_2016_GetLogLikelihood.resolveDependency(&LUX_2016_Calc);
-      LUX_2016_GetLogLikelihood.resolveBackendReq(&Backends::DDCalc_2_0_0::Functown::DDCalc_Experiment);
-      LUX_2016_GetLogLikelihood.resolveBackendReq(&Backends::DDCalc_2_0_0::Functown::DDCalc_LogLikelihood);
+      LUX_2016_GetLogLikelihood.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_Experiment);
+      LUX_2016_GetLogLikelihood.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_LogLikelihood);
       LUX_2016_GetLogLikelihood.reset_and_calculate();
       // Save the result
       results["LUX_2016_lnL"][current_backend] = LUX_2016_GetLogLikelihood(0);
@@ -1084,30 +1081,29 @@ int main(int argc, char* argv[])
       // The below calculates the DD couplings using the full 1 loop calculation of
       // Drees Nojiri Phys.Rev. D48 (1993) 3483
       DD_couplings_DarkSUSY_MSSM.setOption<bool>("loop", true);
-      // When the calculation is done at tree level (loop = false), setting the below to false
-      // approximates the squark propagator as 1/m_sq^2 to avoid poles.
-      // DD_couplings_DarkSUSY_DS5.setOption<bool>("pole", false);
+      // Setting the below to false approximates the squark propagator as 1/m_sq^2 to avoid poles.
+      DD_couplings_DarkSUSY_MSSM.setOption<bool>("pole", false);
       DD_couplings_DarkSUSY_MSSM.reset_and_calculate();
 
       // Initialize DDCalc backend
-      Backends::DDCalc_2_0_0::Functown::DDCalc_CalcRates_simple.setStatus(2);
-      Backends::DDCalc_2_0_0::Functown::DDCalc_Experiment.setStatus(2);
-      Backends::DDCalc_2_0_0::Functown::DDCalc_LogLikelihood.setStatus(2);
-      DDCalc_2_0_0_init.resolveDependency(&ExtractLocalMaxwellianHalo);
-      DDCalc_2_0_0_init.resolveDependency(&RD_fraction_one);
-      DDCalc_2_0_0_init.resolveDependency(&mwimp_generic);
-      DDCalc_2_0_0_init.resolveDependency(&DD_couplings_DarkSUSY_MSSM);
-      DDCalc_2_0_0_init.reset_and_calculate();
+      Backends::DDCalc_2_2_0::Functown::DDCalc_CalcRates_simple.setStatus(2);
+      Backends::DDCalc_2_2_0::Functown::DDCalc_Experiment.setStatus(2);
+      Backends::DDCalc_2_2_0::Functown::DDCalc_LogLikelihood.setStatus(2);
+      DDCalc_2_2_0_init.resolveDependency(&ExtractLocalMaxwellianHalo);
+      DDCalc_2_2_0_init.resolveDependency(&RD_fraction_one);
+      DDCalc_2_2_0_init.resolveDependency(&mwimp_generic);
+      DDCalc_2_2_0_init.resolveDependency(&DD_couplings_DarkSUSY_MSSM);
+      DDCalc_2_2_0_init.reset_and_calculate();
 
       // Calculate direct detection rates for LUX 2016
-      LUX_2016_Calc.resolveBackendReq(&Backends::DDCalc_2_0_0::Functown::DDCalc_Experiment);
-      LUX_2016_Calc.resolveBackendReq(&Backends::DDCalc_2_0_0::Functown::DDCalc_CalcRates_simple);
+      LUX_2016_Calc.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_Experiment);
+      LUX_2016_Calc.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_CalcRates_simple);
       LUX_2016_Calc.reset_and_calculate();
 
       // Calculate direct detection likelihood for LUX 2016
       LUX_2016_GetLogLikelihood.resolveDependency(&LUX_2016_Calc);
-      LUX_2016_GetLogLikelihood.resolveBackendReq(&Backends::DDCalc_2_0_0::Functown::DDCalc_Experiment);
-      LUX_2016_GetLogLikelihood.resolveBackendReq(&Backends::DDCalc_2_0_0::Functown::DDCalc_LogLikelihood);
+      LUX_2016_GetLogLikelihood.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_Experiment);
+      LUX_2016_GetLogLikelihood.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_LogLikelihood);
       LUX_2016_GetLogLikelihood.reset_and_calculate();
       // Save the result
       results["LUX_2016_lnL"][current_backend] = LUX_2016_GetLogLikelihood(0);
@@ -1269,14 +1265,14 @@ int main(int argc, char* argv[])
       DD_couplings_MicrOmegas.reset_and_calculate();
 
       // Initialize DDCalc backend
-      Backends::DDCalc_2_0_0::Functown::DDCalc_CalcRates_simple.setStatus(2);
-      Backends::DDCalc_2_0_0::Functown::DDCalc_Experiment.setStatus(2);
-      Backends::DDCalc_2_0_0::Functown::DDCalc_LogLikelihood.setStatus(2);
-      DDCalc_2_0_0_init.resolveDependency(&ExtractLocalMaxwellianHalo);
-      DDCalc_2_0_0_init.resolveDependency(&RD_fraction_one);
-      DDCalc_2_0_0_init.resolveDependency(&mwimp_generic);
-      DDCalc_2_0_0_init.resolveDependency(&DD_couplings_MicrOmegas);
-      DDCalc_2_0_0_init.reset_and_calculate();
+      Backends::DDCalc_2_2_0::Functown::DDCalc_CalcRates_simple.setStatus(2);
+      Backends::DDCalc_2_2_0::Functown::DDCalc_Experiment.setStatus(2);
+      Backends::DDCalc_2_2_0::Functown::DDCalc_LogLikelihood.setStatus(2);
+      DDCalc_2_2_0_init.resolveDependency(&ExtractLocalMaxwellianHalo);
+      DDCalc_2_2_0_init.resolveDependency(&RD_fraction_one);
+      DDCalc_2_2_0_init.resolveDependency(&mwimp_generic);
+      DDCalc_2_2_0_init.resolveDependency(&DD_couplings_MicrOmegas);
+      DDCalc_2_2_0_init.reset_and_calculate();
 
 
       sigma_SI_p_simple.resolveDependency(&mwimp_generic);
