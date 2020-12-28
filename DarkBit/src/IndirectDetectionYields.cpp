@@ -1038,7 +1038,7 @@ namespace Gambit
       {
         // Just duplicate the positron yield.  DarkSUSY at least does not offer separate electron yields.
         result = *Pipes::electron_SimYieldTable_from_positron_SimYieldTable::Dep::positron_SimYieldTable;
-        // FIXME this will have e+ as final state in the result
+        result.replaceFinalState("e+","e-");
         initialized = true;
       }
     }

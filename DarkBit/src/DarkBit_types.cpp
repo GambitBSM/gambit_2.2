@@ -19,10 +19,11 @@
 ///  \date 2013 Jun
 ///
 ///  \author Pat Scott
-///          (patscott@physics.mcgill.ca)
+///          (pat.scott@uq.edu.au)
 ///  \date 2013 Oct
 ///  \date 2014 Jan, Apr
 ///  \date 2015 Mar
+///  \date 2020 Dec
 ///
 ///  \author Lars A. Dal
 ///          (l.a.dal@fys.uio.no)
@@ -65,9 +66,9 @@ namespace Gambit
 {
   namespace DarkBit
   {
-    
+
     /// General annihilation/decay channel for sim yield tables
-    SimYieldChannel::SimYieldChannel(daFunk::Funk dNdE, std::string p1, std::string p2, std::string finalState, double Ecm_min, double Ecm_max)
+    SimYieldChannel::SimYieldChannel(daFunk::Funk dNdE, const std::string& p1, const std::string& p2, const std::string& finalState, double Ecm_min, double Ecm_max)
     : dNdE(dNdE)
     , p1(p1)
     , p2(p2)
@@ -84,11 +85,11 @@ namespace Gambit
       this->dNdE = daFunk::ifelse(Ecm - Ecm_min, daFunk::ifelse(Ecm_max - Ecm, dNdE, error), error);
       dNdE_bound = this->dNdE->bind("E", "Ecm");
     }
-    
+
     /// Sim yield table dummy constructor
     SimYieldTable::SimYieldTable() : dummy_channel(daFunk::zero("E", "Ecm"), "", "", "", 0.0, 0.0) {}
-    
-    void SimYieldTable::addChannel(daFunk::Funk dNdE, std::string p1, std::string p2, std::string finalState, double Ecm_min, double Ecm_max)
+
+    void SimYieldTable::addChannel(daFunk::Funk dNdE, const std::string& p1, const std::string& p2, const std::string& finalState, double Ecm_min, double Ecm_max)
     {
       if ( hasChannel(p1, p2) )
       {
@@ -97,28 +98,36 @@ namespace Gambit
       }
       channel_list.push_back(SimYieldChannel(dNdE, p1, p2, finalState, Ecm_min, Ecm_max));
     }
-    
-    void SimYieldTable::addChannel(daFunk::Funk dNdE, std::string p1, std::string finalState, double Ecm_min, double Ecm_max)
+
+    void SimYieldTable::addChannel(daFunk::Funk dNdE, const std::string& p1, const std::string& finalState, double Ecm_min, double Ecm_max)
     {
       addChannel(dNdE, p1, "", finalState, Ecm_min, Ecm_max);
     }
-    
-    bool SimYieldTable::hasChannel(std::string p1, std::string p2, std::string finalState) const
+
+    void SimYieldTable::replaceFinalState(const std::string& oldFinalState, const std::string& newFinalState)
+    {
+      for (auto& channel : channel_list)
+      {
+        if (channel.finalState == oldFinalState) channel.finalState = newFinalState;
+      }
+    }
+
+    bool SimYieldTable::hasChannel(const std::string& p1, const std::string& p2, const std::string& finalState) const
     {
       return ( findChannel(p1, p2, finalState) != -1 );
     }
-    
-    bool SimYieldTable::hasChannel(std::string p1, std::string finalState) const
+
+    bool SimYieldTable::hasChannel(const std::string& p1, const std::string& finalState) const
     {
       return hasChannel(p1, "", finalState);
     }
-    
-    bool SimYieldTable::hasAnyChannel(std::string p1) const
+
+    bool SimYieldTable::hasAnyChannel(const std::string& p1) const
     {
       return hasAnyChannel(p1, "");
     }
-    
-    bool SimYieldTable::hasAnyChannel(std::string p1, std::string p2) const
+
+    bool SimYieldTable::hasAnyChannel(const std::string& p1, const std::string& p2) const
     {
       const std::vector<SimYieldChannel> &cl = channel_list;
       for ( unsigned int i = 0; i < channel_list.size(); i++ )
@@ -130,8 +139,8 @@ namespace Gambit
       }
       return false;
     }
-    
-    const SimYieldChannel& SimYieldTable::getChannel(std::string p1, std::string p2, std::string finalState) const
+
+    const SimYieldChannel& SimYieldTable::getChannel(const std::string& p1, const std::string& p2, const std::string& finalState) const
     {
       int index = findChannel(p1, p2, finalState);
       if ( index == -1 )
@@ -141,21 +150,21 @@ namespace Gambit
       }
       return channel_list[index];
     }
-    
+
     /// Retrieve simyield table entries at given center of mass energy (GeV)
-    daFunk::Funk SimYieldTable::operator()(std::string p1, std::string p2, std::string finalState, double Ecm) const
+    daFunk::Funk SimYieldTable::operator()(const std::string& p1, const std::string& p2, const std::string& finalState, double Ecm) const
     {
       return this->operator()(p1, p2, finalState)->set("Ecm", Ecm);
     }
-    
+
     /// Retrieve simyield table entries at given center of mass energy (GeV)
-    daFunk::Funk SimYieldTable::operator()(std::string p1, std::string finalState, double Ecm) const
+    daFunk::Funk SimYieldTable::operator()(const std::string& p1, const std::string& finalState, double Ecm) const
     {
       return this->operator()(p1,finalState)->set("Ecm", Ecm);
     }
-    
+
     /// Retrieve simyield table entries at given center of mass energy (GeV)
-    daFunk::Funk SimYieldTable::operator()(std::string p1, std::string p2, std::string finalState) const
+    daFunk::Funk SimYieldTable::operator()(const std::string& p1, const std::string& p2, const std::string& finalState) const
     {
       int index = findChannel(p1, p2, finalState);
       if ( index == -1 )
@@ -165,13 +174,13 @@ namespace Gambit
       }
       return channel_list[index].dNdE;
     }
-    
-    daFunk::Funk SimYieldTable::operator()(std::string p1, std::string finalState) const
+
+    daFunk::Funk SimYieldTable::operator()(const std::string& p1, const std::string& finalState) const
     {
       return this->operator()(p1, "", finalState);
     }
-    
-    int SimYieldTable::findChannel(std::string p1, std::string p2, std::string finalState) const
+
+    int SimYieldTable::findChannel(const std::string& p1, const std::string& p2, const std::string& finalState) const
     {
       const std::vector<SimYieldChannel> &cl = channel_list;
       for ( unsigned int i = 0; i < channel_list.size(); i++ )
