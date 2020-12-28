@@ -74,21 +74,22 @@ namespace Gambit
     /*! \brief Helper function returning yield from
      *         a given DM process.
      */
-    daFunk::Funk getYield(TH_Process process, double Ecm, double mass, TH_ProcessCatalog catalog,
-                          SimYieldTable table, double line_width, stringFunkMap cascadeMC_gammaSpectra)
+    daFunk::Funk getYield(const str& yield, const bool is_annihilation, const str& DMid, const str& DMbarid,
+      TH_ProcessCatalog catalog, SimYieldTable table, double line_width, stringFunkMap cascadeMC_spectra)
     {
       using DarkBit_utils::gamma3bdy_limits;
 
-      // Set the daFunk object based on the type of process.
-      daFunk::Funk Yield;
-      if (process.isAnnihilation)
-      {
-        Yield = daFunk::zero("E", "v");
-      }
-      else
-      {
-        Yield = daFunk::zero("E");
-      }
+      // Make sure that the ProcessCatalog process matches the is_annihilation flag.
+      const TH_Process* p = (is_annihilation ? catalog.find(DMid, DMbarid) : catalog.find(DMid));
+      if (p == NULL) DarkBit_error().raise(LOCAL_INFO, "Process does not match type indicated by is_annihilation flag.");
+
+      // Get particle mass from process catalog
+      const double mass = catalog.getParticleProperty(DMid).mass;
+      const double Ecm(is_annihilation ? 2*mass : mass);
+
+      // Get annihilation or decay process from process catalog and set up yield vector
+      TH_Process process(is_annihilation ? catalog.getProcess(DMid, DMbarid) : catalog.getProcess(DMid));
+      daFunk::Funk Yield(is_annihilation ? daFunk::zero("E", "v") : daFunk::zero("E"));
 
       // Adding two-body channels
       for (std::vector<TH_Channel>::iterator it = process.channelList.begin();
@@ -113,12 +114,12 @@ namespace Gambit
         double E0 = 0.5*(Ecm*Ecm+m0*m0-m1*m1)/Ecm;
         double E1 = Ecm-E0;
 
-        // Check whether two-body final state is in SimYield table
-        if ( table.hasChannel(it->finalStateIDs[0], it->finalStateIDs[1], "gamma") )
+        // Check whether two-body hard process final state is in SimYield table
+        if ( table.hasChannel(it->finalStateIDs[0], it->finalStateIDs[1], yield) )
         {
           Yield = Yield +
             it->genRate*(table)(
-                it->finalStateIDs[0], it->finalStateIDs[1], "gamma", Ecm);
+                it->finalStateIDs[0], it->finalStateIDs[1], yield, Ecm);
           added = true;
         }
         // Deal with composite final states
@@ -130,40 +131,40 @@ namespace Gambit
 
           // Final state particle one
           // Tabulated spectrum available?
-          if ( table.hasChannel(it->finalStateIDs[0], "gamma") )
+          if ( table.hasChannel(it->finalStateIDs[0], yield) )
           {
-            spec0 = (table)(it->finalStateIDs[0], "gamma")->set("Ecm",E0);
+            spec0 = (table)(it->finalStateIDs[0], yield)->set("Ecm",E0);
           }
-          // Gamma-ray line?
-          else if ( it->finalStateIDs[0] == "gamma" )
+          // Monochromatic line?
+          else if ( it->finalStateIDs[0] == yield )
           {
             daFunk::Funk E = daFunk::var("E");
             spec0 = exp(-pow((E-E0)/line_width/E0,2)/2)/E0/sqrt(2*M_PI)/line_width;
           }
           // MC spectra available?
-          else if ( cascadeMC_gammaSpectra.count(it->finalStateIDs[0]) )
+          else if ( cascadeMC_spectra.count(it->finalStateIDs[0]) )
           {
             double gamma0 = E0/m0;
             //std::cout << it->finalStateIDs[0] << " " << gamma0 << std::endl;
-            spec0 = boost_dNdE(cascadeMC_gammaSpectra.at(it->finalStateIDs[0]), gamma0, 0.0);
+            spec0 = boost_dNdE(cascadeMC_spectra.at(it->finalStateIDs[0]), gamma0, 0.0);
           }
           else added = false;
 
           // Final state particle two
-          if ( table.hasChannel(it->finalStateIDs[1], "gamma") )
+          if ( table.hasChannel(it->finalStateIDs[1], yield) )
           {
-            spec1 = (table)(it->finalStateIDs[1], "gamma")->set("Ecm", E1);
+            spec1 = (table)(it->finalStateIDs[1], yield)->set("Ecm", E1);
           }
-          else if ( it->finalStateIDs[1] == "gamma" )
+          else if ( it->finalStateIDs[1] == yield )
           {
             daFunk::Funk E = daFunk::var("E");
             spec1 = exp(-pow((E-E1)/line_width/E1,2)/2)/E1/sqrt(2*M_PI)/line_width;
           }
-          else if ( cascadeMC_gammaSpectra.count(it->finalStateIDs[1]) )
+          else if ( cascadeMC_spectra.count(it->finalStateIDs[1]) )
           {
             double gamma1 = E1/m1;
             //std::cout << it->finalStateIDs[1] << " " << gamma1 << std::endl;
-            spec1 = boost_dNdE(cascadeMC_gammaSpectra.at(it->finalStateIDs[1]), gamma1, 0.0);
+            spec1 = boost_dNdE(cascadeMC_spectra.at(it->finalStateIDs[1]), gamma1, 0.0);
           }
           else added = false;
 
@@ -188,9 +189,8 @@ namespace Gambit
 
           if (!added)
           {
-            DarkBit_warning().raise(LOCAL_INFO,
-                "GA_AnnYield_General: cannot find spectra for "
-                + it->finalStateIDs[0] + " " + it->finalStateIDs[1]);
+            DarkBit_warning().raise(LOCAL_INFO, "DarkBit::getYield cannot "
+              "find spectra for " + it->finalStateIDs[0] + " " + it->finalStateIDs[1]);
           }
 
           Yield = Yield + (spec0 + spec1) * it->genRate;
@@ -203,7 +203,7 @@ namespace Gambit
 
         for(size_t i=0; i<test1.size();i++)
         {
-            daFunk::Funk chnSpec = (table)(test1[i], test2[i], "gamma", Ecm);
+            daFunk::Funk chnSpec = (table)(test1[i], test2[i], yield, Ecm);
             std::vector<double> y = chnSpec->bind("E")->vect(x);
             os << test1[i] << test2[i] << ":\n";
             os << "  E: [";
@@ -228,30 +228,26 @@ namespace Gambit
         // Here only take care of three-body final states
         if (it->nFinalStates != 3) continue;
 
-        // Implement tabulated three-body final states
         /*
-           if ( it->nFinalStates == 3
-           and table->hasChannel(it->finalStateIDs[0], "gamma")
-           and table->hasChannel(it->finalStateIDs[1], "gamma")
-           and table->hasChannel(it->finalStateIDs[2], "gamma")
-           )
-           {
-           daFunk::Funk dNdE1dE2 = it->genRate->set("v",0.);
-           daFunk::Funk spec0 =
-             (table)(it->finalStateIDs[0], "gamma");
-           daFunk::Funk spec1 =
-             (table)(it->finalStateIDs[1], "gamma");
-           daFunk::Funk spec2 =
-             (table)(it->finalStateIDs[2], "gamma");
-           Yield = Yield + convspec(spec0, spec1, spec2, dNdE1dE2);
-           }
+        // Implement tabulated three-body final states
+        if ( it->nFinalStates == 3
+         and table->hasChannel(it->finalStateIDs[0], yield)
+         and table->hasChannel(it->finalStateIDs[1], yield)
+         and table->hasChannel(it->finalStateIDs[2], yield) )
+        {
+         daFunk::Funk dNdE1dE2 = it->genRate->set("v",0.);
+         daFunk::Funk spec0 = (table)(it->finalStateIDs[0], yield);
+         daFunk::Funk spec1 = (table)(it->finalStateIDs[1], yield);
+         daFunk::Funk spec2 = (table)(it->finalStateIDs[2], yield);
+         Yield = Yield + convspec(spec0, spec1, spec2, dNdE1dE2);
+        }
         */
 
-        if ( it->finalStateIDs[0] == "gamma" )
+        if ( it->finalStateIDs[0] == yield )
         {
-          if ( it->finalStateIDs[1] == "gamma" or it->finalStateIDs[2] == "gamma")
+          if ( it->finalStateIDs[1] == yield or it->finalStateIDs[2] == yield)
           {
-            DarkBit_warning().raise(LOCAL_INFO, "Second and/or third primary gamma rays in three-body final states ignored.");
+            DarkBit_warning().raise(LOCAL_INFO, "Second and/or third primary "+yield+" in three-body final states ignored.");
           }
           double m1 = catalog.getParticleProperty(it->finalStateIDs[1]).mass;
           double m2 = catalog.getParticleProperty(it->finalStateIDs[2]).mass;
@@ -291,114 +287,178 @@ namespace Gambit
         if(debug) os.close();
       #endif
 
+      // Rescale the yield by the correct kinematic factor
+      if (is_annihilation)
+      {
+        // If process involves non-self-conjugate DM then we need to add a factor of 1/2
+        // to the final spectrum. This must be explicitly set in the process catalog.
+        double k = (process.isSelfConj) ? 1. : 0.5;
+        Yield = k*daFunk::ifelse(1e-6 - daFunk::var("v"), Yield/(mass*mass),
+          daFunk::throwError("Spectrum currently only defined for v=0."));
+      }
+      else
+      {
+        Yield = Yield/mass;
+      }
+
       return Yield;
 
     }
 
-    /*! \brief General routine to derive annihilation yield.
-     *
-     * Depends on:
-     * - SimYieldTable
-     * - TH_ProcessCatalog
-     * - cascadeMC_gammaSpectra
-     *
-     * This function returns
-     *
-     *   k*dN/dE*(sv)/mDM**2 (E, v)  [cm^3/s/GeV^3]
-     *
-     * the energy spectrum of photons times sigma*v/m^2, as function of
-     * energy (in GeV) and velocity (as a fraction of c), multiplied by k=1 for self-conjugate DM
-     * or k=1/2 for non-self conjugate.  By default, only the v=0 component
-     * is calculated.
-     *
-     */
+    /// \brief General routine to derive gamma-ray annihilation yield.
+    /// This function returns
+    ///   k*dN/dE*(sv)/mDM**2 (E, v)  [cm^3/s/GeV^3]
+    /// the energy spectrum of photons times sigma*v/m^2, as function of energy (in GeV)
+    /// and velocity (as a fraction of c), multiplied by k=1 for self-conjugate DM or k=1/2
+    /// for non-self conjugate.  By default, only the v=0 component is calculated.
     void GA_AnnYield_General(daFunk::Funk &result)
     {
       using namespace Pipes::GA_AnnYield_General;
-
       std::string DMid= *Dep::DarkMatter_ID;
       std::string DMbarid = *Dep::DarkMatterConj_ID;
-
       /// Option line_width<double>: Set relative line width used in gamma-ray spectra (default 0.03)
-      double line_width = runOptions->getValueOrDef<double>(0.03,  "line_width");
-
-      // Check that the ProcessCatalog process *is* an annihilation, not a decay.
-      const TH_Process* p = (*Dep::TH_ProcessCatalog).find(DMid, DMbarid);
-      if (p == NULL)
-        DarkBit_error().raise(LOCAL_INFO, "Annihilation process not found.  For decaying DM please use GA_DecayYield_General.");
-
-      // if (not *Dep::TH_ProcessCatalog.isAnnihilation)
-      //   DarkBit_error().raise(LOCAL_INFO, "Process is not an annihilation.  Please use GA_DecayYield_General.");
-
-      // Get annihilation process from process catalog
-      TH_Process annProc = (*Dep::TH_ProcessCatalog).getProcess(DMid, DMbarid);
-
-      // If process involves non-self-conjugate DM then we need to add a factor of 1/2
-      // to the final spectrum. This must be explicitly set in the process catalog.
-      double k = (annProc.isSelfConj) ? 1. : 0.5;
-
-      // Get particle mass from process catalog
-      const double mass = (*Dep::TH_ProcessCatalog).getParticleProperty(DMid).mass;
-      const double Ecm = 2*mass;
-
-      // Loop over all channels for that process
-      daFunk::Funk Yield = getYield(annProc, Ecm, mass, *Dep::TH_ProcessCatalog, *Dep::GA_SimYieldTable,
-                                    line_width, *Dep::cascadeMC_gammaSpectra);
-
-      result = k*daFunk::ifelse(1e-6 - daFunk::var("v"), Yield/(mass*mass),
-          daFunk::throwError("Spectrum currently only defined for v=0."));
+      const double line_width = runOptions->getValueOrDef<double>(0.03,  "line_width");
+      result = getYield("gamma", true, DMid, DMbarid, *Dep::TH_ProcessCatalog, *Dep::GA_SimYieldTable,
+                        line_width, *Dep::cascadeMC_gammaSpectra);
     }
 
-    /*! \brief General routine to derive yield from decaying DM.
-     *
-     * Depends on:
-     * - SimYieldTable
-     * - TH_ProcessCatalog
-     * - cascadeMC_gammaSpectra
-     *
-     * This function returns
-     *
-     *   dN/dE*(Gamma)/mDM (E)  [1/s/GeV^2]
-     *
-     * the energy spectrum of photons times Gamma/m, as function of
-     * energy (in GeV).
-     *
-     */
+    /// \brief General routine to derive gamma-ray decay yield.
+    /// This function returns
+    ///   dN/dE*(Gamma)/mDM (E)  [1/s/GeV^2]
+    /// the energy spectrum of photons times Gamma/m, as function of energy (in GeV).
     void GA_DecayYield_General(daFunk::Funk &result)
     {
       using namespace Pipes::GA_DecayYield_General;
-
-      std::string DMid= *Dep::DarkMatter_ID;
-
+      std::string DMid = *Dep::DarkMatter_ID;
       /// Option line_width<double>: Set relative line width used in gamma-ray spectra (default 0.03)
-      double line_width = runOptions->getValueOrDef<double>(0.03,  "line_width");
-
-      // // Check that the ProcessCatalog process *is* a decay, not an annihilation.
-      const TH_Process* p = (*Dep::TH_ProcessCatalog).find(DMid);
-      if (p == NULL)
-        DarkBit_error().raise(LOCAL_INFO, "Decay process not found.  For annihilating DM please use GA_AnnYield_General.");
-
-      // // Check that the ProcessCatalog process *is* a decay, not an annihilation.
-      // if (*Dep::TH_ProcessCatalog.isAnnihilation)
-      //   DarkBit_error().raise(LOCAL_INFO, "Process is not a decay.  Please use GA_AnnYield_General.");
-
-      // Get annihilation process from process catalog
-      TH_Process decayProc = (*Dep::TH_ProcessCatalog).getProcess(DMid);
-
-      // Get particle mass from process catalog
-      const double mass = (*Dep::TH_ProcessCatalog).getParticleProperty(DMid).mass;
-      const double Ecm = mass;
-
-      // Loop over all channels for that process
-      daFunk::Funk Yield = getYield(decayProc, Ecm, mass, *Dep::TH_ProcessCatalog, *Dep::GA_SimYieldTable,
-                                    line_width, *Dep::cascadeMC_gammaSpectra);
-
-      // Rescale the yield by the correct kinematic factor
-      result = Yield/mass;
+      const double line_width = runOptions->getValueOrDef<double>(0.03,  "line_width");
+      result = getYield("gamma", false, DMid, "null", *Dep::TH_ProcessCatalog, *Dep::GA_SimYieldTable,
+                        line_width, *Dep::cascadeMC_gammaSpectra);
     }
 
+    /// \brief General routine to derive electron annihilation yield.
+    /// This function returns
+    /// k*dN/dE*(sv)/mDM**2 (E, v)  [cm^3/s/GeV^3]
+    /// the energy spectrum of electrons times sigma*v/m^2, as function of energy (in GeV)
+    /// and velocity (as a fraction of c), multiplied by k=1 for self-conjugate DM or k=1/2
+    /// for non-self conjugate.  By default, only the v=0 component is calculated.
+    void electron_AnnYield_General(daFunk::Funk &result)
+    {
+      using namespace Pipes::electron_AnnYield_General;
+      std::string DMid= *Dep::DarkMatter_ID;
+      std::string DMbarid = *Dep::DarkMatterConj_ID;
+      /// Option line_width<double>: Set relative line width used in gamma-ray spectra (default 0.03)
+      const double line_width = runOptions->getValueOrDef<double>(0.03,  "line_width");
+      result = getYield("e-", true, DMid, DMbarid, *Dep::TH_ProcessCatalog, *Dep::electron_SimYieldTable,
+                        line_width, *Dep::cascadeMC_electronSpectra);
+    }
 
+    /// \brief General routine to derive electron decay yield.
+    /// This function returns
+    ///   dN/dE*(Gamma)/mDM (E)  [1/s/GeV^2]
+    /// the energy spectrum of electrons times Gamma/m, as function of energy (in GeV).
+    void electron_DecayYield_General(daFunk::Funk &result)
+    {
+      using namespace Pipes::electron_DecayYield_General;
+      std::string DMid = *Dep::DarkMatter_ID;
+      /// Option line_width<double>: Set relative line width used in gamma-ray spectra (default 0.03)
+      const double line_width = runOptions->getValueOrDef<double>(0.03,  "line_width");
+      result = getYield("e-", false, DMid, "null", *Dep::TH_ProcessCatalog, *Dep::electron_SimYieldTable,
+                        line_width, *Dep::cascadeMC_electronSpectra);
+    }
 
+    /// \brief General routine to derive positron annihilation yield.
+    /// This function returns
+    /// k*dN/dE*(sv)/mDM**2 (E, v)  [cm^3/s/GeV^3]
+    /// the energy spectrum of positrons times sigma*v/m^2, as function of energy (in GeV)
+    /// and velocity (as a fraction of c), multiplied by k=1 for self-conjugate DM or k=1/2
+    /// for non-self conjugate.  By default, only the v=0 component is calculated.
+    void positron_AnnYield_General(daFunk::Funk &result)
+    {
+      using namespace Pipes::positron_AnnYield_General;
+      std::string DMid= *Dep::DarkMatter_ID;
+      std::string DMbarid = *Dep::DarkMatterConj_ID;
+      /// Option line_width<double>: Set relative line width used in gamma-ray spectra (default 0.03)
+      const double line_width = runOptions->getValueOrDef<double>(0.03,  "line_width");
+      result = getYield("e+", true, DMid, DMbarid, *Dep::TH_ProcessCatalog, *Dep::positron_SimYieldTable,
+                        line_width, *Dep::cascadeMC_positronSpectra);
+    }
+
+    /// \brief General routine to derive positron decay yield.
+    /// This function returns
+    ///   dN/dE*(Gamma)/mDM (E)  [1/s/GeV^2]
+    /// the energy spectrum of positrons times Gamma/m, as function of energy (in GeV).
+    void positron_DecayYield_General(daFunk::Funk &result)
+    {
+      using namespace Pipes::positron_DecayYield_General;
+      std::string DMid = *Dep::DarkMatter_ID;
+      /// Option line_width<double>: Set relative line width used in gamma-ray spectra (default 0.03)
+      const double line_width = runOptions->getValueOrDef<double>(0.03,  "line_width");
+      result = getYield("e+", false, DMid, "null", *Dep::TH_ProcessCatalog, *Dep::positron_SimYieldTable,
+                        line_width, *Dep::cascadeMC_positronSpectra);
+    }
+
+    /// \brief General routine to derive antiproton annihilation yield.
+    /// This function returns
+    /// k*dN/dE*(sv)/mDM**2 (E, v)  [cm^3/s/GeV^3]
+    /// the energy spectrum of antiprotons times sigma*v/m^2, as function of energy (in GeV)
+    /// and velocity (as a fraction of c), multiplied by k=1 for self-conjugate DM or k=1/2
+    /// for non-self conjugate.  By default, only the v=0 component is calculated.
+    void antiproton_AnnYield_General(daFunk::Funk &result)
+    {
+      using namespace Pipes::antiproton_AnnYield_General;
+      std::string DMid= *Dep::DarkMatter_ID;
+      std::string DMbarid = *Dep::DarkMatterConj_ID;
+      /// Option line_width<double>: Set relative line width used in gamma-ray spectra (default 0.03)
+      const double line_width = runOptions->getValueOrDef<double>(0.03,  "line_width");
+      result = getYield("pbar", true, DMid, DMbarid, *Dep::TH_ProcessCatalog, *Dep::antiproton_SimYieldTable,
+                        line_width, *Dep::cascadeMC_antiprotonSpectra);
+    }
+
+    /// \brief General routine to derive antiproton decay yield.
+    /// This function returns
+    ///   dN/dE*(Gamma)/mDM (E)  [1/s/GeV^2]
+    /// the energy spectrum of antiprotons times Gamma/m, as function of energy (in GeV).
+    void antiproton_DecayYield_General(daFunk::Funk &result)
+    {
+      using namespace Pipes::antiproton_DecayYield_General;
+      std::string DMid = *Dep::DarkMatter_ID;
+      /// Option line_width<double>: Set relative line width used in gamma-ray spectra (default 0.03)
+      const double line_width = runOptions->getValueOrDef<double>(0.03,  "line_width");
+      result = getYield("pbar", false, DMid, "null", *Dep::TH_ProcessCatalog, *Dep::antiproton_SimYieldTable,
+                        line_width, *Dep::cascadeMC_antiprotonSpectra);
+    }
+
+    /// \brief General routine to derive antideuteron annihilation yield.
+    /// This function returns
+    /// k*dN/dE*(sv)/mDM**2 (E, v)  [cm^3/s/GeV^3]
+    /// the energy spectrum of antideuterons times sigma*v/m^2, as function of energy (in GeV)
+    /// and velocity (as a fraction of c), multiplied by k=1 for self-conjugate DM or k=1/2
+    /// for non-self conjugate.  By default, only the v=0 component is calculated.
+    void antideuteron_AnnYield_General(daFunk::Funk &result)
+    {
+      using namespace Pipes::antideuteron_AnnYield_General;
+      std::string DMid= *Dep::DarkMatter_ID;
+      std::string DMbarid = *Dep::DarkMatterConj_ID;
+      /// Option line_width<double>: Set relative line width used in gamma-ray spectra (default 0.03)
+      const double line_width = runOptions->getValueOrDef<double>(0.03,  "line_width");
+      result = getYield("Dbar", true, DMid, DMbarid, *Dep::TH_ProcessCatalog, *Dep::antideuteron_SimYieldTable,
+                        line_width, *Dep::cascadeMC_antideuteronSpectra);
+    }
+
+    /// \brief General routine to derive antideuteron decay yield.
+    /// This function returns
+    ///   dN/dE*(Gamma)/mDM (E)  [1/s/GeV^2]
+    /// the energy spectrum of antideuterons times Gamma/m, as function of energy (in GeV).
+    void antideuteron_DecayYield_General(daFunk::Funk &result)
+    {
+      using namespace Pipes::antideuteron_DecayYield_General;
+      std::string DMid = *Dep::DarkMatter_ID;
+      /// Option line_width<double>: Set relative line width used in gamma-ray spectra (default 0.03)
+      const double line_width = runOptions->getValueOrDef<double>(0.03,  "line_width");
+      result = getYield("Dbar", false, DMid, "null", *Dep::TH_ProcessCatalog, *Dep::antideuteron_SimYieldTable,
+                        line_width, *Dep::cascadeMC_antideuteronSpectra);
+    }
 
 
     // SimYields =======================================================

@@ -575,7 +575,6 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION cascadeMC_EventCount
       START_FUNCTION(stringIntMap)
-      DEPENDENCY(cascadeMC_InitialState, std::string)
       NEEDS_MANAGER(cascadeMC_LoopManagement, std::string)
     #undef FUNCTION
   #undef CAPABILITY
@@ -585,7 +584,6 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION cascadeMC_GenerateChain
       START_FUNCTION(DecayChain::ChainContainer)
-      DEPENDENCY(cascadeMC_InitialState, std::string)
       DEPENDENCY(cascadeMC_DecayTable, DecayChain::DecayTable)
       NEEDS_MANAGER(cascadeMC_LoopManagement, std::string)
     #undef FUNCTION
@@ -596,7 +594,6 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION cascadeMC_Histograms
       START_FUNCTION(simpleHistContainter)
-      DEPENDENCY(cascadeMC_InitialState, std::string)
       DEPENDENCY(cascadeMC_ChainEvent, DecayChain::ChainContainer)
       DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
       DEPENDENCY(FullSimYieldTable, SimYieldTable)
