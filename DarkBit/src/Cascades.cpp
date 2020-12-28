@@ -684,6 +684,23 @@ namespace Gambit
       }
     }
 
+    /// Debug print function for cascase spectra
+    void print_spectrum_debug_info(const str& fs, const std::map<std::string, daFunk::Funk> & spectra)
+    {
+      std::cout << "Retrieving cascade spectra for " << fs << " final states" << std::endl;
+      std::cout << "Number of simulated final states: " << spectra.size() << std::endl;
+      for ( auto it = spectra.begin(); it != spectra.end(); it ++ )
+      {
+        std::cout << "Particle: " << it->first << std::endl;
+        auto f= it->second;
+        for ( double E = 0.1; E < 1000; E*=1.5 )
+        {
+          std::cout << "  " << E << " " << f->bind("E")->eval(E) << std::endl;
+        }
+        std::cout << "  Integrated spectrum: " << f->gsl_integration("E", 0, 1000)->bind()->eval() << std::endl;
+      }
+    }
+
     /// Function requesting and returning gamma ray spectra from cascade decays.
     void cascadeMC_gammaSpectra(std::map<std::string, daFunk::Funk> &spectra)
     {
@@ -692,18 +709,55 @@ namespace Gambit
           *Dep::cascadeMC_FinalStates, *Dep::cascadeMC_Histograms,
           *Dep::cascadeMC_EventCount);
       #ifdef DARKBIT_DEBUG
-        std::cout << "Retrieving cascade spectra for gamma final states" << std::endl;
-        std::cout << "Number of simulated final states: " << spectra.size() << std::endl;
-        for ( auto it = spectra.begin(); it != spectra.end(); it ++ )
-        {
-          std::cout << "Particle: " << it->first << std::endl;
-          auto f= it->second;
-          for ( double E = 0.1; E < 1000; E*=1.5 )
-          {
-            std::cout << "  " << E << " " << f->bind("E")->eval(E) << std::endl;
-          }
-          std::cout << "  Integrated spectrum: " << f->gsl_integration("E", 0, 1000)->bind()->eval() << std::endl;
-        }
+        print_spectrum_debug_info("gamma", spectra);
+      #endif
+    }
+
+    /// Function requesting and returning electron spectra from cascade decays.
+    void cascadeMC_electronSpectra(std::map<std::string, daFunk::Funk> &spectra)
+    {
+      using namespace Pipes::cascadeMC_electronSpectra;
+      cascadeMC_fetchSpectra(spectra, "e-", *Dep::electron_missingFinalStates,
+          *Dep::cascadeMC_FinalStates, *Dep::cascadeMC_Histograms,
+          *Dep::cascadeMC_EventCount);
+      #ifdef DARKBIT_DEBUG
+        print_spectrum_debug_info("electron", spectra);
+      #endif
+    }
+
+    /// Function requesting and returning positron spectra from cascade decays.
+    void cascadeMC_positronSpectra(std::map<std::string, daFunk::Funk> &spectra)
+    {
+      using namespace Pipes::cascadeMC_positronSpectra;
+      cascadeMC_fetchSpectra(spectra, "e+", *Dep::positron_missingFinalStates,
+          *Dep::cascadeMC_FinalStates, *Dep::cascadeMC_Histograms,
+          *Dep::cascadeMC_EventCount);
+      #ifdef DARKBIT_DEBUG
+        print_spectrum_debug_info("positron", spectra);
+      #endif
+    }
+
+    /// Function requesting and returning pbar spectra from cascade decays.
+    void cascadeMC_antiprotonSpectra(std::map<std::string, daFunk::Funk> &spectra)
+    {
+      using namespace Pipes::cascadeMC_antiprotonSpectra;
+      cascadeMC_fetchSpectra(spectra, "pbar", *Dep::antiproton_missingFinalStates,
+          *Dep::cascadeMC_FinalStates, *Dep::cascadeMC_Histograms,
+          *Dep::cascadeMC_EventCount);
+      #ifdef DARKBIT_DEBUG
+        print_spectrum_debug_info("antiproton", spectra);
+      #endif
+    }
+
+    /// Function requesting and returning Dbar spectra from cascade decays.
+    void cascadeMC_antideuteronSpectra(std::map<std::string, daFunk::Funk> &spectra)
+    {
+      using namespace Pipes::cascadeMC_antideuteronSpectra;
+      cascadeMC_fetchSpectra(spectra, "Dbar", *Dep::antideuteron_missingFinalStates,
+          *Dep::cascadeMC_FinalStates, *Dep::cascadeMC_Histograms,
+          *Dep::cascadeMC_EventCount);
+      #ifdef DARKBIT_DEBUG
+        print_spectrum_debug_info("antideuteron", spectra);
       #endif
     }
 

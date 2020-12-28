@@ -467,27 +467,5 @@ namespace Gambit {
       logger() << LogTags::debug << "lnL_vesc yields " << result << EOM;
     }
 
-    /// \brief Helper function to dump gamma-ray spectra.
-    void dump_gammaSpectrum(double &result)
-    {
-      using namespace Pipes::dump_gammaSpectrum;
-      daFunk::Funk spectrum = (*Dep::GA_Yield)->set("v", 0.);
-      // Option filename<string>: Filename for gamma-ray spectrum dump
-      // (default: dNdE.dat)
-      std::string filename = runOptions->getValueOrDef<std::string>("dNdE.dat", "filename");
-      logger() << "FILENAME for gamma dump: " << filename << EOM;
-      std::ofstream myfile (filename);
-      if (myfile.is_open())
-      {
-        for (int i = 0; i<=1200; i++)
-        {
-          double energy = pow(10., i/200. - 4.);
-
-          myfile << energy << " " << spectrum->bind("E")->eval(energy) << "\n";
-        }
-        myfile.close();
-      }
-      result = 0.;
-    }
   }
 }

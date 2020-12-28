@@ -1065,5 +1065,88 @@ namespace Gambit
       }
     }
 
+    // Dumper functions ================================================
+
+    /// \brief Helper function to dump any spectra
+    int dump(const str& filename, const daFunk::Funk& spectrum)
+    {
+      std::ofstream myfile (filename);
+      if (myfile.is_open())
+      {
+        for (int i = 0; i<=1200; i++)
+        {
+          double energy = pow(10., i/200. - 4.);
+          myfile << energy << " " << spectrum->bind("E")->eval(energy) << "\n";
+        }
+        myfile.close();
+        return 0;
+      }
+      else
+      {
+        DarkBit_error().raise(LOCAL_INFO, "Failed to open file " + filename + ".");
+      }
+      return 1;
+    }
+
+    /// \brief Helper function to dump gamma-ray spectra.
+    void dump_gammaSpectrum(int &result)
+    {
+      using namespace Pipes::dump_gammaSpectrum;
+      daFunk::Funk spectrum = (*Dep::GA_Yield)->set("v", 0.);
+      // Option filename<string>: Filename for gamma-ray spectrum dump
+      // (default: dNdE_gamma.dat)
+      std::string filename = runOptions->getValueOrDef<std::string>("dNdE_gamma.dat", "filename");
+      logger() << "FILENAME for gamma dump: " << filename << EOM;
+      result = dump(filename, spectrum);
+    }
+
+    /// \brief Helper function to dump electron spectra.
+    void dump_electronSpectrum(int &result)
+    {
+      using namespace Pipes::dump_electronSpectrum;
+      daFunk::Funk spectrum = (*Dep::electron_Yield)->set("v", 0.);
+      // Option filename<string>: Filename for electron spectrum dump
+      // (default: dNdE_electron.dat)
+      std::string filename = runOptions->getValueOrDef<std::string>("dNdE_electron.dat", "filename");
+      logger() << "FILENAME for electron dump: " << filename << EOM;
+      result = dump(filename, spectrum);
+    }
+
+    /// \brief Helper function to dump positron spectra.
+    void dump_positronSpectrum(int &result)
+    {
+      using namespace Pipes::dump_positronSpectrum;
+      daFunk::Funk spectrum = (*Dep::positron_Yield)->set("v", 0.);
+      // Option filename<string>: Filename for positron spectrum dump
+      // (default: dNdE_positron.dat)
+      std::string filename = runOptions->getValueOrDef<std::string>("dNdE_positron.dat", "filename");
+      logger() << "FILENAME for positron dump: " << filename << EOM;
+      result = dump(filename, spectrum);
+    }
+
+    /// \brief Helper function to dump anti-proton spectra.
+    void dump_antiprotonSpectrum(int &result)
+    {
+      using namespace Pipes::dump_antiprotonSpectrum;
+      daFunk::Funk spectrum = (*Dep::antiproton_Yield)->set("v", 0.);
+      // Option filename<string>: Filename for antiproton spectrum dump
+      // (default: dNdE_antiproton.dat)
+      std::string filename = runOptions->getValueOrDef<std::string>("dNdE_antiproton.dat", "filename");
+      logger() << "FILENAME for antiproton dump: " << filename << EOM;
+      result = dump(filename, spectrum);
+    }
+
+    /// \brief Helper function to dump anti-deuteron spectra.
+    void dump_antideuteronSpectrum(int &result)
+    {
+      using namespace Pipes::dump_antideuteronSpectrum;
+      daFunk::Funk spectrum = (*Dep::antideuteron_Yield)->set("v", 0.);
+      // Option filename<string>: Filename for antideuteron spectrum dump
+      // (default: dNdE_antideuteron.dat)
+      std::string filename = runOptions->getValueOrDef<std::string>("dNdE_antideuteron.dat", "filename");
+      logger() << "FILENAME for antideuteron dump: " << filename << EOM;
+      result = dump(filename, spectrum);
+    }
+
   }
 }

@@ -637,6 +637,30 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  /// Function requesting and returning antiproton spectra from cascade decays.
+  #define CAPABILITY cascadeMC_antiprotonSpectra
+  START_CAPABILITY
+    #define FUNCTION cascadeMC_antiprotonSpectra
+      START_FUNCTION(stringFunkMap)
+      DEPENDENCY(antiproton_missingFinalStates, std::vector<std::string>)
+      DEPENDENCY(cascadeMC_FinalStates,std::vector<std::string>)
+      DEPENDENCY(cascadeMC_Histograms, simpleHistContainter)
+      DEPENDENCY(cascadeMC_EventCount, stringIntMap)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  /// Function requesting and returning antideuteron spectra from cascade decays.
+  #define CAPABILITY cascadeMC_antideuteronSpectra
+  START_CAPABILITY
+    #define FUNCTION cascadeMC_antideuteronSpectra
+      START_FUNCTION(stringFunkMap)
+      DEPENDENCY(antideuteron_missingFinalStates, std::vector<std::string>)
+      DEPENDENCY(cascadeMC_FinalStates,std::vector<std::string>)
+      DEPENDENCY(cascadeMC_Histograms, simpleHistContainter)
+      DEPENDENCY(cascadeMC_EventCount, stringIntMap)
+    #undef FUNCTION
+  #undef CAPABILITY
+
   /*
   /// Function for printing test result of cascade decays
   #define CAPABILITY cascadeMC_PrintResult
@@ -686,7 +710,7 @@ START_MODULE
   #define CAPABILITY dump_gammaSpectrum
   START_CAPABILITY
     #define FUNCTION dump_gammaSpectrum
-      START_FUNCTION(double)
+      START_FUNCTION(int)
       DEPENDENCY(GA_Yield, daFunk::Funk)
     #undef FUNCTION
   #undef CAPABILITY
@@ -755,7 +779,7 @@ START_MODULE
   #define CAPABILITY dump_electronSpectrum
   START_CAPABILITY
     #define FUNCTION dump_electronSpectrum
-      START_FUNCTION(double)
+      START_FUNCTION(int)
       DEPENDENCY(electron_Yield, daFunk::Funk)
     #undef FUNCTION
   #undef CAPABILITY
@@ -763,8 +787,92 @@ START_MODULE
   #define CAPABILITY dump_positronSpectrum
   START_CAPABILITY
     #define FUNCTION dump_positronSpectrum
-      START_FUNCTION(double)
+      START_FUNCTION(int)
       DEPENDENCY(positron_Yield, daFunk::Funk)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+
+  // Anti-proton spectra ===============================================
+
+  #define CAPABILITY antiproton_missingFinalStates
+  START_CAPABILITY
+    #define FUNCTION antiproton_missingFinalStates
+      START_FUNCTION(std::vector<std::string>)
+      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+      DEPENDENCY(antiproton_SimYieldTable, SimYieldTable)
+      DEPENDENCY(DarkMatter_ID, std::string)
+      DEPENDENCY(DarkMatterConj_ID, std::string)
+      DEPENDENCY(DM_process, std::string)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY antiproton_Yield
+  START_CAPABILITY
+    #define FUNCTION antiproton_AnnYield_General
+      START_FUNCTION(daFunk::Funk)
+      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+      DEPENDENCY(antiproton_SimYieldTable, SimYieldTable)
+      DEPENDENCY(cascadeMC_antiprotonSpectra, stringFunkMap)
+      DEPENDENCY(DarkMatter_ID, std::string)
+      DEPENDENCY(DarkMatterConj_ID, std::string)
+    #undef FUNCTION
+    #define FUNCTION antiproton_DecayYield_General
+      START_FUNCTION(daFunk::Funk)
+      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+      DEPENDENCY(antiproton_SimYieldTable, SimYieldTable)
+      DEPENDENCY(cascadeMC_antiprotonSpectra, stringFunkMap)
+      DEPENDENCY(DarkMatter_ID, std::string)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY dump_antiprotonSpectrum
+  START_CAPABILITY
+    #define FUNCTION dump_antiprotonSpectrum
+      START_FUNCTION(int)
+      DEPENDENCY(antiproton_Yield, daFunk::Funk)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+
+  // Anti-deuteron spectra =============================================
+
+  #define CAPABILITY antideuteron_missingFinalStates
+  START_CAPABILITY
+    #define FUNCTION antideuteron_missingFinalStates
+      START_FUNCTION(std::vector<std::string>)
+      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+      DEPENDENCY(antideuteron_SimYieldTable, SimYieldTable)
+      DEPENDENCY(DarkMatter_ID, std::string)
+      DEPENDENCY(DarkMatterConj_ID, std::string)
+      DEPENDENCY(DM_process, std::string)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY anditdeuteron_Yield
+  START_CAPABILITY
+    #define FUNCTION antideuteron_AnnYield_General
+      START_FUNCTION(daFunk::Funk)
+      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+      DEPENDENCY(antideuteron_SimYieldTable, SimYieldTable)
+      DEPENDENCY(cascadeMC_antideuteronSpectra, stringFunkMap)
+      DEPENDENCY(DarkMatter_ID, std::string)
+      DEPENDENCY(DarkMatterConj_ID, std::string)
+    #undef FUNCTION
+    #define FUNCTION antideuteron_DecayYield_General
+      START_FUNCTION(daFunk::Funk)
+      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+      DEPENDENCY(antideuteron_SimYieldTable, SimYieldTable)
+      DEPENDENCY(cascadeMC_antideuteronSpectra, stringFunkMap)
+      DEPENDENCY(DarkMatter_ID, std::string)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY dump_antideuteronSpectrum
+  START_CAPABILITY
+    #define FUNCTION dump_antideuteronSpectrum
+      START_FUNCTION(int)
+      DEPENDENCY(antideuteron_Yield, daFunk::Funk)
     #undef FUNCTION
   #undef CAPABILITY
 
