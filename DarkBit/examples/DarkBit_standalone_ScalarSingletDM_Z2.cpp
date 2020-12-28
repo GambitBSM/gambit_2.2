@@ -162,6 +162,8 @@ int main()
     // Set identifier for DM particle
     DarkMatter_ID_ScalarSingletDM.notifyOfModel("ScalarSingletDM_Z2");
     DarkMatter_ID_ScalarSingletDM.reset_and_calculate();
+    DarkMatterConj_ID_ScalarSingletDM.notifyOfModel("ScalarSingletDM_Z2");
+    DarkMatterConj_ID_ScalarSingletDM.reset_and_calculate();
 
     // Set up process catalog
     TH_ProcessCatalog_ScalarSingletDM_Z2.notifyOfModel("ScalarSingletDM_Z2");
@@ -181,6 +183,7 @@ int main()
     // Set generic annihilation rate in late universe (v->0 limit)
     sigmav_late_universe.resolveDependency(&TH_ProcessCatalog_ScalarSingletDM_Z2);
     sigmav_late_universe.resolveDependency(&DarkMatter_ID_ScalarSingletDM);
+    sigmav_late_universe.resolveDependency(&DarkMatterConj_ID_ScalarSingletDM);
     sigmav_late_universe.reset_and_calculate();
 
     // ---- Initialize backends ----
@@ -231,10 +234,12 @@ int main()
     // Relic density calculation with GAMBIT (DarkSUSY Boltzmann solver)
     RD_spectrum_from_ProcessCatalog.resolveDependency(&TH_ProcessCatalog_ScalarSingletDM_Z2);
     RD_spectrum_from_ProcessCatalog.resolveDependency(&DarkMatter_ID_ScalarSingletDM);
+    RD_spectrum_from_ProcessCatalog.resolveDependency(&DarkMatterConj_ID_ScalarSingletDM);
     RD_spectrum_from_ProcessCatalog.reset_and_calculate();
 
     RD_eff_annrate_from_ProcessCatalog.resolveDependency(&TH_ProcessCatalog_ScalarSingletDM_Z2);
     RD_eff_annrate_from_ProcessCatalog.resolveDependency(&DarkMatter_ID_ScalarSingletDM);
+    RD_eff_annrate_from_ProcessCatalog.resolveDependency(&DarkMatterConj_ID_ScalarSingletDM);
     RD_eff_annrate_from_ProcessCatalog.reset_and_calculate();
 
     RD_spectrum_ordered_func.resolveDependency(&RD_spectrum_from_ProcessCatalog);
@@ -338,12 +343,18 @@ int main()
     SimYieldTable_DarkSUSY.resolveBackendReq(&Backends::DarkSUSY_generic_wimp_6_2_2::Functown::dsanyield_sim);
     SimYieldTable_DarkSUSY.reset_and_calculate();
 
+    // Identify process as annihilation rather than decay
+    DM_process_from_ProcessCatalog.resolveDependency(&TH_ProcessCatalog_ScalarSingletDM_Z2);
+    DM_process_from_ProcessCatalog.resolveDependency(&DarkMatter_ID_ScalarSingletDM);
+    DM_process_from_ProcessCatalog.reset_and_calculate();
+
     // Collect missing final states for simulation in cascade MC
     GA_missingFinalStates.resolveDependency(&TH_ProcessCatalog_ScalarSingletDM_Z2);
     GA_missingFinalStates.resolveDependency(&SimYieldTable_DarkSUSY);
     GA_missingFinalStates.resolveDependency(&DarkMatter_ID_ScalarSingletDM);
+    GA_missingFinalStates.resolveDependency(&DarkMatterConj_ID_ScalarSingletDM);
+    GA_missingFinalStates.resolveDependency(&DM_process_from_ProcessCatalog);
     GA_missingFinalStates.reset_and_calculate();
-
 
     // Infer for which type of final states particles MC should be performed
     cascadeMC_FinalStates.setOption<std::vector<std::string>>("cMC_finalStates", daFunk::vec<std::string>("gamma"));
@@ -395,12 +406,14 @@ int main()
     GA_AnnYield_General.resolveDependency(&TH_ProcessCatalog_ScalarSingletDM_Z2);
     GA_AnnYield_General.resolveDependency(&SimYieldTable_DarkSUSY);
     GA_AnnYield_General.resolveDependency(&DarkMatter_ID_ScalarSingletDM);
+    GA_AnnYield_General.resolveDependency(&DarkMatterConj_ID_ScalarSingletDM);
     GA_AnnYield_General.resolveDependency(&cascadeMC_gammaSpectra);
     GA_AnnYield_General.reset_and_calculate();
 
     // Calculate Fermi LAT dwarf likelihood
     lnL_FermiLATdwarfs_gamLike.resolveDependency(&GA_AnnYield_General);
     lnL_FermiLATdwarfs_gamLike.resolveDependency(&RD_fraction_one);
+    lnL_FermiLATdwarfs_gamLike.resolveDependency(&DM_process_from_ProcessCatalog);
     lnL_FermiLATdwarfs_gamLike.resolveBackendReq(&Backends::gamLike_1_0_1::Functown::lnL);
     lnL_FermiLATdwarfs_gamLike.reset_and_calculate();
 
@@ -421,6 +434,7 @@ int main()
     // Infer WIMP equilibration time in Sun
     equilibration_time_Sun.resolveDependency(&TH_ProcessCatalog_ScalarSingletDM_Z2);
     equilibration_time_Sun.resolveDependency(&DarkMatter_ID_ScalarSingletDM);
+    equilibration_time_Sun.resolveDependency(&DarkMatterConj_ID_ScalarSingletDM);
     equilibration_time_Sun.resolveDependency(&mwimp_generic);
     equilibration_time_Sun.resolveDependency(&capture_rate_Sun_const_xsec);
     equilibration_time_Sun.reset_and_calculate();
@@ -435,6 +449,7 @@ int main()
     nuyield_from_DS.resolveDependency(&mwimp_generic);
     nuyield_from_DS.resolveDependency(&sigmav_late_universe);
     nuyield_from_DS.resolveDependency(&DarkMatter_ID_ScalarSingletDM);
+    nuyield_from_DS.resolveDependency(&DarkMatterConj_ID_ScalarSingletDM);
     nuyield_from_DS.resolveBackendReq(&Backends::DarkSUSY_generic_wimp_6_2_2::Functown::dsgenericwimp_nusetup);
     nuyield_from_DS.resolveBackendReq(&Backends::DarkSUSY_generic_wimp_6_2_2::Functown::neutrino_yield);
     nuyield_from_DS.resolveBackendReq(&Backends::DarkSUSY_generic_wimp_6_2_2::Functown::DS_neutral_h_decay_channels);
