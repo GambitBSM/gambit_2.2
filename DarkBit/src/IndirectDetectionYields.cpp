@@ -651,6 +651,18 @@ namespace Gambit
         yieldpdg =  22;
       else if (yield == "e+")
         yieldpdg = -11;
+      else if (yield == "pbar")
+        yieldpdg = -2212;
+      else if (yield == "Dbar")
+        yieldpdg = -1000010020;
+      else if (yield == "pi0")
+        yieldpdg = 111;
+      else if (yield == "nu_e + nu_ebar")
+        yieldpdg = 12;
+      else if (yield == "nu_mu + nu_mubar")
+        yieldpdg = 14;
+      else if (yield == "nu_tau + nu_taubar")
+        yieldpdg = 16;
       else
         DarkBit_error().raise(LOCAL_INFO, "SimYieldTable_DarkSUSY called with unrecognised final state " + yield);
 
@@ -794,6 +806,36 @@ namespace Gambit
         /// Option allow_yield_extrapolation<bool>: Spectra extrapolated for masses beyond Pythia results (default false)
         bool allow_yield_extrapolation = runOptions->getValueOrDef(false, "allow_yield_extrapolation");
         result = SimYieldTable_DarkSUSY("e+", allow_yield_extrapolation, BEreq::dsanyield_sim.pointer());
+        initialized = true;
+      }
+    }
+
+    /// Anti-proton SimYieldTable based on DarkSUSY6 tabulated results.
+    void antiproton_SimYieldTable_DarkSUSY(SimYieldTable& result)
+    {
+      using namespace Pipes::antiproton_SimYieldTable_DarkSUSY;
+
+      static bool initialized = false;
+      if ( not initialized )
+      {
+        /// Option allow_yield_extrapolation<bool>: Spectra extrapolated for masses beyond Pythia results (default false)
+        bool allow_yield_extrapolation = runOptions->getValueOrDef(false, "allow_yield_extrapolation");
+        result = SimYieldTable_DarkSUSY("pbar", allow_yield_extrapolation, BEreq::dsanyield_sim.pointer());
+        initialized = true;
+      }
+    }
+
+    /// Anti-deuteron SimYieldTable based on DarkSUSY6 tabulated results.
+    void antideuteron_SimYieldTable_DarkSUSY(SimYieldTable& result)
+    {
+      using namespace Pipes::antideuteron_SimYieldTable_DarkSUSY;
+
+      static bool initialized = false;
+      if ( not initialized )
+      {
+        /// Option allow_yield_extrapolation<bool>: Spectra extrapolated for masses beyond Pythia results (default false)
+        bool allow_yield_extrapolation = runOptions->getValueOrDef(false, "allow_yield_extrapolation");
+        result = SimYieldTable_DarkSUSY("Dbar", allow_yield_extrapolation, BEreq::dsanyield_sim.pointer());
         initialized = true;
       }
     }
@@ -996,6 +1038,7 @@ namespace Gambit
       {
         // Just duplicate the positron yield.  DarkSUSY at least does not offer separate electron yields.
         result = *Pipes::electron_SimYieldTable_from_positron_SimYieldTable::Dep::positron_SimYieldTable;
+        // FIXME this will have e+ as final state in the result
         initialized = true;
       }
     }

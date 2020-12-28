@@ -1550,6 +1550,22 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  #define CAPABILITY antiproton_SimYieldTable
+  START_CAPABILITY
+    #define FUNCTION antiproton_SimYieldTable_DarkSUSY
+    START_FUNCTION(SimYieldTable)
+    BACKEND_REQ(dsanyield_sim, (), double, (double&,double&,int&,char*,int&,int&,int&))
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY antideuteron_SimYieldTable
+  START_CAPABILITY
+    #define FUNCTION antideuteron_SimYieldTable_DarkSUSY
+    START_FUNCTION(SimYieldTable)
+    BACKEND_REQ(dsanyield_sim, (), double, (double&,double&,int&,char*,int&,int&,int&))
+    #undef FUNCTION
+  #undef CAPABILITY
+
   #define CAPABILITY DarkMatter_ID
   START_CAPABILITY
     #define FUNCTION DarkMatter_ID_ScalarSingletDM
