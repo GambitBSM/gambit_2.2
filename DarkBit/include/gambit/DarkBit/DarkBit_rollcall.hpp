@@ -453,6 +453,79 @@ START_MODULE
   #undef CAPABILITY
 
 
+  // Simulated annihilation/decay yield tables ==========================================
+
+  #define CAPABILITY FullSimYieldTable
+  START_CAPABILITY
+    #define FUNCTION Combine_SimYields
+    START_FUNCTION(SimYieldTable)
+    DEPENDENCY(GA_SimYieldTable, SimYieldTable)
+    DEPENDENCY(electron_SimYieldTable, SimYieldTable)
+    DEPENDENCY(positron_SimYieldTable, SimYieldTable)
+    DEPENDENCY(antiproton_SimYieldTable, SimYieldTable)
+    DEPENDENCY(antideuteron_SimYieldTable, SimYieldTable)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY GA_SimYieldTable
+  START_CAPABILITY
+    #define FUNCTION GA_SimYieldTable_DarkSUSY
+    START_FUNCTION(SimYieldTable)
+    BACKEND_REQ(dsanyield_sim, (), double, (double&,double&,int&,char*,int&,int&,int&))
+    #undef FUNCTION
+    #define FUNCTION GA_SimYieldTable_DS5 // DS5 only
+    START_FUNCTION(SimYieldTable)
+    BACKEND_REQ(dshayield, (ds5), double, (double&,double&,int&,int&,int&))
+    BACKEND_OPTION((DarkSUSY, 5.1.3), (ds5))  // Only for DarkSUSY5
+    #undef FUNCTION
+    #define FUNCTION GA_SimYieldTable_MicrOmegas
+    START_FUNCTION(SimYieldTable)
+    BACKEND_REQ(dNdE, (), double, (double,double,int,int))
+    #undef FUNCTION
+    #define FUNCTION GA_SimYieldTable_PPPC
+    START_FUNCTION(SimYieldTable)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY positron_SimYieldTable
+  START_CAPABILITY
+    #define FUNCTION positron_SimYieldTable_DarkSUSY
+    START_FUNCTION(SimYieldTable)
+    BACKEND_REQ(dsanyield_sim, (), double, (double&,double&,int&,char*,int&,int&,int&))
+    #undef FUNCTION
+    #define FUNCTION positron_SimYieldTable_MicrOmegas
+    START_FUNCTION(SimYieldTable)
+    BACKEND_REQ(dNdE, (), double, (double,double,int,int))
+    #undef FUNCTION
+    #define FUNCTION positron_SimYieldTable_PPPC
+    START_FUNCTION(SimYieldTable)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY electron_SimYieldTable
+  START_CAPABILITY
+    #define FUNCTION electron_SimYieldTable_from_positron_SimYieldTable
+    START_FUNCTION(SimYieldTable)
+    DEPENDENCY(positron_SimYieldTable, SimYieldTable)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY antiproton_SimYieldTable
+  START_CAPABILITY
+    #define FUNCTION antiproton_SimYieldTable_DarkSUSY
+    START_FUNCTION(SimYieldTable)
+    BACKEND_REQ(dsanyield_sim, (), double, (double&,double&,int&,char*,int&,int&,int&))
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY antideuteron_SimYieldTable
+  START_CAPABILITY
+    #define FUNCTION antideuteron_SimYieldTable_DarkSUSY
+    START_FUNCTION(SimYieldTable)
+    BACKEND_REQ(dsanyield_sim, (), double, (double&,double&,int&,char*,int&,int&,int&))
+    #undef FUNCTION
+  #undef CAPABILITY
+
 
   // Cascade decays ====================================================
 
@@ -470,9 +543,7 @@ START_MODULE
     #define FUNCTION cascadeMC_DecayTable
       START_FUNCTION(DecayChain::DecayTable)
       DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
-      DEPENDENCY(GA_SimYieldTable, SimYieldTable)
-      DEPENDENCY(electron_SimYieldTable, SimYieldTable)
-      DEPENDENCY(positron_SimYieldTable, SimYieldTable)
+      DEPENDENCY(FullSimYieldTable, SimYieldTable)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -524,9 +595,7 @@ START_MODULE
       DEPENDENCY(cascadeMC_InitialState, std::string)
       DEPENDENCY(cascadeMC_ChainEvent, DecayChain::ChainContainer)
       DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
-      DEPENDENCY(GA_SimYieldTable, SimYieldTable)
-      DEPENDENCY(electron_SimYieldTable, SimYieldTable)
-      DEPENDENCY(positron_SimYieldTable, SimYieldTable)
+      DEPENDENCY(FullSimYieldTable, SimYieldTable)
       DEPENDENCY(cascadeMC_FinalStates,std::vector<std::string>)
       NEEDS_MANAGER(cascadeMC_LoopManagement)
     #undef FUNCTION
@@ -580,7 +649,8 @@ START_MODULE
   #undef CAPABILITY
   */
 
-  // Gamma rays --------------------------------------------
+
+  // Gamma-ray spectra =================================================
 
   #define CAPABILITY GA_missingFinalStates
   START_CAPABILITY
@@ -622,8 +692,7 @@ START_MODULE
   #undef CAPABILITY
 
 
-  // e+e- yields =======================================================
-  //
+  // e+e- spectra ======================================================
 
   #define CAPABILITY electron_missingFinalStates
   START_CAPABILITY
@@ -856,6 +925,7 @@ START_MODULE
     #undef FUNCTION
 
   #undef CAPABILITY
+
 
   // Direct detection ==================================================
 
@@ -1494,6 +1564,9 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+
+  // DarkBit auxiliary module functions ================================
+
   #define CAPABILITY UnitTest_DarkBit
   START_CAPABILITY
     #define FUNCTION UnitTest_DarkBit
@@ -1504,65 +1577,6 @@ START_MODULE
     DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
     DEPENDENCY(DarkMatter_ID, std::string)
     DEPENDENCY(DarkMatterConj_ID, std::string)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY GA_SimYieldTable
-  START_CAPABILITY
-    #define FUNCTION GA_SimYieldTable_DarkSUSY
-    START_FUNCTION(SimYieldTable)
-    BACKEND_REQ(dsanyield_sim, (), double, (double&,double&,int&,char*,int&,int&,int&))
-    #undef FUNCTION
-    #define FUNCTION GA_SimYieldTable_DS5 // DS5 only
-    START_FUNCTION(SimYieldTable)
-    BACKEND_REQ(dshayield, (ds5), double, (double&,double&,int&,int&,int&))
-    BACKEND_OPTION((DarkSUSY, 5.1.3), (ds5))  // Only for DarkSUSY5
-    #undef FUNCTION
-    #define FUNCTION GA_SimYieldTable_MicrOmegas
-    START_FUNCTION(SimYieldTable)
-    BACKEND_REQ(dNdE, (), double, (double,double,int,int))
-    #undef FUNCTION
-    #define FUNCTION GA_SimYieldTable_PPPC
-    START_FUNCTION(SimYieldTable)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY positron_SimYieldTable
-  START_CAPABILITY
-    #define FUNCTION positron_SimYieldTable_DarkSUSY
-    START_FUNCTION(SimYieldTable)
-    BACKEND_REQ(dsanyield_sim, (), double, (double&,double&,int&,char*,int&,int&,int&))
-    #undef FUNCTION
-    #define FUNCTION positron_SimYieldTable_MicrOmegas
-    START_FUNCTION(SimYieldTable)
-    BACKEND_REQ(dNdE, (), double, (double,double,int,int))
-    #undef FUNCTION
-    #define FUNCTION positron_SimYieldTable_PPPC
-    START_FUNCTION(SimYieldTable)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY electron_SimYieldTable
-  START_CAPABILITY
-    #define FUNCTION electron_SimYieldTable_from_positron_SimYieldTable
-    START_FUNCTION(SimYieldTable)
-    DEPENDENCY(positron_SimYieldTable, SimYieldTable)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY antiproton_SimYieldTable
-  START_CAPABILITY
-    #define FUNCTION antiproton_SimYieldTable_DarkSUSY
-    START_FUNCTION(SimYieldTable)
-    BACKEND_REQ(dsanyield_sim, (), double, (double&,double&,int&,char*,int&,int&,int&))
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY antideuteron_SimYieldTable
-  START_CAPABILITY
-    #define FUNCTION antideuteron_SimYieldTable_DarkSUSY
-    START_FUNCTION(SimYieldTable)
-    BACKEND_REQ(dsanyield_sim, (), double, (double&,double&,int&,char*,int&,int&,int&))
     #undef FUNCTION
   #undef CAPABILITY
 

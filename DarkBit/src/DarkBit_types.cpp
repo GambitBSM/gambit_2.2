@@ -91,11 +91,7 @@ namespace Gambit
 
     void SimYieldTable::addChannel(daFunk::Funk dNdE, const std::string& p1, const std::string& p2, const std::string& finalState, double Ecm_min, double Ecm_max)
     {
-      if ( hasChannel(p1, p2) )
-      {
-        DarkBit_warning().raise(LOCAL_INFO, "addChanel: Channel already exists --> ignoring new one.");
-        return;
-      }
+      checkChannel(p1, p2, finalState);
       channel_list.push_back(SimYieldChannel(dNdE, p1, p2, finalState, Ecm_min, Ecm_max));
     }
 
@@ -104,12 +100,23 @@ namespace Gambit
       addChannel(dNdE, p1, "", finalState, Ecm_min, Ecm_max);
     }
 
+    void SimYieldTable::addChannel(SimYieldChannel channel)
+    {
+      checkChannel(channel.p1, channel.p2, channel.finalState);
+      channel_list.push_back(channel);
+    }
+
     void SimYieldTable::replaceFinalState(const std::string& oldFinalState, const std::string& newFinalState)
     {
       for (auto& channel : channel_list)
       {
         if (channel.finalState == oldFinalState) channel.finalState = newFinalState;
       }
+    }
+
+    void SimYieldTable::donateChannels(SimYieldTable& receiver) const
+    {
+      for (const auto& channel : channel_list) receiver.addChannel(channel);
     }
 
     bool SimYieldTable::hasChannel(const std::string& p1, const std::string& p2, const std::string& finalState) const
@@ -191,6 +198,15 @@ namespace Gambit
         }
       }
       return -1;
+    }
+
+    void SimYieldTable::checkChannel(const std::string& p1, const std::string& p2, const std::string& finalState) const
+    {
+      if ( hasChannel(p1, p2, finalState) )
+      {
+        DarkBit_warning().raise(LOCAL_INFO, "addChanel: Channel already exists --> ignoring new one.");
+        return;
+      }
     }
 
   }

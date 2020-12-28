@@ -159,7 +159,9 @@ namespace Gambit
             SimYieldTable();
             void addChannel(daFunk::Funk dNdE, const std::string& p1, const std::string& p2, const std::string& finalState, double Ecm_min, double Ecm_max);
             void addChannel(daFunk::Funk dNdE, const std::string& p1, const std::string& finalState, double Ecm_min, double Ecm_max);
+            void addChannel(SimYieldChannel channel);
             void replaceFinalState(const std::string& oldFinalState, const std::string& newFinalState);
+            void donateChannels(SimYieldTable& receiver) const;
             bool hasChannel(const std::string& p1, const std::string& p2, const std::string& finalState) const;
             bool hasChannel(const std::string& p1, const std::string& finalState) const;
             bool hasAnyChannel(const std::string& p1) const;
@@ -174,6 +176,7 @@ namespace Gambit
             SimYieldChannel dummy_channel;
             std::vector<SimYieldChannel> channel_list;
             int findChannel(const std::string& p1, const std::string& p2, const std::string& finalState) const;
+            void checkChannel(const std::string& p1, const std::string& p2, const std::string& finalState) const;
     };
 
   }

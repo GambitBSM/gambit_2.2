@@ -65,15 +65,15 @@ namespace Gambit
       // DecayTable.
       try
       {
-        table = DecayTable(*Dep::TH_ProcessCatalog, *Dep::GA_SimYieldTable, disabled);
+        table = DecayTable(*Dep::TH_ProcessCatalog, *Dep::FullSimYieldTable, disabled);
       }
       catch(Piped_exceptions::description err)
       {
           DarkBit_error().raise(err.first,err.second);
       }
-#ifdef DARKBIT_DEBUG
-      table.printTable();
-#endif
+      #ifdef DARKBIT_DEBUG
+        table.printTable();
+      #endif
     }
 
     /// Loop manager for cascade decays
@@ -162,13 +162,13 @@ namespace Gambit
       }
       else
         pID = chainList[iteration];
-#ifdef DARKBIT_DEBUG
-         std::cout << "cascadeMC_InitialState" << std::endl;
-         std::cout << "  Iteration: " << *Loop::iteration << std::endl;
-         std::cout << "  Number of states to simulate: "
-           << chainList.size() << std::endl;
-         std::cout << "  Current state: " << pID << std::endl;
-#endif
+      #ifdef DARKBIT_DEBUG
+        std::cout << "cascadeMC_InitialState" << std::endl;
+        std::cout << "  Iteration: " << *Loop::iteration << std::endl;
+        std::cout << "  Number of states to simulate: "
+          << chainList.size() << std::endl;
+        std::cout << "  Current state: " << pID << std::endl;
+      #endif
     }
 
     /// Event counter for cascade decays
@@ -189,7 +189,7 @@ namespace Gambit
           counts=counters;
           break;
         default:
-#pragma omp atomic
+        #pragma omp atomic
           counters[*Dep::cascadeMC_InitialState]++;
       }
     }
@@ -241,9 +241,9 @@ namespace Gambit
         double weight, int cMC_numSpecSamples
         )
     {
-#ifdef DARKBIT_DEBUG
-      std::cout << "SampleSimYield" << std::endl;
-#endif
+      #ifdef DARKBIT_DEBUG
+        std::cout << "SampleSimYield" << std::endl;
+      #endif
       std::string p1,p2;
       double gamma,beta;
       double M;
@@ -309,7 +309,7 @@ namespace Gambit
       const double logmax = log(Ecmax);
       const double dlogE=logmax-logmin;
 
-#ifdef DARKBIT_DEBUG
+      #ifdef DARKBIT_DEBUG
         std::cout << "M = " << M << std::endl;
         std::cout << "E_lab = " << endpoint->E_Lab() << std::endl;
         std::cout << "p_lab = " << endpoint->p_Lab() << std::endl;
@@ -325,7 +325,7 @@ namespace Gambit
           << std::endl;
         std::cout << "Ecmin/max: " << Ecmin << " " << Ecmax << std::endl;
         std::cout << "Final state mass^2: " << msq << std::endl;
-#endif
+      #endif
 
       double specSum=0;
       int Nsampl=0;
@@ -346,9 +346,9 @@ namespace Gambit
         spectrum.addBox(tmp1-tmp2,tmp1+tmp2,weight2);
         Nsampl++;
       }
-#ifdef DARKBIT_DEBUG
-      std::cout << "Number of samples = " << Nsampl << std::endl;
-#endif
+      #ifdef DARKBIT_DEBUG
+        std::cout << "Number of samples = " << Nsampl << std::endl;
+      #endif
       if(Nsampl>0)
       {
         spectrum.multiply(1.0/Nsampl);
@@ -412,11 +412,11 @@ namespace Gambit
               Dep::cascadeMC_FinalStates->begin();
               it!=Dep::cascadeMC_FinalStates->end(); ++it)
           {
-#ifdef DARKBIT_DEBUG
-            std::cout << "Defining new histList entry!!!" << std::endl;
-            std::cout << "for: " << *Dep::cascadeMC_InitialState
-              << " " << *it << std::endl;
-#endif
+            #ifdef DARKBIT_DEBUG
+              std::cout << "Defining new histList entry!!!" << std::endl;
+              std::cout << "for: " << *Dep::cascadeMC_InitialState
+                << " " << *it << std::endl;
+            #endif
             histList[*Dep::cascadeMC_InitialState][*it]=
               SimpleHist(cMC_NhistBins,cMC_binLow,cMC_binHigh,true);
           }
@@ -467,10 +467,10 @@ namespace Gambit
               ignored = false;
             }
             // Check if tabulated spectra exist for this final state
-            else if((*Dep::GA_SimYieldTable).hasChannel( (*it)->getpID(), *pit ))
+            else if((*Dep::FullSimYieldTable).hasChannel( (*it)->getpID(), *pit ))
             {
               cascadeMC_sampleSimYield(
-                  *Dep::GA_SimYieldTable, *it, *pit, *Dep::TH_ProcessCatalog,
+                  *Dep::FullSimYieldTable, *it, *pit, *Dep::TH_ProcessCatalog,
                   histList, *Dep::cascadeMC_InitialState, weight,
                   cMC_numSpecSamples
                   );
@@ -491,17 +491,17 @@ namespace Gambit
             bool hasTabulated = false;
             if((*it)->getnChildren() == 2)
             {
-#ifdef DARKBIT_DEBUG
-              std::cout << "  check whether two-body final state is tabulated: "
-                << (*(*it))[0]->getpID() << " " << (*(*it))[1]->getpID() <<
-                std::endl;
-#endif
+              #ifdef DARKBIT_DEBUG
+                std::cout << "  check whether two-body final state is tabulated: "
+                  << (*(*it))[0]->getpID() << " " << (*(*it))[1]->getpID() <<
+                  std::endl;
+              #endif
               // Check if tabulated spectra exist for this final state
-              if((*Dep::GA_SimYieldTable).hasChannel(
+              if((*Dep::FullSimYieldTable).hasChannel(
                     (*(*it))[0]->getpID() , (*(*it))[1]->getpID(), *pit ))
               {
                 hasTabulated = true;
-                cascadeMC_sampleSimYield(*Dep::GA_SimYieldTable, *it, *pit,
+                cascadeMC_sampleSimYield(*Dep::FullSimYieldTable, *it, *pit,
                     *Dep::TH_ProcessCatalog, histList,
                     *Dep::cascadeMC_InitialState, weight,
                     cMC_numSpecSamples
@@ -525,16 +525,15 @@ namespace Gambit
                 if(child->getpID()==*pit)
                 {
                   double E = child->E_Lab();
-#pragma omp critical (cascadeMC_histList)
-                  histList[
-                    *Dep::cascadeMC_InitialState][*pit].addEvent(E,weight);
+                  #pragma omp critical (cascadeMC_histList)
+                    histList[*Dep::cascadeMC_InitialState][*pit].addEvent(E,weight);
                   ignored = false;
                 }
                 // Check if tabulated spectra exist for this final state
-                else if((*Dep::GA_SimYieldTable).hasChannel( child->getpID(),
+                else if((*Dep::FullSimYieldTable).hasChannel( child->getpID(),
                       *pit))
                 {
-                  cascadeMC_sampleSimYield(*Dep::GA_SimYieldTable, child, *pit,
+                  cascadeMC_sampleSimYield(*Dep::FullSimYieldTable, child, *pit,
                       *Dep::TH_ProcessCatalog, histList,
                       *Dep::cascadeMC_InitialState, weight,
                       cMC_numSpecSamples
@@ -571,13 +570,13 @@ namespace Gambit
           if(*it=="gamma")
           {
             SimpleHist hist;
-#pragma omp critical (cascadeMC_histList)
-            hist = histList[*Dep::cascadeMC_InitialState][*it];
-#ifdef DARKBIT_DEBUG
-            std::cout << "Checking whether convergence is reached" << std::endl;
-            for ( int i = 0; i < hist.nBins; i++ )
-              std::cout << "Estimated error at " << hist.binCenter(i) << " GeV : " << hist.getRelError(i) << std::endl;
-#endif
+            #pragma omp critical (cascadeMC_histList)
+              hist = histList[*Dep::cascadeMC_InitialState][*it];
+            #ifdef DARKBIT_DEBUG
+              std::cout << "Checking whether convergence is reached" << std::endl;
+              for ( int i = 0; i < hist.nBins; i++ )
+                std::cout << "Estimated error at " << hist.binCenter(i) << " GeV : " << hist.getRelError(i) << std::endl;
+            #endif
             double sbRatioMax=-1.0;
             int maxBin=0;
             for(int i=0; i<hist.nBins; i++)
@@ -591,12 +590,13 @@ namespace Gambit
                 maxBin=i;
               }
             }
-#ifdef DARKBIT_DEBUG
-            std::cout << "Estimated maxBin: " << maxBin << std::endl;
-            std::cout << "Energy at maxBin: " << hist.binCenter(maxBin) << std::endl;
-            std::cout << "Estimated error at maxBin: " << hist.getRelError(maxBin) << std::endl;
-            std::cout << "Value at maxBin: " << hist.getBinValues()[maxBin];
-#endif
+            #ifdef DARKBIT_DEBUG
+              std::cout << "Estimated maxBin: " << maxBin << std::endl;
+              std::cout << "Energy at maxBin: " << hist.binCenter(maxBin) << std::endl;
+              std::cout << "Estimated error at maxBin: " << hist.getRelError(maxBin) << std::endl;
+              std::cout << "Value at maxBin: " << hist.getBinValues()[maxBin];
+            #endif
+
             // Check if end condition is fulfilled. If not, set cond to
             // unfinished.
             if(hist.getRelError(maxBin) > cMC_gammaRelError) cond = unfinished;
@@ -609,10 +609,10 @@ namespace Gambit
         // Break Monte Carlo loop if all end conditions are fulfilled.
         if(cond==finished)
         {
-#ifdef DARKBIT_DEBUG
-          std::cout << "!! wrapping up !!" << std::endl;
-          std::cout << "Performed iterations: " << *Loop::iteration << std::endl;
-#endif
+          #ifdef DARKBIT_DEBUG
+            std::cout << "!! wrapping up !!" << std::endl;
+            std::cout << "Performed iterations: " << *Loop::iteration << std::endl;
+          #endif
           Loop::wrapup();
         }
       }
@@ -636,15 +636,16 @@ namespace Gambit
       for(std::vector<std::string>::const_iterator it = ini.begin();
           it != ini.end(); ++it )
       {
-#ifdef DARKBIT_DEBUG
-        std::cout << "Trying to get cascade spectra for initial state: " << *it << std::endl;
-#endif
+        #ifdef DARKBIT_DEBUG
+          std::cout << "Trying to get cascade spectra for initial state: " << *it << std::endl;
+        #endif
         if(calculated)
         {
-#ifdef DARKBIT_DEBUG
-          std::cout << finalState << "...was calculated!" << std::endl;
-          std::cout << eventCounts.at(*it) << " events generated" << std::endl;
-#endif
+          #ifdef DARKBIT_DEBUG
+            std::cout << finalState << "...was calculated!" << std::endl;
+            std::cout << eventCounts.at(*it) << " events generated" << std::endl;
+          #endif
+
           SimpleHist hist = h.at(*it).at(finalState);
           hist.divideByBinSize();
           std::vector<double> E = hist.getBinCenters();
@@ -655,9 +656,9 @@ namespace Gambit
               it2!=dN_dE.end();++it2)
           {
             *it2 /= eventCounts.at(*it);
-#ifdef DARKBIT_DEBUG
-            std::cout << E[i] << " " << *it2 << std::endl;
-#endif
+            #ifdef DARKBIT_DEBUG
+              std::cout << E[i] << " " << *it2 << std::endl;
+            #endif
             i++;
           }
           // Default values provide 1-2% accuracy for singular integrals
@@ -668,10 +669,10 @@ namespace Gambit
           {
             if (dN_dE[i]/(dN_dE[i-1]+dN_dE[i+1]+dN_dE[i]*1e-4) > 1e2)
             {
-#ifdef DARKBIT_DEBUG
-              std::cout << "Set singularity at " << E[i] << " with width "
-                << E[i+1]-E[i] << endl;
-#endif
+              #ifdef DARKBIT_DEBUG
+                std::cout << "Set singularity at " << E[i] << " with width "
+                  << E[i+1]-E[i] << endl;
+              #endif
               spectra[*it]->set_singularity("E", E[i], (E[i+1]-E[i]));
             }
           }
@@ -690,20 +691,20 @@ namespace Gambit
       cascadeMC_fetchSpectra(spectra, "gamma", *Dep::GA_missingFinalStates,
           *Dep::cascadeMC_FinalStates, *Dep::cascadeMC_Histograms,
           *Dep::cascadeMC_EventCount);
-#ifdef DARKBIT_DEBUG
-      std::cout << "Retrieving cascade spectra for gamma final states" << std::endl;
-      std::cout << "Number of simulated final states: " << spectra.size() << std::endl;
-      for ( auto it = spectra.begin(); it != spectra.end(); it ++ )
-      {
-        std::cout << "Particle: " << it->first << std::endl;
-        auto f= it->second;
-        for ( double E = 0.1; E < 1000; E*=1.5 )
+      #ifdef DARKBIT_DEBUG
+        std::cout << "Retrieving cascade spectra for gamma final states" << std::endl;
+        std::cout << "Number of simulated final states: " << spectra.size() << std::endl;
+        for ( auto it = spectra.begin(); it != spectra.end(); it ++ )
         {
-          std::cout << "  " << E << " " << f->bind("E")->eval(E) << std::endl;
+          std::cout << "Particle: " << it->first << std::endl;
+          auto f= it->second;
+          for ( double E = 0.1; E < 1000; E*=1.5 )
+          {
+            std::cout << "  " << E << " " << f->bind("E")->eval(E) << std::endl;
+          }
+          std::cout << "  Integrated spectrum: " << f->gsl_integration("E", 0, 1000)->bind()->eval() << std::endl;
         }
-        std::cout << "  Integrated spectrum: " << f->gsl_integration("E", 0, 1000)->bind()->eval() << std::endl;
-      }
-#endif
+      #endif
     }
 
     /*

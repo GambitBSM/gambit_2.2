@@ -500,6 +500,28 @@ namespace Gambit
     }
 
 
+
+
+
+    // SimYields =======================================================
+
+
+    /// Combined SimYieldTable containing final yields of all stable particles
+    void Combine_SimYields(SimYieldTable& result)
+    {
+      using namespace Pipes::Combine_SimYields;
+      static bool initialized = false;
+      if ( not initialized )
+      {
+        Dep::GA_SimYieldTable->donateChannels(result);
+        Dep::positron_SimYieldTable->donateChannels(result);
+        Dep::electron_SimYieldTable->donateChannels(result);
+        Dep::antiproton_SimYieldTable->donateChannels(result);
+        Dep::antideuteron_SimYieldTable->donateChannels(result);
+        initialized = true;
+      }
+    }
+
     /// Gamma-ray SimYieldTable based on DarkSUSY5 tabulated results. (DS6 below)
     void GA_SimYieldTable_DS5(SimYieldTable& result)
     {
