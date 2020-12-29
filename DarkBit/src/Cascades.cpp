@@ -143,8 +143,8 @@ namespace Gambit
       {
         states.clear();
         if (Downstream::neededFor("cascadeMC_gammaSpectra")) states.insert("gamma");
-        if (Downstream::neededFor("cascadeMC_electronSpectra")) states.insert("e-");
-        if (Downstream::neededFor("cascadeMC_positronSpectra")) states.insert("e+");
+        if (Downstream::neededFor("cascadeMC_electronSpectra")) states.insert("e-_1");
+        if (Downstream::neededFor("cascadeMC_positronSpectra")) states.insert("e+_1");
         if (Downstream::neededFor("cascadeMC_antiprotonSpectra")) states.insert("pbar");
         if (Downstream::neededFor("cascadeMC_antideuteronSpectra")) states.insert("Dbar");
         first = false;
@@ -761,7 +761,7 @@ namespace Gambit
     void cascadeMC_electronSpectra(std::map<std::string, daFunk::Funk> &spectra)
     {
       using namespace Pipes::cascadeMC_electronSpectra;
-      cascadeMC_fetchSpectra(spectra, "e-", *Dep::cascadeMC_InitialStates,
+      cascadeMC_fetchSpectra(spectra, "e-_1", *Dep::cascadeMC_InitialStates,
           *Dep::cascadeMC_FinalStates, *Dep::cascadeMC_Histograms,
           *Dep::cascadeMC_EventCount);
       #ifdef DARKBIT_DEBUG
@@ -773,7 +773,7 @@ namespace Gambit
     void cascadeMC_positronSpectra(std::map<std::string, daFunk::Funk> &spectra)
     {
       using namespace Pipes::cascadeMC_positronSpectra;
-      cascadeMC_fetchSpectra(spectra, "e+", *Dep::cascadeMC_InitialStates,
+      cascadeMC_fetchSpectra(spectra, "e+_1", *Dep::cascadeMC_InitialStates,
           *Dep::cascadeMC_FinalStates, *Dep::cascadeMC_Histograms,
           *Dep::cascadeMC_EventCount);
       #ifdef DARKBIT_DEBUG

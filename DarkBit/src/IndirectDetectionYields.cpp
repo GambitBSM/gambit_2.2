@@ -197,26 +197,6 @@ namespace Gambit
         }
       } // End adding two-body final states
 
-      #ifdef DARKBIT_DEBUG
-        std::vector<std::string> test1 = initVector<std::string> ("h0_1_test","h0_2_test","h0_2_test","h0_1_test","WH_test", "A0_test", "h0_1_test", "W+");
-        std::vector<std::string> test2 = initVector<std::string> ("A0_test",  "A0_test",  "Z0_test",  "Z0_test",  "WH_test", "Z0_test", "h0_2_test", "W-");
-
-        for(size_t i=0; i<test1.size();i++)
-        {
-            daFunk::Funk chnSpec = (table)(test1[i], test2[i], yield, Ecm);
-            std::vector<double> y = chnSpec->bind("E")->vect(x);
-            os << test1[i] << test2[i] << ":\n";
-            os << "  E: [";
-            for (std::vector<double>::iterator it2 = x.begin(); it2 != x.end(); it2++)
-              os << *it2 << ", ";
-            os  << "]\n";
-            os << "  dNdE: [";
-            for (std::vector<double>::iterator it2 = y.begin(); it2 != y.end(); it2++)
-              os << *it2 << ", ";
-            os  << "]\n";
-        }
-      #endif
-
       // Adding three-body final states
       //
       // NOTE:  Three body processes are added even if they are closed at v=0
@@ -258,20 +238,6 @@ namespace Gambit
           daFunk::Funk dsigmavde = it->genRate->gsl_integration(
               "E1", E1_low, E1_high);
 
-          #ifdef DARKBIT_DEBUG
-            daFunk::Funk chnSpec = (daFunk::zero("v", "E") + dsigmavde)-> set("v", 0.);
-            std::vector<double> y = chnSpec->bind("E")->vect(x);
-            os << it->finalStateIDs[0] << it->finalStateIDs[1] << it->finalStateIDs[2] << ":\n";
-            os << "  E: [";
-            for (std::vector<double>::iterator it2 = x.begin(); it2 != x.end(); it2++)
-              os << *it2 << ", ";
-            os  << "]\n";
-            os << "  dNdE: [";
-            for (std::vector<double>::iterator it2 = y.begin(); it2 != y.end(); it2++)
-              os << *it2 << ", ";
-            os  << "]\n";
-          #endif
-
           Yield = Yield + dsigmavde;
         }
         else added = false;
@@ -283,9 +249,6 @@ namespace Gambit
               + it->finalStateIDs[0] + " " + it->finalStateIDs[1] + " " + it->finalStateIDs[2]);
         }
       }
-      #ifdef DARKBIT_DEBUG
-        if(debug) os.close();
-      #endif
 
       // Rescale the yield by the correct kinematic factor
       if (is_annihilation)
@@ -349,7 +312,7 @@ namespace Gambit
       std::string DMbarid = *Dep::DarkMatterConj_ID;
       /// Option line_width<double>: Set relative line width used in gamma-ray spectra (default 0.03)
       const double line_width = runOptions->getValueOrDef<double>(0.03,  "line_width");
-      result = getYield("e-", true, DMid, DMbarid, *Dep::TH_ProcessCatalog, *Dep::electron_SimYieldTable,
+      result = getYield("e-_1", true, DMid, DMbarid, *Dep::TH_ProcessCatalog, *Dep::electron_SimYieldTable,
                         line_width, *Dep::cascadeMC_electronSpectra);
     }
 
@@ -363,7 +326,7 @@ namespace Gambit
       std::string DMid = *Dep::DarkMatter_ID;
       /// Option line_width<double>: Set relative line width used in gamma-ray spectra (default 0.03)
       const double line_width = runOptions->getValueOrDef<double>(0.03,  "line_width");
-      result = getYield("e-", false, DMid, "null", *Dep::TH_ProcessCatalog, *Dep::electron_SimYieldTable,
+      result = getYield("e-_1", false, DMid, "null", *Dep::TH_ProcessCatalog, *Dep::electron_SimYieldTable,
                         line_width, *Dep::cascadeMC_electronSpectra);
     }
 
@@ -380,7 +343,7 @@ namespace Gambit
       std::string DMbarid = *Dep::DarkMatterConj_ID;
       /// Option line_width<double>: Set relative line width used in gamma-ray spectra (default 0.03)
       const double line_width = runOptions->getValueOrDef<double>(0.03,  "line_width");
-      result = getYield("e+", true, DMid, DMbarid, *Dep::TH_ProcessCatalog, *Dep::positron_SimYieldTable,
+      result = getYield("e+_1", true, DMid, DMbarid, *Dep::TH_ProcessCatalog, *Dep::positron_SimYieldTable,
                         line_width, *Dep::cascadeMC_positronSpectra);
     }
 
@@ -394,7 +357,7 @@ namespace Gambit
       std::string DMid = *Dep::DarkMatter_ID;
       /// Option line_width<double>: Set relative line width used in gamma-ray spectra (default 0.03)
       const double line_width = runOptions->getValueOrDef<double>(0.03,  "line_width");
-      result = getYield("e+", false, DMid, "null", *Dep::TH_ProcessCatalog, *Dep::positron_SimYieldTable,
+      result = getYield("e+_1", false, DMid, "null", *Dep::TH_ProcessCatalog, *Dep::positron_SimYieldTable,
                         line_width, *Dep::cascadeMC_positronSpectra);
     }
 
@@ -471,11 +434,11 @@ namespace Gambit
       static bool initialized = false;
       if ( not initialized )
       {
-        Dep::GA_SimYieldTable->donateChannels(result);
-        Dep::positron_SimYieldTable->donateChannels(result);
-        Dep::electron_SimYieldTable->donateChannels(result);
-        Dep::antiproton_SimYieldTable->donateChannels(result);
-        Dep::antideuteron_SimYieldTable->donateChannels(result);
+        if (Downstream::neededFor("cascadeMC_gammaSpectra")) Dep::GA_SimYieldTable->donateChannels(result);
+        if (Downstream::neededFor("cascadeMC_electronSpectra")) Dep::positron_SimYieldTable->donateChannels(result);
+        if (Downstream::neededFor("cascadeMC_positronSpectra")) Dep::electron_SimYieldTable->donateChannels(result);
+        if (Downstream::neededFor("cascadeMC_antiprotonSpectra")) Dep::antiproton_SimYieldTable->donateChannels(result);
+        if (Downstream::neededFor("cascadeMC_antideuteronSpectra")) Dep::antideuteron_SimYieldTable->donateChannels(result);
         initialized = true;
       }
     }
@@ -629,7 +592,7 @@ namespace Gambit
       // Determine PDG code of the particle for which the yield has been requested
       if (yield == "gamma")
         yieldpdg =  22;
-      else if (yield == "e+")
+      else if (yield == "e+_1")
         yieldpdg = -11;
       else if (yield == "pbar")
         yieldpdg = -2212;
@@ -658,11 +621,11 @@ namespace Gambit
         mDM_max = 20000.; // maximal dark matter mass simulated in DarkSUSY6.
       }
 
-      auto add_channel = [&](int pdg, str P1, str P2, double EcmMin, double EcmMax)
+      auto add_channel = [&](int pdg, str p1, str p2, double EcmMin, double EcmMax)
       {
         daFunk::Funk dNdE = daFunk::func_fromThreadsafe(dsanyield, daFunk::var("mwimp"),
          daFunk::var("E"), pdg, hel, yieldpdg, diff, flag)->set("mwimp", daFunk::var("Ecm")/2);
-        result.addChannel(dNdE, str_flav_to_mass(P1), str_flav_to_mass(P2), yield, EcmMin, EcmMax);
+        result.addChannel(dNdE, str_flav_to_mass(p1), str_flav_to_mass(p2), yield, EcmMin, EcmMax);
       };
 
       // The following routine adds an annihilation/decay channel, for which the yields are extrapolated below Ecm_ToScale
@@ -785,7 +748,7 @@ namespace Gambit
       {
         /// Option allow_yield_extrapolation<bool>: Spectra extrapolated for masses beyond Pythia results (default false)
         bool allow_yield_extrapolation = runOptions->getValueOrDef(false, "allow_yield_extrapolation");
-        result = SimYieldTable_DarkSUSY("e+", allow_yield_extrapolation, BEreq::dsanyield_sim.pointer());
+        result = SimYieldTable_DarkSUSY("e+_1", allow_yield_extrapolation, BEreq::dsanyield_sim.pointer());
         initialized = true;
       }
     }
@@ -1018,7 +981,7 @@ namespace Gambit
       {
         // Just duplicate the positron yield.  DarkSUSY at least does not offer separate electron yields.
         result = *Pipes::electron_SimYieldTable_from_positron_SimYieldTable::Dep::positron_SimYieldTable;
-        result.replaceFinalState("e+","e-");
+        result.replaceFinalState("e+_1","e-_1");
         initialized = true;
       }
     }
