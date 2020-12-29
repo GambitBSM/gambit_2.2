@@ -81,7 +81,7 @@ namespace Gambit
             {
               #ifdef DARKBIT_DEBUG
                 std::cout << "Checking for missing two-body final states: "
-                          << process.finalStateIDs[0] << " " << process.finalStateIDs[1]  << std::endl;
+                          << channel.finalStateIDs[0] << " " << channel.finalStateIDs[1]  << std::endl;
               #endif
               if (not Dep::FullSimYieldTable->hasChannel(channel.finalStateIDs[0], channel.finalStateIDs[1], cMCFinalState))
               {
