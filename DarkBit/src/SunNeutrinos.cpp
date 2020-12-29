@@ -182,6 +182,10 @@ namespace Gambit
 
       std::string DMid = *Dep::DarkMatter_ID;
       std::string DMbarid = *Dep::DarkMatterConj_ID;
+
+      // Make sure that we're not trying to work with decaying DM.
+      const TH_Process* p = Dep::TH_ProcessCatalog->find(DMid, DMbarid);
+      if (p == NULL) DarkBit_error().raise(LOCAL_INFO, "Sorry, decaying DM is not supported yet by the DarkBit neutrino routines.");
       TH_Process annProc = Dep::TH_ProcessCatalog->getProcess(DMid, DMbarid);
 
       // Add all the regular channels

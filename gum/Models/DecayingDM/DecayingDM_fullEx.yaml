@@ -1,11 +1,11 @@
 #################################################################################################
 #
-#      Example YAML file for DecayingDM model with DM likelihoods. 
+#      Example YAML file for DecayingDM model with DM likelihoods.
 #      NO relic density routines available for this model.
+#      NO indirect detection routines available for this model.
 #
 #      Likelihoods:
 #        - Direct detection: MicrOMEGAs + DDCalc
-#        - Indirect detection (Fermi) - CalcHEP + DarkSUSY + gamlike
 #
 #################################################################################################
 
@@ -20,7 +20,7 @@ Parameters:
     mH: 125.09
 
   DecayingDM:
-    lamS: 
+    lamS:
       range: [1e-20, 1e-10]
       prior_type: log
     mS0:
@@ -38,7 +38,7 @@ Parameters:
     alpha: 1
     beta: 3
     gamma: 1
-  
+
   # Nuclear matrix parameters.
   nuclear_params_sigmas_sigmal:
     sigmas: 43
@@ -55,7 +55,7 @@ Priors:
 Printer:
 
   printer: hdf5
-  
+
   options:
     output_file: "DecayingDM.hdf5"
     group: "/DDM"
@@ -77,15 +77,11 @@ Scanner:
       like:  LogLike
 
 ObsLikes:
-  
-  # Indirect detection: decaying DM
-  - capability: lnL_FermiLATdwarfs
-    purpose: LogLike
-  
+
   # Direct detection
   - capability: LUX_2016_LogLikelihood
     purpose: LogLike
-  
+
   - capability: XENON1T_2018_LogLikelihood
     purpose: LogLike
 
@@ -108,12 +104,6 @@ Rules:
   # Assume the DM candidate S0 is all of the DM.
   - capability: RD_fraction
     function: RD_fraction_one
-
-  # Choose to use DarkSUSY's yield tables for indirect detection
-  - capability: SimYieldTable
-    function: SimYieldTable_DarkSUSY
-    options:
-      allow_yield_extrapolation: true
 
   # Choose to get decays from DecayBit proper, not from an SLHA file.
   - capability: decay_rates
