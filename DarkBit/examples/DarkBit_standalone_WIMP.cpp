@@ -78,7 +78,7 @@ void dumpSpectrum(std::vector<std::string> filenames, double mWIMP, double sv, s
   positron_SimYieldTable_DarkSUSY.reset_and_calculate();
   electron_SimYieldTable_from_positron_SimYieldTable.reset_and_calculate();
   antiproton_SimYieldTable_DarkSUSY.reset_and_calculate();
-  antideuteron_SimYieldTable_DarkSUSY.reset_and_calculate();
+  //antideuteron_SimYieldTable_DarkSUSY.reset_and_calculate();
   Combine_SimYields.reset_and_calculate();
   cascadeMC_FinalStates.reset_and_calculate();
   cascadeMC_InitialStates.reset_and_calculate();
@@ -89,15 +89,18 @@ void dumpSpectrum(std::vector<std::string> filenames, double mWIMP, double sv, s
   dump_gammaSpectrum.setOption<std::string>("filename", filenames[0]);
   dump_gammaSpectrum.reset_and_calculate();
   if (filenames.size() == 1) return;
+  cascadeMC_positronSpectra.reset_and_calculate();
   positron_AnnYield_General.reset_and_calculate();
   dump_positronSpectrum.setOption<std::string>("filename", filenames[1]);
   dump_positronSpectrum.reset_and_calculate();
+  cascadeMC_antiprotonSpectra.reset_and_calculate();
   antiproton_AnnYield_General.reset_and_calculate();
   dump_antiprotonSpectrum.setOption<std::string>("filename", filenames[2]);
   dump_antiprotonSpectrum.reset_and_calculate();
-  antideuteron_AnnYield_General.reset_and_calculate();
-  dump_antideuteronSpectrum.setOption<std::string>("filename", filenames[3]);
-  dump_antideuteronSpectrum.reset_and_calculate();
+  //cascadeMC_antideuteronSpectra.reset_and_calculate();
+  //antideuteron_AnnYield_General.reset_and_calculate();
+  //dump_antideuteronSpectrum.setOption<std::string>("filename", filenames[3]);
+  //dump_antideuteronSpectrum.reset_and_calculate();
 }
 
 // ---- Set up basic internal structures for direct & indirect detection ----
@@ -138,7 +141,7 @@ namespace Gambit
         /// Option mWIMP<double>: WIMP mass in GeV (required)
         double mPhi = runOptions->getValueOrDef<double>(59.0, "mPhi");
 
-        addParticle("gamma", 0.0,  2)
+        addParticle("gamma", 0.0, 2)
         addParticle("Z0", 91.2,  2)
         addParticle("W+", 80.39, 2)
         addParticle("W-", 80.39, 2)
@@ -150,6 +153,12 @@ namespace Gambit
         addParticle("bbar", 4.9,  1)
         addParticle("d_3", 4.9,  1)
         addParticle("dbar_3", 4.9,  1)
+        addParticle("p", m_proton, 1)
+        addParticle("pbar", m_proton, 1)
+        addParticle("n", m_neutron, 1)
+        addParticle("nbar", m_neutron, 1)
+        addParticle("D", m_deuteron, 2)
+        addParticle("Dbar", m_deuteron, 2)
 
         addParticle("WIMP", mWIMP,  0)
         addParticle("phi",  mPhi,  0)
@@ -368,14 +377,14 @@ int main(int argc, char* argv[])
     positron_SimYieldTable_DarkSUSY.resolveBackendReq(&Backends::DarkSUSY_generic_wimp_6_2_2::Functown::dsanyield_sim);
     electron_SimYieldTable_from_positron_SimYieldTable.resolveDependency(&positron_SimYieldTable_DarkSUSY);
     antiproton_SimYieldTable_DarkSUSY.resolveBackendReq(&Backends::DarkSUSY_generic_wimp_6_2_2::Functown::dsanyield_sim);
-    antideuteron_SimYieldTable_DarkSUSY.resolveBackendReq(&Backends::DarkSUSY_generic_wimp_6_2_2::Functown::dsanyield_sim);
+    //antideuteron_SimYieldTable_DarkSUSY.resolveBackendReq(&Backends::DarkSUSY_generic_wimp_6_2_2::Functown::dsanyield_sim);
     positron_SimYieldTable_DarkSUSY.setOption<bool>("allow_yield_extrapolation", true);
     antiproton_SimYieldTable_DarkSUSY.setOption<bool>("allow_yield_extrapolation", true);
-    antideuteron_SimYieldTable_DarkSUSY.setOption<bool>("allow_yield_extrapolation", true);
+    //antideuteron_SimYieldTable_DarkSUSY.setOption<bool>("allow_yield_extrapolation", true);
     Combine_SimYields.resolveDependency(&positron_SimYieldTable_DarkSUSY);
     Combine_SimYields.resolveDependency(&electron_SimYieldTable_from_positron_SimYieldTable);
     Combine_SimYields.resolveDependency(&antiproton_SimYieldTable_DarkSUSY);
-    Combine_SimYields.resolveDependency(&antideuteron_SimYieldTable_DarkSUSY);
+    //Combine_SimYields.resolveDependency(&antideuteron_SimYieldTable_DarkSUSY);
 
     // Identify process as annihilation rather than decay
     DM_process_from_ProcessCatalog.resolveDependency(&TH_ProcessCatalog_WIMP);
@@ -421,13 +430,32 @@ int main(int argc, char* argv[])
     // Check convergence of cascade MC
     cascadeMC_EventCount.resolveLoopManager(&cascadeMC_LoopManager);
 
-    // Start cascade MC loop
-
     // Infer gamma-ray spectra for recorded MC results
     cascadeMC_gammaSpectra.resolveDependency(&cascadeMC_InitialStates);
     cascadeMC_gammaSpectra.resolveDependency(&cascadeMC_FinalStates);
     cascadeMC_gammaSpectra.resolveDependency(&cascadeMC_Histograms);
     cascadeMC_gammaSpectra.resolveDependency(&cascadeMC_EventCount);
+
+    // Infer positron spectra for recorded MC results
+    cascadeMC_positronSpectra.resolveDependency(&cascadeMC_InitialStates);
+    cascadeMC_positronSpectra.resolveDependency(&cascadeMC_FinalStates);
+    cascadeMC_positronSpectra.resolveDependency(&cascadeMC_Histograms);
+    cascadeMC_positronSpectra.resolveDependency(&cascadeMC_EventCount);
+    dump_positronSpectrum.resolveDependency(&positron_AnnYield_General);
+
+    // Infer anti-proton spectra for recorded MC results
+    cascadeMC_antiprotonSpectra.resolveDependency(&cascadeMC_InitialStates);
+    cascadeMC_antiprotonSpectra.resolveDependency(&cascadeMC_FinalStates);
+    cascadeMC_antiprotonSpectra.resolveDependency(&cascadeMC_Histograms);
+    cascadeMC_antiprotonSpectra.resolveDependency(&cascadeMC_EventCount);
+    dump_antiprotonSpectrum.resolveDependency(&antiproton_AnnYield_General);
+
+    // Infer anti-deuteron spectra for recorded MC results
+    //cascadeMC_antideuteronSpectra.resolveDependency(&cascadeMC_InitialStates);
+    //cascadeMC_antideuteronSpectra.resolveDependency(&cascadeMC_FinalStates);
+    //cascadeMC_antideuteronSpectra.resolveDependency(&cascadeMC_Histograms);
+    //cascadeMC_antideuteronSpectra.resolveDependency(&cascadeMC_EventCount);
+    //dump_antideuteronSpectrum.resolveDependency(&antideuteron_AnnYield_General);
 
     // Calculate total gamma-ray yield (cascade MC + tabulated results)
     GA_AnnYield_General.resolveDependency(&TH_ProcessCatalog_WIMP);
@@ -454,12 +482,12 @@ int main(int argc, char* argv[])
     dump_antiprotonSpectrum.resolveDependency(&antiproton_AnnYield_General);
 
     // Calculate total anti-deuteron yield (cascade MC + tabulated results)
-    antideuteron_AnnYield_General.resolveDependency(&TH_ProcessCatalog_WIMP);
-    antideuteron_AnnYield_General.resolveDependency(&antideuteron_SimYieldTable_DarkSUSY);
-    antideuteron_AnnYield_General.resolveDependency(&DarkMatter_ID_WIMP);
-    antideuteron_AnnYield_General.resolveDependency(&DarkMatterConj_ID_WIMP);
-    antideuteron_AnnYield_General.resolveDependency(&cascadeMC_antideuteronSpectra);
-    dump_antideuteronSpectrum.resolveDependency(&antideuteron_AnnYield_General);
+    //antideuteron_AnnYield_General.resolveDependency(&TH_ProcessCatalog_WIMP);
+    //antideuteron_AnnYield_General.resolveDependency(&antideuteron_SimYieldTable_DarkSUSY);
+    //antideuteron_AnnYield_General.resolveDependency(&DarkMatter_ID_WIMP);
+    //antideuteron_AnnYield_General.resolveDependency(&DarkMatterConj_ID_WIMP);
+    //antideuteron_AnnYield_General.resolveDependency(&cascadeMC_antideuteronSpectra);
+    //dump_antideuteronSpectrum.resolveDependency(&antideuteron_AnnYield_General);
 
     // Resolve Galactic halo requirements for gamLike
     set_gamLike_GC_halo.resolveDependency(&GalacticHalo_Einasto);
@@ -467,20 +495,24 @@ int main(int argc, char* argv[])
 
     // Calculate Fermi LAT dwarf likelihood
     lnL_FermiLATdwarfs_gamLike.resolveDependency(&GA_AnnYield_General);
+    lnL_FermiLATdwarfs_gamLike.resolveDependency(&DM_process_from_ProcessCatalog);
     // Assume for direct and indirect detection likelihoods that dark matter
     // density is always the measured one (despite relic density results)
     lnL_FermiLATdwarfs_gamLike.resolveDependency(&RD_fraction_one);
     lnL_FermiLATdwarfs_gamLike.resolveBackendReq(&Backends::gamLike_1_0_1::Functown::lnL);
 
     lnL_HESSGC_gamLike.resolveDependency(&GA_AnnYield_General);
+    lnL_HESSGC_gamLike.resolveDependency(&DM_process_from_ProcessCatalog);
     lnL_HESSGC_gamLike.resolveDependency(&RD_fraction_one);
     lnL_HESSGC_gamLike.resolveBackendReq(&Backends::gamLike_1_0_1::Functown::lnL);
 
     lnL_CTAGC_gamLike.resolveDependency(&GA_AnnYield_General);
+    lnL_CTAGC_gamLike.resolveDependency(&DM_process_from_ProcessCatalog);
     lnL_CTAGC_gamLike.resolveDependency(&RD_fraction_one);
     lnL_CTAGC_gamLike.resolveBackendReq(&Backends::gamLike_1_0_1::Functown::lnL);
 
     lnL_FermiGC_gamLike.resolveDependency(&GA_AnnYield_General);
+    lnL_FermiGC_gamLike.resolveDependency(&DM_process_from_ProcessCatalog);
     lnL_FermiGC_gamLike.resolveDependency(&RD_fraction_one);
     lnL_FermiGC_gamLike.resolveBackendReq(&Backends::gamLike_1_0_1::Functown::lnL);
 
@@ -626,10 +658,6 @@ int main(int argc, char* argv[])
           RD_fraction_one.reset_and_calculate();
           GA_SimYieldTable_MicrOmegas.reset_and_calculate();
           GA_SimYieldTable_DarkSUSY.reset_and_calculate();
-          positron_SimYieldTable_DarkSUSY.reset_and_calculate();
-          electron_SimYieldTable_from_positron_SimYieldTable.reset_and_calculate();
-          antiproton_SimYieldTable_DarkSUSY.reset_and_calculate();
-          antideuteron_SimYieldTable_DarkSUSY.reset_and_calculate();
           Combine_SimYields.reset_and_calculate();
           cascadeMC_FinalStates.reset_and_calculate();
           cascadeMC_InitialStates.reset_and_calculate();
@@ -682,10 +710,6 @@ int main(int argc, char* argv[])
           RD_fraction_one.reset_and_calculate();
           GA_SimYieldTable_MicrOmegas.reset_and_calculate();
           GA_SimYieldTable_DarkSUSY.reset_and_calculate();
-          positron_SimYieldTable_DarkSUSY.reset_and_calculate();
-          electron_SimYieldTable_from_positron_SimYieldTable.reset_and_calculate();
-          antiproton_SimYieldTable_DarkSUSY.reset_and_calculate();
-          antideuteron_SimYieldTable_DarkSUSY.reset_and_calculate();
           Combine_SimYields.reset_and_calculate();
           cascadeMC_FinalStates.reset_and_calculate();
           cascadeMC_InitialStates.reset_and_calculate();
