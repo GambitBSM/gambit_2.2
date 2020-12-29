@@ -161,6 +161,7 @@ namespace Gambit {
       }
       else if (proc == "decay")
       {
+        DarkBit_error().raise(LOCAL_INFO, "Sorry, decaying DM is not supported yet in gamlike.");
         y = ((*Dep::GA_Yield)/4./M_PI*fraction)->bind("E")->vect(x);
       }
       else
@@ -203,6 +204,7 @@ namespace Gambit {
       }
       else if (proc == "decay")
       {
+        DarkBit_error().raise(LOCAL_INFO, "Sorry, decaying DM is not supported yet in gamlike.");
         y = ((*Dep::GA_Yield)/4./M_PI*fraction)->bind("E")->vect(x);
       }
       else
@@ -236,6 +238,7 @@ namespace Gambit {
       }
       else if (proc == "decay")
       {
+        DarkBit_error().raise(LOCAL_INFO, "Sorry, decaying DM is not supported yet in gamlike.");
         y = ((*Dep::GA_Yield)/4./M_PI*fraction)->bind("E")->vect(x);
       }
       else
@@ -280,6 +283,7 @@ namespace Gambit {
       }
       else if (proc == "decay")
       {
+        DarkBit_error().raise(LOCAL_INFO, "Sorry, decaying DM is not supported yet in gamlike.");
         y = ((*Dep::GA_Yield)/4./M_PI*fraction)->bind("E")->vect(x);
       }
       else

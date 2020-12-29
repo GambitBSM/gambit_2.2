@@ -33,17 +33,17 @@ namespace Gambit
     /// Suspicious point exception class methods.
 
     /// Constructor
-    Suspicious_point_exception::Suspicious_point_exception() : special_exception("GAMBIT suspicious point."), SuspiciousPtID(Printers::get_main_param_id("Suspicious Point Code")) {} 
+    Suspicious_point_exception::Suspicious_point_exception() : special_exception("GAMBIT suspicious point."), SuspiciousPtID(1 /*Printers::get_main_param_id("Suspicious Point Code")*/) {}
 
     /// Raise the new suspicious point exception, i.e. throw it with a message and a code.
     void Suspicious_point_exception::raise(const std::string& msg,int mycode, bool debug)
     {
 
       // get the printer pointer
-      Printers::BaseBasePrinter& printer = *(get_global_printer_manager()->printerptr);
+      //Printers::BaseBasePrinter& printer = *(get_global_printer_manager()->printerptr);
 
-      int ranksus = printer.getRank();
-      printer.print(mycode,   "Suspicious Point Code", SuspiciousPtID, ranksus, Printers::get_point_id());
+      //int ranksus = printer.getRank();
+      //printer.print(mycode,   "Suspicious Point Code", SuspiciousPtID, ranksus, Printers::get_point_id());
       if (debug) std::cout << "Point Suspicious: " << msg << endl;
 
     }
