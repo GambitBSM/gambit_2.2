@@ -118,7 +118,6 @@ if(NOT ditched_${name}_${ver})
     PATCH_COMMAND patch -p1 < ${patch}
     CONFIGURE_COMMAND ""
     BUILD_COMMAND sed ${dashi} -e "s#CC = gcc#CC = ${CMAKE_C_COMPILER}#g" Makefile
-          COMMAND sed ${dashi} -e "s#rcsU#rcs#g" Makefile
           COMMAND sed ${dashi} -e "s/CFLAGS= -O3 -pipe -fomit-frame-pointer -mtune=native -ffast-math -fno-finite-math-only/CFLAGS= ${AlterBBN_C_FLAGS}/g" Makefile
           COMMAND sed ${dashi} -e "s/CFLAGS_MP= -fopenmp/CFLAGS_MP= ${OpenMP_C_FLAGS}/g" Makefile
           COMMAND ${MAKE_PARALLEL}
@@ -136,13 +135,13 @@ endif()
 set(name "capgen")
 set(ver "1.0")
 set(lib "gencaplib")
-set(dl "null")
+set(dl "https://github.com/aaronvincent/captngen/archive/${ver}.tar.gz")
+set(md5 "410034ac91593c6695a8ed1751a4214c")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
-    GIT_REPOSITORY https://github.com/aaronvincent/captngen.git
-    GIT_TAG ${ver}
+    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""
@@ -671,7 +670,8 @@ endif()
 set(name "montepythonlike")
 set(ver "3.3.0")
 set(sfver "3_3_0")
-set(dl "null")
+set(dl "https://github.com/brinckmann/montepython_public/archive/${ver}.tar.gz")
+set(md5 "84944f0a5b9fb1cab0ddb5dd7be3ea17")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 set(patchdir "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/")
 set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/${name}_${ver}.diff")
@@ -684,13 +684,13 @@ if(NOT ditched_${name}_${ver})
     inform_of_missing_modules(${name} ${ver} ${modules_missing_${name}_${ver}})
   else()
     ExternalProject_Add(${name}_${ver}
-      GIT_REPOSITORY https://github.com/brinckmann/montepython_public.git
-      GIT_TAG ${ver}
+      DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
       SOURCE_DIR ${dir}
       BUILD_IN_SOURCE 1
       PATCH_COMMAND patch -p1 < ${patch}
       CONFIGURE_COMMAND ${CMAKE_COMMAND} -E copy ${patchdir}/MontePythonLike.py ${dir}/montepython/MontePythonLike_${sfver}.py
       COMMAND ${CMAKE_COMMAND} -E copy ${patchdir}/fastPantheon__init__.py ${dir}/montepython/likelihoods/Pantheon/__init__.py
+      COMMAND ${CMAKE_COMMAND} -E copy ${patchdir}/__init__eBOSS_DR14_Lya_combined.py ${dir}/montepython/likelihoods/eBOSS_DR14_Lya_combined/__init__.py
       COMMAND ${CMAKE_COMMAND} -E copy ${patchdir}/sdss_lrgDR7_fiducialmodel.dat ${dir}/data/sdss_lrgDR7/sdss_lrgDR7_fiducialmodel.dat
       COMMAND ${CMAKE_COMMAND} -E copy ${patchdir}/bao_eBOSS_2017.txt ${dir}/data/bao_eBOSS_2017.txt
       COMMAND ${CMAKE_COMMAND} -E copy ${patchdir}/bao_smallz_combined_2018.txt ${dir}/data/bao_smallz_combined_2018.txt
@@ -702,7 +702,6 @@ if(NOT ditched_${name}_${ver})
       COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/bao_correlations_data ${dir}/data/bao_correlations/
       COMMAND ${CMAKE_COMMAND} -E copy ${patchdir}/MPLike_patch_script.py ${dir}/montepython/MPLike_patch_script.py
       COMMAND sed ${dashi} -e "s#from MontePythonLike import#from MontePythonLike_${sfver} import#g" ${dir}/montepython/MPLike_patch_script.py
-      COMMAND ${CMAKE_COMMAND} -E copy ${patchdir}/__init__eBOSS_DR14_Lya_combined.py ${dir}/montepython/likelihoods/eBOSS_DR14_Lya_combined/__init__.py
       BUILD_COMMAND ""
       INSTALL_COMMAND ${PYTHON_EXECUTABLE} ${dir}/montepython/MPLike_patch_script.py
     )
@@ -1700,7 +1699,7 @@ if(NOT ditched_${name}_${ver})
       CONFIGURE_COMMAND ""
       COMMAND sed ${dashi} -e "s#autosetup.py install#autosetup.py build#g" Makefile
       COMMAND sed ${dashi} -e "s#rm -f libclass.a#rm -rf libclass.a lib#g" Makefile
-      COMMAND sed ${dashi} -e "s#\".\"#\"${dir}\"#g" include/common.h
+      COMMAND sed ${dashi} -e "s#\"[.]\"#\"${dir}\"#g" include/common.h
       BUILD_COMMAND ${MAKE_PARALLEL} CC=${CMAKE_C_COMPILER} OMPFLAG=${OpenMP_C_FLAGS} OPTFLAG= CCFLAG=${BACKEND_GNU99_FLAGS} LDFLAG=${BACKEND_GNU99_FLAGS} PYTHON=${PYTHON_EXECUTABLE} all
       COMMAND ${CMAKE_COMMAND} -E make_directory lib
       COMMAND find python/ -name "classy*.so" | xargs -I {} cp "{}" lib/
@@ -1738,7 +1737,7 @@ if(NOT ditched_${name}_${ver})
       CONFIGURE_COMMAND ""
       COMMAND sed ${dashi} -e "s#autosetup.py install#autosetup.py build#g" Makefile
       COMMAND sed ${dashi} -e "s#rm -f libclass.a#rm -rf libclass.a lib#g" Makefile
-      COMMAND sed ${dashi} -e "s#\".\"#\"${dir}\"#g" include/common.h
+      COMMAND sed ${dashi} -e "s#\"[.]\"#\"${dir}\"#g" include/common.h
       BUILD_COMMAND ${MAKE_PARALLEL} CC=${CMAKE_C_COMPILER} OMPFLAG=${OpenMP_C_FLAGS} OPTFLAG= CCFLAG=${BACKEND_GNU99_FLAGS} LDFLAG=${BACKEND_GNU99_FLAGS} PYTHON=${PYTHON_EXECUTABLE} all
       COMMAND ${CMAKE_COMMAND} -E make_directory lib
       COMMAND find python/ -name "classy*.so" | xargs -I {} cp "{}" lib/
@@ -1776,7 +1775,7 @@ if(NOT ditched_${name}_${ver})
       CONFIGURE_COMMAND ""
       COMMAND sed ${dashi} -e "s#autosetup.py install#autosetup.py build#g" Makefile
       COMMAND sed ${dashi} -e "s#rm -f libclass.a#rm -rf libclass.a lib#g" Makefile
-      COMMAND sed ${dashi} -e "s#\".\"#\"${dir}\"#g" include/common.h
+      COMMAND sed ${dashi} -e "s#\"[.]\"#\"${dir}\"#g" include/common.h
       BUILD_COMMAND ${MAKE_PARALLEL} CC=${CMAKE_C_COMPILER} OMPFLAG=${OpenMP_C_FLAGS} OPTFLAG= CCFLAG=${BACKEND_GNU99_FLAGS} LDFLAG=${BACKEND_GNU99_FLAGS} PYTHON=${PYTHON_EXECUTABLE} all
       COMMAND ${CMAKE_COMMAND} -E make_directory lib
       COMMAND find python/ -name "classy*.so" | xargs -I {} cp "{}" lib/
@@ -1815,7 +1814,7 @@ if(NOT ditched_${name}_${ver})
       CONFIGURE_COMMAND ""
       COMMAND sed ${dashi} -e "s#autosetup.py install#autosetup.py build#g" Makefile
       COMMAND sed ${dashi} -e "s#rm -f libclass.a#rm -rf libclass.a lib#g" Makefile
-      COMMAND sed ${dashi} -e "s#\".\"#\"${dir}\"#g" include/common.h
+      COMMAND sed ${dashi} -e "s#\"[.]\"#\"${dir}\"#g" include/common.h
       BUILD_COMMAND ${MAKE_PARALLEL} CC=${CMAKE_C_COMPILER} OMPFLAG=${OpenMP_C_FLAGS} OPTFLAG= CCFLAG=${BACKEND_GNU99_FLAGS} LDFLAG=${BACKEND_GNU99_FLAGS} PYTHON=${PYTHON_EXECUTABLE} all
       COMMAND ${CMAKE_COMMAND} -E make_directory lib
       COMMAND find python/ -name "classy*.so" | xargs -I {} cp "{}" lib/
@@ -1839,7 +1838,8 @@ endif()
 set(name "darkages")
 set(ver "1.2.0")
 set(sfver "1_2_0")
-set(dl "null")
+set(dl "https://github.com/pstoecker/DarkAges/archive/v${ver}.tar.gz")
+set(md5 "d39d331ab750d1f9796d2b81d55e7703")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 set(ditch_if_absent "Python")
 set(required_modules "scipy,dill,future,numpy")
@@ -1850,8 +1850,7 @@ if(NOT ditched_${name}_${ver})
     inform_of_missing_modules(${name} ${ver} ${modules_missing_${name}_${ver}})
   else()
     ExternalProject_Add(${name}_${ver}
-      GIT_REPOSITORY https://github.com/pstoecker/DarkAges.git
-      GIT_TAG v${ver}
+      DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
       SOURCE_DIR ${dir}
       BUILD_IN_SOURCE 1
       CONFIGURE_COMMAND ln ${DarkAges_SYMLINK_FLAGS} DarkAges DarkAges_${sfver}
