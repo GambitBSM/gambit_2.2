@@ -317,13 +317,13 @@ int main(int argc, char* argv[])
       RD_annrate_DS5prep_func.resolveBackendReq(&Backends::DarkSUSY_5_1_3::Functown::rdmgev);
       RD_annrate_DS5prep_func.reset_and_calculate();
 
-      RD_eff_annrate_DS_MSSM.notifyOfModel("MSSM30atQ");
-      RD_eff_annrate_DS_MSSM.resolveDependency(&RD_annrate_DS5prep_func);
-      RD_eff_annrate_DS_MSSM.resolveBackendReq(&Backends::DarkSUSY_5_1_3::Functown::dsanwx);
-      RD_eff_annrate_DS_MSSM.reset_and_calculate();
+      RD_eff_annrate_DS5_MSSM.notifyOfModel("MSSM30atQ");
+      RD_eff_annrate_DS5_MSSM.resolveDependency(&RD_annrate_DS5prep_func);
+      RD_eff_annrate_DS5_MSSM.resolveBackendReq(&Backends::DarkSUSY_5_1_3::Functown::dsanwx);
+      RD_eff_annrate_DS5_MSSM.reset_and_calculate();
 
       RD_oh2_DS5_general.resolveDependency(&RD_spectrum_ordered_func);
-      RD_oh2_DS5_general.resolveDependency(&RD_eff_annrate_DS_MSSM);
+      RD_oh2_DS5_general.resolveDependency(&RD_eff_annrate_DS5_MSSM);
       RD_oh2_DS5_general.resolveBackendReq(&Backends::DarkSUSY_5_1_3::Functown::dsrdthlim);
       RD_oh2_DS5_general.resolveBackendReq(&Backends::DarkSUSY_5_1_3::Functown::dsrdtab);
       RD_oh2_DS5_general.resolveBackendReq(&Backends::DarkSUSY_5_1_3::Functown::dsrdeqn);
@@ -432,29 +432,38 @@ int main(int argc, char* argv[])
       // ---- Gamma-ray yields ----
 
       // Initialize tabulated gamma-ray yields
-      SimYieldTable_DS5.resolveBackendReq(&Backends::DarkSUSY_5_1_3::Functown::dshayield);
-      SimYieldTable_DS5.reset_and_calculate();
+      GA_SimYieldTable_DS5.resolveBackendReq(&Backends::DarkSUSY_5_1_3::Functown::dshayield);
+      GA_SimYieldTable_DS5.reset_and_calculate();
+      Combine_SimYields.resolveDependency(&GA_SimYieldTable_DS5);
+      // Here we need to establish the dependency chain from Combine_SimYields down to cascadeMC_gammaSpectra
+      // *before* Combine_SimYields runs in order for it to correctly realise that it needs to enable gammas.
+      cascadeMC_InitialStates.resolveDependency(&Combine_SimYields);
+      cascadeMC_gammaSpectra.resolveDependency(&cascadeMC_InitialStates);
+      Combine_SimYields.reset_and_calculate();
 
       // Identify process as annihilation rather than decay
       DM_process_from_ProcessCatalog.resolveDependency(&TH_ProcessCatalog_DS_MSSM);
       DM_process_from_ProcessCatalog.resolveDependency(&DarkMatter_ID_MSSM);
       DM_process_from_ProcessCatalog.reset_and_calculate();
 
-      // Collect missing final states for simulation in cascade MC
-      GA_missingFinalStates.resolveDependency(&TH_ProcessCatalog_DS5_MSSM);
-      GA_missingFinalStates.resolveDependency(&SimYieldTable_DS5);
-      GA_missingFinalStates.resolveDependency(&DarkMatter_ID_MSSM);
-      GA_missingFinalStates.resolveDependency(&DarkMatterConj_ID_MSSM);
-      GA_missingFinalStates.resolveDependency(&DM_process_from_ProcessCatalog);
-      GA_missingFinalStates.reset_and_calculate();
+      // Set up initial states for cascade MC
+      cascadeMC_InitialStates.resolveDependency(&cascadeMC_FinalStates);
+      cascadeMC_InitialStates.resolveDependency(&TH_ProcessCatalog_DS5_MSSM);
+      cascadeMC_InitialStates.resolveDependency(&DarkMatter_ID_MSSM);
+      cascadeMC_InitialStates.resolveDependency(&DarkMatterConj_ID_MSSM);
+      cascadeMC_InitialStates.resolveDependency(&DM_process_from_ProcessCatalog);
+      cascadeMC_InitialStates.reset_and_calculate();
 
       // Infer for which type of final states particles MC should be performed
       cascadeMC_FinalStates.setOption<std::vector<std::string>>("cMC_finalStates", daFunk::vec<std::string>("gamma"));
+      // Here we need to establish the dependency chain from cascadeMC_FinalStates down to cascadeMC_gammaSpectra
+      // *before* cascadeMC_FinalStates runs in order for it to correctly realise that it needs to enable gammas.
+      cascadeMC_gammaSpectra.resolveDependency(&cascadeMC_FinalStates);
       cascadeMC_FinalStates.reset_and_calculate();
 
       // Collect decay information for cascade MC
       cascadeMC_DecayTable.resolveDependency(&TH_ProcessCatalog_DS5_MSSM);
-      cascadeMC_DecayTable.resolveDependency(&SimYieldTable_DS5);
+      cascadeMC_DecayTable.resolveDependency(&Combine_SimYields);
       cascadeMC_DecayTable.reset_and_calculate();
 
       // cascadeMC_LoopManager.setOption<int>("cMC_maxEvents", 100000);
@@ -464,58 +473,51 @@ int main(int argc, char* argv[])
       // cascadeMC_Histograms.setOption<int>("cMC_NhistBins", 300);
 
       // Set up MC loop manager for cascade MC
-      cascadeMC_LoopManager.resolveDependency(&GA_missingFinalStates);
+      cascadeMC_LoopManager.resolveDependency(&cascadeMC_InitialStates);
       std::vector<functor*> nested_functions = initVector<functor*>(
-              &cascadeMC_InitialState, &cascadeMC_GenerateChain, &cascadeMC_Histograms, &cascadeMC_EventCount);
+              &cascadeMC_GenerateChain, &cascadeMC_Histograms, &cascadeMC_EventCount);
       cascadeMC_LoopManager.setNestedList(nested_functions);
 
-      // Set up initial state for cascade MC step
-      cascadeMC_InitialState.resolveDependency(&GA_missingFinalStates);
-      cascadeMC_InitialState.resolveLoopManager(&cascadeMC_LoopManager);
-
       // Perform MC step for cascade MC
-      cascadeMC_GenerateChain.resolveDependency(&cascadeMC_InitialState);
       cascadeMC_GenerateChain.resolveDependency(&cascadeMC_DecayTable);
       cascadeMC_GenerateChain.resolveLoopManager(&cascadeMC_LoopManager);
 
       // Generate histogram for cascade MC
-      cascadeMC_Histograms.resolveDependency(&cascadeMC_InitialState);
       cascadeMC_Histograms.resolveDependency(&cascadeMC_GenerateChain);
       cascadeMC_Histograms.resolveDependency(&TH_ProcessCatalog_DS5_MSSM);
-      cascadeMC_Histograms.resolveDependency(&SimYieldTable_DS5);
+      cascadeMC_Histograms.resolveDependency(&Combine_SimYields);
       cascadeMC_Histograms.resolveDependency(&cascadeMC_FinalStates);
       cascadeMC_Histograms.resolveLoopManager(&cascadeMC_LoopManager);
 
       // Check convergence of cascade MC
-      cascadeMC_EventCount.resolveDependency(&cascadeMC_InitialState);
       cascadeMC_EventCount.resolveLoopManager(&cascadeMC_LoopManager);
 
       // Start cascade MC loop
       cascadeMC_LoopManager.reset_and_calculate();
 
       // Infer gamma-ray spectra for recorded MC results
-      cascadeMC_gammaSpectra.resolveDependency(&GA_missingFinalStates);
-      cascadeMC_gammaSpectra.resolveDependency(&cascadeMC_FinalStates);
+      cascadeMC_gammaSpectra.resolveDependency(&cascadeMC_InitialStates);
       cascadeMC_gammaSpectra.resolveDependency(&cascadeMC_Histograms);
       cascadeMC_gammaSpectra.resolveDependency(&cascadeMC_EventCount);
       cascadeMC_gammaSpectra.reset_and_calculate();
 
       // Calculate total gamma-ray yield (cascade MC + tabulated results)
       GA_AnnYield_General.resolveDependency(&TH_ProcessCatalog_DS5_MSSM);
-      GA_AnnYield_General.resolveDependency(&SimYieldTable_DS5);
+      GA_AnnYield_General.resolveDependency(&GA_SimYieldTable_DS5);
       GA_AnnYield_General.resolveDependency(&DarkMatter_ID_MSSM);
       GA_AnnYield_General.resolveDependency(&DarkMatterConj_ID_MSSM);
       GA_AnnYield_General.resolveDependency(&cascadeMC_gammaSpectra);
       GA_AnnYield_General.reset_and_calculate();
 
       // Dump spectrum into file
-      dump_GammaSpectrum.resolveDependency(&GA_AnnYield_General);
-      dump_GammaSpectrum.setOption<std::string>("filename", current_backend + "_" + outname_dNdE_spectrum);
-      dump_GammaSpectrum.reset_and_calculate();
+      dump_gammaSpectrum.resolveDependency(&GA_AnnYield_General);
+      dump_gammaSpectrum.setOption<std::string>("filename", current_backend + "_" + outname_dNdE_spectrum);
+      dump_gammaSpectrum.reset_and_calculate();
 
       // Calculate Fermi LAT dwarf likelihood
       lnL_FermiLATdwarfs_gamLike.resolveDependency(&GA_AnnYield_General);
       lnL_FermiLATdwarfs_gamLike.resolveDependency(&RD_fraction_one);
+      lnL_FermiLATdwarfs_gamLike.resolveDependency(&DM_process_from_ProcessCatalog);
       lnL_FermiLATdwarfs_gamLike.resolveBackendReq(&Backends::gamLike_1_0_1::Functown::lnL);
       lnL_FermiLATdwarfs_gamLike.reset_and_calculate();
       // Save the result
@@ -704,84 +706,86 @@ int main(int argc, char* argv[])
       // ---- Gamma-ray yields ----
 
       // Initialize tabulated gamma-ray yields
-      SimYieldTable_DarkSUSY.resolveBackendReq(&Backends::DarkSUSY_MSSM_6_1_1::Functown::dsanyield_sim);
-      SimYieldTable_DarkSUSY.reset_and_calculate();
+      GA_SimYieldTable_DarkSUSY.resolveBackendReq(&Backends::DarkSUSY_MSSM_6_1_1::Functown::dsanyield_sim);
+      GA_SimYieldTable_DarkSUSY.reset_and_calculate();
+      Combine_SimYields.resolveDependency(&GA_SimYieldTable_DarkSUSY);
+      // Here we need to establish the dependency chain from Combine_SimYields down to cascadeMC_gammaSpectra
+      // *before* Combine_SimYields runs in order for it to correctly realise that it needs to enable gammas.
+      cascadeMC_InitialStates.resolveDependency(&Combine_SimYields);
+      cascadeMC_gammaSpectra.resolveDependency(&cascadeMC_InitialStates);
+      Combine_SimYields.reset_and_calculate();
 
       // Identify process as annihilation rather than decay
       DM_process_from_ProcessCatalog.resolveDependency(&TH_ProcessCatalog_DS_MSSM);
       DM_process_from_ProcessCatalog.resolveDependency(&DarkMatter_ID_MSSM);
       DM_process_from_ProcessCatalog.reset_and_calculate();
 
-      // Collect missing final states for simulation in cascade MC
-      GA_missingFinalStates.resolveDependency(&TH_ProcessCatalog_DS_MSSM);
-      GA_missingFinalStates.resolveDependency(&SimYieldTable_DarkSUSY);
-      GA_missingFinalStates.resolveDependency(&DarkMatter_ID_MSSM);
-      GA_missingFinalStates.resolveDependency(&DarkMatterConj_ID_MSSM);
-      GA_missingFinalStates.resolveDependency(&DM_process_from_ProcessCatalog);
-      GA_missingFinalStates.reset_and_calculate();
+      // Set up initial states for cascade MC
+      cascadeMC_InitialStates.resolveDependency(&cascadeMC_FinalStates);
+      cascadeMC_InitialStates.resolveDependency(&TH_ProcessCatalog_DS_MSSM);
+      cascadeMC_InitialStates.resolveDependency(&DarkMatter_ID_MSSM);
+      cascadeMC_InitialStates.resolveDependency(&DarkMatterConj_ID_MSSM);
+      cascadeMC_InitialStates.resolveDependency(&DM_process_from_ProcessCatalog);
+      cascadeMC_InitialStates.reset_and_calculate();
 
       // Infer for which type of final states particles MC should be performed
       cascadeMC_FinalStates.setOption<std::vector<std::string>>("cMC_finalStates", daFunk::vec<std::string>("gamma"));
+      // Here we need to establish the dependency chain from cascadeMC_FinalStates down to cascadeMC_gammaSpectra
+      // *before* cascadeMC_FinalStates runs in order for it to correctly realise that it needs to enable gammas.
+      cascadeMC_gammaSpectra.resolveDependency(&cascadeMC_FinalStates);
       cascadeMC_FinalStates.reset_and_calculate();
 
       // Collect decay information for cascade MC
       cascadeMC_DecayTable.resolveDependency(&TH_ProcessCatalog_DS_MSSM);
-      cascadeMC_DecayTable.resolveDependency(&SimYieldTable_DarkSUSY);
+      cascadeMC_DecayTable.resolveDependency(&Combine_SimYields);
       cascadeMC_DecayTable.reset_and_calculate();
 
       // Set up MC loop manager for cascade MC
-      cascadeMC_LoopManager.resolveDependency(&GA_missingFinalStates);
+      cascadeMC_LoopManager.resolveDependency(&cascadeMC_InitialStates);
       std::vector<functor*> nested_functions = initVector<functor*>(
-              &cascadeMC_InitialState, &cascadeMC_GenerateChain, &cascadeMC_Histograms, &cascadeMC_EventCount);
+              &cascadeMC_GenerateChain, &cascadeMC_Histograms, &cascadeMC_EventCount);
       cascadeMC_LoopManager.setNestedList(nested_functions);
 
-      // Set up initial state for cascade MC step
-      cascadeMC_InitialState.resolveDependency(&GA_missingFinalStates);
-      cascadeMC_InitialState.resolveLoopManager(&cascadeMC_LoopManager);
-
       // Perform MC step for cascade MC
-      cascadeMC_GenerateChain.resolveDependency(&cascadeMC_InitialState);
       cascadeMC_GenerateChain.resolveDependency(&cascadeMC_DecayTable);
       cascadeMC_GenerateChain.resolveLoopManager(&cascadeMC_LoopManager);
 
       // Generate histogram for cascade MC
-      cascadeMC_Histograms.resolveDependency(&cascadeMC_InitialState);
       cascadeMC_Histograms.resolveDependency(&cascadeMC_GenerateChain);
       cascadeMC_Histograms.resolveDependency(&TH_ProcessCatalog_DS_MSSM);
-      cascadeMC_Histograms.resolveDependency(&SimYieldTable_DarkSUSY);
+      cascadeMC_Histograms.resolveDependency(&Combine_SimYields);
       cascadeMC_Histograms.resolveDependency(&cascadeMC_FinalStates);
       cascadeMC_Histograms.resolveLoopManager(&cascadeMC_LoopManager);
 
       // Check convergence of cascade MC
-      cascadeMC_EventCount.resolveDependency(&cascadeMC_InitialState);
       cascadeMC_EventCount.resolveLoopManager(&cascadeMC_LoopManager);
 
       // Start cascade MC loop
       cascadeMC_LoopManager.reset_and_calculate();
 
       // Infer gamma-ray spectra for recorded MC results
-      cascadeMC_gammaSpectra.resolveDependency(&GA_missingFinalStates);
-      cascadeMC_gammaSpectra.resolveDependency(&cascadeMC_FinalStates);
+      cascadeMC_gammaSpectra.resolveDependency(&cascadeMC_InitialStates);
       cascadeMC_gammaSpectra.resolveDependency(&cascadeMC_Histograms);
       cascadeMC_gammaSpectra.resolveDependency(&cascadeMC_EventCount);
       cascadeMC_gammaSpectra.reset_and_calculate();
 
       // Calculate total gamma-ray yield (cascade MC + tabulated results)
       GA_AnnYield_General.resolveDependency(&TH_ProcessCatalog_DS_MSSM);
-      GA_AnnYield_General.resolveDependency(&SimYieldTable_DarkSUSY);
+      GA_AnnYield_General.resolveDependency(&GA_SimYieldTable_DarkSUSY);
       GA_AnnYield_General.resolveDependency(&DarkMatter_ID_MSSM);
       GA_AnnYield_General.resolveDependency(&DarkMatterConj_ID_MSSM);
       GA_AnnYield_General.resolveDependency(&cascadeMC_gammaSpectra);
       GA_AnnYield_General.reset_and_calculate();
 
       // Dump spectrum into file
-      dump_GammaSpectrum.resolveDependency(&GA_AnnYield_General);
-      dump_GammaSpectrum.setOption<std::string>("filename", current_backend + "_" + outname_dNdE_spectrum);
-      dump_GammaSpectrum.reset_and_calculate();
+      dump_gammaSpectrum.resolveDependency(&GA_AnnYield_General);
+      dump_gammaSpectrum.setOption<std::string>("filename", current_backend + "_" + outname_dNdE_spectrum);
+      dump_gammaSpectrum.reset_and_calculate();
 
       // Calculate Fermi LAT dwarf likelihood
       lnL_FermiLATdwarfs_gamLike.resolveDependency(&GA_AnnYield_General);
       lnL_FermiLATdwarfs_gamLike.resolveDependency(&RD_fraction_one);
+      lnL_FermiLATdwarfs_gamLike.resolveDependency(&DM_process_from_ProcessCatalog);
       lnL_FermiLATdwarfs_gamLike.resolveBackendReq(&Backends::gamLike_1_0_1::Functown::lnL);
       lnL_FermiLATdwarfs_gamLike.reset_and_calculate();
       // Save the result
@@ -1021,80 +1025,81 @@ int main(int argc, char* argv[])
       // ---- Gamma-ray yields ----
 
       // Initialize tabulated gamma-ray yields
-      SimYieldTable_DarkSUSY.resolveBackendReq(&Backends::DarkSUSY_MSSM_6_2_2::Functown::dsanyield_sim);
-      SimYieldTable_DarkSUSY.reset_and_calculate();
+      GA_SimYieldTable_DarkSUSY.resolveBackendReq(&Backends::DarkSUSY_MSSM_6_2_2::Functown::dsanyield_sim);
+      GA_SimYieldTable_DarkSUSY.reset_and_calculate();
+      Combine_SimYields.resolveDependency(&GA_SimYieldTable_DarkSUSY);
+      // Here we need to establish the dependency chain from Combine_SimYields down to cascadeMC_gammaSpectra
+      // *before* Combine_SimYields runs in order for it to correctly realise that it needs to enable gammas.
+      cascadeMC_InitialStates.resolveDependency(&Combine_SimYields);
+      cascadeMC_gammaSpectra.resolveDependency(&cascadeMC_InitialStates);
+      Combine_SimYields.reset_and_calculate();
 
       // Identify process as annihilation rather than decay
       DM_process_from_ProcessCatalog.resolveDependency(&TH_ProcessCatalog_DS_MSSM);
       DM_process_from_ProcessCatalog.resolveDependency(&DarkMatter_ID_MSSM);
       DM_process_from_ProcessCatalog.reset_and_calculate();
 
-      // Collect missing final states for simulation in cascade MC
-      GA_missingFinalStates.resolveDependency(&TH_ProcessCatalog_DS_MSSM);
-      GA_missingFinalStates.resolveDependency(&SimYieldTable_DarkSUSY);
-      GA_missingFinalStates.resolveDependency(&DarkMatter_ID_MSSM);
-      GA_missingFinalStates.resolveDependency(&DarkMatterConj_ID_MSSM);
-      GA_missingFinalStates.resolveDependency(&DM_process_from_ProcessCatalog);
-      GA_missingFinalStates.reset_and_calculate();
+      // Set up initial states for cascade MC
+      cascadeMC_InitialStates.resolveDependency(&cascadeMC_FinalStates);
+      cascadeMC_InitialStates.resolveDependency(&TH_ProcessCatalog_DS_MSSM);
+      cascadeMC_InitialStates.resolveDependency(&DarkMatter_ID_MSSM);
+      cascadeMC_InitialStates.resolveDependency(&DarkMatterConj_ID_MSSM);
+      cascadeMC_InitialStates.resolveDependency(&DM_process_from_ProcessCatalog);
+      cascadeMC_InitialStates.reset_and_calculate();
 
       // Infer for which type of final states particles MC should be performed
       cascadeMC_FinalStates.setOption<std::vector<std::string>>("cMC_finalStates", daFunk::vec<std::string>("gamma"));
+      // Here we need to establish the dependency chain from cascadeMC_FinalStates down to cascadeMC_gammaSpectra
+      // *before* cascadeMC_FinalStates runs in order for it to correctly realise that it needs to enable gammas.
+      cascadeMC_gammaSpectra.resolveDependency(&cascadeMC_FinalStates);
       cascadeMC_FinalStates.reset_and_calculate();
 
       // Collect decay information for cascade MC
       cascadeMC_DecayTable.resolveDependency(&TH_ProcessCatalog_DS_MSSM);
-      cascadeMC_DecayTable.resolveDependency(&SimYieldTable_DarkSUSY);
+      cascadeMC_DecayTable.resolveDependency(&Combine_SimYields);
       cascadeMC_DecayTable.reset_and_calculate();
 
       // Set up MC loop manager for cascade MC
-      cascadeMC_LoopManager.resolveDependency(&GA_missingFinalStates);
+      cascadeMC_LoopManager.resolveDependency(&cascadeMC_InitialStates);
       std::vector<functor*> nested_functions = initVector<functor*>(
-              &cascadeMC_InitialState, &cascadeMC_GenerateChain, &cascadeMC_Histograms, &cascadeMC_EventCount);
+              &cascadeMC_GenerateChain, &cascadeMC_Histograms, &cascadeMC_EventCount);
       cascadeMC_LoopManager.setNestedList(nested_functions);
 
-      // Set up initial state for cascade MC step
-      cascadeMC_InitialState.resolveDependency(&GA_missingFinalStates);
-      cascadeMC_InitialState.resolveLoopManager(&cascadeMC_LoopManager);
-
       // Perform MC step for cascade MC
-      cascadeMC_GenerateChain.resolveDependency(&cascadeMC_InitialState);
       cascadeMC_GenerateChain.resolveDependency(&cascadeMC_DecayTable);
       cascadeMC_GenerateChain.resolveLoopManager(&cascadeMC_LoopManager);
 
       // Generate histogram for cascade MC
-      cascadeMC_Histograms.resolveDependency(&cascadeMC_InitialState);
       cascadeMC_Histograms.resolveDependency(&cascadeMC_GenerateChain);
       cascadeMC_Histograms.resolveDependency(&TH_ProcessCatalog_DS_MSSM);
-      cascadeMC_Histograms.resolveDependency(&SimYieldTable_DarkSUSY);
+      cascadeMC_Histograms.resolveDependency(&Combine_SimYields);
       cascadeMC_Histograms.resolveDependency(&cascadeMC_FinalStates);
       cascadeMC_Histograms.resolveLoopManager(&cascadeMC_LoopManager);
 
       // Check convergence of cascade MC
-      cascadeMC_EventCount.resolveDependency(&cascadeMC_InitialState);
       cascadeMC_EventCount.resolveLoopManager(&cascadeMC_LoopManager);
 
       // Start cascade MC loop
       cascadeMC_LoopManager.reset_and_calculate();
 
       // Infer gamma-ray spectra for recorded MC results
-      cascadeMC_gammaSpectra.resolveDependency(&GA_missingFinalStates);
-      cascadeMC_gammaSpectra.resolveDependency(&cascadeMC_FinalStates);
+      cascadeMC_gammaSpectra.resolveDependency(&cascadeMC_InitialStates);
       cascadeMC_gammaSpectra.resolveDependency(&cascadeMC_Histograms);
       cascadeMC_gammaSpectra.resolveDependency(&cascadeMC_EventCount);
       cascadeMC_gammaSpectra.reset_and_calculate();
 
       // Calculate total gamma-ray yield (cascade MC + tabulated results)
       GA_AnnYield_General.resolveDependency(&TH_ProcessCatalog_DS_MSSM);
-      GA_AnnYield_General.resolveDependency(&SimYieldTable_DarkSUSY);
+      GA_AnnYield_General.resolveDependency(&GA_SimYieldTable_DarkSUSY);
       GA_AnnYield_General.resolveDependency(&DarkMatter_ID_MSSM);
       GA_AnnYield_General.resolveDependency(&DarkMatterConj_ID_MSSM);
       GA_AnnYield_General.resolveDependency(&cascadeMC_gammaSpectra);
       GA_AnnYield_General.reset_and_calculate();
 
       // Dump spectrum into file
-      dump_GammaSpectrum.resolveDependency(&GA_AnnYield_General);
-      dump_GammaSpectrum.setOption<std::string>("filename", current_backend + "_" + outname_dNdE_spectrum);
-      dump_GammaSpectrum.reset_and_calculate();
+      dump_gammaSpectrum.resolveDependency(&GA_AnnYield_General);
+      dump_gammaSpectrum.setOption<std::string>("filename", current_backend + "_" + outname_dNdE_spectrum);
+      dump_gammaSpectrum.reset_and_calculate();
 
       // Calculate Fermi LAT dwarf likelihood
       lnL_FermiLATdwarfs_gamLike.resolveDependency(&GA_AnnYield_General);
