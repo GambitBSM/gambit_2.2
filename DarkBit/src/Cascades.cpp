@@ -478,7 +478,8 @@ namespace Gambit
               std::cout << "Defining new histList entry!!!" << std::endl;
               std::cout << "for: " << *Dep::cascadeMC_LoopManagement << " " << state << std::endl;
             #endif
-            histList[*Dep::cascadeMC_LoopManagement][state] = SimpleHist(cMC_NhistBins,cMC_binLow,cMC_binHigh,true);
+            double FinalStateMass = Dep::TH_ProcessCatalog->getParticleProperty(state).mass;
+            histList[*Dep::cascadeMC_LoopManagement][state] = SimpleHist(cMC_NhistBins,cMC_binLow+FinalStateMass,cMC_binHigh+FinalStateMass,true);
           }
           return;
         case MC_FINALIZE:
