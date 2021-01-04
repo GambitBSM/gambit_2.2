@@ -4439,6 +4439,9 @@ class_get_Hz: |
 class_get_rs: |
     Returns comoving sound horizon at baryon drag.
 
+class_get_z_reio: |
+    Returns redshift of reionisation.
+
 class_get_scale_independent_growth_factor: |
     Return the scale invariant growth factor D(a) for CDM perturbations
     for a given redshift (exactly, the quantity defined by Class as index_bg_D in the background module)
@@ -4762,6 +4765,9 @@ S8_cosmo: |
 
 rs_drag: |
    Returns the comoving sound horizon at baryon drag.
+
+z_reio: |
+    Returns redshift of reionisation.
 
 unlensed_Cl_TT: |
    Returns the unlensed dimensionless CMB temperature-temperature anisotro spectrum.

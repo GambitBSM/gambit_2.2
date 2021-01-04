@@ -54,7 +54,18 @@
 +
      def Neff(self):
          return self.ba.Neff
-
+ 
+@@ -854,6 +882,10 @@
+         self.compute(["thermodynamics"])
+         return self.th.rs_d
+ 
++    def z_reio(self):
++        self.compute(["thermodynamics"])
++        return self.th.z_reio
++
+     def angular_distance(self, z):
+         """
+         angular_distance(z)
 --- a/python/cclassy.pxd	2019-07-03 12:43:33.138033238 +0100
 +++ b/python/cclassy.pxd	2019-07-03 12:43:09.645573577 +0100
 @@ -60,6 +60,7 @@

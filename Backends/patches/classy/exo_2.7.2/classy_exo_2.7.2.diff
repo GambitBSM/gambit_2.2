@@ -126,6 +126,17 @@ index fae0dd04..a8020991 100644
      def omega_b(self):
          return self.ba.Omega0_b * self.ba.h * self.ba.h
  
+@@ -1046,6 +1076,10 @@
+         self.compute(["thermodynamics"])
+         return self.th.rs_d
+ 
++    def z_reio(self):
++        self.compute(["thermodynamics"])
++        return self.th.z_reio
++
+     def angular_distance(self, z):
+         """
+         angular_distance(z)
 diff --git a/source/input.c b/source/input.c
 index d6f41879..f1e55990 100644
 --- a/source/input.c

@@ -747,6 +747,15 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  // redshift of reionisation
+  #define CAPABILITY z_reio
+  START_CAPABILITY
+    #define FUNCTION get_z_reio_classy
+    START_FUNCTION(double)
+    BACKEND_REQ(class_get_z_reio,(),double,())
+    #undef FUNCTION
+  #undef CAPABILITY
+
   /// get the value of Neff in the early Universe from CLASS backend
   #define CAPABILITY Neff
   START_CAPABILITY

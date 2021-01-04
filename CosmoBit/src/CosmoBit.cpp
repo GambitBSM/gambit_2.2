@@ -330,6 +330,14 @@ namespace Gambit
       result = BEreq::class_get_Neff();
     }
 
+    /// redshift of reionisation
+    void get_z_reio_classy(double& result)
+    {
+      using namespace Pipes::get_z_reio_classy;
+
+      result = BEreq::class_get_z_reio();
+    }
+
     /// Comoving sound horizon at baryon drag epoch
     void get_rs_drag_classy(double& result)
     {
