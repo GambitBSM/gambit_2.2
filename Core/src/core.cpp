@@ -572,7 +572,7 @@ namespace Gambit
   /// Launch non-interactive command-line diagnostic mode, for printing info about current GAMBIT configuration.
   str gambit_core::run_diagnostic(int argc, char **argv)
   {
-    constexpr int mpirank = GET_RANK; // Get MPI rank (assume MPI already initialised)
+    const int mpirank = GET_RANK; // Get MPI rank (assume MPI already initialised)
     str filename;
     str command = "none";
     std::vector<std::string> didyoumean;
