@@ -242,7 +242,7 @@ namespace Gambit
       {
         std::ostringstream err;
         err << "The sum of the branching fractions into electrons and photons (BR_el and BR_ph) must not exceed 1.";
-        model_error().raise(LOCAL_INFO,err.str());
+        CosmoBit_error().raise(LOCAL_INFO,err.str());
       }
 
       if (m <= m_electron && BR_el >= std::numeric_limits<double>::epsilon())
@@ -250,7 +250,7 @@ namespace Gambit
         std::ostringstream err;
         err << "The mass of the annihilating dark matter candidate is below the electron mass.";
         err << " No production of e+/e- is possible.";
-        model_error().raise(LOCAL_INFO,err.str());
+        CosmoBit_error().raise(LOCAL_INFO,err.str());
       }
 
       spectrum.E_el.clear();
@@ -282,7 +282,7 @@ namespace Gambit
       {
         std::ostringstream err;
         err << "The sum of the branching fractions into electrons and photons (BR_el and BR_ph) must not exceed 1.";
-        model_error().raise(LOCAL_INFO,err.str());
+        CosmoBit_error().raise(LOCAL_INFO,err.str());
       }
 
       if (m <= 2*m_electron && BR_el >= std::numeric_limits<double>::epsilon())
@@ -290,7 +290,7 @@ namespace Gambit
         std::ostringstream err;
         err << "The mass of the decaying dark matter candidate is below twice the electron mass.";
         err << " No production of e+/e- is possible.";
-        model_error().raise(LOCAL_INFO,err.str());
+        CosmoBit_error().raise(LOCAL_INFO,err.str());
       }
 
       spectrum.E_el.clear();
