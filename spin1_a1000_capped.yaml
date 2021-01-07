@@ -36,13 +36,19 @@ Parameters:
       ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # axial-vector vector
     C62: 
-      range: [-12.56637, 12.56637]
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # vector axial-vector
     C63: 
-      range: [-12.56637, 12.56637]
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # axial-vector axial-vector
     C64: 
-      range: [-12.56637, 12.56637]
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # Dim 7 -- gluons
     C71: 0
     C72: 0
