@@ -67,7 +67,7 @@ Parameters:
     v0:
       range: [216, 264]
     vesc:
-      range: [437, 629]
+      range: [453, 603]
     vrot: 
       same_as: Halo_gNFW_rho0::v0
     rs: 20.0
@@ -261,12 +261,12 @@ Rules:
       v0_obs: 240
       v0_obserr: 8
 
-  # Set vesc to 533 +/- 32 km/s based on RAVE survey [arXiv:1309.4293]
+  # Set vesc to 528 +/- 25 km/s based on Gaia data [arXiv:1901.02016]
   - capability: lnL_vesc
     function: lnL_vesc_gaussian
     options:
-      vesc_obs: 533
-      vesc_obserr: 31.9
+      vesc_obs: 528
+      vesc_obserr: 25
 
 Logger:
 
