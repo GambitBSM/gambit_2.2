@@ -599,6 +599,17 @@ LCDM_theta: |
    tau_reio            - reionization optical depth
    T_cmb               - CMB temperature [K]
 
+LCDM_zreio: |
+
+   The standard Lambda-CDM model, but without any details of the inflationary or neutrino sectors. redshift of reionisation as an input parameter.
+   The simplest standard contemporary model with 4+1 effective parameters including cosmological constant Lambda and cold dark matter. The 5 parameters are chosen as:
+
+   omega_b             - baryon density parameter
+   omega_cdm           - dark matter density parameter
+   H0                  - Hubble constant [km/s/Mpc]
+   z_reio              - reionization redshift
+   T_cmb               - CMB temperature [K]
+
 #
 # Modifications to N_eff
 #

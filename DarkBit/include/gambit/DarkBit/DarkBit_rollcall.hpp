@@ -77,6 +77,7 @@
 /// \author Patrick Stöcker
 ///         (stoecker@physik.rwth-aachen.de)
 /// \date 2019 Sep
+/// \date 2021 Jan
 ///
 /// \author Anders Kvellestad
 ///         (anders.kvellestad@fys.uio.no)
@@ -361,7 +362,7 @@ START_MODULE
     #undef FUNCTION
     #define FUNCTION RD_fraction_rescaled_LCDM
       START_FUNCTION(double)
-      ALLOW_MODELS(LCDM, LCDM_theta)
+      ALLOW_MODELS(LCDM, LCDM_theta, LCDM_zreio)
       DEPENDENCY(RD_oh2, double)
     #undef FUNCTION
   #undef CAPABILITY

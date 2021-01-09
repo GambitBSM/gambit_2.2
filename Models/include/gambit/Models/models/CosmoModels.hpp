@@ -16,6 +16,7 @@
 ///  \author Patrick Stoecker
 ///          (stoecker@physik.rwth-aachen.de)
 ///  \date 2019 Feb, July
+///  \date 2021 Jan
 ///
 ///  \author Janina Renk
 ///          (janina.renk@fysik.su.se)
@@ -60,6 +61,16 @@
   START_MODEL
   DEFINEPARS(T_cmb,omega_b,omega_cdm,100theta_s,tau_reio)
   MAP_TO_CAPABILITY(T_cmb,T_cmb)
+#undef MODEL
+
+// Vanilla ΛCDM.
+// This model would usually be scanned alongside an inflationary model and a neutrino model
+// As LCDM but with z_reio, redshift of reonisation, as model parameter instead of tau_reio.
+#define MODEL LCDM_zreio
+  START_MODEL
+  DEFINEPARS(T_cmb,omega_b,omega_cdm,H0,z_reio)
+  MAP_TO_CAPABILITY(T_cmb,T_cmb)
+  MAP_TO_CAPABILITY(H0, H0)
 #undef MODEL
 
 /* CMB + BBN */

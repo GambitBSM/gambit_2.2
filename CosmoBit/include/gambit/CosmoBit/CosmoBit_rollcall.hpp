@@ -22,6 +22,7 @@
 ///  \date 2018 Jan,Feb, Mar
 ///  \date 2019 Jan, Feb, June
 ///  \date 2020 Nov
+///  \date 2021 Jan
 ///
 ///  \author Janina Renk
 ///          (janina.renk@fysik.su.se)
@@ -71,8 +72,8 @@ START_MODULE
     DEPENDENCY(minimum_fraction,double)
     DEPENDENCY(lifetime,double)
     DEPENDENCY(RD_oh2, double)
-    ALLOW_MODEL_DEPENDENCE(LCDM, LCDM_theta, GeneralCosmoALP)
-    MODEL_GROUP(lcdm_model, (LCDM, LCDM_theta))
+    ALLOW_MODEL_DEPENDENCE(LCDM, LCDM_theta, LCDM_zreio, GeneralCosmoALP)
+    MODEL_GROUP(lcdm_model, (LCDM, LCDM_theta, LCDM_zreio))
     MODEL_GROUP(alp_model, (GeneralCosmoALP))
     ALLOW_MODEL_COMBINATION(lcdm_model, alp_model)
     #undef FUNCTION
@@ -84,8 +85,8 @@ START_MODULE
     #define FUNCTION total_DM_abundance_ALP
     START_FUNCTION(double)
     DEPENDENCY(DM_fraction,double)
-    ALLOW_MODEL_DEPENDENCE(LCDM, LCDM_theta, GeneralCosmoALP)
-    MODEL_GROUP(lcdm_model, (LCDM, LCDM_theta))
+    ALLOW_MODEL_DEPENDENCE(LCDM, LCDM_theta, LCDM_zreio, GeneralCosmoALP)
+    MODEL_GROUP(lcdm_model, (LCDM, LCDM_theta, LCDM_zreio))
     MODEL_GROUP(alp_model, (GeneralCosmoALP))
     ALLOW_MODEL_COMBINATION(lcdm_model, alp_model)
     #undef FUNCTION
@@ -116,8 +117,8 @@ START_MODULE
     #define FUNCTION minimum_fraction_ALP
     START_FUNCTION(double)
     DEPENDENCY(minimum_abundance,double)
-    ALLOW_MODEL_DEPENDENCE(LCDM, LCDM_theta, GeneralCosmoALP)
-    MODEL_GROUP(lcdm_model, (LCDM, LCDM_theta))
+    ALLOW_MODEL_DEPENDENCE(LCDM, LCDM_theta, LCDM_zreio, GeneralCosmoALP)
+    MODEL_GROUP(lcdm_model, (LCDM, LCDM_theta, LCDM_zreio))
     MODEL_GROUP(alp_model, (GeneralCosmoALP))
     ALLOW_MODEL_COMBINATION(lcdm_model, alp_model)
     #undef FUNCTION
@@ -224,7 +225,7 @@ START_MODULE
     START_CAPABILITY
       #define FUNCTION set_classy_input_params
       START_FUNCTION(Classy_input)
-      ALLOW_MODELS(LCDM,LCDM_theta)
+      ALLOW_MODELS(LCDM,LCDM_theta,LCDM_zreio)
       DEPENDENCY(classy_MPLike_input, pybind11::dict)
       DEPENDENCY(classy_NuMasses_Nur_input, pybind11::dict)
       DEPENDENCY(classy_primordial_input, pybind11::dict)
@@ -643,7 +644,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION compute_n0_g
     START_FUNCTION(double)
-    ALLOW_MODELS(LCDM, LCDM_theta)
+    ALLOW_MODELS(LCDM, LCDM_theta, LCDM_zreio)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -670,7 +671,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION compute_Omega0_b
     START_FUNCTION(double)
-    ALLOW_MODELS(LCDM, LCDM_theta)
+    ALLOW_MODELS(LCDM, LCDM_theta, LCDM_zreio)
     DEPENDENCY(H0, double)
     #undef FUNCTION
   #undef CAPABILITY
@@ -680,7 +681,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION compute_Omega0_cdm
     START_FUNCTION(double)
-    ALLOW_MODELS(LCDM, LCDM_theta)
+    ALLOW_MODELS(LCDM, LCDM_theta, LCDM_zreio)
     DEPENDENCY(H0, double)
     #undef FUNCTION
   #undef CAPABILITY
@@ -699,7 +700,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION compute_Omega0_g
     START_FUNCTION(double)
-    ALLOW_MODELS(LCDM, LCDM_theta)
+    ALLOW_MODELS(LCDM, LCDM_theta, LCDM_zreio)
     DEPENDENCY(H0, double)
     #undef FUNCTION
   #undef CAPABILITY
@@ -734,7 +735,7 @@ START_MODULE
     // calculate eta0 (today) from omega_b and T_cmb
     #define FUNCTION eta0_LCDM
     START_FUNCTION(double)
-    ALLOW_MODELS(LCDM, LCDM_theta)
+    ALLOW_MODELS(LCDM, LCDM_theta, LCDM_zreio)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -786,13 +787,13 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION AlterBBN_Input
     START_FUNCTION(map_str_dbl)
-    ALLOW_MODELS(LCDM, LCDM_theta, etaBBN_rBBN_rCMB_dNurBBN_dNurCMB)
+    ALLOW_MODELS(LCDM, LCDM_theta, LCDM_zreio, etaBBN_rBBN_rCMB_dNurBBN_dNurCMB)
     ALLOW_MODEL_DEPENDENCE(nuclear_params_neutron_lifetime)
-    MODEL_GROUP(cosmo,(LCDM, LCDM_theta, etaBBN_rBBN_rCMB_dNurBBN_dNurCMB))
+    MODEL_GROUP(cosmo,(LCDM, LCDM_theta, LCDM_zreio, etaBBN_rBBN_rCMB_dNurBBN_dNurCMB))
     MODEL_GROUP(neutron,(nuclear_params_neutron_lifetime))
     ALLOW_MODEL_COMBINATION(cosmo,neutron)
     DEPENDENCY(Neff_SM, double)
-    MODEL_CONDITIONAL_DEPENDENCY(eta0,double,LCDM,LCDM_theta)
+    MODEL_CONDITIONAL_DEPENDENCY(eta0,double,LCDM,LCDM_theta,LCDM_zreio)
     #undef FUNCTION
   #undef CAPABILITY
 

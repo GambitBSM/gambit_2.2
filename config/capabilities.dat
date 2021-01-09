@@ -4587,6 +4587,10 @@ LCDM_theta_parameters: |
    Standard (4+1)-parameter LCDM model (no neutrinos, no inflation), using 100*theta_s instead of H0.
    See ./gambit LCDM_theta for more details.
 
+LCDM_zreio_parameters: |
+   Standard (4+1)-parameter LCDM model (no neutrinos, no inflation), using z_reio instead of tau_reio.
+   See ./gambit LCDM_zreio for more details.
+
 etaBBN_rBBN_rCMB_dNurBBN_dNurCMB_parameters: |
    Model to be scanned in addition to LCDM as an extension: allowing for non-standard values of the baryon-to-photon ratio at BBN, non-standard values of the temperature ratio between photon and neutrinos at BBN and CMB release, as well as additional ultra-relativistic species present during BBN or at CMB release. See ./gambit etaBBN_rBBN_rCMB_dNurBBN_dNurCMB for more details.
 
