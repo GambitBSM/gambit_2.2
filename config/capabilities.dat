@@ -4439,6 +4439,9 @@ class_get_Hz: |
 class_get_rs: |
     Returns comoving sound horizon at baryon drag.
 
+class_get_tau_reio: |
+    Returns optical depth at reionisation.
+
 class_get_z_reio: |
     Returns redshift of reionisation.
 
@@ -4769,6 +4772,9 @@ S8_cosmo: |
 
 rs_drag: |
    Returns the comoving sound horizon at baryon drag.
+
+tau_reio: |
+    Returns optical depth at reionisation.
 
 z_reio: |
     Returns redshift of reionisation.

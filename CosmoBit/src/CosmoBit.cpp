@@ -330,6 +330,14 @@ namespace Gambit
       result = BEreq::class_get_Neff();
     }
 
+    /// Optical depth at reionisation
+    void get_tau_reio_classy(double& result)
+    {
+      using namespace Pipes::get_tau_reio_classy;
+
+      result = BEreq::class_get_tau_reio();
+    }
+
     /// redshift of reionisation
     void get_z_reio_classy(double& result)
     {

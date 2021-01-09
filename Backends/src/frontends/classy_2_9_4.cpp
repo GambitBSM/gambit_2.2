@@ -222,6 +222,13 @@
       return rs_d;
     }
 
+    // returns optical depth at reionisation
+    double class_get_tau_reio()
+    {
+      double rs_d = cosmo.attr("tau_reio")().cast<double>();
+      return rs_d;
+    }
+
     // returns redshift of reionisation
     double class_get_z_reio()
     {

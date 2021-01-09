@@ -747,6 +747,15 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  // optical depth at reionisation
+  #define CAPABILITY tau_reio
+  START_CAPABILITY
+    #define FUNCTION get_tau_reio_classy
+    START_FUNCTION(double)
+    BACKEND_REQ(class_get_tau_reio,(),double,())
+    #undef FUNCTION
+  #undef CAPABILITY
+
   // redshift of reionisation
   #define CAPABILITY z_reio
   START_CAPABILITY
