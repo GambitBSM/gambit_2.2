@@ -634,7 +634,6 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION get_H0_classy
     START_FUNCTION(double)
-    ALLOW_MODELS(LCDM_theta)
     BACKEND_REQ(class_get_H0,(),double,())
     #undef FUNCTION
   #undef CAPABILITY
