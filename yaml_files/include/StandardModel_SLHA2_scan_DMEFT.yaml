@@ -15,7 +15,7 @@
 ##  @ from http://pdg.lbl.gov/2017/reviews/rpp2017-rev-qcd.pdf
 ##  ! from http://pdg.lbl.gov/2017/reviews/rpp2017-rev-standard-model.pdf
 ## Value from PDG 2020
-##  $ from https://pdg.lbl.gov/2020/listings/rpp2020-list-t-quark.pdf
+##  $ from https://pdg.lbl.gov/2020/tables/rpp2020-sum-quarks.pdf
 ##
 ## If more than one source is listed, values are equal in both sources.
 ## Values in GeV where units apply.
@@ -27,8 +27,8 @@ GF      :  1.16637870E-05 # G_Fermi !
 alphaS  :  1.18100000E-01 # alpha_s(mZ)^MSbar @
 mZ      :  9.11876000E+01 # mZ(pole) !
 mBmB    :  4.18000000E+00 # mb(mb)^MSbar #
-mT      :  # 1.72760000E+02 # mtop(pole) $
-           range: [171.86, 173.66]
+mT      :  # 1.7240000E+02 # mtop(pole) $
+           range: [170.3, 174.5]
 mTau    :  1.77686000E+00 # mtau(pole) &
 mNu3    :               0 # mnu3(pole)
 
