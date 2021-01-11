@@ -183,6 +183,7 @@ Rules:
     options: # Planck 2018 values
       oh2_obs: 0.120
       oh2_obserr: 0.001
+      oh2_fractional_theory_err: 0.01
 
   # Choose to rescale signals in direct and indirect detection by the relic density fraction
   - capability: RD_fraction
