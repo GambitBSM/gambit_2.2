@@ -78,8 +78,9 @@ scanner_plugin(minuit2, version(6, 23, 01))
   {
     // retrieve the dimensionality of the scan
     const int dim = get_dimension();
+    std::cout << dim << "-dimensional scan" << std::endl;
 
-    // retrive the model - contains loglike etc
+    // retrieve the model - contains loglike etc
     Gambit::Scanner::like_ptr model = get_purpose(get_inifile_value<std::string>("like"));
     const auto offset = get_inifile_value<double>("likelihood: lnlike_offset", 0.);
     model->setPurposeOffset(offset);
@@ -105,25 +106,34 @@ scanner_plugin(minuit2, version(6, 23, 01))
       throw std::runtime_error("Minuit2: start specified by unit hypercube or physical parameters");
     }
 
-    const double default_start = 0.5;
-    const std::vector<double> default_hypercube_start(dim, default_start);
-    param_map start_map = model.transform(default_hypercube_start);
+    check_node_keys(physical_start_node ? physical_start_node : hypercube_start_node, names);
 
-    const auto start_node = physical_start_node ? physical_start_node : hypercube_start_node;
-    check_node_keys(start_node, names);
+    const double default_hypercube_start = 0.5;
+    std::vector<double> hypercube_start(dim, default_hypercube_start);
+    param_map physical_start_map;
 
-    for (auto &s : start_map)
+    if (physical_start_node)
     {
-      s.second = get_node_value(start_node, s.first, physical_start_node ? s.second : default_start);
+      physical_start_map = model.transform(hypercube_start);
+      for (auto &s : physical_start_map)
+      {
+        s.second = get_node_value(physical_start_node, s.first, s.second);
+      }
+      hypercube_start = model.inverse_transform(physical_start_map);
     }
-
-    const std::vector<double> hypercube_start = physical_start_node ?
-      model.inverse_transform(start_map) : get_values(start_map, names);
+    else
+    {
+      for (int i = 0; i < dim; i++)
+      {
+        hypercube_start[i] = get_node_value(hypercube_start_node, names[i], hypercube_start[i]);
+      }
+      physical_start_map = model.transform(hypercube_start);
+    }
 
     // get hypercube step (optional). It can be written in hypercube or physical
     // parameters. Default is same for each parameter
 
-    const double default_step = 0.01;
+    const double default_hypercube_step = 0.01;
     const auto hypercube_step_node = get_inifile_node("unit_hypercube_step");
     const auto physical_step_node = get_inifile_node("step");
 
@@ -144,7 +154,7 @@ scanner_plugin(minuit2, version(6, 23, 01))
       {
         if (!physical_step_node[names[i]])
         {
-          hypercube_step.push_back(default_step);
+          hypercube_step.push_back(default_hypercube_step);
         }
         else
         {
@@ -153,6 +163,7 @@ scanner_plugin(minuit2, version(6, 23, 01))
           forward.at(names[i]) += physical_step;
           auto backward = center;
           backward.at(names[i]) -= physical_step;
+
           const auto hypercube_forward = model.inverse_transform(forward);
           const auto hypercube_backward = model.inverse_transform(backward);
           const double mean_step = 0.5 * (hypercube_forward[i] - hypercube_backward[i]);
@@ -164,7 +175,7 @@ scanner_plugin(minuit2, version(6, 23, 01))
     {
       for (const auto& n : names)
       {
-         hypercube_step.push_back(get_node_value(hypercube_step_node, n, default_step));
+         hypercube_step.push_back(get_node_value(hypercube_step_node, n, default_hypercube_step));
       }
     }
 
@@ -225,10 +236,17 @@ scanner_plugin(minuit2, version(6, 23, 01))
 
     for (int i = 0; i < dim; i++)
     {
-      min->SetLimitedVariable(i, names[i], hypercube_start[i], hypercube_step[i], 0., 1.);
-      std::cout << names[i] << ". hypercube = " << hypercube_start[i]
-                << " +/- " << hypercube_step[i]
-                << ". physical = " << start_map.at(names[i]) << std::endl;
+      const bool added = min->SetLimitedVariable(i, names[i], hypercube_start[i], hypercube_step[i], 0., 1.);
+      if (added)
+      {
+        std::cout << names[i] << ". hypercube = " << hypercube_start[i]
+                  << " +/- " << hypercube_step[i]
+                  << ". physical = " << physical_start_map.at(names[i]) << std::endl;
+      }
+      else
+      {
+        throw std::runtime_error("could not add parameter");
+      }
     }
 
     // do the minimization
