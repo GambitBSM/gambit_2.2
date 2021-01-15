@@ -154,9 +154,9 @@ ObsLikes:
   # Top mass
   - capability: lnL_t_mass
     purpose:    LogLike
-    options: # PDG 2020 value (pole from xsection measurements) 
-      mT_obs: 172.4
-      mT_obserr: 0.7
+    options: # PDG 2020 value (from xsection measurements) 
+      mT_obs: 162.5
+      mT_obserr: 1.8
 
   # DirectDM nuisance parameters 
   - capability: lnL_nuclear_parameters_ChPT
