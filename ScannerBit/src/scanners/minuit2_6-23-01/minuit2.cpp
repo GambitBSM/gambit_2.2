@@ -87,7 +87,7 @@ scanner_plugin(minuit2, version(6, 23, 01))
     const auto names = model.get_names();
 
     // minuit2 algorithm options
-    const auto algorithm{get_inifile_value<std::string>("algorithm", "minimize")};
+    const auto algorithm{get_inifile_value<std::string>("algorithm", "combined")};
     const auto max_loglike_calls{get_inifile_value<int>("max_loglike_calls", 100000)};
     const auto max_iterations{get_inifile_value<int>("max_iterations", 100000)};
     const auto tolerance{get_inifile_value<double>("tolerace", 0.0001)};
@@ -186,7 +186,7 @@ scanner_plugin(minuit2, version(6, 23, 01))
     {
       kalgorithm = ROOT::Minuit2::kSimplex;
     }
-    else if (algorithm == "minimize")
+    else if (algorithm == "combined")
     {
       kalgorithm = ROOT::Minuit2::kCombined;
     }
