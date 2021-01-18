@@ -66,6 +66,16 @@ scanner_plugin(minuit2, version(6, 23, 01))
     // retrieve the dimensionality of the scan
     const int dim = get_dimension();
 
+#ifdef WITH_MPI
+    int size = 0;
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    const int elements = dim * (dim - 1) / 2;
+    if (size < elements)
+    {
+      throw std::runtime_error("Minuit2: require no. processes >= 1/2 dim (dim - 1)");
+    }
+#endif
+
     // retrieve the model - contains loglike etc
     Gambit::Scanner::like_ptr model = get_purpose(get_inifile_value<std::string>("like"));
     const auto offset = get_inifile_value<double>("likelihood: lnlike_offset", 0.);
