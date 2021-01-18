@@ -16,6 +16,10 @@
 ///
 ///  *********************************************
 
+#ifdef WITH_MPI
+#include "mpi.h"
+#endif
+
 #include <iostream>
 #include <map>
 #include <string>
@@ -70,9 +74,9 @@ scanner_plugin(minuit2, version(6, 23, 01))
     int size = 0;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     const int elements = dim * (dim - 1) / 2;
-    if (size < elements)
+    if (size > elements)
     {
-      throw std::runtime_error("Minuit2: require no. processes >= 1/2 dim (dim - 1)");
+      throw std::runtime_error("Minuit2: require no. processes <= 1/2 dim (dim - 1)");
     }
 #endif
 
