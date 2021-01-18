@@ -30,8 +30,6 @@
 #include "Math/Functor.h"
 
 
-typedef std::unordered_map<std::string, double> param_map;
-
 /** @brief Check that a yaml node does not contain unexpected keys */
 void check_node_keys(YAML::Node node, std::vector<std::string> keys)
 {
@@ -58,17 +56,6 @@ double get_node_value(YAML::Node node, std::string key, double default_)
   return default_;
 }
 
-/** @brief Get values from a map in a particular order */
-std::vector<double> get_values(param_map map, std::vector<std::string> keys)
-{
-  std::vector<double> values;
-  for (const auto& k : keys)
-  {
-    values.push_back(map.at(k));
-  }
-  return values;
-}
-
 scanner_plugin(minuit2, version(6, 23, 01))
 {
   reqd_libraries("Minuit2", "Minuit2Math");
@@ -78,7 +65,6 @@ scanner_plugin(minuit2, version(6, 23, 01))
   {
     // retrieve the dimensionality of the scan
     const int dim = get_dimension();
-    std::cout << dim << "-dimensional scan" << std::endl;
 
     // retrieve the model - contains loglike etc
     Gambit::Scanner::like_ptr model = get_purpose(get_inifile_value<std::string>("like"));
@@ -110,7 +96,7 @@ scanner_plugin(minuit2, version(6, 23, 01))
 
     const double default_hypercube_start = 0.5;
     std::vector<double> hypercube_start(dim, default_hypercube_start);
-    param_map physical_start_map;
+    std::unordered_map<std::string, double> physical_start_map;
 
     if (physical_start_node)
     {
