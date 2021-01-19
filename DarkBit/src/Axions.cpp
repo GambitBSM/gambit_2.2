@@ -15,6 +15,7 @@
 ///  \date 2018 Jan, Mar - May, Sept
 ///  \date 2019 Feb, May - July
 ///  \date 2020 Sept, Dec
+///  \date 2021 Jan
 ///
 ///  *********************************************
 
@@ -63,6 +64,9 @@ namespace Gambit
 
     /*! \brief Supporting classes and functions for the axion module.
      */
+
+     const double gagg_conversion = 1.0E-9;
+     const double gaee_conversion = 1.0E+13;
 
     /////////////////////////////////////////////////////////////////
     //      Auxillary functions and classes for interpolation      //
@@ -814,7 +818,7 @@ namespace Gambit
 
         // Load the solar model.
         // Solar radius R_Sol and D_Sol (= 1 a.u.) in 10^10 cm.
-        double radius_sol = 6.9598, distance_sol = 1495.978707;
+        const double radius_sol = 6.9598, distance_sol = 1495.978707;
         double temp = prefactor_gagg*gsl_pow_2(radius_sol/distance_sol)*radius_sol;
 
         SolarModel model_gagg;
@@ -1211,7 +1215,7 @@ namespace Gambit
     {
       using namespace Pipes::calc_ALPS1_signal_vac;
       double m_ax = *Param["ma0"];
-      double gagg = 1.0E-9*std::fabs(*Param["gagg"]); // gagg needs to be in eV^-1.
+      double gagg = gagg_conversion*std::fabs(*Param["gagg"]); // gagg needs to be in eV^-1.
 
       result = ALPS1_signal_general(1096.0, 0.0, m_ax, gagg);
     }
@@ -1221,7 +1225,7 @@ namespace Gambit
     {
       using namespace Pipes::calc_ALPS1_signal_gas;
       double m_ax = *Param["ma0"];
-      double gagg = 1.0E-9*std::fabs(*Param["gagg"]); // gagg needs to be in eV^-1.
+      double gagg = gagg_conversion*std::fabs(*Param["gagg"]); // gagg needs to be in eV^-1.
 
       result = ALPS1_signal_general(1044.0, 5.0E-8, m_ax, gagg);
     }
@@ -1230,7 +1234,8 @@ namespace Gambit
     double ALPS1_lnL_general(double s, double mu, double sigma)
     {
       // Propagate uncertainty from efficiency in chi^2-likelihood.
-      return -0.5*gsl_pow_2(s-mu)/(gsl_pow_2(0.05*s/0.82)+gsl_pow_2(sigma));
+      const double rel_error = 0.05/0.82;
+      return -0.5*gsl_pow_2(s-mu)/(gsl_pow_2(rel_error*s)+gsl_pow_2(sigma));
     }
 
     // Capability to provide joint liklihood for all three data runs.
@@ -1266,7 +1271,7 @@ namespace Gambit
     {
       using namespace Pipes::calc_CAST2007_signal_vac;
       double m_ax = *Param["ma0"];
-      double gagg = 1.0E-9*std::fabs(*Param["gagg"]); // gagg needs to be in eV^-1.
+      double gagg = gagg_conversion*std::fabs(*Param["gagg"]); // gagg needs to be in eV^-1.
       double gaee = std::fabs(*Param["gaee"]);
 
       // Initialise the Solar model calculator and get the reference counts for a given mass.
@@ -1282,7 +1287,7 @@ namespace Gambit
       double dummy;
       for (int i = 0; i < n_bins; i++)
       {
-        dummy = gsl_pow_2(gagg*1E19)*pow(10,lg_ref_counts_gagg[i]) + gsl_pow_2(gaee*1E13)*pow(10,lg_ref_counts_gaee[i]);
+        dummy = gsl_pow_2(gagg*1E19)*pow(10,lg_ref_counts_gagg[i]) + gsl_pow_2(gaee*gaee_conversion)*pow(10,lg_ref_counts_gaee[i]);
         counts.push_back(gsl_pow_2(gagg*1E19)*dummy);
       }
 
@@ -1294,7 +1299,7 @@ namespace Gambit
     {
       using namespace Pipes::calc_CAST2017_signal_vac;
       double m_ax = *Param["ma0"];
-      double gagg = 1.0E-9*std::fabs(*Param["gagg"]); // gagg needs to be in eV^-1.
+      double gagg = gagg_conversion*std::fabs(*Param["gagg"]); // gagg needs to be in eV^-1.
       double gaee = std::fabs(*Param["gaee"]);
       std::vector<std::vector<double>> res;
 
@@ -1327,7 +1332,7 @@ namespace Gambit
         double dummy;
         for (int bin = 0; bin < n_bins; bin++)
         {
-          dummy = gsl_pow_2(gagg*1E19)*pow(10,lg_ref_counts_gagg[bin]) + gsl_pow_2(gaee*1E13)*pow(10,lg_ref_counts_gaee[bin]);
+          dummy = gsl_pow_2(gagg*1E19)*pow(10,lg_ref_counts_gagg[bin]) + gsl_pow_2(gaee*gaee_conversion)*pow(10,lg_ref_counts_gaee[bin]);
           counts.push_back(gsl_pow_2(gagg*1E19)*dummy);
         }
 
@@ -1438,7 +1443,7 @@ namespace Gambit
     void calc_Haloscope_signal(double &result)
     {
       using namespace Pipes::calc_Haloscope_signal;
-      double gagg = 1.0E-9*std::fabs(*Param["gagg"]); // gagg needs to be in eV^-1.
+      double gagg = gagg_conversion*std::fabs(*Param["gagg"]); // gagg needs to be in eV^-1.
       // Get the DM fraction in axions and the local DM density.
       double fraction = *Dep::RD_fraction;
       LocalMaxwellianHalo LocalHaloParameters = *Dep::LocalHalo;
@@ -1459,10 +1464,11 @@ namespace Gambit
       using namespace Pipes::calc_lnL_Haloscope_ADMX1;
       double m_ax = *Param["ma0"];
       // Calculate equivalent frequency in MHz.
-      double freq = m_ax*1.0E-15/(2.0*pi*hbar);
+      const double eV_to_MHz = 1.0E-15/(2.0*pi*hbar);
+      double freq = m_ax*eV_to_MHz;
       double l = 0.0;
       // Initialise GSL histogram and flag.
-      static gsl_histogram *h = gsl_histogram_alloc (89);
+      static gsl_histogram *h = gsl_histogram_alloc(89);
       static bool init_flag = false;
 
       // Unless initialised already, read in digitised limits from 0910.5914.
@@ -1864,7 +1870,7 @@ namespace Gambit
      {
        using namespace Pipes::calc_RParameter;
        const ModelParameters& params = *Dep::GeneralALP_parameters;
-       double gaee2 = gsl_pow_2(1.0E+13 * std::fabs(params.at("gaee")));
+       double gaee2 = gsl_pow_2(gaee_conversion * std::fabs(params.at("gaee")));
        double gagg = 1.0E+10*std::fabs(params.at("gagg")); // gagg needs to be in 10^-10 GeV^-1.
        double ma0 = params.at("ma0");
        // Value for He-abundance Y from 1503.08146: <Y> = 0.2515(17).
@@ -1950,7 +1956,9 @@ namespace Gambit
       // Values for the model prediction provided by the authors.
       const std::vector<double> x2vals  = {0.0, 1.0, 6.25, 25.0, 56.25, 100.0, 156.25, 225.0, 306.25, 404.0, 506.25, 625.0, 756.25, 900.0};
       const std::vector<double> dPidts  = {1.235687, 1.244741, 1.299579, 1.470017, 1.796766, 2.260604, 2.795575, 3.484570, 4.232738, 5.056075, 6.113390, 7.342085, 8.344424, 9.775156};
-      const double err = 0.09;
+      const double err2 = 0.09*0.09;
+      const double obs = 4.19;
+      const double obs_err2 = 0.73*0.73;
 
       static WDInterpolator dPidt (x2vals, dPidts, GAMBIT_DIR "/DarkBit/data/Axions_WDCorrection_G117B15A.dat");
 
@@ -1960,7 +1968,7 @@ namespace Gambit
 
       double pred = dPidt.evaluate(mrel, x2);
 
-      result = -0.5 * gsl_pow_2(4.19 - pred) / (0.73*0.73 + err*err);
+      result = -0.5 * gsl_pow_2(obs - pred) / (obs_err2 + err2);
     }
 
     // Capability function to compute the cooling likelihood of R548 (1211.3389 using T = 11630 K; observations from Mukadam+ (2012)).
@@ -1974,7 +1982,9 @@ namespace Gambit
       // Values for the model prediction provided by the authors.
       const std::vector<double> x2vals   = {0.0, 1.0, 6.25, 25.0, 56.25, 100.0, 156.25, 225.0, 306.25, 400.0, 506.25, 625.0, 756.25, 900.0};
       const std::vector<double> dPidts  = {1.075373, 1.095319, 1.123040, 1.289434, 1.497666, 1.869437, 2.300523, 2.844954, 3.379978, 4.086028, 4.847149, 5.754807, 6.714841, 7.649140};
-      const double err = 0.09;
+      const double err2 = 0.09*0.09;
+      const double obs = 3.3;
+      const double obs_err2 = 1.1*1.1;
 
       static WDInterpolator dPidt (x2vals, dPidts, GAMBIT_DIR "/DarkBit/data/Axions_WDCorrection_R548.dat");
 
@@ -1984,7 +1994,7 @@ namespace Gambit
 
       double pred = dPidt.evaluate(mrel, x2);
 
-      result = -0.5 * gsl_pow_2(3.3 - pred) / (1.1*1.1 + err*err);
+      result = -0.5 * gsl_pow_2(obs - pred) / (obs_err2 + err2);
     }
 
     // Capability function to compute the cooling likelihood of PG1351+489 (1605.07668 & 1406.6034; using observations from Redaelli+ (2011)).
@@ -1998,7 +2008,9 @@ namespace Gambit
       // Values for the model prediction provided by the authors.
       const std::vector<double> x2vals = {0.0, 4.0, 16.0, 36.0, 64.0, 100.0, 144.0, 196.0, 256.0, 324.0, 400.0};
       const std::vector<double> dPidts = {0.90878126, 0.96382008, 1.2022906, 1.5712931, 2.1220619, 2.8002354, 3.6172605, 4.5000560, 5.5256592, 6.5055283, 7.5341296};
-      const double err = 0.5;
+      const double err2 = 0.5*0.5;
+      const double obs = 2.0;
+      const double obs_err2 = 0.9*0.9;
 
       static WDInterpolator dPidt (x2vals, dPidts, GAMBIT_DIR "/DarkBit/data/Axions_WDCorrection_PG1351489.dat");
 
@@ -2008,7 +2020,7 @@ namespace Gambit
 
       double pred = dPidt.evaluate(mrel, x2);
 
-      result = -0.5 * gsl_pow_2(2.0 - pred) / (0.9*0.9 + err*err);
+      result = -0.5 * gsl_pow_2(obs - pred) / (obs_err2 + err2);
     }
 
     // Capability function to compute the cooling likelihood of L192 (1605.06458  using l=1 & k=2; observations from Sullivan+Chote (2015)).
@@ -2022,7 +2034,9 @@ namespace Gambit
       // Values for the model prediction provided by the authors.
       const std::vector<double> x2vals = {0.0, 1.0, 4.0, 9.0, 16.0, 25.0, 36.0, 49.0, 64.0, 81.0, 100.0, 121.0, 144.0, 169.0, 196.0, 225.0, 256.0, 289.0, 324.0, 361.0, 400.0, 441.0, 484.0, 529.0, 576.0, 625.0, 676.0, 729.0, 784.0, 841.0, 900.0};
       const std::vector<double> dPidts = {2.41, 2.40, 2.44, 2.42, 2.50, 2.57, 2.63, 2.74, 2.83, 2.99, 3.15, 3.32, 3.52, 3.70, 3.90, 4.08, 4.42, 4.69, 4.98, 5.34, 5.62, 6.02, 6.27, 6.62, 7.04, 7.38, 7.89, 8.09, 8.65, 9.16, 9.62};
-      const double err = 0.85;
+      const double err2 = 0.85*0.85;
+      const double obs = 3.0;
+      const double obs_err2 = 0.6*0.6;
 
       static WDInterpolator dPidt (x2vals, dPidts, GAMBIT_DIR "/DarkBit/data/Axions_WDCorrection_L192.dat");
 
@@ -2032,7 +2046,7 @@ namespace Gambit
 
       double pred = dPidt.evaluate(mrel, x2);
 
-      result = -0.5 * gsl_pow_2(3.0 - pred) / (0.6*0.6 + err*err);
+      result = -0.5 * gsl_pow_2(obs - pred) / (obs_err2 + err2);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2079,7 +2093,7 @@ namespace Gambit
     {
       using namespace Pipes::calc_lnL_HESS_GCMF;
       double m_ax = *Param["ma0"];
-      double gagg = 1.0E-9*std::fabs(*Param["gagg"]); // gagg needs to be in eV^-1.
+      double gagg = gagg_conversion*std::fabs(*Param["gagg"]); // gagg needs to be in eV^-1.
 
       // Compute the domensionless parameters Epsilon and Gamma from the axion mass and axion-photon coupling (see 1311.3148).
       const double c_epsilon = 0.071546787;
@@ -2208,7 +2222,8 @@ namespace Gambit
     struct dRdE_params { double m; double sigma; };
     double dRdE (double E, void * params) {
       struct dRdE_params * par = (struct dRdE_params *)params;
-      // Efficiency from 2006.09721
+      // Efficiency of the Xenon1T experiment from arXiv:2006.09721
+      // Columns: Energy [keV] | Efficiency [dimensionless]
       static AxionInterpolator efficiency (GAMBIT_DIR "/DarkBit/data/XENON1T/efficiency.txt", "cspline");
       return std::exp(-0.5*pow((E - par->m)/par->sigma,2))*efficiency.interpolate(E);
     }
@@ -2253,16 +2268,19 @@ namespace Gambit
         44.14510208, 44.24450247, 44.3406822 , 44.43638726, 44.5331988 ,
         44.62865958, 44.72654689, 44.82382807, 44.91842725).finished();
 
-      // Photo-electric cross section from https://dx.doi.org/10.18434/T48G6X
+      // Photoelectric cross section for Xe from https://dx.doi.org/10.18434/T48G6X
+      // Columns: Photon energy [MeV] | Photoelectric absorption [10^-28 m^2/atom]
       static AxionInterpolator sigma_pe (GAMBIT_DIR "/DarkBit/data/XENON1T/photoelectric.txt");
 
-      gsl_integration_workspace * w = gsl_integration_workspace_alloc (1000);
+      gsl_integration_workspace * w = gsl_integration_workspace_alloc(1000);
       if ( (ma >= 1.0) && (ma <= 30.0) )
       {
         // Energy resolution from 2003.03825
         double energy_resolution = 0.15 + 31.71/sqrt(ma);
         double sigma = ma * energy_resolution / 100.0;
-        double amplitude = dm_fraction * (rho0/0.3) * (0.647309514*1000.0*365.0) * gae*gae * ma * (1.5e19/131.0)*sigma_pe.interpolate(ma/1000.0);
+        const double exposure = 0.647309514*1000.0*365.0;
+        const double photoel_eff_conversion = 1.5e19/131.0;
+        double amplitude = dm_fraction * (rho0/0.3) * exposure * gae*gae * ma * photoel_eff_conversion*sigma_pe.interpolate(ma/1000.0);
         gsl_function f;
         struct dRdE_params params = {ma, sigma};
         f.function = &dRdE;

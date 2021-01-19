@@ -1,3 +1,5 @@
+# Photoelectric cross section for Xe from https://dx.doi.org/10.18434/T48G6X
+# Columns: Photon energy [MeV] | Photoelectric absorption [10^-28 m^2/atom]
 0.001 2050000
 0.001072 1773000
 0.001149 1533000
@@ -23,4 +25,3 @@
 0.03456 1181
 0.034560000000001 7073
 0.04 4820
-
