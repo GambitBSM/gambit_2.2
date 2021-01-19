@@ -33,7 +33,6 @@ set(source_files src/decay_table.cpp
                  src/terminator.cpp
                  src/type_equivalency.cpp
                  src/virtual_higgs.cpp
-                 src/suspicious_points.cpp
 )
 
 set(header_files include/gambit/Elements/decay_table.hpp
