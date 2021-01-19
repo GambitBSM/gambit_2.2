@@ -192,6 +192,8 @@ namespace Gambit
     /*! \brief Two-dimensional integration container for bilinear interpolation and bicubic splines.
      */
 
+     enum class InterpolationOptions2D { bilinear, bicubic };
+     const std::map<InterpolationOptions2D, std::string> int_2d_type_name = { { InterpolationOptions2D::bilinear, "bilinear" }, { InterpolationOptions2D::bicubic, "bicubic"} };
     // AxionInterpolator2D class: Provides a 2-D interpolation container based on the gsl library.
     // Can be declared static for efficiency & easy one-time initialisation of interpolating functions.
     class AxionInterpolator2D
@@ -199,7 +201,7 @@ namespace Gambit
       public:
         // Overloaded class creators for the AxionInterpolator class using the init function below.
         AxionInterpolator2D();
-        AxionInterpolator2D(std::string file, std::string type);
+        AxionInterpolator2D(std::string file, InterpolationOptions2D type);
         AxionInterpolator2D(std::string file);
         AxionInterpolator2D& operator=(AxionInterpolator2D&&);
         // Destructor.
@@ -213,7 +215,7 @@ namespace Gambit
         bool is_inside_box(double x, double y);
       private:
         // Initialiser for the AxionInterpolator2D class.
-        void init(std::string file, std::string type);
+        void init(std::string file, InterpolationOptions2D type);
         // The gsl objects for the interpolating functions that need to be available to the class routines.
         gsl_interp_accel *x_acc;
         gsl_interp_accel *y_acc;
@@ -250,14 +252,14 @@ namespace Gambit
     }
 
     // Initialiser for the AxionInterpolator class.
-    void AxionInterpolator2D::init(std::string file, std::string type)
+    void AxionInterpolator2D::init(std::string file, InterpolationOptions2D type)
     {
       // Check if file exists.
       if (not(Utils::file_exists(file)))
       {
         DarkBit_error().raise(LOCAL_INFO, "ERROR! File '"+file+"' not found!");
       } else {
-        logger() << LogTags::debug << "Reading data from file '"+file+"' and interpolating it with '"+type+"' method." << EOM;
+        logger() << LogTags::debug << "Reading data from file '"+file+"' and interpolating it with '"+int_2d_type_name.at(type)+"' method." << EOM;
       }
       // Read numerical values from data file.
       ASCIItableReader tab (file);
@@ -284,17 +286,17 @@ namespace Gambit
       // Allocate memory for "z" values array in gsl format
       z = (double*) malloc(nx * ny * sizeof(double));
 
-      if (type == "bicubic")
+      if (type == InterpolationOptions2D::bicubic)
       {
         spline = gsl_spline2d_alloc(gsl_interp2d_bicubic, nx, ny);
       }
-      else if (type == "bilinear")
+      else if (type == InterpolationOptions2D::bilinear)
       {
         spline = gsl_spline2d_alloc(gsl_interp2d_bilinear, nx, ny);
       }
       else
       {
-        DarkBit_error().raise(LOCAL_INFO, "ERROR! Interpolation type '"+type+"' not known to class AxionInterpolator2D.\n       Available types: 'bilinear' and 'bicubic'.");
+        DarkBit_error().raise(LOCAL_INFO, "ERROR! Interpolation type not known to class AxionInterpolator2D.");
       }
 
       x_acc = gsl_interp_accel_alloc();
@@ -333,8 +335,8 @@ namespace Gambit
       z = (double*) malloc(2 * 2 * sizeof(double));
     }
     // Overloaded class creators for the AxionInterpolator class using the init function above.
-    AxionInterpolator2D::AxionInterpolator2D(std::string file, std::string type) { init(file, type); }
-    AxionInterpolator2D::AxionInterpolator2D(std::string file) { init(file, "bilinear"); }
+    AxionInterpolator2D::AxionInterpolator2D(std::string file, InterpolationOptions2D type) { init(file, type); }
+    AxionInterpolator2D::AxionInterpolator2D(std::string file) { init(file, InterpolationOptions2D::bilinear); }
 
     // Routine to access interpolated values.
     double AxionInterpolator2D::interpolate(double x, double y) { return gsl_spline2d_eval(spline, x, y, x_acc, y_acc); }
