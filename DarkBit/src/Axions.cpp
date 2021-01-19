@@ -75,6 +75,8 @@ namespace Gambit
     /*! \brief Generic one-dimensional integration container for linear interpolation and cubic splines.
      */
 
+    enum class InterpolationOptions1D { linear, cspline };
+    const std::map<InterpolationOptions1D, std::string> int_type_name = { { InterpolationOptions1D::linear, "linear" }, { InterpolationOptions1D::cspline, "cspline"} };
     // AxionInterpolator class: Provides a general 1-D interpolation container based on the gsl library.
     // Can be declared static for efficiency & easy one-time initialisation of interpolating functions.
     class AxionInterpolator
@@ -82,8 +84,8 @@ namespace Gambit
       public:
         // Overloaded class creators for the AxionInterpolator class using the init function below.
         AxionInterpolator();
-        AxionInterpolator(const std::vector<double> x, const std::vector<double> y, std::string type = "linear");
-        AxionInterpolator(std::string file, std::string type = "linear");
+        AxionInterpolator(const std::vector<double> x, const std::vector<double> y, InterpolationOptions1D type = InterpolationOptions1D::linear);
+        AxionInterpolator(std::string file, InterpolationOptions1D type = InterpolationOptions1D::linear);
         AxionInterpolator& operator=(AxionInterpolator&&);
         // Destructor.
         ~AxionInterpolator();
@@ -97,8 +99,8 @@ namespace Gambit
         double upper();
       private:
         // Initialiser for the AxionInterpolator class.
-        void init(std::string file, std::string type);
-        void init(const std::vector<double> x, const std::vector<double> y, std::string type);
+        void init(std::string file, InterpolationOptions1D type);
+        void init(const std::vector<double> x, const std::vector<double> y, InterpolationOptions1D type);
         // The gsl objects for the interpolating functions.
         gsl_interp_accel *acc;
         gsl_spline *spline;
@@ -115,49 +117,49 @@ namespace Gambit
     }
 
     // Initialiser for the AxionInterpolator class.
-    void AxionInterpolator::init(const std::vector<double> x, const std::vector<double> y, std::string type)
+    void AxionInterpolator::init(const std::vector<double> x, const std::vector<double> y, InterpolationOptions1D type)
     {
       int pts = x.size();
       // Get first and last value of the "x" component.
       lo = x.front();
       up = x.back();
       acc = gsl_interp_accel_alloc();
-      if (type == "cspline")
+      if (type == InterpolationOptions1D::cspline)
       {
         spline = gsl_spline_alloc(gsl_interp_cspline, pts);
       }
-      else if (type == "linear")
+      else if (type == InterpolationOptions1D::linear)
       {
         spline = gsl_spline_alloc(gsl_interp_linear, pts);
       }
       else
       {
-        DarkBit_error().raise(LOCAL_INFO, "ERROR! Interpolation type '"+type+"' not known to class AxionInterpolator.\n       Available types: 'linear' and 'cspline'.");
+        DarkBit_error().raise(LOCAL_INFO, "ERROR! Interpolation type not known to class AxionInterpolator.");
       }
 
       gsl_spline_init(spline, &x[0], &y[0], pts);
     }
 
-    AxionInterpolator::AxionInterpolator(const std::vector<double> x, const std::vector<double> y, std::string type) { init(x, y, type); }
+    AxionInterpolator::AxionInterpolator(const std::vector<double> x, const std::vector<double> y, InterpolationOptions1D type) { init(x, y, type); }
 
     // Initialiser for the AxionInterpolator class.
-    void AxionInterpolator::init(std::string file, std::string type)
+    void AxionInterpolator::init(std::string file, InterpolationOptions1D type)
     {
       // Check if file exists.
       if (not(Utils::file_exists(file)))
       {
         DarkBit_error().raise(LOCAL_INFO, "ERROR! File '"+file+"' not found!");
       } else {
-        logger() << LogTags::debug << "Reading data from file '"+file+"' and interpolating it with '"+type+"' method." << EOM;
+        logger() << LogTags::debug << "Reading data from file '"+file+"' and interpolating it with '"+int_type_name.at(type)+"' method." << EOM;
       }
       // Read numerical values from data file.
       ASCIItableReader tab (file);
       tab.setcolnames("x", "y");
 
-      init(tab["x"],tab["y"],type);
+      init(tab["x"], tab["y"], type);
     }
 
-    AxionInterpolator::AxionInterpolator(std::string file, std::string type) { init(file, type); }
+    AxionInterpolator::AxionInterpolator(std::string file, InterpolationOptions1D type) { init(file, type); }
 
     // Move assignment operator
     AxionInterpolator& AxionInterpolator::operator=(AxionInterpolator&& interp)
@@ -1074,7 +1076,7 @@ namespace Gambit
       double lgT = log10(T) - 3.0;
       // Interpolated effective relatvistic d.o.f. based on 0910.1066, deviations < 0.5%
       // Tabulated data: x = log10(T/GeV), y = gStar
-      static AxionInterpolator gR (GAMBIT_DIR "/DarkBit/data/gR_WantzShellard.dat", "cspline");
+      static AxionInterpolator gR (GAMBIT_DIR "/DarkBit/data/gR_WantzShellard.dat", InterpolationOptions1D::cspline);
       double res;
       if (lgT > 3.0) {
         res = gR.interpolate (2.99);
@@ -1094,7 +1096,7 @@ namespace Gambit
       double lgT = log10(T) - 3.0;
       // Interpolated effective relatvistic d.o.f. based on 0910.1066, deviations < 0.5%
       // Tabulated data: x = log10(T/GeV), y = gStar
-      static AxionInterpolator gS (GAMBIT_DIR "/DarkBit/data/gS_WantzShellard.dat", "cspline");
+      static AxionInterpolator gS (GAMBIT_DIR "/DarkBit/data/gS_WantzShellard.dat", InterpolationOptions1D::cspline);
       double res;
       if (lgT > 3.0) {
         res = gS.interpolate (2.99);
@@ -1614,7 +1616,7 @@ namespace Gambit
       // log10(T/GeV) required for interpolation.
       double lgT = log10(T) - 3.0;
       // Tabulated data: x = log10(T/GeV), y = F1(T); gR and gS from 0910.1066 .
-      static AxionInterpolator F1 (GAMBIT_DIR "/DarkBit/data/Axion_DiffEqnFun1.dat", "linear");
+      static AxionInterpolator F1 (GAMBIT_DIR "/DarkBit/data/Axion_DiffEqnFun1.dat", InterpolationOptions1D::linear);
       double res = -1.0;
       if ((lgT > 3.0) && (lgT < -5.0)) { res = F1.interpolate (lgT); }
       return res;
@@ -1626,7 +1628,7 @@ namespace Gambit
       // log10(T/GeV) required for interpolation.
       double lgT = log10(T) - 3.0;
       // Tabulated data: x = log10(T/GeV), y = F3(T); gR and gS from 0910.1066 .
-      static AxionInterpolator F3 (GAMBIT_DIR "/DarkBit/data/Axion_DiffEqnFun3.dat", "linear");
+      static AxionInterpolator F3 (GAMBIT_DIR "/DarkBit/data/Axion_DiffEqnFun3.dat", InterpolationOptions1D::linear);
       double res = 0.0;
       if ((lgT > 3.0) && (lgT < -5.0)) { res = F3.interpolate (lgT); }
       return res;
@@ -1876,7 +1878,7 @@ namespace Gambit
        // Value for He-abundance Y from 1503.08146: <Y> = 0.2515(17).
        const double Y = 0.2515;
        // Use interpolation for the finite-mass correction.
-       static AxionInterpolator correction (GAMBIT_DIR "/DarkBit/data/Axions_RParameterCorrection.dat", "linear");
+       static AxionInterpolator correction (GAMBIT_DIR "/DarkBit/data/Axions_RParameterCorrection.dat", InterpolationOptions1D::linear);
        // Initialise an effective axion-photon coupling, valid for low masses.
        double geff = gagg;
        // Apply correction for higher mass values...
@@ -1916,7 +1918,7 @@ namespace Gambit
     {
       public:
         // Constructor
-        WDInterpolator(const std::vector<double> x, const std::vector<double> y, std::string correction_file, std::string type = "linear")
+        WDInterpolator(const std::vector<double> x, const std::vector<double> y, std::string correction_file, InterpolationOptions1D type = InterpolationOptions1D::linear)
         {
           period_change = AxionInterpolator(x, y, type);
           correction = AxionInterpolator(correction_file, type);
@@ -2224,7 +2226,7 @@ namespace Gambit
       struct dRdE_params * par = (struct dRdE_params *)params;
       // Efficiency of the Xenon1T experiment from arXiv:2006.09721
       // Columns: Energy [keV] | Efficiency [dimensionless]
-      static AxionInterpolator efficiency (GAMBIT_DIR "/DarkBit/data/XENON1T/efficiency.txt", "cspline");
+      static AxionInterpolator efficiency (GAMBIT_DIR "/DarkBit/data/XENON1T/efficiency.txt", InterpolationOptions1D::cspline);
       return std::exp(-0.5*pow((E - par->m)/par->sigma,2))*efficiency.interpolate(E);
     }
 
