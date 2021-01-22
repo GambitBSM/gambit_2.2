@@ -3,8 +3,8 @@
 ##
 ## Constrains : (correct) relic density, gamma rays, direct detection, full LHC likelihood (profile cut-off). 
 ## 
-## Only dim-6 (C61-64) and dim-7 (C71-C710) operators.
-## Nuisance parameters: rho0, v0, vesc, mtop, sigmapiN, Deltas, gTs, rs2
+## 16 model parameters (mchi, Lambda, C61-64 and C71-C710 (WCs for Dim-6 & Dim-7 operators))
+## 8 nuisance parameters (mT, rho0, v0, vesc, sigmapiN, Deltas, gTs, rs2)
 ##########################################################################################################
 
 
@@ -30,45 +30,73 @@ Parameters:
     # Dim 6 -- qq chi chi bilinears
     # vector vector
     C61:
-      range: [-1, 1] # Heavily constrained by direct detection
+      #range: [-1, 1] # Heavily constrained by direct detection
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # axial-vector vector
     C62: 
-      range: [-12.56637, 12.56637]
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # vector axial-vector
     C63: 
-      range: [-12.56637, 12.56637]
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # axial-vector axial-vector
     C64: 
-      range: [-12.56637, 12.56637]
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # Dim 7 -- gluons
     C71: 
-      range: [-12.56637, 12.56637]
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     C72: 
-      range: [-12.56637, 12.56637]
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     C73:
-      range: [-12.56637, 12.56637]
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     C74: 
-      range: [-12.56637, 12.56637]
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # Dim 7 -- Higgs induced bilinears
     # Scalar scalar
     C75: 
-      range: [-12.56637, 12.56637]
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # Pseudoscalar scalar
     C76: 
-      range: [-12.56637, 12.56637]
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # Scalar pseudoscalar
     C77: 
-      range: [-12.56637, 12.56637]
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # Pseudoscalar pseudoscalar
     C78: 
-      range: [-12.56637, 12.56637]
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # Dim 7 -- tensor currents
     # sigma sigma
     C79: 
-      range: [-12.56637, 12.56637]
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # sigma*ig5 sigma
     C710: 
-      range: [-12.56637, 12.56637]
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
 
   # NFW profile
   Halo_gNFW_rho0:
