@@ -1,7 +1,7 @@
 ##########################################################################################################
 ## GAMBIT configuration file for a Diver scan of the DMEFT model
 ##
-## Constrains : relic density, gamma rays, direct detection, capped LHC likelihood (hard cut-off). 
+## Constrains : (correct) relic density, gamma rays, direct detection, full LHC likelihood (profile cut-off). 
 ## 
 ## Only dim-6 (C61-64) and dim-7 (C71-C710) operators.
 ## Nuisance parameters: rho0, v0, vesc, mtop, sigmapiN, Deltas, gTs, rs2
@@ -146,6 +146,10 @@ ObsLikes:
     module:     ColliderBit
     type: double
 
+    # Get details about the nuisance parameter 'a'
+  - purpose:    Observable
+    capability: DMEFT_profiled_LHC_nuisance_params
+
   ## Nuisance parameters
   # DM Local Halo likelihoods
   - capability: lnL_rho0
@@ -173,9 +177,9 @@ Rules:
   - capability: RD_oh2
     function: RD_oh2_general # Use the DarkBit native calculator for the relic density
 
-  # Choose to implement the relic density likelihood as an upper bound, not a detection
+  # Choose to implement the relic density likelihood as a detection
   - capability: lnL_oh2
-    function: lnL_oh2_upperlimit
+    function: lnL_oh2_Simple
     options: # Planck 2018 values
       oh2_obs: 0.120
       oh2_obserr: 0.001
@@ -210,7 +214,7 @@ Rules:
     
   - capability: LHC_Combined_LogLike
     options:
-      cap_loglike: true
+      cap_loglike: false
       skip_analyses:
         - CMS_13TeV_MONOJET_36invfb_interpolated_nocovar
 
@@ -232,9 +236,23 @@ Rules:
       nuisance_prof_method: 5
       nuisance_prof_verbosity: 0
 
-  # Hard cut-off of the pT/ETmiss spectrum for pT/ETmiss > Lambda
+  # Profile over the cut-off parameter for pT/ETmiss > Lambda
   - capability: AllAnalysisNumbers
-    function: DMEFT_results_cutoff
+    function: DMEFT_results_profiled
+
+  - capability: DMEFT_profiled_LHC_nuisance_params
+    function: calc_DMEFT_profiled_LHC_nuisance_params
+    options:
+      # use_fixed_value_a: 1000.0  # This will switch off the profiling
+      init_values_a: [1.0, 2.0, 3.0]
+      range_a: [0.0, 4.0]
+      nuisance_prof_initstep: 0.1
+      nuisance_prof_convtol: 0.1
+      nuisance_prof_maxsteps: 15
+      nuisance_prof_convacc: 0.1
+      nuisance_prof_simplexsize: 1e-5
+      nuisance_prof_method: 6
+      nuisance_prof_verbosity: 0
 
   # Use the WIMP properties structure to get WIMP mass etc.
   - capability: mwimp
@@ -276,7 +294,7 @@ Printer:
 
   printer: hdf5
   options:
-    output_file: "DMEFT_dim_6+7_capped_hard.hdf5"
+    output_file: "DMEFT_dim_6_7_full_prof_RF_1.hdf5"
     delete_file_on_restart: false
     buffer_length: 1000
     group: "/DMEFT"
@@ -304,7 +322,7 @@ KeyValues:
     model_invalid_for_lnlike_below: -5e5
     model_invalid_for_lnlike_below_alt: -1e5
 
-  default_output_path: "runs/DMEFT/dim_6+7_capped_hard/"
+  default_output_path: "runs/DMEFT/dim_6_7_full_prof_RF_1/"
 
   debug: false
   print_timing_data: false

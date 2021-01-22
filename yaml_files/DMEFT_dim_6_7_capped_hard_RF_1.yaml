@@ -1,7 +1,7 @@
 ##########################################################################################################
 ## GAMBIT configuration file for a Diver scan of the DMEFT model
 ##
-## Constrains : (correct) relic density, gamma rays, direct detection, full LHC likelihood (hard cut-off). 
+## Constrains : (correct) relic density, gamma rays, direct detection, capped LHC likelihood (hard cut-off). 
 ## 
 ## Only dim-6 (C61-64) and dim-7 (C71-C710) operators.
 ## Nuisance parameters: rho0, v0, vesc, mtop, sigmapiN, Deltas, gTs, rs2
@@ -210,7 +210,7 @@ Rules:
     
   - capability: LHC_Combined_LogLike
     options:
-      cap_loglike: false
+      cap_loglike: true
       skip_analyses:
         - CMS_13TeV_MONOJET_36invfb_interpolated_nocovar
 
@@ -276,7 +276,7 @@ Printer:
 
   printer: hdf5
   options:
-    output_file: "DMEFT_dim_6+7_full_hard_RF_1.hdf5"
+    output_file: "DMEFT_dim_6_7_capped_hard_RF_1.hdf5"
     delete_file_on_restart: false
     buffer_length: 1000
     group: "/DMEFT"
@@ -304,7 +304,7 @@ KeyValues:
     model_invalid_for_lnlike_below: -5e5
     model_invalid_for_lnlike_below_alt: -1e5
 
-  default_output_path: "runs/DMEFT/dim_6+7_full_hard_RF_1/"
+  default_output_path: "runs/DMEFT/dim_6_7_capped_hard_RF_1/"
 
   debug: false
   print_timing_data: false
