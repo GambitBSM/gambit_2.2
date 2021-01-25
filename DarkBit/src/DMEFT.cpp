@@ -87,7 +87,7 @@ namespace Gambit
       const Spectrum& spec = *Dep::DMEFT_spectrum;
       const SubSpectrum& SM = spec.get_LE();
       const SMInputs& SMI   = spec.get_SMInputs();
-      
+
       // Get SM pole masses
       getSMmass("e-_1",     1)
       getSMmass("e+_1",     1)
@@ -304,14 +304,22 @@ namespace Gambit
       result["C710c"] = C710/pow(Lambda, 3.);
       result["C710b"] = C710/pow(Lambda, 3.);
 
-      // If Lambda > m_t then we include corrections
-      double mt = spec.get(Par::Pole_Mass, "t");
-      if(Lambda > mt) 
+      // use the running top mass at Q=mt, which is an input
+      double mtatmt = spec.get(Par::mass1,"trun");
+      // If Lambda > m_t(m_t) then we include corrections
+      if(Lambda > mtatmt)
       {
+	/// Now use the running top mass at the scale of the spectrum object
+	/// If RGEs had been used to evolve yt and vEW this could be
+	/// different to mtatmt, though in the simple spectra its the same
+	const SubSpectrum& dmeft = Dep::DMEFT_spectrum->get_HE();
+	double yt = dmeft.get(Par::dimensionless, "Yu", 3,3);
+	double vEW = dmeft.get(Par::mass1, "vev");
+	double mtrun = yt * vEW / sqrt(2.);
         // 1. Loop induced coupling to dim-5 
         //    operators to dim-7, see:
         // https://arxiv.org/pdf/1302.4454.pdf
-        double lamovermt2 = pow(Lambda, 2.)/pow(mt, 2.);
+	double lamovermt2 = pow(Lambda, 2.)/pow(mtrun, 2.);
         double prefactor = -4/lamovermt2*log(lamovermt2);
         result["C51"] += prefactor*C79/Lambda;
         result["C52"] += prefactor*C710/Lambda;
