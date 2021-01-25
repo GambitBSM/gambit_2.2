@@ -305,14 +305,15 @@ namespace Gambit
       result["C710b"] = C710/pow(Lambda, 3.);
 
       // use the running top mass at Q=mt, which is an input
-      double mtatmt = spec.get(Par::mass1,"trun");
+      double mtatmt = spec.get(Par::mass1,"mtrun");
+      
       // If Lambda > m_t(m_t) then we include corrections
       if(Lambda > mtatmt)
       {
         // 1. Loop induced coupling to dim-5 
         //    operators to dim-7, see:
         // https://arxiv.org/pdf/1302.4454.pdf
-	double lamovermt2 = pow(Lambda, 2.)/pow(mtatmt, 2.);
+	      double lamovermt2 = pow(Lambda, 2.)/pow(mtatmt, 2.);
         double prefactor = -4/lamovermt2*log(lamovermt2);
         result["C51"] += prefactor*C79/Lambda;
         result["C52"] += prefactor*C710/Lambda;

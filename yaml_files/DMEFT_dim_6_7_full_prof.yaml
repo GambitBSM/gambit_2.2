@@ -93,11 +93,11 @@ Parameters:
       prior_type: double_log_flat_join
       ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # sigma*ig5 sigma
-    C710:
+    C710: 
       #range: [-12.56637, 12.56637]
       prior_type: double_log_flat_join
       ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
- # Top running mass - this overrides the SM top pole mass parameter
+    # Top running mass - this overrides the SM top pole mass parameter
     mtrunIN:
       range: [157.1, 167.9]
 
