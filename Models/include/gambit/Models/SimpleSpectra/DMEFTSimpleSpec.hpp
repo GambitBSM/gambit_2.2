@@ -195,7 +195,7 @@ namespace Gambit
         getters[dimensionless].map2W["Ye"] = FInfo2W(&Self::get_Ye, i012, i012);
         getters[Pole_Mass].map0W["chi"] =  &Self::get_chiPoleMass;
         getters[Pole_Mass].map0W["h0_1"] =  &Self::get_h0_1PoleMass;
-        getters[mass1].map0W["trun"] = &Self::get_mtrun;
+        getters[mass1].map0W["mtrun"] = &Self::get_mtrun;
         return getters;
       }
       
@@ -236,7 +236,7 @@ namespace Gambit
         setters[dimensionless].map2W["Ye"] = FInfo2W(&Self::set_Ye, i012, i012);
         setters[Pole_Mass].map0W["chi"] =  &Self::set_chiPoleMass;
         setters[Pole_Mass].map0W["h0_1"] =  &Self::set_h0_1PoleMass;
-        setters[mass1].map0W["trun"] = &Self::set_mtrun;
+        setters[mass1].map0W["mtrun"] = &Self::set_mtrun;
         return setters;
       }
     };
