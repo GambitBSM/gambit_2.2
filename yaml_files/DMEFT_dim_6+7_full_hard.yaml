@@ -69,7 +69,9 @@ Parameters:
     # sigma*ig5 sigma
     C710: 
       range: [-12.56637, 12.56637]
-    mtrunIN: 163.0
+    # Top running mass - this overrides the SM top pole mass parameter
+    mtrunIN:
+      range: [157.1, 167.9]
 
   # NFW profile
   Halo_gNFW_rho0:

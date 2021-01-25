@@ -775,7 +775,9 @@ namespace Gambit
       const double default_mtrun_obserr = 0.5 * (2.1 + 1.5);
       const double mtrun_obserr = runOptions->getValueOrDef<double>(default_mtrun_obserr, "mtrun_obserr");
       const bool profile = runOptions->getValueOrDef<bool>(false, "profile_systematics");
-      result = Stats::gaussian_loglikelihood(Dep::SMINPUTS->mtrunIN, mtrun_obs, 0.0, mtrun_obserr, profile);
+      const Spectrum& spec = *Dep::DMEFT_spectrum;
+      const double mtrun = spec.get(Par::mass1, "trun");
+      result = Stats::gaussian_loglikelihood(mtrun, mtrun_obs, 0.0, mtrun_obserr, profile);
     }
 
     /// b quark mass likelihood

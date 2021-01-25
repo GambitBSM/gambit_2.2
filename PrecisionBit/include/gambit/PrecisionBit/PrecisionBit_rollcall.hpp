@@ -125,7 +125,6 @@ START_MODULE
   // SM nuisance likelihoods
   QUICK_FUNCTION(PrecisionBit, lnL_Z_mass,   NEW_CAPABILITY, lnL_Z_mass_chi2,   double, (), (SMINPUTS, SMInputs))
   QUICK_FUNCTION(PrecisionBit, lnL_t_mass,   NEW_CAPABILITY, lnL_t_mass_chi2,   double, (), (SMINPUTS, SMInputs))
-  QUICK_FUNCTION(PrecisionBit, lnL_mtrun,    NEW_CAPABILITY, lnL_mtrun,         double, (), (SMINPUTS, SMInputs))
   QUICK_FUNCTION(PrecisionBit, lnL_mbmb,     NEW_CAPABILITY, lnL_mbmb_chi2,     double, (), (SMINPUTS, SMInputs))
   QUICK_FUNCTION(PrecisionBit, lnL_mcmc,     NEW_CAPABILITY, lnL_mcmc_chi2,     double, (), (SMINPUTS, SMInputs))
   QUICK_FUNCTION(PrecisionBit, lnL_alpha_em, NEW_CAPABILITY, lnL_alpha_em_chi2, double, (), (SMINPUTS, SMInputs))
@@ -133,6 +132,16 @@ START_MODULE
   QUICK_FUNCTION(PrecisionBit, lnL_GF,       NEW_CAPABILITY, lnL_GF_chi2,       double, (), (SMINPUTS, SMInputs))
 
   QUICK_FUNCTION(PrecisionBit, lnL_light_quark_masses, NEW_CAPABILITY, lnL_light_quark_masses_chi2, double, (), (SMINPUTS, SMInputs))
+
+  // Top quark running mass log-likelihood
+  #define CAPABILITY lnL_mtrun
+  START_CAPABILITY
+    #define FUNCTION lnL_mtrun
+    START_FUNCTION(double)
+    DEPENDENCY(DMEFT_spectrum, Spectrum)
+    ALLOW_MODEL(DMEFT)
+    #undef FUNCTION
+  #undef CAPABILITY
 
 
   // Electroweak precision likelihoods: W mass
