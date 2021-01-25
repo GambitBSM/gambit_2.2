@@ -470,8 +470,6 @@ def proc_cat(dm, sv, products, propagators, gambit_pdg_dict,
 
     # Use DarkBit_utils::ImportDecays to recursively import decays for final
     # state particles
-    # TODO confirm final state particles to exclude.
-    # TODO add SM fermion final states (excludedecays)
     if higgses or propagators:
 
         towrite += (
@@ -494,7 +492,6 @@ def proc_cat(dm, sv, products, propagators, gambit_pdg_dict,
 
         if does_DM_decay: propagators = []
 
-        # TODO add any final state, non-SM particles (external legs)
         for particle in list(set(higgses+propagators)):
 
             towrite += (
