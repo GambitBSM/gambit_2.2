@@ -776,7 +776,7 @@ namespace Gambit
       const double mtrun_obserr = runOptions->getValueOrDef<double>(default_mtrun_obserr, "mtrun_obserr");
       const bool profile = runOptions->getValueOrDef<bool>(false, "profile_systematics");
       const Spectrum& spec = *Dep::DMEFT_spectrum;
-      const double mtrun = spec.get(Par::mass1, "trun");
+      const double mtrun = spec.get(Par::mass1, "mtrun");
       result = Stats::gaussian_loglikelihood(mtrun, mtrun_obs, 0.0, mtrun_obserr, profile);
     }
 
