@@ -27,25 +27,37 @@
 #include "gambit/Utils/util_macros.hpp"
 #include "gambit/Logs/log_tags.hpp"
 
-#include "gambit/Printers/baseprinter.hpp"
+#ifndef STANDALONE
+    #include "gambit/Printers/printermanager.hpp"
+    #include "gambit/Printers/baseprinter.hpp"
+#endif
 
 namespace Gambit
 {
 
   /// Gambit suspicious point exception class.
-  class Suspicious_point_exception : public special_exception
+  class Suspicious_point_exception
   {
 
     public:
 
-      const int SuspiciousPtID;
-
       /// Constructor
-      Suspicious_point_exception();
+      Suspicious_point_exception() {} 
 
-      /// Raise the exception, i.e. throw it. The default code is 1.
-      virtual void raise(const std::string&, int code=1, bool debug=false);
+      /// Raise the new suspicious point exception, Print it with a message and a code.
+      void raise(const std::string& msg,int mycode=1, bool debug=false)
+      {
 
+#ifndef STANDALONE
+        // get the printer pointer
+        Printers::BaseBasePrinter& printer = *(get_global_printer_manager()->printerptr);
+
+        int ranksus = printer.getRank();
+        printer.print(mycode,   "Suspicious Point Code", Printers::get_main_param_id("Suspicious Point Code"), ranksus, Printers::get_point_id());
+#endif
+
+        if (debug) std::cout << "Point Suspicious: " << msg << std::endl;
+      }
   };
 
 }
