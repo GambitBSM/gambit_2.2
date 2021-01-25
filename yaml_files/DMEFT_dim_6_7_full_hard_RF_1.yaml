@@ -97,7 +97,9 @@ Parameters:
       #range: [-12.56637, 12.56637]
       prior_type: double_log_flat_join
       ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
-
+    # Top running mass - this overrides the SM top pole mass parameter
+    mtrunIN:
+      range: [157.1, 167.9]
   # NFW profile
   Halo_gNFW_rho0:
     rho0:
@@ -185,12 +187,9 @@ ObsLikes:
   - capability: lnL_vesc
     purpose: LogLike
 
-  # Top mass
-  - capability: lnL_t_mass
+  # Top running mass
+  - capability: lnL_mtrun
     purpose:    LogLike
-    options: # PDG 2020 value (from xsection measurements) 
-      mT_obs: 162.5
-      mT_obserr: 1.8
 
   # DirectDM nuisance parameters 
   - capability: lnL_nuclear_parameters_ChPT

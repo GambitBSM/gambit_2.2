@@ -24,7 +24,7 @@
 
   DEFINEPARS(Lambda, C51, C52, C61, C62, C63, C64, C71, C72)
   DEFINEPARS(C73, C74, C75, C76, C77, C78, C79, C710, mchi)
-
+  DEFINEPARS(mtrunIN)
   #define CAPABILITY WIMP_properties
   START_CAPABILITY
      #define FUNCTION DMEFT_WIMP_properties
