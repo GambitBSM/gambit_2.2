@@ -4,14 +4,14 @@
 ## Constrains : (correct) relic density, gamma rays, direct detection, full LHC likelihood (profile cut-off). 
 ## 
 ## 16 model parameters (mchi, Lambda, C61-64 and C71-C710 (WCs for Dim-6 & Dim-7 operators))
-## 8 nuisance parameters (mT, rho0, v0, vesc, sigmapiN, Deltas, gTs, rs2)
+## 8 nuisance parameters (mtrunIN, rho0, v0, vesc, sigmapiN, Deltas, gTs, rs2)
 ##########################################################################################################
 
 
 Parameters:
 
   # SM parameters.
-  StandardModel_SLHA2: !import include/StandardModel_SLHA2_scan_DMEFT.yaml
+  StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
 
   StandardModel_Higgs:
      mH: 125.10 # PDG 2020 value
