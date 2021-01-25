@@ -352,9 +352,9 @@ namespace Gambit {
     }
 
 
-    /// \brief Likelihoods for nuclear parameters (ChPT) in DirectDM 2.2.0
+    /// \brief Likelihoods for nuclear parameters (ChPT) as used in DirectDM v2.2.0
     /// Default data:
-    ///  sigmapiN = 0.050 +/- 0.015 GeV
+    ///  sigmapiN = 0.050  +/- 0.015 GeV
     ///  Deltas   = -0.035 +/- 0.009
     ///  gTs      = -0.027 +/- 0.016
     ///  rs2      = -0.115 +/- 0.035 GeV^-2
@@ -374,8 +374,8 @@ namespace Gambit {
         double Deltas_obs    = runOptions->getValueOrDef<double>(-0.035, "Deltas_obs");
         double Deltas_obserr = runOptions->getValueOrDef<double>(0.009, "Deltas_obserr");
 
-        double gTs_obs       = runOptions->getValueOrDef<double>(-0.027, "gTs_obs");
-        double gTs_obserr    = runOptions->getValueOrDef<double>(0.016, "gTs_obserr");
+        double gTs_obs    = runOptions->getValueOrDef<double>(-0.027, "gTs_obs");
+        double gTs_obserr = runOptions->getValueOrDef<double>(0.016, "gTs_obserr");
 
         double rs2_obs    = runOptions->getValueOrDef<double>(-0.115, "rs2_obs");
         double rs2_obserr = runOptions->getValueOrDef<double>(0.035, "rs2_obserr");
