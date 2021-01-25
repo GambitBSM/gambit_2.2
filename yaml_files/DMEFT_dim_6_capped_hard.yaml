@@ -4,7 +4,7 @@
 ## Constrains : relic density, gamma rays, direct detection, capped LHC likelihood (hard cut-off). 
 ## 
 ## 6 model parameters (mchi, Lambda, C61-64 (WCs for Dim-6 operators))
-## 7 nuisance parameters (rho0, v0, vesc, sigmapiN, Deltas, gTs, rs2)
+## 8 nuisance parameters (mtrunIN, rho0, v0, vesc, sigmapiN, Deltas, gTs, rs2)
 ##########################################################################################################
 
 
@@ -68,7 +68,8 @@ Parameters:
     # sigma*ig5 sigma
     C710: 0
     # Top running mass - this overrides the SM top pole mass parameter
-    mtrunIN: 162.5
+    mtrunIN:
+      range: [157.1, 167.9]
 
   # NFW profile
   Halo_gNFW_rho0:
@@ -157,6 +158,10 @@ ObsLikes:
   - capability: lnL_vesc
     purpose: LogLike
 
+  # Top running mass
+  - capability: lnL_mtrun
+    purpose:    LogLike
+    
   # DirectDM nuisance parameters 
   - capability: lnL_nuclear_parameters_ChPT
     purpose: LogLike
