@@ -760,6 +760,24 @@ namespace Gambit
       result = Stats::gaussian_loglikelihood(Dep::SMINPUTS->mT, mT_obs, 0.0, mT_obserr, profile);
     }
 
+    /**
+     * @brief Running top mass MS-bar likelihood
+     *
+     * This uses a special running MS-bar top mass input parameter at the scale mtop.
+     * By default the data from PDG 2020; see p25 of https://pdg.lbl.gov/2020/download/db2020.pdf
+     *
+     * The asymmetric errors are averaged.
+     */
+    void lnL_mtrun(double &result)
+    {
+      using namespace Pipes::lnL_mtrun;
+      const double mtrun_obs = runOptions->getValueOrDef<double>(162.5, "mtrun_obs");
+      const double default_mtrun_obserr = 0.5 * (2.1 + 1.5);
+      const double mtrun_obserr = runOptions->getValueOrDef<double>(default_mtrun_obserr, "mtrun_obserr");
+      const bool profile = runOptions->getValueOrDef<bool>(false, "profile_systematics");
+      result = Stats::gaussian_loglikelihood(Dep::SMINPUTS->mtrunIN, mtrun_obs, 0.0, mtrun_obserr, profile);
+    }
+
     /// b quark mass likelihood
     /// m_b (mb)^MSbar = 4.18 +/- 0.03 GeV (1 sigma), Gaussian.
     /// Reference: http://pdg.lbl.gov/2016/reviews/rpp2016-rev-qcd.pdf = C. Patrignani et al. (Particle Data Group), Chin. Phys. C, 40, 100001 (2016).
