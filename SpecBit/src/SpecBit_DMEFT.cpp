@@ -115,7 +115,9 @@ namespace Gambit
       // See footnote 9 https://link.springer.com/article/10.1007/JHEP11(2019)150)
       
       // First run alpha_S from MZ to desired scale with one-loop SM RGE
-      const double b0 = -7.;
+
+      // b_N = 11/ 3 N - nf / 4 - ns /6 = 11 - 10/3 for a topless SM
+      const double b0 = 23/3.;
       const double alpha_S_MZ = sminputs.alphaS;
       const double MZ = sminputs.mZ;
       const double alpha_S_mtop = alpha_S_MZ / (1. + b0 / (2. * M_PI) * alpha_S_MZ * std::log(DMEFTmodel.mtrun/ MZ));
