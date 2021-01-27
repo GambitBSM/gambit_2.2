@@ -161,7 +161,7 @@ ObsLikes:
   # Top running mass
   - capability: lnL_mtrun
     purpose:    LogLike
-  
+
   # DirectDM nuisance parameters 
   - capability: lnL_nuclear_parameters_ChPT
     purpose: LogLike
