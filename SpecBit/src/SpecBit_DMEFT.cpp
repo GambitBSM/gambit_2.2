@@ -196,6 +196,11 @@ namespace Gambit
           errmsg << "Problematic parameter was: "<< tag <<", " << name << ", shape="<< shape;
           utils_error().forced_throw(LOCAL_INFO,errmsg.str());
         }
+
+        // Include the pole mass of the top (which is a derived parameter and not in SpectrumContents::DMEFT)
+        std::ostringstream label;
+        label << "t" <<" "<< Par::toString.at(Par::Pole_Mass);
+        specmap[label.str()] = spec.get(Par::Pole_Mass,"t");
       }
     }
     
