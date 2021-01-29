@@ -33,6 +33,7 @@
 ///         (ankit.beniwal@adelaide.edu.au)
 ///  \date 2016 Oct
 ///  \date 2020 Dec
+///  \date 2021 Jan
 ///
 ///  *********************************************
 
@@ -763,16 +764,16 @@ namespace Gambit
     /**
      * @brief Running top mass MS-bar likelihood
      *
-     * This uses a special running MS-bar top mass input parameter at the scale mtop.
-     * By default the data from PDG 2020; see p25 of https://pdg.lbl.gov/2020/download/db2020.pdf
+     * This uses a special running MS-bar top mass input parameter at the scale mtop from ATLAS.
+     * Reference: https://arxiv.org/pdf/1905.02302.pdf (see table 2, page 14)
      *
      * The asymmetric errors are averaged.
      */
     void lnL_mtrun(double &result)
     {
       using namespace Pipes::lnL_mtrun;
-      const double mtrun_obs = runOptions->getValueOrDef<double>(162.5, "mtrun_obs");
-      const double default_mtrun_obserr = 0.5 * (2.1 + 1.5);
+      const double mtrun_obs = runOptions->getValueOrDef<double>(162.9, "mtrun_obs");
+      const double default_mtrun_obserr = 0.5 * (2.3 + 1.6);
       const double mtrun_obserr = runOptions->getValueOrDef<double>(default_mtrun_obserr, "mtrun_obserr");
       const bool profile = runOptions->getValueOrDef<bool>(false, "profile_systematics");
       const Spectrum& spec = *Dep::DMEFT_spectrum;
