@@ -99,7 +99,7 @@ Parameters:
       ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # Top running mass - this overrides the SM top pole mass parameter
     mtrunIN:
-      range: [157.1, 167.9]
+      range: [157.05, 168.75]
 
   # NFW profile
   Halo_gNFW_rho0:
