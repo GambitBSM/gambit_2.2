@@ -309,7 +309,7 @@ Scanner:
       NP: 50000
       verbosity: 1
       convthresh: 1E-5
-      lambdajDE: true
+      lambdajDE: false
 
 KeyValues:
 
