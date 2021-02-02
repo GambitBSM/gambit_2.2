@@ -66,7 +66,7 @@ namespace Gambit
 
     // ---------------------------------- INTERPOLATION FUNCTIONS ------------------------------------------------
       const char* colliderbitdata_path = GAMBIT_DIR "/ColliderBit/data/"; 
-      #define PI 3.14159265
+      // #define PI 3.14159265
       // Initialize all data
       // static const size_t data_INC           = 15;
       // static const size_t data_SIZE          = pow(data_INC,2);
@@ -520,19 +520,23 @@ namespace Gambit
         }
         else if (O2==0){
           Norm = pow(O1,2);
-          th   = float(PI)/float(2);
+          th   = pi/float(2);
           // cout << " O2 is zero"<< endl;
         }
         else{
           th    = 0.5*asin(float(2*O1*O2)/float((pow(O1,2)+pow(O2,2))));
 
           if (O1*O2 < 0){
-            th = th + float(PI);
+            th = th + pi;
           }
           // cout << "Theta = "<< th<<endl;
           Norm  = 2*O1*O2/(sin(2.0*th));
         }
 
+        if (Norm < 0.0)
+        {
+          ColliderBit_error().raise(LOCAL_INFO, "Norm < 0 in function Acceptance_CS.");
+        }
 
         // Checks to go ahead with interpolation
         // cout << "Check things 6"<<mass[0]<<endl;  
@@ -1008,19 +1012,23 @@ namespace Gambit
         }
         else if (O2==0){
           Norm = pow(O1,2);
-          th   = float(PI)/2;
+          th   = pi/2;
           // cout << " O2 is zero"<< endl;
         }
         else{
           th    = 0.5*asin(float(2*O1*O2)/float((pow(O1,2)+pow(O2,2))));
 
           if (O1*O2 < 0){
-            th = th + float(PI);
+            th = th + pi;
           }
           // cout << "Theta = "<< th<<endl;
           Norm  = 2*O1*O2/(sin(2.0*th));
         }
 
+        if (Norm < 0.0)
+        {
+          ColliderBit_error().raise(LOCAL_INFO, "Norm < 0 in function Acceptance_CS.");
+        }
 
         // Checks to go ahead with interpolation
         // cout << "Check things 6"<<mass[0]<<endl;  
