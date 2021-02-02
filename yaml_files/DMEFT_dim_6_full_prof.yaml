@@ -294,7 +294,7 @@ Printer:
   options:
     output_file: "DMEFT_dim_6_full_prof.hdf5"
     delete_file_on_restart: false
-    buffer_length: 1000
+    buffer_length: 100
     group: "/DMEFT"
 
 Scanner:
