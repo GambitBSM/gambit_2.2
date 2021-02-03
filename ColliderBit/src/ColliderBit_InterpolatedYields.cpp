@@ -513,24 +513,17 @@ namespace Gambit
         // Calculate normalisation
         double Norm,th;
 
-        if (O1==0){
-          Norm = pow(O2,2);
-          th   = 0;
-          // cout << " O1 is zero"<< endl;
-        }
-        else if (O2==0){
-          Norm = pow(O1,2);
+        Norm = pow(O1,2) + pow(O2,2);
+
+        if (O2==0){
           th   = pi/float(2);
           // cout << " O2 is zero"<< endl;
         }
         else{
-          th    = 0.5*asin(float(2*O1*O2)/float((pow(O1,2)+pow(O2,2))));
-
-          if (O1*O2 < 0){
+          th    = atan(float(O1/O2));
+          if (O1/O2 < 0){
             th = th + pi;
           }
-          // cout << "Theta = "<< th<<endl;
-          Norm  = 2*O1*O2/(sin(2.0*th));
         }
 
         if (Norm < 0.0)
@@ -1005,24 +998,17 @@ namespace Gambit
         // Calculate normalisation
         double Norm,th;
 
-        if (O1==0){
-          Norm = pow(O2,2);
-          th   = 0;
-          // cout << " O1 is zero"<< endl;
-        }
-        else if (O2==0){
-          Norm = pow(O1,2);
-          th   = pi/2;
+        Norm = pow(O1,2) + pow(O2,2);
+
+        if (O2==0){
+          th   = pi/float(2);
           // cout << " O2 is zero"<< endl;
         }
         else{
-          th    = 0.5*asin(float(2*O1*O2)/float((pow(O1,2)+pow(O2,2))));
-
-          if (O1*O2 < 0){
+          th    = atan(float(O1/O2));
+          if (O1/O2 < 0){
             th = th + pi;
           }
-          // cout << "Theta = "<< th<<endl;
-          Norm  = 2*O1*O2/(sin(2.0*th));
         }
 
         if (Norm < 0.0)
