@@ -1871,10 +1871,9 @@ namespace Gambit
      void calc_RParameter(double &result)
      {
        using namespace Pipes::calc_RParameter;
-       const ModelParameters& params = *Dep::GeneralALP_parameters;
-       double gaee2 = gsl_pow_2(gaee_conversion * std::fabs(params.at("gaee")));
-       double gagg = 1.0E+10*std::fabs(params.at("gagg")); // gagg needs to be in 10^-10 GeV^-1.
-       double ma0 = params.at("ma0");
+       double ma0 = *Param["ma0"];
+       double gaee2 = gsl_pow_2(gaee_conversion*std::fabs(*Param["gaee"]));
+       double gagg = 1.0E+10*std::fabs(*Param["gagg"]); // gagg needs to be in 10^-10 GeV^-1.
        // Value for He-abundance Y from 1503.08146: <Y> = 0.2515(17).
        const double Y = 0.2515;
        // Use interpolation for the finite-mass correction.
