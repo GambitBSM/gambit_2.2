@@ -1601,7 +1601,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_XENON1T_Anomaly
     START_FUNCTION(double)
-    ALLOW_MODEL(GeneralALP,XENON1T_NuisanceParameters)
+    ALLOW_JOINT_MODEL(GeneralALP,XENON1T_NuisanceParameters)
     #undef FUNCTION
   #undef CAPABILITY
 

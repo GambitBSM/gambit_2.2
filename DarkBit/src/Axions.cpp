@@ -2120,9 +2120,9 @@ namespace Gambit
     {
       using namespace Pipes::calc_lnL_XENON1T_Anomaly;
 
+      // Rescale couplings and 3H abundance to the reference values used in 2006.10035 for convenience.
       double gae = std::fabs(*Param["gaee"]) / 5.0e-12;
       double gagamma = std::fabs(*Param["gagg"]) / 2.0e-10;
-      //double gaN = std::fabs((1.095*(*Param["gan"]) + 0.095*(*Param["gap"])) / 1.0e-6);
       double gaN = std::fabs(*Param["gaN"]) / 1.0e-6;
       double x_3H = *Param["x_3H"] / 6.2e-25;
       double bkg_scale = 1.0 + *Param["delta_bkg"];
@@ -2223,7 +2223,11 @@ namespace Gambit
       result = (observed * expected.log() - expected).sum() - asimov;
     }
 
-    struct dRdE_params { double m; double sigma; };
+    struct dRdE_params
+    {
+      double m; double sigma;
+    };
+
     double dRdE (double E, void * params) {
       struct dRdE_params * par = (struct dRdE_params *)params;
       // Efficiency of the Xenon1T experiment from arXiv:2006.09721
@@ -2238,6 +2242,7 @@ namespace Gambit
 
       result = 0;
 
+      // Rescale couplings and 3H abundance to the reference values used in 2006.10035 for convenience.
       double gae = std::fabs(*Param["gaee"]);
       double ma = *Param["ma0"] / 1.0e3;
       double x_3H = *Param["x_3H"] / 6.2e-25;
