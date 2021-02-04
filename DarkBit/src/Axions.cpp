@@ -2223,12 +2223,10 @@ namespace Gambit
       result = (observed * expected.log() - expected).sum() - asimov;
     }
 
-    struct dRdE_params
-    {
-      double m; double sigma;
-    };
+    struct dRdE_params { double m; double sigma; };
 
-    double dRdE (double E, void * params) {
+    double dRdE (double E, void * params)
+    {
       struct dRdE_params * par = (struct dRdE_params *)params;
       // Efficiency of the Xenon1T experiment from arXiv:2006.09721
       // Columns: Energy [keV] | Efficiency [dimensionless]
