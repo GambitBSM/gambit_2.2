@@ -344,22 +344,24 @@ namespace Gambit
                 }
                 out << std::endl;
 
+                bool exclude{false};
+                for (auto&& plug : plugins)
                 {
-                    int tot = 0;
+                    if (not plug->reason.empty())
+                    {
+                        exclude = true;
+                        break;
+                    }
+                }
+
+                if (exclude)
+                {
+                    out << "\nreason for exclusion:";
                     for (auto &&plug : plugins)
                     {
-                        tot += plug->reason.size();
-                    }
-                    
-                    if(tot)
-                    {
-                        out << "\nreason for exclusion:";
-                        for (auto &&plug : plugins)
-                        {
-                            out << "\n    " << plug->version << ":\n";
-                            for (auto it = plug->reason.begin(), end = plug->reason.end(); it != end; ++it)
-                                out << "        " << *it << std::endl;
-                        }
+                        out << "\n    " << plug->version << ":\n";
+                        for (auto it = plug->reason.begin(), end = plug->reason.end(); it != end; ++it)
+                            out << "        " << *it << std::endl;
                     }
                 }
 
