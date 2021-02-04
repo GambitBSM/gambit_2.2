@@ -201,8 +201,7 @@ namespace Gambit
       public:
         // Overloaded class creators for the AxionInterpolator class using the init function below.
         AxionInterpolator2D();
-        AxionInterpolator2D(std::string file, InterpolationOptions2D type);
-        AxionInterpolator2D(std::string file);
+        AxionInterpolator2D(std::string file, InterpolationOptions2D type = InterpolationOptions2D::bilinear);
         AxionInterpolator2D& operator=(AxionInterpolator2D&&);
         // Destructor.
         ~AxionInterpolator2D();
@@ -336,7 +335,6 @@ namespace Gambit
     }
     // Overloaded class creators for the AxionInterpolator class using the init function above.
     AxionInterpolator2D::AxionInterpolator2D(std::string file, InterpolationOptions2D type) { init(file, type); }
-    AxionInterpolator2D::AxionInterpolator2D(std::string file) { init(file, InterpolationOptions2D::bilinear); }
 
     // Routine to access interpolated values.
     double AxionInterpolator2D::interpolate(double x, double y) { return gsl_spline2d_eval(spline, x, y, x_acc, y_acc); }
