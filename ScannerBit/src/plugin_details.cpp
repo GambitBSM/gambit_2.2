@@ -430,8 +430,15 @@ namespace Gambit
 
                 out << "\x1b[01m\x1b[04mDESCRIPTION\x1b[0m\n" << std::endl;
 
-                std::string p_str, description;
-                std::string path = GAMBIT_DIR "/config/";
+                out << get_description(plugins) << std::endl;
+
+                return out.str();
+            }
+
+            std::string Plugin_Details::get_description(const std::vector<const Plugin_Details *> &plugins) {
+                std::string description;
+                std::string p_str;
+                const std::string path = GAMBIT_DIR "/config/";
                 if (FILE* p_f = popen((std::string("ls ") + path + std::string(" | grep \".dat\" | grep \""+ plugins[0]->type + "\"")).c_str(), "r"))
                 {
                     char path_buffer[1024];
@@ -452,10 +459,7 @@ namespace Gambit
 
                     pclose(p_f);
                 }
-
-                out << description << std::endl;
-
-                return out.str();
+                return description;
             }
 
             bool Plugin_Version_Supersedes(const Plugin_Details &plug1, const Plugin_Details &plug2)
