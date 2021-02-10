@@ -631,6 +631,8 @@ namespace Gambit
 
     //------------- Functions to compute X-ray likelihoods -------------//
 
+    // capability returning the decay photon flux in [photons/cm²/s] (assuming DM decays into a monochromatic line)
+    // only used for the INTEGRAL_ang_b/l likelihoods
     void SuperRenormHP_DecayFluxG (double &result)
     {
       using namespace Pipes::SuperRenormHP_DecayFluxG;
@@ -638,7 +640,6 @@ namespace Gambit
       double density = *Dep::DM_relic_density;
 
       double H0 = *Dep::H0;
-      /* double h = H0/100; */
 
       double OmegaDM = *Dep::Omega0_cdm;
 
@@ -688,6 +689,7 @@ namespace Gambit
     }
 
     const double s(1./3.); // standard deviation of the gaussian for the galactic emission line = s*energy dispersion instrument
+
     // galactic (Milky Way) contribution to the differential photon flux [photons/eV/cm²/s]
     double dPhiG(double const& E, XrayLikelihood_params *params)
     {
@@ -920,7 +922,7 @@ namespace Gambit
 
       double Emin = experiment.getEmin(), Emax = experiment.getEmax(), E, lik1, lik2;
 
-      // no constraints available above the electron threshold, we need to take into account the decay into charged particles and their subsequent FSR
+      // no constraints available above the electron threshold, we need to take into account the decay into charged particles
       if (mass >= 1e6) { result = 0; }
 
       else if (mass >= 2.*Emin)
@@ -1012,7 +1014,7 @@ namespace Gambit
 
       std::vector<double> Omega = {1.6119, 4.1858};
 
-      // no constraints available above the electron threshold, we need to take into account the decay into charged particles and their subsequent FSR
+      // no constraints available above the electron threshold, we need to take into account the decay into charged particles
       if (mass >= 1e3) { result = 0; }
 
       else if (mass < 2.**std::min_element(Emin.begin(), Emin.end())) { result = 0; }
@@ -1101,7 +1103,7 @@ namespace Gambit
 
       std::vector<double> Omega = {1.4224, 1.7919};
 
-      // no constraints available above the electron threshold, we need to take into account the decay into charged particles and their subsequent FSR
+      // no constraints available above the electron threshold, we need to take into account the decay into charged particles
       if (mass >= 1e3) { result = 0; }
 
       else if (mass < 2.**std::min_element(Emin.begin(), Emin.end())) { result = 0; }
@@ -1124,6 +1126,7 @@ namespace Gambit
       }
     }
 
+    // for some reason this is not giving the correct value of J, need to fix it!
     void get_J_factor_HEAO (double &result)
     {
       using namespace Pipes::get_J_factor_HEAO;
@@ -1192,7 +1195,7 @@ namespace Gambit
       const double Emin = experiment.getEmin(), Emax = experiment.getEmax();
       double E, lik1, lik2;
 
-      // no constraints available above the electron threshold, we need to take into account the decay into charged particles and their subsequent FSR
+      // no constraints available above the electron threshold, we need to take into account the decay into charged particles
       if (mass >= 1e6) { result = 0; }
 
       else if (mass >= 2.*Emin)
