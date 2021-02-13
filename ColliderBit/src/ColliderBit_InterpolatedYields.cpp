@@ -279,12 +279,9 @@ namespace Gambit
     //  Calculate Yields // 
     // ---------------------------------------------------- //  
  
-    void Acceptance_CS(double * accep, float m,float O1,float O2, float lambda ,const char* pair, const char* experiment)
+    void Acceptance_CS_dim6(double * accep, float m,float O1,float O2, float lambda ,const char* pair, const char* experiment)
     {
 
-      static bool first     = true;
-      static bool first_low = true;
-      Utils::FileLock mylock("Get_data_once");
 
       if (m>150){
 
@@ -312,9 +309,10 @@ namespace Gambit
 
         
     
+        static bool first = true;
         if (first)
         {
-
+          Utils::ProcessLock mylock("Acceptance_CS_dim6_high");
           mylock.get_lock();
 
           cout << "Reading in grids. [Only happens on first itteration per MPI process]."<<endl;
@@ -528,7 +526,7 @@ namespace Gambit
 
         if (Norm < 0.0)
         {
-          ColliderBit_error().raise(LOCAL_INFO, "Norm < 0 in function Acceptance_CS.");
+          ColliderBit_error().raise(LOCAL_INFO, "Norm < 0 in function Acceptance_CS_dim6.");
         }
 
         // Checks to go ahead with interpolation
@@ -543,7 +541,7 @@ namespace Gambit
           cout<<" Error! Theta param out of range with value " << th << " Exiting..."<<endl;
           std::exit(EXIT_SUCCESS);
         }
-        // cout << " Acceptance_CS DEBUG: 4" << endl;
+        // cout << " Acceptance_CS_dim6 DEBUG: 4" << endl;
 
         
         // Get x1,2 y1,2 : Mass and theta coordinates for interpolation
@@ -718,7 +716,7 @@ namespace Gambit
             // cout << "Exited while loop..." << endl;
             // cout << "Check things 9"<<mass[0]<<endl;  
 
-            // cout << " Acceptance_CS DEBUG: 5 - Fixed" << endl;
+            // cout << " Acceptance_CS_dim6 DEBUG: 5 - Fixed" << endl;
 
             // Luminoscity scaling gets applied at the end...
             double A   = BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th,yalpha);
@@ -798,10 +796,10 @@ namespace Gambit
         static double theta_low[data_INC_low];
         static double mass_low[data_INC_low]; 
 
-        
-    
+        static bool first_low = true;
         if (first_low)
         {
+          Utils::ProcessLock mylock("Acceptance_CS_dim6_low");
           mylock.get_lock();
 
           cout << "Reading in grids. [Only happens on first itteration per MPI process]."<<endl;
@@ -1013,7 +1011,7 @@ namespace Gambit
 
         if (Norm < 0.0)
         {
-          ColliderBit_error().raise(LOCAL_INFO, "Norm < 0 in function Acceptance_CS.");
+          ColliderBit_error().raise(LOCAL_INFO, "Norm < 0 in function Acceptance_CS_dim6.");
         }
 
         // Checks to go ahead with interpolation
@@ -1028,7 +1026,7 @@ namespace Gambit
           cout<<" Error! Theta param out of range with value " << th << " Exiting..."<<endl;
           std::exit(EXIT_SUCCESS);
         }
-        // cout << " Acceptance_CS DEBUG: 4" << endl;
+        // cout << " Acceptance_CS_dim6 DEBUG: 4" << endl;
 
         
         // Get x1,2 y1,2 : Mass and theta coordinates for interpolation
@@ -1203,7 +1201,7 @@ namespace Gambit
             // cout << "Exited while loop..." << endl;
             // cout << "Check things 9"<<mass[0]<<endl;  
 
-            // cout << " Acceptance_CS DEBUG: 5 - Fixed" << endl;
+            // cout << " Acceptance_CS_dim6 DEBUG: 5 - Fixed" << endl;
 
             // Luminoscity scaling gets applied at the end...
             double A   = BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th,yalpha);
@@ -1259,15 +1257,11 @@ namespace Gambit
     
     
     
-    } // Function Acceptance_CS <---- End of function
+    } // Function Acceptance_CS_dim6 <---- End of function
 
 
     void Acceptance_CS_dim7(double * accep, float m, float Opp, float lambda ,const char* pair, const char* experiment)
     {
-      static bool first_7     = true;
-      Utils::FileLock mylock7("Get_data_once7");
-
-  
       static double MET_HIST_CMS_71[data_SIZE_d7][cms_bin_size];
       static double MET_HIST_ATLAS_71[data_SIZE_d7][atlas_bin_size];
       static double MET_HIST_CMS_72[data_SIZE_d7][cms_bin_size];
@@ -1287,9 +1281,10 @@ namespace Gambit
       static double mass[data_INC_d7]; 
 
   
+      static bool first_7 = true;
       if (first_7)
       {
-        
+        Utils::ProcessLock mylock7("Acceptance_CS_dim7");
         mylock7.get_lock();
         
         cout << "Reading in grids. [Only happens on first itteration per MPI process]."<<endl;
@@ -1722,9 +1717,9 @@ namespace Gambit
       double A23[met_bin_size];
       double A14[met_bin_size];
 
-      Acceptance_CS(A23, m, C62, C63, lambda, tt, exper_);
+      Acceptance_CS_dim6(A23, m, C62, C63, lambda, tt, exper_);
 
-      Acceptance_CS(A14, m, C61, C64, lambda, of, exper_);
+      Acceptance_CS_dim6(A14, m, C61, C64, lambda, of, exper_);
 
       // Dim-7 yields
       double A71[met_bin_size];
