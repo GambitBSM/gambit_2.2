@@ -189,7 +189,7 @@ namespace Gambit
 
           if (!added)
           {
-            DarkBit_warning().raise(LOCAL_INFO, "DarkBit::getYield cannot "
+            DarkBit_warning().raise(LOCAL_INFO, "DarkBit::getYield (with yield = " + yield + ") cannot "
               "find spectra for " + it->finalStateIDs[0] + " " + it->finalStateIDs[1]);
           }
 
@@ -474,7 +474,7 @@ namespace Gambit
         auto add_channel = [&](int ch, str P1, str P2, str FINAL, double EcmMin, double EcmMax)
         {
           daFunk::Funk dNdE = daFunk::func_fromThreadsafe(BEreq::dshayield.pointer(), daFunk::var("mwimp"),
-           daFunk::var("E"), ch, yieldk, flag)->set("mwimp", daFunk::var("Ecm")/2);
+           daFunk::var("Ekin"), ch, yieldk, flag)->set("mwimp", daFunk::var("Ecm")/2);
           result.addChannel(dNdE, str_flav_to_mass(P1), str_flav_to_mass(P2), FINAL, EcmMin, EcmMax);
         };
 
@@ -485,7 +485,7 @@ namespace Gambit
           daFunk::Funk Ecm_ToUse = fmax(Ecm_ToScale, daFunk::var("Ecm"));
           daFunk::Funk ScalingFactor = Ecm_ToUse/daFunk::var("Ecm");
           daFunk::Funk dNdE = ScalingFactor * daFunk::func_fromThreadsafe(BEreq::dshayield.pointer(), daFunk::var("mwimp"),
-           ScalingFactor * daFunk::var("E"), ch, yieldk, flag)->set("mwimp", Ecm_ToUse/2);
+           ScalingFactor * daFunk::var("Ekin"), ch, yieldk, flag)->set("mwimp", Ecm_ToUse/2);
           result.addChannel(dNdE, str_flav_to_mass(P1), str_flav_to_mass(P2), FINAL, EcmMin, EcmMax);
         };
 
@@ -512,18 +512,18 @@ namespace Gambit
         // Add approximations for single-particle cases.
         // TODO: Replace by boosted rest frame spectrum Z0
         daFunk::Funk dNdE;
-        dNdE = daFunk::func_fromThreadsafe(BEreq::dshayield.pointer(), daFunk::var("Ecm"), daFunk::var("E"), 12, yieldk, flag);
+        dNdE = daFunk::func_fromThreadsafe(BEreq::dshayield.pointer(), daFunk::var("Ecm"), daFunk::var("Ekin"), 12, yieldk, flag);
         result.addChannel(dNdE/2, "Z0", "gamma", 90.288, mDM_max);
-        dNdE = daFunk::func_fromThreadsafe(BEreq::dshayield.pointer(), daFunk::var("Ecm"), daFunk::var("E"), 13, yieldk, flag);
+        dNdE = daFunk::func_fromThreadsafe(BEreq::dshayield.pointer(), daFunk::var("Ecm"), daFunk::var("Ekin"), 13, yieldk, flag);
         result.addChannel(dNdE/2, "W+", "gamma", 79.4475, mDM_max);
         result.addChannel(dNdE/2, "W-", "gamma", 79.4475, mDM_max);
-        dNdE = daFunk::func_fromThreadsafe(BEreq::dshayield.pointer(), daFunk::var("Ecm"), daFunk::var("E"), 15, yieldk, flag);
+        dNdE = daFunk::func_fromThreadsafe(BEreq::dshayield.pointer(), daFunk::var("Ecm"), daFunk::var("Ekin"), 15, yieldk, flag);
         result.addChannel(dNdE/2, str_flav_to_mass("e+"), "gamma", std::max(mDM_min, 0.0), mDM_max);
         result.addChannel(dNdE/2, str_flav_to_mass("e-"), "gamma", std::max(mDM_min, 0.0), mDM_max);
-        dNdE = daFunk::func_fromThreadsafe(BEreq::dshayield.pointer(), daFunk::var("Ecm"), daFunk::var("E"), 17, yieldk, flag);
+        dNdE = daFunk::func_fromThreadsafe(BEreq::dshayield.pointer(), daFunk::var("Ecm"), daFunk::var("Ekin"), 17, yieldk, flag);
         result.addChannel(dNdE/2, str_flav_to_mass("mu+"), "gamma", std::max(mDM_min, 0.0), mDM_max);
         result.addChannel(dNdE/2, str_flav_to_mass("mu-"), "gamma", std::max(mDM_min, 0.0), mDM_max);
-        dNdE = daFunk::func_fromThreadsafe(BEreq::dshayield.pointer(), daFunk::var("Ecm"), daFunk::var("E"), 19, yieldk, flag);
+        dNdE = daFunk::func_fromThreadsafe(BEreq::dshayield.pointer(), daFunk::var("Ecm"), daFunk::var("Ekin"), 19, yieldk, flag);
         result.addChannel(dNdE/2, str_flav_to_mass("tau+"), "gamma", std::max(mDM_min, 1.7841), mDM_max);
         result.addChannel(dNdE/2, str_flav_to_mass("tau-"), "gamma", std::max(mDM_min, 1.7841), mDM_max);
 
@@ -531,7 +531,7 @@ namespace Gambit
         daFunk::Funk Ecm_ToUse_top = fmax(Ecm_ToScale_top, daFunk::var("Ecm"));
         daFunk::Funk ScalingFactor_top = Ecm_ToUse_top/daFunk::var("Ecm");
         dNdE = ScalingFactor_top * daFunk::func_fromThreadsafe(BEreq::dshayield.pointer(), Ecm_ToUse_top,
-         ScalingFactor_top * daFunk::var("E"), 24, yieldk, flag);
+         ScalingFactor_top * daFunk::var("Ekin"), 24, yieldk, flag);
         result.addChannel(dNdE/2, str_flav_to_mass("t"), "gamma", 160.0, mDM_max);
         result.addChannel(dNdE/2, str_flav_to_mass("tbar"), "gamma", 160.0, mDM_max);
 
@@ -540,9 +540,9 @@ namespace Gambit
         auto add_channel_mixedmasses = [&](int ch1, int ch2, str P1, str P2, str FINAL, double m1, double m2, double EcmMin, double EcmMax)
         {
           daFunk::Funk dNdE_1 = daFunk::func_fromThreadsafe(BEreq::dshayield.pointer(), daFunk::var("E1"),
-           daFunk::var("E"), ch1, yieldk, flag)->set("E1", Ecm/2 + (m1*m1 - m2*m2)/(2*Ecm));
+           daFunk::var("Ekin"), ch1, yieldk, flag)->set("E1", Ecm/2 + (m1*m1 - m2*m2)/(2*Ecm));
           daFunk::Funk dNdE_2 = daFunk::func_fromThreadsafe(BEreq::dshayield.pointer(), daFunk::var("E2"),
-           daFunk::var("E"), ch2, yieldk, flag)->set("E2", Ecm/2 + (m2*m2 - m1*m1)/(2*Ecm));
+           daFunk::var("Ekin"), ch2, yieldk, flag)->set("E2", Ecm/2 + (m2*m2 - m1*m1)/(2*Ecm));
           result.addChannel(0.5*(dNdE_1 + dNdE_2), str_flav_to_mass(P1), str_flav_to_mass(P2), FINAL, EcmMin, EcmMax);
         };
 
@@ -624,7 +624,7 @@ namespace Gambit
       auto add_channel = [&](int pdg, str p1, str p2, double EcmMin, double EcmMax)
       {
         daFunk::Funk dNdE = daFunk::func_fromThreadsafe(dsanyield, daFunk::var("mwimp"),
-         daFunk::var("E"), pdg, hel, yieldpdg, diff, flag)->set("mwimp", daFunk::var("Ecm")/2);
+         daFunk::var("Ekin"), pdg, hel, yieldpdg, diff, flag)->set("mwimp", daFunk::var("Ecm")/2);
         result.addChannel(dNdE, str_flav_to_mass(p1), str_flav_to_mass(p2), yield, EcmMin, EcmMax);
       };
 
@@ -635,7 +635,7 @@ namespace Gambit
         daFunk::Funk Ecm_ToUse = fmax(Ecm_ToScale, daFunk::var("Ecm"));
         daFunk::Funk ScalingFactor = Ecm_ToUse/daFunk::var("Ecm");
         daFunk::Funk dNdE = ScalingFactor * daFunk::func_fromThreadsafe(dsanyield, daFunk::var("mwimp"),
-         ScalingFactor * daFunk::var("E"), pdg, hel, yieldpdg, diff, flag)->set("mwimp", Ecm_ToUse/2);
+         ScalingFactor * daFunk::var("Ekin"), pdg, hel, yieldpdg, diff, flag)->set("mwimp", Ecm_ToUse/2);
         result.addChannel(dNdE, str_flav_to_mass(P1), str_flav_to_mass(P2), yield, EcmMin, EcmMax);
       };
 
@@ -662,18 +662,18 @@ namespace Gambit
       // Add approximations for single-particle cases.
       // TODO: Replace by boosted rest frame spectrum Z0
       daFunk::Funk dNdE;
-      dNdE = daFunk::func_fromThreadsafe(dsanyield, daFunk::var("Ecm"), daFunk::var("E"), 23, hel,yieldpdg, diff,flag);
+      dNdE = daFunk::func_fromThreadsafe(dsanyield, daFunk::var("Ecm"), daFunk::var("Ekin"), 23, hel,yieldpdg, diff,flag);
       result.addChannel(dNdE/2, "Z0", yield, 90.288, mDM_max);
-      dNdE = daFunk::func_fromThreadsafe(dsanyield, daFunk::var("Ecm"), daFunk::var("E"), 24, hel,yieldpdg, diff, flag);
+      dNdE = daFunk::func_fromThreadsafe(dsanyield, daFunk::var("Ecm"), daFunk::var("Ekin"), 24, hel,yieldpdg, diff, flag);
       result.addChannel(dNdE/2, "W+", yield, 79.4475, mDM_max);
       result.addChannel(dNdE/2, "W-", yield, 79.4475, mDM_max);
-      dNdE = daFunk::func_fromThreadsafe(dsanyield, daFunk::var("Ecm"), daFunk::var("E"), 11, hel, yieldpdg, diff, flag);
+      dNdE = daFunk::func_fromThreadsafe(dsanyield, daFunk::var("Ecm"), daFunk::var("Ekin"), 11, hel, yieldpdg, diff, flag);
       result.addChannel(dNdE/2, str_flav_to_mass("e+"), yield, std::max(mDM_min, 0.0), mDM_max);
       result.addChannel(dNdE/2, str_flav_to_mass("e-"), yield, std::max(mDM_min, 0.0), mDM_max);
-      dNdE = daFunk::func_fromThreadsafe(dsanyield, daFunk::var("Ecm"), daFunk::var("E"), 13, hel, yieldpdg, diff, flag);
+      dNdE = daFunk::func_fromThreadsafe(dsanyield, daFunk::var("Ecm"), daFunk::var("Ekin"), 13, hel, yieldpdg, diff, flag);
       result.addChannel(dNdE/2, str_flav_to_mass("mu+"), yield, std::max(mDM_min, 0.0), mDM_max);
       result.addChannel(dNdE/2, str_flav_to_mass("mu-"), yield, std::max(mDM_min, 0.0), mDM_max);
-      dNdE = daFunk::func_fromThreadsafe(dsanyield, daFunk::var("Ecm"), daFunk::var("E"), 15, hel, yieldpdg, diff, flag);
+      dNdE = daFunk::func_fromThreadsafe(dsanyield, daFunk::var("Ecm"), daFunk::var("Ekin"), 15, hel, yieldpdg, diff, flag);
       result.addChannel(dNdE/2, str_flav_to_mass("tau+"), yield, std::max(mDM_min, 1.7841), mDM_max);
       result.addChannel(dNdE/2, str_flav_to_mass("tau-"), yield, std::max(mDM_min, 1.7841), mDM_max);
 
@@ -681,7 +681,7 @@ namespace Gambit
       daFunk::Funk Ecm_ToUse_top = fmax(Ecm_ToScale_top, daFunk::var("Ecm"));
       daFunk::Funk ScalingFactor_top = Ecm_ToUse_top/daFunk::var("Ecm");
       dNdE = ScalingFactor_top * daFunk::func_fromThreadsafe(dsanyield, Ecm_ToUse_top,
-       ScalingFactor_top * daFunk::var("E"), 6, hel, yieldpdg, diff, flag);
+       ScalingFactor_top * daFunk::var("Ekin"), 6, hel, yieldpdg, diff, flag);
       result.addChannel(dNdE/2, str_flav_to_mass("t"), yield, 160.0, mDM_max);
       result.addChannel(dNdE/2, str_flav_to_mass("tbar"), yield, 160.0, mDM_max);
 
@@ -690,9 +690,9 @@ namespace Gambit
       auto add_channel_mixedmasses = [&](int pdg1, int pdg2, str P1, str P2, double m1, double m2, double EcmMin, double EcmMax)
       {
         daFunk::Funk dNdE_1 = daFunk::func_fromThreadsafe(dsanyield, daFunk::var("E1"),
-         daFunk::var("E"), pdg1, hel, yieldpdg, diff, flag)->set("E1", Ecm/2 + (m1*m1 - m2*m2)/(2*Ecm));
+         daFunk::var("Ekin"), pdg1, hel, yieldpdg, diff, flag)->set("E1", Ecm/2 + (m1*m1 - m2*m2)/(2*Ecm));
         daFunk::Funk dNdE_2 = daFunk::func_fromThreadsafe(dsanyield, daFunk::var("E2"),
-         daFunk::var("E"), pdg2, hel, yieldpdg, diff, flag)->set("E2", Ecm/2 + (m2*m2 - m1*m1)/(2*Ecm));
+         daFunk::var("Ekin"), pdg2, hel, yieldpdg, diff, flag)->set("E2", Ecm/2 + (m2*m2 - m1*m1)/(2*Ecm));
         result.addChannel(0.5*(dNdE_1 + dNdE_2), str_flav_to_mass(P1), str_flav_to_mass(P2), yield, EcmMin, EcmMax);
       };
 

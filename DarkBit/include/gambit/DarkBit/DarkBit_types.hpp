@@ -147,8 +147,17 @@ namespace Gambit
         std::string p1;
         std::string p2;
         std::string finalState;
+        double finalStateMass;
         double Ecm_min;
         double Ecm_max;
+    };
+
+    /// Result of SimYieldTable::checkChannel
+    enum class SimYieldChannelCheck
+    {
+      success,            // The check succeeded.
+      duplication,        // The channel is already in the SimYieldTable
+      monochromatic_line  // The channel is a monochromatic line (pi==finalState)
     };
 
     /// \brief Channel container
@@ -176,7 +185,7 @@ namespace Gambit
             SimYieldChannel dummy_channel;
             std::vector<SimYieldChannel> channel_list;
             int findChannel(const std::string& p1, const std::string& p2, const std::string& finalState) const;
-            void checkChannel(const std::string& p1, const std::string& p2, const std::string& finalState) const;
+            SimYieldChannelCheck checkChannel(const std::string& p1, const std::string& p2, const std::string& finalState) const;
     };
 
   }

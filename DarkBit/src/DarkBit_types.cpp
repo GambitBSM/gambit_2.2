@@ -56,6 +56,7 @@
 
 #include "gambit/Backends/backend_types/nulike.hpp"
 #include "gambit/DarkBit/DarkBit_types.hpp"
+#include "gambit/Utils/numerical_constants.hpp"
 #include "gambit/cmake/cmake_variables.hpp"
 
 #include <boost/enable_shared_from_this.hpp>
@@ -67,15 +68,51 @@ namespace Gambit
   namespace DarkBit
   {
 
+    namespace
+    {
+      /// Helper function to convert a "finalState" in the SimYield channel to its conjugated state.
+      std::string get_conjugated_finalState(const std::string& finalState)
+      {
+        if (finalState=="e+_1") return "e-_1";
+        if (finalState=="pbar") return "p";
+        if (finalState=="Dbar") return "D";
+
+        // All other cases ("gamma","nu_e + nu_ebar",...) are self conjugate
+        return finalState;
+      }
+    }
+
+    /// Helper function to get the mass of a given final state particle
+    double get_finalState_mass(const std::string& finalState)
+    {
+      // Current "massive" final states that can occur in SimYieldTables.
+      if (finalState=="e+_1" || finalState=="e-_1") return m_electron;
+      if (finalState=="pbar" || finalState=="p"   ) return m_proton;
+      if (finalState=="Dbar" || finalState=="D"   ) return m_deuteron;
+
+      // All other final states are ("gamma","nu_e + nu_ebar",...) are massless.
+      return 0.0;
+    }
+
     /// General annihilation/decay channel for sim yield tables
     SimYieldChannel::SimYieldChannel(daFunk::Funk dNdE, const std::string& p1, const std::string& p2, const std::string& finalState, double Ecm_min, double Ecm_max)
     : dNdE(dNdE)
     , p1(p1)
     , p2(p2)
     , finalState(finalState)
+    , finalStateMass(get_finalState_mass(finalState))
     , Ecm_min(Ecm_min)
     , Ecm_max(Ecm_max)
     {
+      // If dNdE is given w.r.t 'Ekin', write it as a function w.r.t. 'E' (total energy)
+      // in order to conform with the rest of the code.
+      // For E < m, we return zero.
+      if (dNdE->hasArg("Ekin")) {
+        auto E = daFunk::var("E");
+        double m = this->finalStateMass;
+        dNdE = daFunk::ifelse(E-m, dNdE->set("Ekin", E -m), daFunk::zero("E","Ecm"));
+      }
+
       std::ostringstream msg;
       msg << "SimYieldChannel for " << p1 << " " << p2 <<
        " final state(s): Requested center-of-mass energy out of range (";
@@ -91,8 +128,8 @@ namespace Gambit
 
     void SimYieldTable::addChannel(daFunk::Funk dNdE, const std::string& p1, const std::string& p2, const std::string& finalState, double Ecm_min, double Ecm_max)
     {
-      checkChannel(p1, p2, finalState);
-      channel_list.push_back(SimYieldChannel(dNdE, p1, p2, finalState, Ecm_min, Ecm_max));
+      if (checkChannel(p1, p2, finalState) == SimYieldChannelCheck::success)
+        channel_list.push_back(SimYieldChannel(dNdE, p1, p2, finalState, Ecm_min, Ecm_max));
     }
 
     void SimYieldTable::addChannel(daFunk::Funk dNdE, const std::string& p1, const std::string& finalState, double Ecm_min, double Ecm_max)
@@ -102,8 +139,8 @@ namespace Gambit
 
     void SimYieldTable::addChannel(SimYieldChannel channel)
     {
-      checkChannel(channel.p1, channel.p2, channel.finalState);
-      channel_list.push_back(channel);
+      if (checkChannel(channel.p1, channel.p2, channel.finalState) == SimYieldChannelCheck::success)
+        channel_list.push_back(channel);
     }
 
     void SimYieldTable::replaceFinalState(const std::string& oldFinalState, const std::string& newFinalState)
@@ -200,13 +237,31 @@ namespace Gambit
       return -1;
     }
 
-    void SimYieldTable::checkChannel(const std::string& p1, const std::string& p2, const std::string& finalState) const
+    SimYieldChannelCheck SimYieldTable::checkChannel(const std::string& p1, const std::string& p2, const std::string& finalState) const
     {
+      // Skip if the channel is already in the table
       if ( hasChannel(p1, p2, finalState) )
       {
         DarkBit_warning().raise(LOCAL_INFO, "addChanel: Channel already exists --> ignoring new one.");
-        return;
+        return SimYieldChannelCheck::duplication;
       }
+
+      // Skip when either p1 or p2 are equal to finalState.
+      // Also skip if finalState is the conjugated state in the single particle case (p2=="")
+      // Such channels are monochromatic lines that are handled separately
+      // in "getYield()" of IndirectDetectionYields.cpp
+      if (p1 == finalState || p2 == finalState || (p2 == "" && p1 == get_conjugated_finalState(finalState)))
+      {
+        std::ostringstream warn;
+        warn << "addChanel: The channel (p1 = " <<p1<<", p2 = "<<p2<<", finalState = "<<finalState<<") appears to be a monochromatic line.\n";
+        warn << "Such lines are handled within \"getYield()\" in DarkBit/src/IndirectDetectionYield.cpp";
+        warn << " --> This channel will be ingnored in the SimYieldTable";
+        DarkBit_warning().raise(LOCAL_INFO, warn.str());
+        return SimYieldChannelCheck::monochromatic_line;
+      }
+
+      // If everything went fine, return success
+      return SimYieldChannelCheck::success;
     }
 
   }
