@@ -213,27 +213,29 @@ namespace Gambit
           cout << DEBUG_PREFIX << "Cross-section veto applies. Will now call Loop::wrapup() to skip event generation for this collider." << endl;
           #endif
           wrapup();
-        }
+        } else {
 
-        // Create a dummy event to make Pythia fill its internal list of process codes
-        EventT dummy_pythia_event;
-        try
-        {
-          result.nextEvent(dummy_pythia_event);
-        }
-        catch (typename Py8Collider<PythiaT,EventT,hepmc_writerT>::EventGenerationError& e)
-        {
-          piped_invalid_point.request("Failed to generate dummy test event. Will invalidate point.");
-
-          #ifdef COLLIDERBIT_DEBUG
-            cout << DEBUG_PREFIX << "Failed to generate dummy test event during COLLIDER_INIT_OMP in getPy8Collider. Check the logs for event details." << endl;
-          #endif
-          #pragma omp critical (pythia_event_failure)
+          // Create a dummy event to make Pythia fill its internal list of process codes
+          EventT dummy_pythia_event;
+          try
           {
-            std::stringstream ss;
-            dummy_pythia_event.list(ss, 1);
-            logger() << LogTags::debug << "Failed to generate dummy test event during COLLIDER_INIT_OMP iteration in getPy8Collider. Pythia record for the event that failed:\n" << ss.str() << EOM;
+            result.nextEvent(dummy_pythia_event);
           }
+          catch (typename Py8Collider<PythiaT,EventT,hepmc_writerT>::EventGenerationError& e)
+          {
+            piped_invalid_point.request("Failed to generate dummy test event. Will invalidate point.");
+
+            #ifdef COLLIDERBIT_DEBUG
+              cout << DEBUG_PREFIX << "Failed to generate dummy test event during COLLIDER_INIT_OMP in getPy8Collider. Check the logs for event details." << endl;
+            #endif
+            #pragma omp critical (pythia_event_failure)
+            {
+              std::stringstream ss;
+              dummy_pythia_event.list(ss, 1);
+              logger() << LogTags::debug << "Failed to generate dummy test event during COLLIDER_INIT_OMP iteration in getPy8Collider. Pythia record for the event that failed:\n" << ss.str() << EOM;
+            }
+          }
+
         }
 
       }
