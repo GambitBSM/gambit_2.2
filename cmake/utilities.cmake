@@ -95,9 +95,15 @@ macro(retrieve_bits bits root excludes quiet)
 
       # Work out if this Bit should be excluded or not.  Never exclude ScannerBit.
       set(excluded "NO")
-      if(NOT ${child} STREQUAL "ScannerBit")
-        foreach(x ${excludes})
-          string(FIND ${child} ${x} location)
+
+      # Make the string comparison case insensitive
+      string( TOLOWER "${child}" child_lower )
+      string( TOLOWER "${excludes}" excludes_lower )
+      
+      if(NOT ${child_lower} STREQUAL "scannerbit")
+        foreach(x ${excludes_lower})
+          string( TOLOWER "${x}" x_lower )
+          string(FIND ${child_lower} ${x_lower} location)
           if(${location} EQUAL 0)
             set(excluded "YES")
           endif()
