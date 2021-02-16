@@ -88,7 +88,7 @@ Scanner:
 
     random:
       plugin: random
-      point_number: 2
+      point_number: 20
       like:  LogLike
 
 ObsLikes:
@@ -107,7 +107,6 @@ ObsLikes:
   # ---- Neutron lifetime -----
   - purpose:      LogLike
     capability:   lnL_neutron_lifetime_bottle
-
 
   # ---- CMB -----
   - purpose:      LogLike
@@ -184,9 +183,9 @@ Rules:
   - capability: lifetime
     function: lifetime_ALP_agg
     # Should points with a lifetime large than 1e17 be rejected?
-    options:
-      do_rejection: true
-      reject_tau_bigger_than: 1e17
+    # options:
+    #  do_rejection: true
+    #  reject_tau_bigger_than: 1e17
 
   - capability: classy_MPLike_input
     function: set_classy_input_with_MPLike
@@ -206,4 +205,4 @@ KeyValues:
   default_output_path: "runs/CosmoBit_example_ALPs"
 
   likelihood:
-    model_invalid_for_lnlike_below: -1e6
+    model_invalid_for_lnlike_below: -1e30
