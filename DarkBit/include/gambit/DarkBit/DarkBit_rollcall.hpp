@@ -1665,6 +1665,31 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  #define CAPABILITY lnL_XENON1T_Anomaly
+  START_CAPABILITY
+    #define FUNCTION calc_lnL_XENON1T_Anomaly
+    START_FUNCTION(double)
+    ALLOW_JOINT_MODEL(GeneralCosmoALP,XENON1T_NuisanceParameters)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_XENON1T_Anomaly_NuisanceParameters
+  START_CAPABILITY
+    #define FUNCTION calc_lnL_XENON1T_Anomaly_NuisanceParameters
+    START_FUNCTION(double)
+    ALLOW_MODEL(XENON1T_NuisanceParameters)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_XENON1T_DM_Anomaly
+  START_CAPABILITY
+    #define FUNCTION calc_lnL_XENON1T_DM_Anomaly
+    START_FUNCTION(double)
+    ALLOW_JOINT_MODEL(GeneralCosmoALP,XENON1T_NuisanceParameters,XENON1T_DM_NuisanceParameters)
+    DEPENDENCY(LocalHalo, LocalMaxwellianHalo)
+    #undef FUNCTION
+  #undef CAPABILITY
+
   #define CAPABILITY AxionOscillationTemperature
   START_CAPABILITY
     #define FUNCTION calc_AxionOscillationTemperature
