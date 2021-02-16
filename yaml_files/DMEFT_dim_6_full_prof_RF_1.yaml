@@ -319,6 +319,7 @@ KeyValues:
   likelihood:
     model_invalid_for_lnlike_below: -5e5
     model_invalid_for_lnlike_below_alt: -1e5
+    print_invalid_points: false
     debug: false
 
   default_output_path: "runs/DMEFT/dim_6_full_prof_RF_1/"
