@@ -72,15 +72,17 @@ namespace Gambit
       // For the lifetime take 1/Gamma and translate GeV^-1 into s by multiplication with "hbar"
       result = 1./Gamma * hbar;
 
-      // Reject points which have a lifetime bigger than 1e17s (or whatever the user chooses)
+      // Reject points which have a lifetime outside a given range
       // Gets only triggered if the user wishes to do so.
       // !! This is not a real physical bound but it is more to deal with the lack of likelihoods so far. !!
-      static bool do_rejection = runOptions->getValueOrDef<bool>(false,"do_rejection");
-      static double tdec_max = runOptions->getValueOrDef<double>(1.0e17,"reject_tau_bigger_than");
-      if (do_rejection && result > tdec_max)
+      static const double cut_below = runOptions->getValueOrDef<double>(0.0,"cut_tau_below");
+      static const double inf = std::numeric_limits<double>::infinity();
+      static const double cut_above = runOptions->getValueOrDef<double>(inf,"cut_tau_above");
+      if ( (result > cut_above) || (result < cut_below) )
       {
         std::ostringstream err;
-        err << "ALP lifetime (" << result << " [s]) exceeds the threshold of " << tdec_max <<" [s].";
+        err << "ALP lifetime (" << result << " [s]) is outside of the permitted range";
+        err << " [" << cut_below << ", " << cut_above << "].";
         invalid_point().raise(err.str());
       }
     }

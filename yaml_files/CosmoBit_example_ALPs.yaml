@@ -220,10 +220,9 @@ Rules:
 
   - capability: lifetime
     function: lifetime_ALP_agg
-    # Should points with a lifetime large than 1e17 be rejected?
     # options:
-    #  do_rejection: true
-    #  reject_tau_bigger_than: 1e17
+    #  cut_tau_below: 0.0
+    #  cut_tau_above: 1e17
 
   - capability: classy_MPLike_input
     function: set_classy_input_with_MPLike
