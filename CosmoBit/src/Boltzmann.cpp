@@ -318,7 +318,7 @@ namespace Gambit
         if (logInputs)
         {
           logger() << "[set_classy_input_params] Collected the following inputs:\n\n"<<endl;
-          for (auto& it : inputs)
+          for (auto& it : result.get_input_dict().cast<map_str_str>())
             logger() << it.first << " = " << it.second << "\n";
           logger() << "\n" << EOM;
         }
