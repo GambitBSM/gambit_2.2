@@ -38,21 +38,25 @@ Parameters:
 
   StandardModel_SLHA2: !import include/StandardModel_SLHA2_Planckbaseline.yaml
 
-  # Model Parameters of CosmoALP
+  # Model Parameters of GeneralCosmoALP
   # This automatically activates etaBBN_rBBN_rCMB_dNurBBN_dNurCMB and DecayingDM_photon
   # such that there is no need to specifies these models.
-  CosmoALP:
-   Cagg: 1.0
-   fa:
-     range: [1e2, 1e12]
-     prior_type: log
-   ma0:
-     range: [1.0E+2, 1.0E+7]
-     prior_type: log
-   thetai: 0.0
-   f0_thermal:
-      range: [1e-12, 1e1]
-   T_R: 5.0
+  GeneralCosmoALP:
+    gagg:
+      range: [1e-20, 1e-3]
+      prior_type: log
+    ma0:
+      range: [1e2, 1e7]
+      prior_type: log
+    f0_thermal:
+      range: [1e-15, 1e2]
+    fa: 1e9
+    thetai: 0.0
+    T_R: 5.0
+    beta: 0.0
+    Tchi: 1e99
+    gaee: 0.0
+    gaN: 0.0
 
   cosmo_nuisance_Planck_lite: !import include/Planck_2018/cosmo_nuisance_Planck_lite_flat.yaml
 
@@ -127,6 +131,7 @@ ObsLikes:
     module:       CosmoBit
     type:         double
     sub_capabilities:
+      bao_boss_dr12: default
       bao_smallz_2014: default
       Pantheon: default
 
@@ -144,6 +149,39 @@ ObsLikes:
     capability:   lnL_RParameter
     module:       DarkBit
     type:         double
+
+  # ---- Simplified X-ray likelihoods (derived from sterile neutrino bounds) -----
+  - purpose:      LogLike
+    capability:   lnL_Xray_M31_sterile_nu
+    module:       DarkBit
+    type:         double
+
+  - purpose:      LogLike
+    capability:   lnL_Xray_Integral_SPI_sterile_nu
+    module:       DarkBit
+    type:         double
+
+  - purpose:      LogLike
+    capability:   lnL_Xray_NuSTAR_sterile_nu
+    module:       DarkBit
+    type:         double
+
+  # ---- Further GeneralCosmoALP Observables -----
+  - purpose:      Observable
+    capability:   lifetime
+    type:         double
+
+  - purpose:      Observable
+    capability:   DM_fraction
+    type:         double
+
+  - purpose:      Observable
+    capability:   minimum_fraction
+    type:         double
+
+  - purpose:      Observable
+    capability:   etaBBN_rBBN_rCMB_dNurBBN_dNurCMB_parameters
+    type:         ModelParameters
 
 Rules:
 
