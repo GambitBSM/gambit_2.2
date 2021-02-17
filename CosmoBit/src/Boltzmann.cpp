@@ -313,6 +313,16 @@ namespace Gambit
           result.merge_input_dicts(*Dep::classy_PlanckLike_input);
         }
 
+        // Print the content of the complete input dictory for CLASS to screen (for debugging)
+        static const bool printInputs = runOptions->getValueOrDef<bool>(false, "print_classy_inputs");
+        if (printInputs)
+        {
+          map_str_str inputs = result.get_input_dict().cast<map_str_str>();
+          std::cout << "=== Inputs for classy ===\n";
+          for (auto& it : inputs)
+            std::cout << it.first << " = " << it.second << "\n";
+          std::cout << std::string(25,'=') << std::endl;
+        }
 
       }
 
