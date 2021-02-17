@@ -2064,16 +2064,18 @@ namespace Gambit
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Capability function to calculate the likelihood for SN 1987A (based on data from 25 to 100 MeV photons, interpreted
-    // by Chupp et al., Phys. Rev. Lett. 62, 505 (1989). Use 10 sec of data for conversion.
+    // by Chupp et al., Phys. Rev. Lett. 62, 505 (1989). Use 10 sec of data for conversion and 223 sec for decay.
     void calc_lnL_SN1987A (double &result)
     {
       using namespace Pipes::calc_lnL_SN1987A;
       double f_10s = *Dep::PhotonFluence_SN1987A_Conversion;
+      double f_223s = *Dep::PhotonFluence_SN1987A_Decay;
 
       // Standard devations of the null observation.
       const double sigma_10s = 0.2;
+      const double sigma_223s = 0.59333;
 
-      double ratio = f_10s/sigma_10s;
+      double ratio = std::max(f_10s/sigma_10s, f_223s/sigma_223s);
 
       result = -0.5*ratio*ratio;
     }
