@@ -44,7 +44,7 @@ namespace Gambit
     auto gambit_bits = gambit_bits_yaml["gambit_bits"].as<std::vector<std::string>>();
 
     // We need to manually add this here, can not be crawled by our script.
-    // We want to sort it again to keep alphapetical ordering from the python script after adding bits explicitly here.
+    // We want to sort it again to keep alphabetical ordering from the python script after adding bits explicitly here.
     gambit_bits.emplace_back(std::string{"BackendIniBit"});
     std::sort(gambit_bits.begin(), gambit_bits.end());
 
@@ -60,7 +60,7 @@ namespace Gambit
       auto result = std::find(std::begin(modules), std::end(modules), bit);
       if (result == std::end(modules))
       {
-        table.red() << "disabled/ditched";
+        table.red() << "ditched";
         table << "n/a";
       }
       else 
