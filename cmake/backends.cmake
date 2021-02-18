@@ -1293,7 +1293,7 @@ if(NOT ditched_${name}_${ver})
             DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
             SOURCE_DIR ${dir}
             BUILD_IN_SOURCE 1
-            CMAKE_ARGS -Dminuit2_mpi=off -Dminuit2_omp=off
+            CMAKE_ARGS -Dminuit2_mpi=off -Dminuit2_omp=off -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_PROJECT_NAME=${CMAKE_PROJECT_NAME}
             BUILD_COMMAND ${MAKE_PARALLEL}
             INSTALL_COMMAND ""
             )
