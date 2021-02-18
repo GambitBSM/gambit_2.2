@@ -2,7 +2,7 @@
 ## GAMBIT configuration for testing mass spectrum generation for several
 ## MSSM variants (CMSSM by default)
 ##
-## Only requires SpecBit.
+## Only requires SpecBit and PrecisionBit.
 ##########################################################################
 
 # NB: If MSSMspectrum_test is chosen this example yaml file will use
@@ -156,16 +156,23 @@ ObsLikes:
   - capability:   VS_results
     purpose:      Obs
 
+  - purpose:    Observable
+    capability: SLHA1_violation
+
+  - purpose:    Observable
+    capability: MSSM_spectrum
+    type:       map_str_dbl
+
 Rules:
 
   # Specify the rules to calculate the MSSM spectrum,
   # i.e. the function specific to the model and spectrum calculator
-  - capabilty:    unimproved_MSSM_spectrum
+  - capability:    unimproved_MSSM_spectrum
     type:         Spectrum
-    function:     get_CMSSM_spectrum_FS
+    #function:     get_CMSSM_spectrum_FS
     #function:     get_MSSMatMGUT_spectrum_FS
     #function:     get_MSSMatQ_spectrum_FS
-    #function:     get_MSSM_spectrum_SPheno
+    function:     get_MSSM_spectrum_SPheno
     options:
     # FlexibleSUSY options
       precision_goal:        1.0e-4
@@ -183,6 +190,50 @@ Rules:
    # SPheno options
       n_run:                 30
       delta_mass:            1.0e-4
+
+  # Choose where to get the precision spectrum from
+  - capability: MSSM_spectrum
+    type: Spectrum
+    function: make_MSSM_precision_spectrum_none
+    #function: make_MSSM_precision_spectrum_W
+    #function: make_MSSM_precision_spectrum_H_W
+    #function: make_MSSM_precision_spectrum_4H_W
+    # The following options only have an impact when using make_MSSM_precision_spectrum_H_W
+    # or make_MSSM_precision_spectrum_H_W.
+    # Choose to take the precision prediction for the Higgs mass(es) (rather then spectrum generator's).
+    # Choose to use the difference between the precision and spectrum generator predictions, along
+    # with the precision error estimate, to estimate the theoretical error on the prediction.
+    options:
+      Higgs_predictions_source: 1
+      Higgs_predictions_error_method: 4
+
+  # Make sure to use the next-to-latest version (2.11.3) of FeynHiggs for things that need it,
+  # as the latest version (2.12.0) is buggy.
+  # In practice, the easiest way to do this is just to not install / nuke the versions you don't want to use, e.g.
+  #  make nuke-feynhiggs_2_12_0
+  #  make nuke-feynhiggs_2_11_2
+  # In a future version of GAMBIT, it will possible to just do this here in the yaml file:
+  #- backend: FeynHiggs
+  #  version: 2.11.3
+  # If you want to do it from the yaml file now, you need to do this:
+  #- capability: FH_Couplings_output
+  #  backends:
+  #  - {backend: FeynHiggs, version: 2.11.3}
+  #- capability: FH_Precision
+  #  backends:
+  #  - {backend: FeynHiggs, version: 2.11.3}
+  # The following two rules only have an impact when using make_MSSM_precision_spectrum_H_W
+  #- capability: prec_HiggsMasses
+  #  backends:
+  #  - {backend: FeynHiggs, version: 2.11.3}
+  #- capability: FH_MSSMMasses
+  #  backends:
+  #  - {backend: FeynHiggs, version: 2.11.3}
+
+  # Choose to get the precision value of the SM-like Higgs mass from FeynHiggs or SUSYHD
+  - capability: prec_mh
+    function: FH_HiggsMass
+    #function: SHD_HiggsMass
 
   # pass settings to vevacious
   - capability: initialize_vevacious

@@ -1,5 +1,6 @@
 ##########################################################################
-## GAMBIT configuration for testing vacuum stability in a grid scan of [mT,mH]
+## GAMBIT configuration for testing vacuum stability of the Scalar Singlet
+## model in a grid scan of [mT,mH]
 ##
 ## This will run a grid scan of the Higgs and top mass parameter space
 ## which is constrained from either side by perturbativity and vacuum
