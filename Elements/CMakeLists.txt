@@ -30,10 +30,10 @@ set(source_files src/decay_table.cpp
                  src/smlike_higgs.cpp
                  src/spectrum.cpp
                  src/subspectrum.cpp
+                 src/suspicious_points.cpp
                  src/terminator.cpp
                  src/type_equivalency.cpp
                  src/virtual_higgs.cpp
-                 src/suspicious_points.cpp
 )
 
 set(header_files include/gambit/Elements/decay_table.hpp
@@ -61,11 +61,11 @@ set(header_files include/gambit/Elements/decay_table.hpp
                  include/gambit/Elements/spec_head.hpp
                  include/gambit/Elements/standalone_module.hpp
                  include/gambit/Elements/subspectrum.hpp
+                 include/gambit/Elements/suspicious_points.hpp
                  include/gambit/Elements/terminator.hpp
                  include/gambit/Elements/type_equivalency.hpp
                  include/gambit/Elements/types_rollcall.hpp
                  include/gambit/Elements/virtual_higgs.hpp
-                 include/gambit/Elements/suspicious_points.hpp
 )
 
 add_gambit_library(Elements OPTION OBJECT SOURCES ${source_files} HEADERS ${header_files})

@@ -600,6 +600,7 @@ list(APPEND MODULE_HARVESTER_FILES "${PROJECT_SOURCE_DIR}/config/resolution_type
 set(MODULE_HARVESTER_FILES ${MODULE_HARVESTER_FILES} ${BACKEND_HARVESTER_FILES})
 remove_build_files(models_harvested backends_harvested modules_harvested printers_harvested colliders_harvested)
 if(EXISTS "${PROJECT_SOURCE_DIR}/Elements/")
+  execute_process(COMMAND touch ${PROJECT_SOURCE_DIR}/Elements/src/suspicious_points.cpp)
   add_gambit_custom(module_harvest modules_harvested MODULE_HARVESTER MODULE_HARVESTER_FILES ${itch_with_commas})
 endif()
 if(EXISTS "${PROJECT_SOURCE_DIR}/Backends/")
