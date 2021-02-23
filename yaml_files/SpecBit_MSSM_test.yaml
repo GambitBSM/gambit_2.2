@@ -24,10 +24,10 @@ Parameters:
   CMSSM:
     M0: 
       range: [1500, 1600]
-    M12: 301.79
-    A0: 3150.25
+    M12: 1001.79
+    A0: -4550.25
     SignMu: 1
-    TanBeta: 23.3845
+    TanBeta: 20.3845
 
 #  MSSM30atMGUT:
 #
