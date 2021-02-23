@@ -61,6 +61,7 @@ set(clean_files ${clean_files} "${PROJECT_SOURCE_DIR}/ColliderBit/include/gambit
 
 # Arrange for the removal of generated source files with "make clean"
 set(clean_files ${clean_files} "${PROJECT_SOURCE_DIR}/Models/src/particle_database.cpp")
+set(clean_files ${clean_files} "${PROJECT_SOURCE_DIR}/Elements/src/suspicious_points.cpp")
 foreach(bit ${ALL_GAMBIT_BITS})
   set(clean_files ${clean_files} "${PROJECT_SOURCE_DIR}/${bit}/examples/standalone_functors.cpp")
 endforeach()

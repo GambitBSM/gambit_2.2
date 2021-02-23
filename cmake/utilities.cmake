@@ -68,6 +68,14 @@ function(check_result result command)
   endif()
 endfunction()
 
+# Execute script to prevent printing problems with standalones
+function(add_extras isStandalone name)
+  add_custom_target(${name} COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/Elements/scripts/extras_printing.py ${isStandalone}
+                            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+                            # Add further files that need editing by extras_printing.py
+                            DEPENDS "${PROJECT_SOURCE_DIR}/Elements/src/suspicious_points.cpp")
+endfunction()
+
 #Check if a string starts with a give substring
 function(starts_with str search)
   string(FIND "${str}" "${search}" out)
@@ -448,6 +456,10 @@ function(add_standalone executablename)
                                   ${STANDALONE_OBJECTS}
                                   ${GAMBIT_ALL_COMMON_OBJECTS}
                           HEADERS ${ARG_HEADERS})
+
+    # Add the extras_printing target
+    add_extras(${standalone_permitted} ${executablename}_extras)
+    add_dependencies(${executablename} ${executablename}_extras)
 
     # Add each of the declared dependencies
     foreach(dep ${ARG_DEPENDENCIES})

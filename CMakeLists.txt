@@ -600,6 +600,7 @@ list(APPEND MODULE_HARVESTER_FILES "${PROJECT_SOURCE_DIR}/config/resolution_type
 set(MODULE_HARVESTER_FILES ${MODULE_HARVESTER_FILES} ${BACKEND_HARVESTER_FILES})
 remove_build_files(models_harvested backends_harvested modules_harvested printers_harvested colliders_harvested)
 if(EXISTS "${PROJECT_SOURCE_DIR}/Elements/")
+  execute_process(COMMAND touch ${PROJECT_SOURCE_DIR}/Elements/src/suspicious_points.cpp)
   add_gambit_custom(module_harvest modules_harvested MODULE_HARVESTER MODULE_HARVESTER_FILES ${itch_with_commas})
 endif()
 if(EXISTS "${PROJECT_SOURCE_DIR}/Backends/")
@@ -675,3 +676,5 @@ if(EXISTS "${PROJECT_SOURCE_DIR}/ScannerBit/")
   include(${PROJECT_BINARY_DIR}/linkedout.cmake)
 endif()
 
+# Create a list of Gambit bits to be used in the diagnostic system of Gambit.
+execute_process(COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/Utils/scripts/find_all_gambit_bits.py --source-dir ${PROJECT_SOURCE_DIR} --output-file=${PROJECT_SOURCE_DIR}/config/gambit_bits.yaml)
