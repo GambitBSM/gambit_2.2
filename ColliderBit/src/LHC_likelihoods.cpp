@@ -40,8 +40,8 @@
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/ColliderBit/ColliderBit_rollcall.hpp"
 #include "gambit/Utils/statistics.hpp" 
-#include "multimin/multimin.hpp"
 
+#include "multimin/multimin.hpp"
 #include "Eigen/Eigenvalues"
 #include <gsl/gsl_sf_gamma.h>
 
