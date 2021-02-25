@@ -414,6 +414,10 @@ namespace GUM
             {
                 spinX2 = 0;
             }
+            else if (spin == "T")
+            {
+                spinX2 = 4;
+            }
             // Don't try and parse ghosts; it'll give us an error. We also
             // don't care about them from a pheno (GUM) standpoint.
             else if (spin == "U")
