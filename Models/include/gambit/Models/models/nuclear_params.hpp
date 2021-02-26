@@ -1,28 +1,35 @@
-//  GAMBIT: Global and Modular BSM Inference Tool
-//  *********************************************
-//
-//  Nuclear parameters model definitions
-//
-//  *********************************************
-//
-//  Authors
-//  =======
-//
-//  (add name and date if you modify)
-//
-//  Jonathan Cornell
-//  2015 March
-//
-//  Sebastian Wild
-//  October 2018
-//
-//  Felix Kahlhoefer
-//  2020 December
-//
-//  Ankit Beniwal
-//  2020 December
-//
-//  *********************************************
+///  GAMBIT: Global and Modular BSM Inference Tool
+///  *********************************************
+///
+///  Nuclear parameters model definitions
+///
+///  *********************************************
+///
+///  Authors
+///  =======
+///
+///  (add name and date if you modify)
+///
+///  \author Jonathan Cornell
+///  \date 2015 March
+///
+///  \author Sebastian Wild
+///  \date 2018 Oct
+///
+///  \author Janina Renk
+///  \date 2020 May
+///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2020 Sep
+///
+///  \author Felix Kahlhoefer
+///  \date 2020 Dec
+///
+///  \author Ankit Beniwal
+///  \date 2020 Dec
+///
+///  *********************************************
 
 #ifndef __nuclear_params_hpp__
 #define __nuclear_params_hpp__
@@ -95,6 +102,13 @@ namespace Gambit
   INTERPRET_AS_PARENT_FUNCTION(sigmas_to_sigma0)
   INTERPRET_AS_PARENT_DEPENDENCY(SMINPUTS, SMInputs)
 #undef PARENT
+#undef MODEL
+
+
+// model for neutron lifetime
+#define MODEL nuclear_params_neutron_lifetime
+  START_MODEL
+  DEFINEPARS(neutron_lifetime)
 #undef MODEL
 
 #endif /* __nuclear_params_hpp__ */

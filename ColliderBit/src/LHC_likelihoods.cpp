@@ -39,12 +39,13 @@
 
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/ColliderBit/ColliderBit_rollcall.hpp"
+#include "gambit/Utils/statistics.hpp" 
+#include "multimin/multimin.hpp"
 
 #include "Eigen/Eigenvalues"
 #include <gsl/gsl_sf_gamma.h>
-#include "gambit/ColliderBit/multimin.h"
 
-// #define COLLIDERBIT_DEBUG
+//#define COLLIDERBIT_DEBUG
 #define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 
 namespace Gambit
@@ -79,14 +80,11 @@ namespace Gambit
           // Save SR numbers and absolute uncertainties
           const SignalRegionData srData = adata[SR];
           const str key = adata.analysis_name + "__" + srData.sr_label + "__i" + std::to_string(SR) + "__signal";
-          result[key] = srData.n_signal_at_lumi;
-          const double abs_uncertainty_s_stat = (srData.n_signal == 0 ? 0 : sqrt(srData.n_signal) * (srData.n_signal_at_lumi/srData.n_signal));
-          const double abs_uncertainty_s_sys = srData.signal_sys;
-          const double combined_uncertainty = HEPUtils::add_quad(abs_uncertainty_s_stat, abs_uncertainty_s_sys);
-          result[key + "_uncert"] = combined_uncertainty;
+          result[key] = srData.n_sig_scaled;
+          const double n_sig_scaled_err = srData.calc_n_sig_scaled_err();
+          result[key + "_uncert"] = n_sig_scaled_err;
 
-          summary_line << srData.sr_label + "__i" + std::to_string(SR) << ":" << srData.n_signal_at_lumi << "+-" << combined_uncertainty << ", ";
-
+          summary_line << srData.sr_label + "__i" + std::to_string(SR) << ":" << srData.n_sig_scaled << "+-" << n_sig_scaled_err << ", ";
         }
       }
       logger() << LogTags::debug << summary_line.str() << EOM;
@@ -116,7 +114,8 @@ namespace Gambit
 
       // Calculate each SR's Poisson likelihood and add to composite likelihood calculation
       double loglike_tot = n * log(1/sqrt(2*M_PI)); //< could also drop this, but it costs ~nothing
-      for (int j = 0; j < n; ++j) {
+      for (size_t j = 0; j < n; ++j)
+      {
 
         // First the multivariate Gaussian bit (j = nuisance)
         const double pnorm_j = -pow(unit_nuisances(j), 2)/2.;
@@ -249,7 +248,7 @@ namespace Gambit
       static const double SIMPLEX_SIZE = runOptions->getValueOrDef<double>(1e-5, "nuisance_prof_simplexsize");
       static const unsigned METHOD = runOptions->getValueOrDef<unsigned>(6, "nuisance_prof_method");
       static const unsigned VERBOSITY = runOptions->getValueOrDef<unsigned>(0, "nuisance_prof_verbosity");
-      static const struct multimin_params oparams = {INITIAL_STEP, CONV_TOL, MAXSTEPS, CONV_ACC, SIMPLEX_SIZE, METHOD, VERBOSITY};
+      static const struct multimin::multimin_params oparams = {INITIAL_STEP, CONV_TOL, MAXSTEPS, CONV_ACC, SIMPLEX_SIZE, METHOD, VERBOSITY};
 
       // Convert the linearised array of doubles into "Eigen views" of the fixed params
       std::vector<double> fixeds = _gsl_mkpackedarray(n_preds, n_obss, sqrtevals, evecs);
@@ -257,7 +256,7 @@ namespace Gambit
       // Pass to the minimiser
       double minusbestll = 999;
       // _gsl_calc_Analysis_MinusLogLike(nSR, &nuisances[0], &fixeds[0], &minusbestll);
-      multimin(nSR, &nuisances[0], &minusbestll,
+      multimin::multimin(nSR, &nuisances[0], &minusbestll,
                nullptr, nullptr, nullptr,
                _gsl_calc_Analysis_MinusLogLike,
                _gsl_calc_Analysis_MinusLogLikeGrad,
@@ -435,6 +434,7 @@ namespace Gambit
         if (USE_COVAR && has_covar)
         {
           result.combination_sr_label = "none";
+          result.combination_sr_index = -1;
           result.combination_loglike = 0.0;
         }
         // If this is an analysis without covariance info, add 0-entries for all SRs plus
@@ -447,6 +447,7 @@ namespace Gambit
             result.sr_loglikes[adata[SR].sr_label] = 0.0;
           }
           result.combination_sr_label = "none";
+          result.combination_sr_index = -1;
           result.combination_loglike = 0.0;
         }
 
@@ -472,7 +473,15 @@ namespace Gambit
       if (all_zero_signal)
       {
         // Store result
-        result.combination_sr_label = "all";
+        if (!(USE_COVAR && has_covar))
+        {
+          for (size_t SR = 0; SR < adata.size(); ++SR)
+          {
+            result.sr_indices[adata[SR].sr_label] = SR;
+            result.sr_loglikes[adata[SR].sr_label] = 0.0;
+          }
+        }
+        result.combination_sr_label = "any";
         result.combination_sr_index = -1;
         result.combination_loglike = 0.0;
 
@@ -921,6 +930,15 @@ namespace Gambit
       using namespace Pipes::calc_combined_LHC_LogLike;
       result = 0.0;
 
+      static const bool write_summary_to_log = runOptions->getValueOrDef<bool>(false, "write_summary_to_log");
+
+      std::stringstream summary_line_combined_loglike; 
+      summary_line_combined_loglike << "calc_combined_LHC_LogLike: combined LogLike: ";
+      std::stringstream summary_line_skipped_analyses;
+      summary_line_skipped_analyses << "calc_combined_LHC_LogLike: skipped analyses: ";
+      std::stringstream summary_line_included_analyses;
+      summary_line_included_analyses << "calc_combined_LHC_LogLike: included analyses: ";
+
       // Read analysis names from the yaml file
       std::vector<str> default_skip_analyses;  // The default is empty lists of analyses to skip
       static const std::vector<str> skip_analyses = runOptions->getValueOrDef<std::vector<str> >(default_skip_analyses, "skip_analyses");
@@ -947,6 +965,13 @@ namespace Gambit
             cout.precision(5);
             cout << DEBUG_PREFIX << "calc_combined_LHC_LogLike: Leaving out analysis " << analysis_name << " with LogL = " << analysis_loglike << endl;
           #endif
+
+          // Add to log summary
+          if(write_summary_to_log)
+          {
+            summary_line_skipped_analyses << analysis_name << "__LogLike:" << analysis_loglike << ", ";
+          }
+
           continue;
         }
 
@@ -960,6 +985,12 @@ namespace Gambit
         else
         {
           result += analysis_loglike;
+        }
+
+        // Add to log summary
+        if(write_summary_to_log)
+        {
+          summary_line_included_analyses << analysis_name << "__LogLike:" << analysis_loglike << ", ";
         }
 
         #ifdef COLLIDERBIT_DEBUG
@@ -979,11 +1010,43 @@ namespace Gambit
         result = std::min(result, 0.0);
       }
 
-      std::stringstream summary_line;
-      summary_line << "LHC combined loglike:" << result;
-      logger() << LogTags::debug << summary_line.str() << EOM;
+      // Write log summary
+      if(write_summary_to_log)
+      {
+        summary_line_combined_loglike << result;
+
+        logger() << summary_line_combined_loglike.str() << EOM;
+        logger() << summary_line_included_analyses.str() << EOM;
+        logger() << summary_line_skipped_analyses.str() << EOM;
+      }  
+    }
+
+
+    /// A dummy log-likelihood that helps the scanner track a given 
+    /// range of collider log-likelihood values
+    void calc_LHC_LogLike_scan_guide(double& result)
+    {
+      using namespace Pipes::calc_LHC_LogLike_scan_guide;
+      result = 0.0;
+
+      static const bool write_summary_to_log = runOptions->getValueOrDef<bool>(false, "write_summary_to_log");
+      static const double target_LHC_loglike = runOptions->getValue<double>("target_LHC_loglike");
+      static const double target_width = runOptions->getValue<double>("width_LHC_loglike");
+
+      // Get the combined LHC loglike
+      double LHC_loglike = *Dep::LHC_Combined_LogLike;
+
+      // Calculate the dummy scan guide loglike using a gaussian centered on the target LHC loglike value
+      result = Stats::gaussian_loglikelihood(LHC_loglike, target_LHC_loglike, 0.0, target_width, false);
+
+      // Write log summary
+      if(write_summary_to_log)
+      {
+        std::stringstream summary_line; 
+        summary_line << "LHC_LogLike_scan_guide: " << result;
+        logger() << summary_line.str() << EOM;
+      }  
     }
 
   }
-
 }

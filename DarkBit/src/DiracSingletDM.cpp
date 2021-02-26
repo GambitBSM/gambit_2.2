@@ -204,6 +204,7 @@ namespace Gambit
     };
 
     void DarkMatter_ID_DiracSingletDM(std::string & result) { result = "F"; }
+    void DarkMatterConj_ID_DiracSingletDM(std::string & result) { result = "F"; }
 
     /// Direct detection couplings for the DiracSingletDM_Z2 model.
     void DD_nonrel_WCs_DiracSingletDM_Z2(NREO_DM_nucleon_couplings &result)
