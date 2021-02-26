@@ -47,8 +47,10 @@
 #include <iostream>
 #endif
 
-namespace Gambit {
-  namespace ColliderBit {
+namespace Gambit
+{
+  namespace ColliderBit
+  {
 
 
     /// A simple container for the result of one signal region from one analysis.
@@ -89,7 +91,8 @@ namespace Gambit {
       SignalRegionData() {} 
 
       /// Consistency check
-      bool check() const {
+      bool check() const
+      {
         bool consistent = true;
         /// @todo Add SR consistency checks
         return consistent;

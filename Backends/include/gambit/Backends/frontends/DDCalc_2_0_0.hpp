@@ -188,13 +188,11 @@ BE_FUNCTION(DDCalc_FreeAll,       void, (), "C_DDUtils_ddcalc_freeall",       "F
 
 // DM mass, spin & conjugate nature, plus couplings and fraction of cosmological DM that is accounted for by model.
 BE_INI_DEPENDENCY(mwimp, double)
+BE_INI_DEPENDENCY(DD_couplings, DM_nucleon_couplings)
 BE_INI_DEPENDENCY(spinwimpx2, unsigned int)
 BE_INI_DEPENDENCY(wimp_sc, bool)
 BE_INI_DEPENDENCY(RD_fraction, double)
 BE_INI_DEPENDENCY(LocalHalo, LocalMaxwellianHalo)
-
-// Direct detection couplings --- see backend_types/DDCalc.hpp for specifics. Wraps up the old DM_nucleon_couplings struct with the new Wilson Coefficient struct.
-BE_INI_DEPENDENCY(DDCalc_Couplings, DD_coupling_container)
 
 // Convenience function for returning detector index given an analysis name.
 BE_CONV_FUNCTION(DDCalc_Experiment, int, (const str&), "DD_Experiment")
