@@ -121,3 +121,18 @@ KeyValues:
 
   likelihood:
     model_invalid_for_lnlike_below: -1e6
+
+    # use_lnlike_modifier: gaussian 
+    # lnlike_modifiers:
+    #   gaussian:
+    #     mu: -3.0
+    #     sigma: 0.1
+    #     use_limit: lower
+    #     use_delta_lnlike: false
+    #   gaussian_plateau:
+    #     mu_dn: -3.0
+    #     sigma_dn: 3.0
+    #     mu_up: 0.0
+    #     sigma_up: 1.0
+    #     use_delta_lnlike: true
+
