@@ -35,13 +35,10 @@ namespace Gambit
       ~DMEFT() {};
       
       // Annihilation cross-section. sigmav is a pointer to a CalcHEP backend function.
-      double sv(str channel, DecayTable& tbl, double (*sigmav)(str&, std::vector<str>&, std::vector<str>&, double&, double&, const DecayTable&), double v_rel)
+      double sv(str channel, DecayTable& tbl, double (*sigmav)(str&, std::vector<str>&, std::vector<str>&, double&, const DecayTable&), double v_rel)
       {
         /// Returns sigma*v for a given channel.
         double GeV2tocm3s1 = gev2cm2*s2cm;
-        
-        /// Hard-coded for now -- CalcHEP frontend needs this removing anyway, it doesn't use it.
-        double QCD_coupling = 1.0;
         
         // CalcHEP args
         str model = "DMEFT"; // CalcHEP model name
@@ -56,7 +53,7 @@ namespace Gambit
         if (channel == "g, g") out = {"g", "g"};
         
         // Check the channel has been filled
-        if (out.size() > 1) return sigmav(model, in, out, QCD_coupling, v_rel, tbl)*GeV2tocm3s1;
+        if (out.size() > 1) return sigmav(model, in, out, v_rel, tbl)*GeV2tocm3s1;
         else return 0;
       }
       
@@ -199,6 +196,8 @@ namespace Gambit
     } // function TH_ProcessCatalog
     
     void DarkMatter_ID_DMEFT(std::string& result){ result = "chi"; }
+
+    void DarkMatterConj_ID_DMEFT(std::string& result){ result = "chi"; }
 
     /// Relativistic Wilson Coefficients for direct detection
     /// DMEFT basis is the same as that used in DirectDM

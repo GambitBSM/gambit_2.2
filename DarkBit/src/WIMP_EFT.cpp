@@ -131,6 +131,14 @@ namespace Gambit
        result = Dep::WIMP_properties->name;
     }
 
+    /// DarkMatterConj_ID string for generic EFT dark matter 
+    void DarkMatterConj_ID_EFT(std::string& result)
+    {
+       using namespace Pipes::DarkMatterConj_ID_EFT;
+       result = Dep::WIMP_properties->name;
+    }
+
+
     /// WIMP spin property extractor
     void jwimpx2_from_WIMPprops(unsigned int& result)
     {
