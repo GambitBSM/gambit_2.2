@@ -74,9 +74,9 @@ function(check_result result command)
 endfunction()
 
 # Execute script to prevent printing problems with standalones
-function(add_elements_extras isStandalone target)
+function(add_elements_extras target)
   set(ELEMENTS_EXTRAS_SCRIPT ${PROJECT_SOURCE_DIR}/Elements/scripts/elements_extras.py)
-  add_custom_target(${target} COMMAND ${PYTHON_EXECUTABLE} ${ELEMENTS_EXTRAS_SCRIPT} ${isStandalone}
+  add_custom_target(${target} COMMAND ${PYTHON_EXECUTABLE} ${ELEMENTS_EXTRAS_SCRIPT} ${target}
                             WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 endfunction()
 
@@ -462,7 +462,7 @@ function(add_standalone executablename)
                           HEADERS ${ARG_HEADERS})
 
     # Add the elements_extras target
-    add_elements_extras(${standalone_permitted} ${executablename}_elements_extras)
+    add_elements_extras(${executablename}_elements_extras)
     add_dependencies(${executablename} ${executablename}_elements_extras)
 
     # Add each of the declared dependencies

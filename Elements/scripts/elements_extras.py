@@ -73,7 +73,8 @@ def main(argv):
         opts, args = getopt.getopt(argv,"v:",["verbose"])
 
         # Extract flag for standalone
-        isStandalone = int(args[0])
+        target = args[0]
+        isStandalone = 1 if "standalone" in target else 0
 
     except :
         print('Usage: elements_extras.py [flags] <isStandalone>')
@@ -150,7 +151,7 @@ namespace Gambit\n\
 
     # Don't touch any existing file unless it is actually different from what we will create
     header = "./Elements/include/gambit/Elements/elements_extras.hpp"
-    candidate = "./scratch/build_time/elements_extras.hpp.candidate"
+    candidate = "./scratch/build_time/" + target + ".hpp.candidate"
     with open(candidate,"w") as f: f.write(contents)
     update_only_if_different(header, candidate, verbose=False)
 

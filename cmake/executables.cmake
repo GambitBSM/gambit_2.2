@@ -56,7 +56,7 @@ if(EXISTS "${PROJECT_SOURCE_DIR}/Core/")
   set_target_properties(gambit PROPERTIES EXCLUDE_FROM_ALL 0)
 
   # Add the elements_extras target
-  add_elements_extras(0 elements_extras)
+  add_elements_extras(elements_extras)
   add_dependencies(${PROJECT_NAME} elements_extras)
 
   # EXPERIMENTAL: Linking against Electric Fence for heap corruption debugging
