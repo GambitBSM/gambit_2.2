@@ -23,12 +23,17 @@
 #  \date 2016 Jan
 #
 #  \author Tomas Gonzalo
-#          (t.e.gonzalo@fys.uio.no)
+#          (gonzalo@physik.rwth-aachen.de)
 #  \date 2016 Sep
+#  \date 2021 Mar
 #
 #  \author Will Handley
 #          (wh260@cam.ac.uk)
 #  \date 2018 Dec
+#
+#  \author Christopher Chang
+#          (christopher.chang@uqconnect.edu.au)
+#  \date 2021 Feb
 #
 #************************************************
 
@@ -69,11 +74,10 @@ function(check_result result command)
 endfunction()
 
 # Execute script to prevent printing problems with standalones
-function(add_extras isStandalone name)
-  add_custom_target(${name} COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/Elements/scripts/extras_printing.py ${isStandalone}
-                            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-                            # Add further files that need editing by extras_printing.py
-                            DEPENDS "${PROJECT_SOURCE_DIR}/Elements/src/suspicious_points.cpp")
+function(add_elements_extras isStandalone target)
+  set(ELEMENTS_EXTRAS_SCRIPT ${PROJECT_SOURCE_DIR}/Elements/scripts/elements_extras.py)
+  add_custom_target(${target} COMMAND ${PYTHON_EXECUTABLE} ${ELEMENTS_EXTRAS_SCRIPT} ${isStandalone}
+                            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 endfunction()
 
 #Check if a string starts with a give substring
@@ -457,9 +461,9 @@ function(add_standalone executablename)
                                   ${GAMBIT_ALL_COMMON_OBJECTS}
                           HEADERS ${ARG_HEADERS})
 
-    # Add the extras_printing target
-    add_extras(${standalone_permitted} ${executablename}_extras)
-    add_dependencies(${executablename} ${executablename}_extras)
+    # Add the elements_extras target
+    add_elements_extras(${standalone_permitted} ${executablename}_elements_extras)
+    add_dependencies(${executablename} ${executablename}_elements_extras)
 
     # Add each of the declared dependencies
     foreach(dep ${ARG_DEPENDENCIES})
