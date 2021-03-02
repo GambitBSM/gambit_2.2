@@ -43,6 +43,12 @@
 // Load it
 LOAD_LIBRARY
 
+// Allow this version of DDCalc for all models but fermionic HP
+BE_ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
+BE_ALLOW_MODELS(ScalarSingletDM_Z2,ScalarSingletDM_Z2_running)
+BE_ALLOW_MODELS(VectorSingletDM_Z2)
+BE_ALLOW_MODELS(ScalarSingletDM_Z3,ScalarSingletDM_Z3_running)
+
 // BACKEND FUNCTIONS =======================================
 
 /* Import functions.
