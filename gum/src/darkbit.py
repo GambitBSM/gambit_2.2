@@ -325,8 +325,8 @@ def decays(dm, products, gambit_pdg_dict):
         ).format(p1, p2, dm_mass, gb_id)
 
     # 3-body decay - genRate = partial decay width, with two variables,
-    # 'E' and 'E1' (final state energy of first & second particles)
-    # @TODO: is this *exactly* what comes out of SPheno? Probably not, right?
+    # Get it from the DecayTable total width * BF
+    # NOTE: Decaying DM is disabled for the moment, so this will not be used
     if threebody:
         out1g = np.array([pdg_to_particle(x[0], gambit_pdg_dict) for x in threebody])
         out2g = np.array([pdg_to_particle(x[1], gambit_pdg_dict) for x in threebody])
@@ -426,7 +426,8 @@ def proc_cat(dm, sv, products, propagators, gambit_pdg_dict,
                     "process_ann.isSelfConj = true;\n\n"
             )
 
-    #@TODO: should rescale decaying DM too... right?
+    # NOTE: GUM may fail to generate all of the decays for non-self-conjugate
+    # DM that is equal part DM and anti-DM. This will be enabled in the future
 
     towrite += add_SM_macros(gambit_model_name)
 

@@ -65,7 +65,7 @@ namespace Gambit
         outprec(8)
         /* command line flags */
         ,
-        processed_options(false), show_runorder(false), resume(true), verbose_flag(false), found_inifile(false), developer_mode(false)
+        processed_options(false), show_runorder(false), resume(true), verbose_flag(false), found_inifile(false)
   {
   }
 
@@ -101,7 +101,6 @@ namespace Gambit
               "\n                                                                           "
               "\nBasic options:                                                             "
               "\n   --version             Display GAMBIT version information                "
-              "\n   --developer           Run in developer mode (suppress database errors)  "
               "\n   -h/--help             Display this usage information                    "
               "\n   -f <inifile>          Start scan using <inifile>                        "
               "\n   -v/--verbose          Turn on verbose mode                              "
@@ -134,7 +133,7 @@ namespace Gambit
     // Note that specialised versions of this structure exist for some of the special run modes.
     const struct option primary_options[] = {
         {"version", no_argument, 0, 1}, /*1 is just a unique integer key to identify this argument*/
-        {"developer", no_argument, 0, 2}, {"verbose", no_argument, 0, 'v'}, {"help", no_argument, 0, 'h'},
+        {"verbose", no_argument, 0, 'v'}, {"help", no_argument, 0, 'h'},
         {"dryrun", no_argument, 0, 'd'},  {"restart", no_argument, 0, 'r'}, {0, 0, 0, 0},
     };
 
@@ -155,10 +154,6 @@ namespace Gambit
       case 'v':
         // Turn on verbose mode
         verbose_flag = true;
-        break;
-      case 2:
-        // Turn on developer mode
-        developer_mode = true;
         break;
       case 'h':
       case '?':
