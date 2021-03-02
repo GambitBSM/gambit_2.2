@@ -137,29 +137,6 @@ ObsLikes:
 ##############################################################################################
 Rules:
 
-  # Use DDCalc 2.0.0
-  - capability: LUX.*
-    backends:
-    - {backend: DDCalc, version: 2.0.0}
-  - capability: XENON1T.*
-    backends:
-    - {backend: DDCalc, version: 2.0.0}
-  - capability: PandaX.*
-    backends:
-    - {backend: DDCalc, version: 2.0.0}
-  - capability: PICO.*
-    backends:
-    - {backend: DDCalc, version: 2.0.0}
-  - capability: CRESST.*
-    backends:
-    - {backend: DDCalc, version: 2.0.0}
-  - capability: CDMS.*
-    backends:
-    - {backend: DDCalc, version: 2.0.0}
-  - capability: DarkSide.*
-    backends:
-    - {backend: DDCalc, version: 2.0.0}
-
   # Use DarkBit native calculator (based on the DarkSUSY Boltzmann solver) for relic density
   - capability: RD_oh2
     #function: RD_oh2_DS5_general

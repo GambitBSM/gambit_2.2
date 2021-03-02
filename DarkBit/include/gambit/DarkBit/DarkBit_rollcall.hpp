@@ -577,7 +577,7 @@ START_MODULE
       START_FUNCTION(TH_ProcessCatalog)
       DEPENDENCY(decay_rates, DecayTable)
       DEPENDENCY(DMEFT_spectrum, Spectrum)
-      BACKEND_REQ(CH_Sigma_V, (), double, (str&, std::vector<str>&, std::vector<str>&, double&, double&, const DecayTable&))
+      BACKEND_REQ(CH_Sigma_V, (), double, (str&, std::vector<str>&, std::vector<str>&, double&, const DecayTable&))
       ALLOW_MODELS(DMEFT)
     #undef FUNCTION
   #undef CAPABILITY
@@ -931,20 +931,10 @@ START_MODULE
 
   // Generalized v^2n, q^2n DM-nucleon cross sections
   #define CAPABILITY sigma_SI_p
-      #define FUNCTION sigma_SI_vnqn
+      #define FUNCTION sigma_SI_vnqn_FermionicHiggsPortal
       START_FUNCTION(map_intpair_dbl)
       DEPENDENCY(mwimp,double)
-      DEPENDENCY(DD_couplings,DM_nucleon_couplings)
-      ALLOW_MODELS(DiracSingletDM_Z2, MajoranaSingletDM_Z2)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY sigma_SD_p
-  //Spin-dependent general v^2n q^2n cross section
-      #define FUNCTION sigma_SD_vnqn
-      START_FUNCTION(map_intpair_dbl)
-      DEPENDENCY(mwimp,double)
-      DEPENDENCY(DD_couplings,DM_nucleon_couplings)
+      DEPENDENCY(DD_nonrel_WCs, NREO_DM_nucleon_couplings)
       ALLOW_MODELS(DiracSingletDM_Z2, MajoranaSingletDM_Z2)
     #undef FUNCTION
   #undef CAPABILITY
@@ -1620,6 +1610,14 @@ START_MODULE
     #define FUNCTION DarkMatterConj_ID_MSSM
     START_FUNCTION(std::string)
     DEPENDENCY(MSSM_spectrum, Spectrum)
+    #undef FUNCTION
+    #define FUNCTION DarkMatterConj_ID_EFT
+    START_FUNCTION(std::string)
+    DEPENDENCY(WIMP_properties, WIMPprops)
+    #undef FUNCTION
+    #define FUNCTION DarkMatterConj_ID_DMEFT
+    START_FUNCTION(std::string)
+    ALLOW_MODELS(DMEFT)
     #undef FUNCTION
   #undef CAPABILITY
 
