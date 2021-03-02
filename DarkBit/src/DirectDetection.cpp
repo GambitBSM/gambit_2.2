@@ -369,7 +369,7 @@ namespace Gambit
     {
       using namespace Pipes::sigma_SI_vnqn_FermionicHiggsPortal;
 
-      NREO_DM_nucleon_couplings wilsonCoeffs = *Dep::NREO_DM_nucleon_couplings;
+      NREO_DM_nucleon_couplings wilsonCoeffs = *Dep::DD_nonrel_WCs;
 
       double q0 = 0.04; // reference momentum transfer: 40 MeV
       double gps = (wilsonCoeffs.c0[1] + wilsonCoeffs.c1[1])/2. ;
