@@ -931,20 +931,10 @@ START_MODULE
 
   // Generalized v^2n, q^2n DM-nucleon cross sections
   #define CAPABILITY sigma_SI_p
-      #define FUNCTION sigma_SI_vnqn
+      #define FUNCTION sigma_SI_vnqn_FermionicHiggsPortal
       START_FUNCTION(map_intpair_dbl)
       DEPENDENCY(mwimp,double)
-      DEPENDENCY(DD_couplings,DM_nucleon_couplings)
-      ALLOW_MODELS(DiracSingletDM_Z2, MajoranaSingletDM_Z2)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY sigma_SD_p
-  //Spin-dependent general v^2n q^2n cross section
-      #define FUNCTION sigma_SD_vnqn
-      START_FUNCTION(map_intpair_dbl)
-      DEPENDENCY(mwimp,double)
-      DEPENDENCY(DD_couplings,DM_nucleon_couplings)
+      DEPENDENCY(DD_nonrel_WCs, NREO_DM_nucleon_couplings)
       ALLOW_MODELS(DiracSingletDM_Z2, MajoranaSingletDM_Z2)
     #undef FUNCTION
   #undef CAPABILITY
