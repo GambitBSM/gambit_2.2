@@ -1918,7 +1918,7 @@ if(NOT ditched_${name}_${ver})
     BUILD_IN_SOURCE 1
     PATCH_COMMAND patch -p1 < ${patch}
     CONFIGURE_COMMAND ""
-    BUILD_COMMAND ${MAKE_PARALLEL} ${lib}.so COMP=${CMAKE_Fortran_COMPILER} OPTION=${PROSPINO_Fortran_FLAGS}
+    BUILD_COMMAND ${MAKE_SERIAL} ${lib}.so COMP=${CMAKE_Fortran_COMPILER} OPTION=${PROSPINO_Fortran_FLAGS}
     INSTALL_COMMAND ""
   )
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} distclean)
