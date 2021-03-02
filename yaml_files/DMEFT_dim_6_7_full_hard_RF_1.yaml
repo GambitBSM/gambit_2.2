@@ -320,7 +320,7 @@ Scanner:
       like: LogLike
       NP: 50000
       verbosity: 1
-      convthresh: 1E-5
+      convthresh: 3E-5
       lambdajDE: false
 
 KeyValues:
@@ -332,6 +332,7 @@ KeyValues:
     model_invalid_for_lnlike_below: -5e5
     model_invalid_for_lnlike_below_alt: -1e5
     print_invalid_points: false
+    disable_print_for_lnlike_below: -113
     debug: false
 
   default_output_path: "runs/DMEFT/dim_6_7_full_hard_RF_1/"
