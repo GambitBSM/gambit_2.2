@@ -269,7 +269,7 @@ endif()
 # minuit2
 # omp possible in principle but disabled in gambit, as only likelihood uses omp
 set(name "minuit2")
-set(ver "6-23-01")
+set(ver "6.23.01")
 set(lib "libminuit2")
 set(md5 "862cc44a3defa0674e6b5a9960ed6f89")
 set(dl "https://github.com/GooFit/Minuit2/archive/v6-23-01.tar.gz")
@@ -282,7 +282,7 @@ if(NOT ditched_${name}_${ver})
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
     CMAKE_COMMAND ${CMAKE_COMMAND} ..
-    CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_CXX_FLAGS=${BACKEND_CXX_FLAGS} -Dminuit2_mpi=${WITH_MPI} -Dminuit2_openmp=0 -Dminuit2_omp=0
+    CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_CXX_FLAGS=${BACKEND_CXX_FLAGS} -DBUILD_SHARED_LIBS=1 -Dminuit2_mpi=${WITH_MPI} -Dminuit2_openmp=0 -Dminuit2_omp=0
     BUILD_COMMAND ${MAKE_PARALLEL}
     INSTALL_COMMAND ""
   )

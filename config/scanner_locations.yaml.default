@@ -38,6 +38,6 @@ great:
 
 minuit2:
   6.23.01:
-    - lib: ./ScannerBit/installed/minuit2/6-23-01/lib/libMinuit2.a
-    - lib: ./ScannerBit/installed/minuit2/6-23-01/lib/libMinuit2Math.a
-    - headers: ./ScannerBit/installed/minuit2/6-23-01/inc/
+    - lib: ./ScannerBit/installed/minuit2/6.23.01/lib/libMinuit2.so
+    - lib: ./ScannerBit/installed/minuit2/6.23.01/lib/libMinuit2Math.so
+    - headers: ./ScannerBit/installed/minuit2/6.23.01/inc/
