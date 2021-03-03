@@ -213,6 +213,7 @@ function(add_gambit_library libraryname)
   add_dependencies(${libraryname} printer_harvest)
   add_dependencies(${libraryname} module_harvest)
   add_dependencies(${libraryname} yaml-cpp)
+  add_dependencies(${libraryname} elements_extras)
 
   if(${CMAKE_VERSION} VERSION_GREATER 2.8.10)
     foreach (dir ${GAMBIT_INCDIRS})
@@ -463,6 +464,7 @@ function(add_standalone executablename)
 
     # Add the elements_extras target
     add_elements_extras(${executablename}_elements_extras)
+    add_dependencies(${executablename}_elements_extras elements_extras)
     add_dependencies(${executablename} ${executablename}_elements_extras)
 
     # Add each of the declared dependencies
