@@ -1,0 +1,155 @@
+##########################################################################
+## GAMBIT configuration for an ultra-minimal MultiNest scan of a toy model.
+##
+## Only needs ExampleBit_A and a scanner (either one of the built-ins like
+## the random sampler or TWalk, or an external like Diver, MultiNest,
+## GreAT or Polychord).
+##########################################################################
+
+
+Parameters:
+  # In this example we will simply be fitting the mean and standard deviation of a normal distribution.
+  NormalDist:
+    mu:
+      range: [15, 30]
+    sigma:
+      range: [0, 5]
+
+
+Priors:
+
+  # None needed: flat priors are automatically generated for NormalDist::mu and NormalDist::sigma
+  # If you wanted to use a Gaussian prior on these parameters instead, you would comment
+  # out their ranges above, and do e.g.
+  #prior1:
+  #  parameters: ["NormalDist::mu", "NormalDist::sigma"]
+  #  prior_type: gaussian
+  # mu: [18, 5]
+  #  sigma: [3.0, 1]
+
+Printer:
+
+  #printer: sqlite
+  #options:
+  #  output_file: "results.sql"
+  #  table_name: "spartan"
+  #  buffer_length: 1000
+  #  delete_file_on_restart: true
+
+  printer: hdf5
+  options:
+    output_file: "results.hdf5"
+    group: "/spartan"
+    delete_file_on_restart: true
+    buffer_length: 1000
+    #disable_autorepair: true
+
+  #printer: ascii
+  #options:
+  #  output_file: "results.dat"
+  #  buffer_length: 10
+  #  delete_file_on_restart: true
+
+  #printer: cout
+
+  #printer: none
+
+Scanner:
+
+  use_scanner: multinest
+
+  scanners:
+
+    random:
+      plugin: random
+      like: LogLike
+      point_number: 1000
+
+    de:
+      plugin: diver
+      like: LogLike
+      NP: 200
+      convthres: 1e-4
+      maxgen: 100
+      lambdajDE: false
+
+    multinest:
+      plugin: multinest
+      like:  LogLike
+      nlive: 500
+      tol: 0.001
+      # tol: 0.1
+
+    mcmc:
+      plugin: great
+      like: LogLike
+      nTrialLists: 5
+      nTrials: 10000
+
+    twalk:
+      plugin: twalk
+      like: LogLike
+      sqrtR: 1.001
+
+    polychord:
+      plugin: polychord
+      like:  LogLike
+      print_parameters_in_native_output: true
+      tol: 0.1
+
+
+ObsLikes:
+
+  - purpose:      LogLike
+    capability:   normaldist_loglike
+    module:       ExampleBit_A
+    type:         double
+
+
+Rules:
+
+  # None required, since no module dependencies to be resolved.
+  - capability: normaldist_loglike
+    options:
+        probability_of_validity: 1.0
+
+Logger:
+
+  redirection:
+    [Default]      : "default.log"
+    [ExampleBit_A] : "ExampleBit_A.log"
+    [Scanner]      : "Scanner.log"
+  debug: true
+
+KeyValues:
+
+  default_output_path: "${PWD}/runs/spartan_modified"
+
+  rng:
+    generator: ranlux48
+    seed: -1
+
+  print_timing_data: true
+
+  print_unitcube: true
+
+  likelihood:
+    # disable_print_for_lnlike_below: -1e6
+    model_invalid_for_lnlike_below: -1e6
+    print_invalid_points: false
+
+    # use_lnlike_modifier: identity
+    use_lnlike_modifier: gaussian_plateau
+    lnlike_modifiers:
+      gaussian:
+        mu: -28.4   # Best-fit is at LogLike = -25.3
+        sigma: 2.0
+        # use_limit: lower
+        use_delta_lnlike: false
+      gaussian_plateau:
+        mu_dn: -28.5
+        sigma_dn: 0.5 # 1.0
+        mu_up: -28.3
+        sigma_up: 3.0 # 3.0
+        use_delta_lnlike: false
+
