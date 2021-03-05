@@ -273,10 +273,10 @@ namespace Gambit
           compute_aux = false;
           point_invalidated = true;
           int rankinv = printer.getRank();
-          printer.print(e.invalidcode, "Invalidation Code", invalidcodeID, rankinv, getPtID());
           // If print_ivalid_points is false disable the printer
           if(!print_invalid_points)
             printer.disable();
+          printer.print(e.invalidcode, "Invalidation Code", invalidcodeID, rankinv, getPtID());
           if (debug) cout << "Point invalid. Invalidation code: " << e.invalidcode << endl;
           break;
         }
