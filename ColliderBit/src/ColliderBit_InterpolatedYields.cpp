@@ -10,35 +10,14 @@
 ///
 ///  \author Martin White
 ///          (martin.white@adelaide.edu.au)
+///
 ///  \author Andre Scaffidi
 ///          (andre.scaffidi@adelaide.edu.au)
 ///  \date 2019 Aug
 ///
 ///  Analyses based on: arxiv:1711.03301 and https://journals.aps.org/prd/abstract/10.1103/PhysRevD.97.092005
-
-//////  *********************************************
-#include <chrono>
-#include <thread>
-#include <cmath>
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <memory>
-#include <numeric>
-#include <sstream>
-#include <vector> 
-#include <iomanip>
-#include <math.h>
-#include <cstring>
-#include <stdlib.h>
-using namespace std;
-
-#include "gambit/ColliderBit/analyses/Analysis.hpp"
-#include "gambit/Elements/gambit_module_headers.hpp"
-#include "gambit/ColliderBit/ColliderBit_rollcall.hpp"
-#include "gambit/Utils/ascii_table_reader.hpp"
-#include "gambit/Utils/file_lock.hpp"
-//#include DMEFT_grids.hpp
+///
+///  *********************************************
 
 // Needs GSL 2 
 #include <gsl/gsl_math.h>
@@ -49,7 +28,14 @@ using namespace std;
 #include "Eigen/Eigenvalues"
 #include "Eigen/Eigen"
 
-#include "gambit/ColliderBit/multimin.h"
+#include "multimin/multimin.hpp"
+
+#include "gambit/ColliderBit/analyses/Analysis.hpp"
+#include "gambit/Elements/gambit_module_headers.hpp"
+#include "gambit/ColliderBit/ColliderBit_rollcall.hpp"
+#include "gambit/Utils/ascii_table_reader.hpp"
+#include "gambit/Utils/file_lock.hpp"
+
 
 // #define COLLIDERBIT_DEBUG_PROFILING
 // #define COLLIDERBIT_DEBUG
@@ -194,13 +180,13 @@ namespace Gambit
       const double* METMINS;
 
       // Choose experiment
-      if (adata.analysis_name.find("ATLAS") != string::npos)
+      if (adata.analysis_name.find("ATLAS") != std::string::npos)
       {
         bool is_ATLAS = true;
         METMINS = METMINS_ATLAS;
         met_bin_size = atlas_bin_size;
       }
-      else if (adata.analysis_name.find("CMS") != string::npos)
+      else if (adata.analysis_name.find("CMS") != std::string::npos)
       {
         bool is_CMS = false;
         METMINS = METMINS_CMS;
@@ -225,8 +211,8 @@ namespace Gambit
         }
 
         SignalRegionData& srdata = adata[bin_index];
-        srdata.n_signal *= weight;
-        srdata.n_signal_at_lumi *= weight;
+        srdata.n_sig_MC *= weight;
+        srdata.n_sig_scaled *= weight;
       } 
 
     }
@@ -242,13 +228,13 @@ namespace Gambit
       const double* METMINS;
 
       // Choose experiment
-      if (adata.analysis_name.find("ATLAS") != string::npos)
+      if (adata.analysis_name.find("ATLAS") != std::string::npos)
       {
         bool is_ATLAS = true;
         METMINS = METMINS_ATLAS;
         met_bin_size = atlas_bin_size;
       }
-      else if (adata.analysis_name.find("CMS") != string::npos)
+      else if (adata.analysis_name.find("CMS") != std::string::npos)
       {
         bool is_CMS = false;
         METMINS = METMINS_CMS;
@@ -267,8 +253,8 @@ namespace Gambit
         if (lambda < MET_min)
         {
           SignalRegionData& srdata = adata[bin_index];
-          srdata.n_signal = 0.0;
-          srdata.n_signal_at_lumi = 0.0;
+          srdata.n_sig_MC = 0.0;
+          srdata.n_sig_scaled = 0.0;
         }
       } 
 
@@ -327,7 +313,7 @@ namespace Gambit
           fclose(fp); 
           
 
-          ifstream mb(met_ATLAS_23);
+          std::ifstream mb(met_ATLAS_23);
 
           for(int row = 0; row < data_SIZE; row++) {  
             for(int column = 0; column < atlas_bin_size; column++){
@@ -337,7 +323,7 @@ namespace Gambit
           mb.close();
 
 
-          ifstream mba14(met_ATLAS_14);
+          std::ifstream mba14(met_ATLAS_14);
           for(int row = 0; row < data_SIZE; row++) {  
             for(int column = 0; column < atlas_bin_size; column++){
               mba14 >> MET_HIST_ATLAS_14[row][column];
@@ -346,7 +332,7 @@ namespace Gambit
           mba14.close();
 
 
-          ifstream mbc23(met_CMS_23);
+          std::ifstream mbc23(met_CMS_23);
           for(int row = 0; row < data_SIZE; row++) {  
             for(int column = 0; column < cms_bin_size; column++){
               mbc23 >> MET_HIST_CMS_23[row][column];
@@ -355,7 +341,7 @@ namespace Gambit
           mbc23.close();     
 
 
-          ifstream mbc14(met_CMS_14);
+          std::ifstream mbc14(met_CMS_14);
           for(int row = 0; row < data_SIZE; row++) {  
             for(int column = 0; column < cms_bin_size; column++){
               mbc14 >> MET_HIST_CMS_14[row][column];
@@ -814,7 +800,7 @@ namespace Gambit
           fclose(fp); 
           
 
-          ifstream mb(met_ATLAS_23_low);
+          std::ifstream mb(met_ATLAS_23_low);
 
           for(int row = 0; row <data_SIZE_low; row++) {  
             for(int column = 0; column < atlas_bin_size; column++){
@@ -824,7 +810,7 @@ namespace Gambit
           mb.close();
 
 
-          ifstream mba14(met_ATLAS_14_low);
+          std::ifstream mba14(met_ATLAS_14_low);
           for(int row = 0; row <data_SIZE_low; row++) {  
             for(int column = 0; column < atlas_bin_size; column++){
               mba14 >> MET_HIST_ATLAS_14_low[row][column];
@@ -833,7 +819,7 @@ namespace Gambit
           mba14.close();
 
 
-          ifstream mbc23(met_CMS_23_low);
+          std::ifstream mbc23(met_CMS_23_low);
           for(int row = 0; row <data_SIZE_low; row++) {  
             for(int column = 0; column < cms_bin_size; column++){
               mbc23 >> MET_HIST_CMS_23_low[row][column];
@@ -842,7 +828,7 @@ namespace Gambit
           mbc23.close();     
 
 
-          ifstream mbc14(met_CMS_14_low);
+          std::ifstream mbc14(met_CMS_14_low);
           for(int row = 0; row <data_SIZE_low; row++) {  
             for(int column = 0; column < cms_bin_size; column++){
               mbc14 >> MET_HIST_CMS_14_low[row][column];
@@ -1297,7 +1283,7 @@ namespace Gambit
         fclose(fp); 
         
 
-        ifstream mb(met_ATLAS_71);
+        std::ifstream mb(met_ATLAS_71);
         for(int row = 0; row < data_SIZE_d7; row++) {  
           for(int column = 0; column < atlas_bin_size; column++){
             mb >> MET_HIST_ATLAS_71[row][column];
@@ -1306,7 +1292,7 @@ namespace Gambit
         mb.close();
 
 
-        ifstream mba72(met_ATLAS_72);
+        std::ifstream mba72(met_ATLAS_72);
         for(int row = 0; row < data_SIZE_d7; row++) {  
           for(int column = 0; column < atlas_bin_size; column++){
             mba72 >> MET_HIST_ATLAS_72[row][column];
@@ -1314,7 +1300,7 @@ namespace Gambit
         }
         mba72.close();
 
-        ifstream mb73(met_ATLAS_73);
+        std::ifstream mb73(met_ATLAS_73);
         for(int row = 0; row < data_SIZE_d7; row++) {  
           for(int column = 0; column < atlas_bin_size; column++){
             mb73 >> MET_HIST_ATLAS_73[row][column];
@@ -1322,7 +1308,7 @@ namespace Gambit
         }
         mb73.close();
 
-        ifstream mba74(met_ATLAS_74);
+        std::ifstream mba74(met_ATLAS_74);
         for(int row = 0; row < data_SIZE_d7; row++) {  
           for(int column = 0; column < atlas_bin_size; column++){
             mba74 >> MET_HIST_ATLAS_74[row][column];
@@ -1333,7 +1319,7 @@ namespace Gambit
 
         // -------------------------------- //
 
-        ifstream mbc71(met_CMS_71);
+        std::ifstream mbc71(met_CMS_71);
         for(int row = 0; row < data_SIZE_d7; row++) {  
           for(int column = 0; column < cms_bin_size; column++){
             mbc71 >> MET_HIST_CMS_71[row][column];
@@ -1342,7 +1328,7 @@ namespace Gambit
         mbc71.close();
 
 
-        ifstream mbac72(met_CMS_72);
+        std::ifstream mbac72(met_CMS_72);
         for(int row = 0; row < data_SIZE_d7; row++) {  
           for(int column = 0; column < cms_bin_size; column++){
             mbac72 >> MET_HIST_CMS_72[row][column];
@@ -1350,7 +1336,7 @@ namespace Gambit
         }
         mbac72.close();
 
-        ifstream mbc73(met_CMS_73);
+        std::ifstream mbc73(met_CMS_73);
         for(int row = 0; row < data_SIZE_d7; row++) {  
           for(int column = 0; column < cms_bin_size; column++){
             mbc73 >> MET_HIST_CMS_73[row][column];
@@ -1358,7 +1344,7 @@ namespace Gambit
         }
         mbc73.close();
 
-        ifstream mbac74(met_CMS_74);
+        std::ifstream mbac74(met_CMS_74);
         for(int row = 0; row < data_SIZE_d7; row++) {  
           for(int column = 0; column < cms_bin_size; column++){
             mbac74 >> MET_HIST_CMS_74[row][column];
@@ -1820,12 +1806,12 @@ namespace Gambit
         // Construct a SignalRegionData instance and add it to cmsBinnedResults
         SignalRegionData sr;
         sr.sr_label = ss.str();
-        sr.n_observed = CMS_OBSNUM[ibin];
-        sr.n_signal = _srnums_CMS[ibin];
-        sr.n_signal_at_lumi = _srnums_CMS[ibin];  // We have already scaled the signals in _srnums_CMS to xsec * lumi
-        sr.signal_sys = 0.;
-        sr.n_background = CMS_BKGNUM[ibin];
-        sr.background_sys = CMS_BKGERR[ibin];
+        sr.n_obs = CMS_OBSNUM[ibin];
+        sr.n_sig_MC = _srnums_CMS[ibin];
+        sr.n_sig_scaled = _srnums_CMS[ibin];  // We have already scaled the signals in _srnums_CMS to xsec * lumi
+        sr.n_sig_MC_sys = 0.;
+        sr.n_bkg = CMS_BKGNUM[ibin];
+        sr.n_bkg_err = CMS_BKGERR[ibin];
         cmsBinnedResults.push_back(sr);
       }
 
@@ -1899,13 +1885,13 @@ namespace Gambit
         // Construct a SignalRegionData instance and add it to atlasBinnedResults
         SignalRegionData sr;
         sr.sr_label = ss.str();
-        sr.n_observed = ATLAS_OBSNUM[ibin];
-        sr.n_signal = _srnums_ATLAS[ibin];
-        sr.n_signal_at_lumi = _srnums_ATLAS[ibin];  // We have already scaled the signals in _srnums_ATLAS to xsec * lumi
+        sr.n_obs = ATLAS_OBSNUM[ibin];
+        sr.n_sig_MC = _srnums_ATLAS[ibin];
+        sr.n_sig_scaled = _srnums_ATLAS[ibin];  // We have already scaled the signals in _srnums_ATLAS to xsec * lumi
         // cout << "Check output: "<< sr.sr_label<< "  " << _srnums_ATLAS[ibin] <<endl;
-        sr.signal_sys = 0.;
-        sr.n_background = ATLAS_BKGNUM[ibin];
-        sr.background_sys = ATLAS_BKGERR[ibin];
+        sr.n_sig_MC_sys = 0.;
+        sr.n_bkg = ATLAS_BKGNUM[ibin];
+        sr.n_bkg_err = ATLAS_BKGERR[ibin];
         atlasBinnedResults.push_back(sr);
       }
 
@@ -1953,10 +1939,10 @@ namespace Gambit
       AnalysisLogLikes analoglikes;
 
       // Create a vector with temp AnalysisData instances by copying the original ones
-      vector<AnalysisData> temp_adata_vec;
+      std::vector<AnalysisData> temp_adata_vec;
       for (AnalysisData* adata_ptr : fpars->adata_ptrs_original)
       {
-        const string& analysis_name = adata_ptr->analysis_name;
+        const str& analysis_name = adata_ptr->analysis_name;
         // If the analysis name is in skip_analyses, don't take it into account in this profiling
         if (std::find(fpars->skip_analyses.begin(), fpars->skip_analyses.end(), analysis_name) != fpars->skip_analyses.end())
         {
@@ -2038,7 +2024,7 @@ namespace Gambit
       static const unsigned METHOD = runOptions->getValueOrDef<unsigned>(6, "nuisance_prof_method");
       static const unsigned VERBOSITY = runOptions->getValueOrDef<unsigned>(0, "nuisance_prof_verbosity");
 
-      static const struct multimin_params oparams = {INITIAL_STEP, CONV_TOL, MAXSTEPS, CONV_ACC, SIMPLEX_SIZE, METHOD, VERBOSITY};
+      static const struct multimin::multimin_params oparams = {INITIAL_STEP, CONV_TOL, MAXSTEPS, CONV_ACC, SIMPLEX_SIZE, METHOD, VERBOSITY};
 
       // Set fixed function parameters
       _gsl_target_func_params fpars;
@@ -2055,8 +2041,8 @@ namespace Gambit
       // Nuisance parameter(s) to be profiled 
       // NOTE: Currently we only profile one parameter ('a'), but the 
       //       below setup can  easily be extended to more parameters
-      static const vector<double> init_values_a = runOptions->getValue<vector<double>>("init_values_a");
-      static const pair<double,double> range_a = runOptions->getValue<pair<double,double>>("range_a");
+      static const std::vector<double> init_values_a = runOptions->getValue<std::vector<double>>("init_values_a");
+      static const std::pair<double,double> range_a = runOptions->getValue<std::pair<double,double>>("range_a");
       
       // How many times should we run the optimiser?
       static const size_t n_runs = init_values_a.size();
@@ -2088,7 +2074,7 @@ namespace Gambit
         */
 
         // Call the optimiser
-        multimin(n_profile_pars, &nuisances[0], &minus_loglike_bestfit,
+        multimin::multimin(n_profile_pars, &nuisances[0], &minus_loglike_bestfit,
                  &boundary_types[0], &nuisances_min[0], &nuisances_max[0],
                  &_gsl_target_func,
                  nullptr,  // If available: function returning the gradient of the target function

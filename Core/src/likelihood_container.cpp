@@ -57,7 +57,7 @@ namespace Gambit
     active_min_valid_lnlike          (min_valid_lnlike), // can be switched to the alternate value by the scanner
     print_invalid_points             (iniFile.getValueOrDef<bool>(true, "likelihood", "print_invalid_points")),
     disable_print_for_lnlike_below   (iniFile.getValueOrDef<double>(min_valid_lnlike, "likelihood", "disable_print_for_lnlike_below")),
-    lnlike_modifier_name    (iniFile.getValueOrDef<str>("identity", "likelihood", "use_lnlike_modifier")),
+    lnlike_modifier_name             (iniFile.getValueOrDef<str>("identity", "likelihood", "use_lnlike_modifier")),
     intralooptime_label              ("Runtime(ms) intraloop"),
     interlooptime_label              ("Runtime(ms) interloop"),
     totallooptime_label              ("Runtime(ms) totalloop"),
@@ -67,6 +67,7 @@ namespace Gambit
     intraloopID(Printers::get_main_param_id(intralooptime_label)),
     interloopID(Printers::get_main_param_id(interlooptime_label)),
     totalloopID(Printers::get_main_param_id(totallooptime_label)),
+    invalidcodeID(Printers::get_main_param_id("Invalidation Code")),
     #ifdef CORE_DEBUG
       debug            (true)
     #else
@@ -143,10 +144,10 @@ namespace Gambit
         std::cout << "MPI process rank: "<< COMM_WORLD.Get_rank() << std::endl;
       #endif
       cout << parstream.str();
-      // logger() << LogTags::core << "\nBeginning computations for parameter point:\n" << parstream.str() << EOM;
+      logger() << LogTags::core << "\nBeginning computations for parameter point:\n" << parstream.str() << EOM;
     }
     // Print the parameter point to the logs, even if not in debug mode
-    logger() << LogTags::core << "\nBeginning computations for parameter point:\n" << parstream.str() << EOM;
+    //logger() << LogTags::core << "\nBeginning computations for parameter point:\n" << parstream.str() << EOM;
 
 
   }
@@ -277,15 +278,17 @@ namespace Gambit
         // Catch points that are invalid, either due to low like or pathology.  Skip the rest of the vertices if a point is invalid.
         catch(invalid_point_exception& e)
         {
-          logger() << LogTags::core << "Point invalidated by " << e.thrower()->origin() << "::" << e.thrower()->name() << ": " << e.message() << EOM;
+          logger() << LogTags::core << "Point invalidated by " << e.thrower()->origin() << "::" << e.thrower()->name() << ": " << e.message() << "Invalidation code " << e.invalidcode << EOM;
           logger().leaving_module();
           lnlike = active_min_valid_lnlike;
           compute_aux = false;
           point_invalidated = true;
+          int rankinv = printer.getRank();
+          printer.print(e.invalidcode, "Invalidation Code", invalidcodeID, rankinv, getPtID());
           // If print_ivalid_points is false disable the printer
           if(!print_invalid_points)
             printer.disable();
-          if (debug) cout << "Point invalid." << endl;
+          if (debug) cout << "Point invalid. Invalidation code: " << e.invalidcode << endl;
           break;
         }
       }
@@ -311,7 +314,7 @@ namespace Gambit
           catch(Gambit::invalid_point_exception& e)
           {
             logger() << LogTags::core << "Additional observable invalidated by " << e.thrower()->origin()
-                     << "::" << e.thrower()->name() << ": " << e.message() << EOM;
+                     << "::" << e.thrower()->name() << ": " << e.message() << "Invalidation code " << e.invalidcode << EOM;
           }
         }
       }
