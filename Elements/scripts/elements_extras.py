@@ -74,7 +74,7 @@ def main(argv):
 
         # Extract flag for standalone
         target = args[0]
-        isStandalone = 1 if "standalone" in target else 0
+        isStandalone = 1 if "standalone" in target or "CBS" in target else 0
 
     except :
         print('Usage: elements_extras.py [flags] <isStandalone>')
