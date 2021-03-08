@@ -1745,8 +1745,12 @@ namespace daFunk
                 std::vector<double> singlgrid = linspace(std::max(position-width*sigma, xmin), std::min(position+width*sigma, xmax), N);
                 result.insert(result.end(), singlgrid.begin(), singlgrid.end());
             }
-            std::sort(result.begin(), result.end());
         }
+        // Sort the values only once
+        std::sort(result.begin(), result.end());
+
+        // Only use unique values, i.e. do not resolve the same singularity twice.
+        result.erase(std::unique(result.begin(), result.end()), result.end());
 
         return result;
     }
