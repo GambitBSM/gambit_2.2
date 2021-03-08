@@ -139,7 +139,7 @@ namespace Gambit
           else if ( it->finalStateIDs[0] == yield )
           {
             daFunk::Funk E = daFunk::var("E");
-            spec0 = exp(-pow((E-E0)/line_width/E0,2)/2)/E0/sqrt(2*M_PI)/line_width;
+            spec0 = daFunk::delta("E",E0,E0*line_width);
           }
           // MC spectra available?
           else if ( cascadeMC_spectra.count(it->finalStateIDs[0]) )
@@ -158,7 +158,7 @@ namespace Gambit
           else if ( it->finalStateIDs[1] == yield )
           {
             daFunk::Funk E = daFunk::var("E");
-            spec1 = exp(-pow((E-E1)/line_width/E1,2)/2)/E1/sqrt(2*M_PI)/line_width;
+            spec1 = daFunk::delta("E",E1,E1*line_width);
           }
           else if ( cascadeMC_spectra.count(it->finalStateIDs[1]) )
           {
