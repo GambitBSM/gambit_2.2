@@ -25,6 +25,10 @@
 ///          (pat.scott@uq.edu.au)
 ///  \date 2020 Nov, Dec
 ///
+///  \author Patrick Stoecker
+///          (stoecker@physik.rwth-aachen.de)
+///  \date 2021 Mar
+///
 ///  *********************************************
 
 #include "gambit/Elements/gambit_module_headers.hpp"
@@ -916,60 +920,175 @@ namespace Gambit
       }
     }
 
-    class PPPC_interpolation
+    SimYieldTable SimYieldTable_PPPC(const str& yield, bool allow_yield_extrapolation, double(*PPPC_yield)(double,double,std::string))
     {
-      public:
-        PPPC_interpolation(std::string filename)
-        {
-          table = ASCIItableReader(filename);
-          std::vector<std::string> colnames = initVector<std::string>(
-              "mass", "log10x", "ee", "mumu", "tautau", "qq", "cc", "bb", "tt",
-              "WW", "ZZ", "gg", "gammagamma", "hh");
-          table.setcolnames(colnames);
-          // log10x = log10(E_gamma/m);
-          log10x = std::vector<double>(table["log10x"].begin(), table["log10x"].begin()+180);
-        }
-        PPPC_interpolation() {}  // Dummy initializer
+      using DarkBit_utils::str_flav_to_mass;
 
-        double operator()(std::string channel, double /*m*/, double /*e*/)
-        {
-          // Not yet implemented
-          std::vector<double> y(table[channel].begin(), table[channel].end());
-          return 0;
-        }
+      SimYieldTable result;
 
-      private:
-        std::vector<double> log10x;
-        ASCIItableReader table;
-    };
+      const double mDM_min = 5.0;
+      const double mDM_max = 100000.0;
+
+      auto add_channel = [&](const str& p1, const str& p2, const str& channel, double EcmMin, double EcmMax)
+      {
+        daFunk::Funk m = daFunk::var("m");
+        daFunk::Funk x = daFunk::var("x");
+        daFunk::Funk E = daFunk::var("Ekin");
+        daFunk::Funk Ecm = daFunk::var("Ecm");
+
+        daFunk::Funk dNdE = daFunk::func( PPPC_yield, daFunk::var("m"), daFunk::var("x"), channel);
+        dNdE = dNdE->set("x", E/m);
+
+        if (p2.size() > 0)
+        {
+          dNdE = dNdE->set("m",Ecm/2);
+          result.addChannel(dNdE, str_flav_to_mass(p1), str_flav_to_mass(p2), yield, EcmMin, EcmMax);
+        }
+        else
+        {
+          dNdE = dNdE->set("m",Ecm);
+          result.addChannel(dNdE/2, str_flav_to_mass(p1), yield, EcmMin, EcmMax);
+        }
+      };
+
+      // The following routine adds an annihilation/decay channel, for which the yields are extrapolated below Ecm_ToScale
+      // using the approximation that x*dN/dx is a constant function of the dark matter mass.
+      auto add_channel_with_scaling = [&](const str& p1, const str& p2, const str& channel, double EcmMin, double EcmMax, double Ecm_ToScale)
+      {
+        daFunk::Funk m = daFunk::var("m");
+        daFunk::Funk x = daFunk::var("x");
+        daFunk::Funk E = daFunk::var("Ekin");
+
+        daFunk::Funk Ecm_ToUse = fmax(Ecm_ToScale, daFunk::var("Ecm"));
+        daFunk::Funk ScalingFactor = Ecm_ToUse/daFunk::var("Ecm");
+
+        daFunk::Funk dNdE = daFunk::func( PPPC_yield, daFunk::var("m"), daFunk::var("x"), channel);
+        dNdE = (ScalingFactor*dNdE)->set("x", E/m);
+
+        if (p2.size() > 0)
+        {
+          dNdE = dNdE->set("m",Ecm_ToUse/2);
+          result.addChannel(dNdE, str_flav_to_mass(p1), str_flav_to_mass(p2), yield, EcmMin, EcmMax);
+        }
+        else
+        {
+          dNdE = dNdE->set("m",Ecm_ToUse);
+          result.addChannel(dNdE/2, str_flav_to_mass(p1), yield, EcmMin, EcmMax);
+        }
+      };
+
+      add_channel("e+",   "e-",   "e",   2*std::max(mDM_min, 0.0), 2*mDM_max);
+      add_channel("mu+",  "mu-",  "mu",  2*std::max(mDM_min, 0.0), 2*mDM_max);
+      add_channel("tau+", "tau-", "tau", 2*std::max(mDM_min, 0.0), 2*mDM_max);
+
+      add_channel("u", "ubar", "q", 2*std::max(mDM_min, 1.35), 2*mDM_max);  // u,d,s are treated as one species
+      add_channel("d", "dbar", "q", 2*std::max(mDM_min, 1.35), 2*mDM_max);
+      add_channel("s", "sbar", "q", 2*std::max(mDM_min, 1.35), 2*mDM_max);
+
+      add_channel("c", "cbar", "c", 2*std::max(mDM_min, 1.35), 2*mDM_max);
+      add_channel("b", "bbar", "b", 2*std::max(mDM_min, 5.0),  2*mDM_max);
+      add_channel_with_scaling("t", "tbar", "t", 2*std::max(mDM_min, 160.0), 2*mDM_max, 2*173.3);
+
+      add_channel("W+", "W-", "W", 2*std::max(mDM_min, 79.4475), 2*mDM_max);
+      add_channel("Z0", "Z0", "Z", 2*std::max(mDM_min, 90.288),  2*mDM_max);
+      add_channel("g",  "g",  "g", 2*std::max(mDM_min, 0.0),     2*mDM_max);
+      //add_channel("gamma",  "gamma",  "gamma", 2*std::max(mDM_min, 0.0), 2*mDM_max);
+      //add_channel("h",  "h",  "h", 2*std::max(mDM_min, 125.1), 2*mDM_max);
+
+      add_channel("nu_e",   "nubar_e",   "nu_e",   2*std::max(mDM_min, 0.0), 2*mDM_max);
+      add_channel("nu_mu",  "nubar_mu",  "nu_mu",  2*std::max(mDM_min, 0.0), 2*mDM_max);
+      add_channel("nu_tau", "nubar_tau", "nu_tau", 2*std::max(mDM_min, 0.0), 2*mDM_max);
+
+      // Add approximations for single-particle cases.
+      add_channel("Z0", "", "Z", std::max(mDM_min, 90.288),  mDM_max);
+      add_channel("W+", "", "W", std::max(mDM_min, 79.4475), mDM_max);
+      add_channel("W-", "", "W", std::max(mDM_min, 79.4475), mDM_max);
+
+      add_channel("e+",   "", "e",   std::max(mDM_min, 0.0), mDM_max);
+      add_channel("e-",   "", "e",   std::max(mDM_min, 0.0), mDM_max);
+      add_channel("mu+",  "", "mu",  std::max(mDM_min, 0.0), mDM_max);
+      add_channel("mu-",  "", "mu",  std::max(mDM_min, 0.0), mDM_max);
+      add_channel("tau+", "", "tau", std::max(mDM_min, 0.0), mDM_max);
+      add_channel("tau-", "", "tau", std::max(mDM_min, 0.0), mDM_max);
+
+      add_channel_with_scaling("t",    "", "t", std::max(mDM_min, 160.0), mDM_max, 173.3);
+      add_channel_with_scaling("tbar", "", "t", std::max(mDM_min, 160.0), mDM_max, 173.3);
+
+      // Add channels with "mixed final states", i.e. final state particles with (potentially) different masses
+      auto add_channel_mixedmasses = [&](const str& p1, const str& p2, const str& ch1, const str& ch2, double m1, double m2, double EcmMin, double EcmMax)
+      {
+        daFunk::Funk m = daFunk::var("m");
+        daFunk::Funk x = daFunk::var("x");
+        daFunk::Funk E = daFunk::var("Ekin");
+        daFunk::Funk Ecm = daFunk::var("Ecm");
+
+        daFunk::Funk dNdE1 = daFunk::func( PPPC_yield, daFunk::var("m"), daFunk::var("x"), ch1);
+        dNdE1 = dNdE1->set("x", E/m)->set("m", Ecm/2 + (m1*m1 - m2*m2)/(2*Ecm));
+        daFunk::Funk dNdE2 = daFunk::func( PPPC_yield, daFunk::var("m"), daFunk::var("x"), ch2);
+        dNdE2 = dNdE2->set("x", E/m)->set("m", Ecm/2 + (m2*m2 - m1*m1)/(2*Ecm));
+
+        result.addChannel((dNdE1+dNdE2)/2, str_flav_to_mass(p1), str_flav_to_mass(p2), yield, EcmMin, EcmMax);
+      };
+      // - The numerical values for EcmMin and EcmMax are obtained from applying the corresponding two-body kinematics
+      //   to the minimally/maximally allowed center-of-mass energies. Hence, EcmMin depends on the flag allow_yield_extrapolation
+      add_channel_mixedmasses("u", "dbar", "q","q", 0.0, 0.0, (allow_yield_extrapolation ? 2*1.35 : 10.0), 2*mDM_max);
+      add_channel_mixedmasses("d", "ubar", "q","q", 0.0, 0.0, (allow_yield_extrapolation ? 2*1.35 : 10.0), 2*mDM_max);
+      add_channel_mixedmasses("u", "sbar", "q","q", 0.0, 0.0, (allow_yield_extrapolation ? 2*1.35 : 10.0), 2*mDM_max);
+      add_channel_mixedmasses("s", "ubar", "q","q", 0.0, 0.0, (allow_yield_extrapolation ? 2*1.35 : 10.0), 2*mDM_max);
+      add_channel_mixedmasses("u", "bbar", "q","b", 0.0, 5.0, (allow_yield_extrapolation ? 6.530 : 21.181), 2*mDM_max);
+      add_channel_mixedmasses("b", "ubar", "b","q", 5.0, 0.0, (allow_yield_extrapolation ? 6.530 : 21.181), 2*mDM_max);
+
+      add_channel_mixedmasses("c", "dbar", "c","q", 1.35, 0.0, (allow_yield_extrapolation ? 3.260 : 20.091), 2*mDM_max);
+      add_channel_mixedmasses("d", "cbar", "q","c", 0.0, 1.35, (allow_yield_extrapolation ? 3.260 : 20.091), 2*mDM_max);
+      add_channel_mixedmasses("c", "sbar", "c","q", 1.35, 0.0, (allow_yield_extrapolation ? 3.260 : 20.091), 2*mDM_max);
+      add_channel_mixedmasses("s", "cbar", "q","c", 0.0, 1.35, (allow_yield_extrapolation ? 3.260 : 20.091), 2*mDM_max);
+      add_channel_mixedmasses("c", "bbar", "c","b", 1.35, 5.0, (allow_yield_extrapolation ? 6.35 : 21.099), 2*mDM_max);
+      add_channel_mixedmasses("b", "cbar", "b","c", 5.0, 1.35, (allow_yield_extrapolation ? 6.35 : 21.099), 2*mDM_max);
+
+      add_channel_mixedmasses("t", "dbar", "t","q", 175.0, 0.0, (allow_yield_extrapolation ? 176.355 : 185.285), 2*mDM_max);
+      add_channel_mixedmasses("d", "tbar", "q","t", 0.0, 175.0, (allow_yield_extrapolation ? 176.355 : 185.285), 2*mDM_max);
+      add_channel_mixedmasses("t", "sbar", "t","q", 175.0, 0.0, (allow_yield_extrapolation ? 176.355 : 185.285), 2*mDM_max);
+      add_channel_mixedmasses("s", "tbar", "q","t", 0.0, 175.0, (allow_yield_extrapolation ? 176.355 : 185.285), 2*mDM_max);
+      add_channel_mixedmasses("t", "bbar", "t","b", 175.0, 5.0, (allow_yield_extrapolation ? 180.0 : 185.214), 2*mDM_max);
+      add_channel_mixedmasses("b", "tbar", "b","t", 5.0, 175.0, (allow_yield_extrapolation ? 180.0 : 185.214), 2*mDM_max);
+
+      return result;
+    }
+
+    // Functions for the PPPC yields are defined elsewhere
+    // (in PPPC.cpp if someone asks)
+    double PPPC_dNdE_gamma(double m, double x, std::string channel);
+    double PPPC_dNdE_positron(double m, double x, std::string channel);
 
     /// Gamma-ray SimYieldTable based on PPPC4DMID Cirelli et al. 2010
-    void GA_SimYieldTable_PPPC(SimYieldTable& /*result*/)
+    void GA_SimYieldTable_PPPC(SimYieldTable& result)
     {
       using namespace Pipes::GA_SimYieldTable_PPPC;
       static bool initialized = false;
-      static PPPC_interpolation PPPC_gam_object;
 
       if ( not initialized )
       {
-        std::string filename = "DarkBit/data/AtProductionNoEW_gammas.dat";
-        PPPC_gam_object = PPPC_interpolation(filename);
+        /// Option allow_yield_extrapolation<bool>: Spectra extrapolated for masses beyond Pythia results (default false)
+        //bool allow_yield_extrapolation = runOptions->getValueOrDef(false, "allow_yield_extrapolation");
+        bool allow_yield_extrapolation = false;
+        result = SimYieldTable_PPPC("gamma", allow_yield_extrapolation, &PPPC_dNdE_gamma);
         initialized = true;
-        DarkBit_error().raise(LOCAL_INFO,
-            "SimYieldTable_PPPC is not implemented yet.  Use e.g. SimYieldTable_DarkSUSY instead.");
       }
     }
 
     /// Positron SimYieldTable based on PPPC4DMID Cirelli et al. 2010
-    void positron_SimYieldTable_PPPC(SimYieldTable& /*result*/)
+    void positron_SimYieldTable_PPPC(SimYieldTable& result)
     {
       using namespace Pipes::positron_SimYieldTable_PPPC;
       static bool initialized = false;
 
       if ( not initialized )
       {
-        DarkBit_error().raise(LOCAL_INFO,
-            "positron_SimYieldTable_PPPC is not implemented yet.  Use e.g. positron_SimYieldTable_DarkSUSY instead.");
+        /// Option allow_yield_extrapolation<bool>: Spectra extrapolated for masses beyond Pythia results (default false)
+        //bool allow_yield_extrapolation = runOptions->getValueOrDef(false, "allow_yield_extrapolation");
+        bool allow_yield_extrapolation = false;
+        result = SimYieldTable_PPPC("e+_1", allow_yield_extrapolation, &PPPC_dNdE_positron);
+        initialized = true;
       }
     }
 
