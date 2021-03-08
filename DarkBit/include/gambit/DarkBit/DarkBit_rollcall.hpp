@@ -82,6 +82,10 @@
 ///         (jonathancornell@weber.edu)
 /// \date 2013 - 2020
 ///
+///  \author Patrick Stoecker
+///          (stoecker@physik.rwth-aachen.de)
+///  \date 2021 Mar
+///
 ///  *********************************************
 
 #pragma once
@@ -1334,6 +1338,23 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  // Energy Injection ===================================================
+
+  // Energy injection yields from ProcessCatalog, SimYield tables and FCMC
+  #define CAPABILITY energy_injection_spectrum
+  START_CAPABILITY
+    #define FUNCTION energy_injection_spectrum_ProcessCatalog
+      START_FUNCTION(DarkAges::Energy_injection_spectrum)
+      ALLOW_MODELS(AnnihilatingDM_general,DecayingDM_general) // Ensure that one of the "energy injection marker" models is in use.
+      DEPENDENCY(DarkMatter_ID, std::string)
+      DEPENDENCY(DarkMatterConj_ID, std::string)
+      DEPENDENCY(DM_process, std::string)
+      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+      DEPENDENCY(GA_Yield, daFunk::Funk)
+      DEPENDENCY(electron_Yield, daFunk::Funk)
+      DEPENDENCY(positron_Yield, daFunk::Funk)
+    #undef FUNCTION
+  #undef CAPABILITY
 
   // Neutrino telescope likelihoods ====================================
 
