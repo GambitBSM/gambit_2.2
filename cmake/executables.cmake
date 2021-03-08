@@ -18,6 +18,14 @@
 #          (p.scott@imperial.ac.uk)
 #  \date 2014 Nov, Dec
 #
+#  \author Christopher Chang
+#          (christopher.chang@uqconnect.edu.au)
+#  \date 2021 Feb
+#
+#  \author Tomas Gonzalo
+#          (gonzalo@physik.rwth-aachen.de)
+#  \date 2021 Mar
+#
 #************************************************
 
 # Add the module standalones
@@ -46,10 +54,6 @@ if(EXISTS "${PROJECT_SOURCE_DIR}/Core/")
                                 $<TARGET_OBJECTS:Printers>
   )
   set_target_properties(gambit PROPERTIES EXCLUDE_FROM_ALL 0)
-
-  # Add the extras_printing target
-  add_extras(0 extras_printing)
-  add_dependencies(${PROJECT_NAME} extras_printing)
 
   # EXPERIMENTAL: Linking against Electric Fence for heap corruption debugging
   #target_link_libraries(gambit PUBLIC efence) # just segfaults. Be good if it could be made to work though.
