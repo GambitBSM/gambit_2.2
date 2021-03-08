@@ -5440,18 +5440,3 @@ pass_spectrum_to_vevacious: |
     Adds all entries of the spectrum object (as SLHAea) that need to be passed to vevacious to an instance of type SpectrumEntriesForVevacious and returns this instance. The actual passing happens in the helper function exec_pass_spectrum_to_vevacious which gets executed every time before a vevacious call. Model dependent.
 
 
-
-#####  MDMSM model #####
-
-Pythia_MDMSM_8_212_init: |
-    Initialise the Pythia 8.212 MDMSM backend.
-
-MDMSM_spectrum: |
-    Create spectrum object for MDMSM model.
-
-Y_decay_rates: |
-    All decay rates for particle Y.
-
-MDMSM_parameters: |
-    Parameters for the model MDMSM (see ./gambit MDMSM).
-

@@ -46,26 +46,5 @@ namespace Gambit
     };
 
 
-    /// In the case that the MDMSM model is being run.
-    template <>
-    class SetHooks<Pythia_MDMSM_default::Pythia8::Pythia,Pythia_MDMSM_default::Pythia8::Event>
-    {
-      public:
-        Pythia_MDMSM_8_212::Pythia8::UserHooks* matching;
-        Pythia_MDMSM_8_212::Pythia8::CombineMatchingInput combined;
-
-        //Constructor and Destructor
-        SetHooks() { }
-        ~SetHooks() { }
-
-        //Function to set the UserHook
-        bool SetupHook(Pythia_MDMSM_default::Pythia8::Pythia* Py8Collider)
-        {
-          matching = combined.getHook(*Py8Collider);
-          Py8Collider->setUserHooksPtr(matching);
-          return true;
-        }
-    };
-
   }
 }

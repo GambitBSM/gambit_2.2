@@ -58,17 +58,6 @@ BE_INI_FUNCTION
       xsecs[std::vector<str>{"~S","~S"}] = std::vector< std::vector<str> >{ {"d'", "D'"}, {"u", "U"}, {"B", "b"}, {"h", "h"}, {"e", "E"}, {"Z", "Z"}, {"c", "C"}, {"s'", "S'"}, {"m", "M"}, {"t", "T"}, {"W+", "W-"}, {"ta+", "ta-"} };
       model = "ScalarSingletDM_Z2";
     }
-    if (ModelInUse("MDMSM"))
-    {
-      BEpath = backendDir + "/../models/MDMSM";
-      path = BEpath.c_str();
-      modeltoset = (char*)malloc(strlen(path)+11);
-      sprintf(modeltoset, "%s", path);
-      decays["Y"] = std::vector< std::vector<str> >{ {"g","g"}, {"b~","b"}, {"c~","c"}, {"~chi","~chi"}, {"d~","d"}, {"e+","e-"}, {"mu+","mu-"}, {"s~","s"}, {"t~","t"}, {"u~","u"} };
-      xsecs[std::vector<str>{"~chi", "~chi"}] = std::vector< std::vector<str> >{ {"d~","d"}, {"c~","c"}, {"g","g"}, {"b~","b"}, {"e+","e-"}, {"u~","u"}, {"mu+","mu-"}, {"Y","Y"}, {"t~","t"}, {"s~","s"} };
-      model = "MDMSM";
-    }
-    
 
     int error = setModel(modeltoset, 1);
     if (error != 0) backend_error().raise(LOCAL_INFO, "Unable to set model" + std::string(modeltoset) +
@@ -118,20 +107,6 @@ BE_INI_FUNCTION
     Assign_All_Values(spec, ScalarSingletDM_Z2_params);
   }
 
-  if (ModelInUse("MDMSM"))
-  {
-    // Obtain spectrum information to pass to CalcHEP
-    const Spectrum& spec = *Dep::MDMSM_spectrum;
-    
-    // Obtain model contents
-    static const SpectrumContents::MDMSM MDMSM_contents;
-    
-    // Obtain list of all parameters within model
-    static const std::vector<SpectrumParameter> MDMSM_params = MDMSM_contents.all_parameters();
-    
-    Assign_All_Values(spec, MDMSM_params);
-  }
-  
 }
 END_BE_INI_FUNCTION
 
