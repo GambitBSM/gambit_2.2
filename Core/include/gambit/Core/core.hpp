@@ -138,9 +138,6 @@ namespace Gambit
     /// Flag recording whether an inifile has been supplied
     bool found_inifile;
 
-    /// Developer mode (ignore missing capability descriptions)
-    bool developer_mode;
-
     /// Command-line info function
     void bail(int mpirank = -1);
 
