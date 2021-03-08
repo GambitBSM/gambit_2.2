@@ -703,6 +703,17 @@ START_MODULE
 
 
   #undef CAPABILITY
+  #define CAPABILITY Y_decay_rates
+  START_CAPABILITY
+
+    #define FUNCTION CH_MDMSM_Y_decays
+    START_FUNCTION(DecayTable::Entry)
+    DEPENDENCY(MDMSM_spectrum, Spectrum)
+    BACKEND_REQ(CH_Decay_Width, (), double, (str&, str&, std::vector<str>&))
+    ALLOW_MODELS(MDMSM)
+    #undef FUNCTION
+
+  #undef CAPABILITY
 
   #define CAPABILITY decay_rates
   START_CAPABILITY
@@ -732,6 +743,8 @@ START_MODULE
     DEPENDENCY(rho_plus_decay_rates, DecayTable::Entry)
     DEPENDENCY(omega_decay_rates, DecayTable::Entry)
     DEPENDENCY(rho1450_decay_rates, DecayTable::Entry)
+    MODEL_CONDITIONAL_DEPENDENCY(MDMSM_spectrum, Spectrum, MDMSM)
+    MODEL_CONDITIONAL_DEPENDENCY(Y_decay_rates, DecayTable::Entry, MDMSM)
     MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum, Spectrum, MSSM63atQ, MSSM63atMGUT)
     MODEL_CONDITIONAL_DEPENDENCY(SLHA_pseudonyms, mass_es_pseudonyms, MSSM63atQ, MSSM63atMGUT)
     MODEL_CONDITIONAL_DEPENDENCY(h0_2_decay_rates, DecayTable::Entry, MSSM63atQ, MSSM63atMGUT)

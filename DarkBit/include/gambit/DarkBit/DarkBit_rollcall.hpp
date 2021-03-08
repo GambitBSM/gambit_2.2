@@ -149,7 +149,7 @@ START_MODULE
       DEPENDENCY(DarkMatterConj_ID, std::string)
       ALLOW_MODELS(ScalarSingletDM_Z2, ScalarSingletDM_Z2_running,
                    ScalarSingletDM_Z3, ScalarSingletDM_Z3_running,
-                   DiracSingletDM_Z2, MajoranaSingletDM_Z2, VectorSingletDM_Z2)
+                   DiracSingletDM_Z2, MajoranaSingletDM_Z2, VectorSingletDM_Z2, MDMSM)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -205,7 +205,7 @@ START_MODULE
       DEPENDENCY(DarkMatter_ID, std::string)
       DEPENDENCY(DarkMatterConj_ID, std::string)
       ALLOW_MODELS(ScalarSingletDM_Z2, ScalarSingletDM_Z2_running,
-                   DiracSingletDM_Z2, MajoranaSingletDM_Z2, VectorSingletDM_Z2)
+                   DiracSingletDM_Z2, MajoranaSingletDM_Z2, VectorSingletDM_Z2, MDMSM)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -564,6 +564,13 @@ START_MODULE
       DEPENDENCY(decay_rates, DecayTable)
       DEPENDENCY(DiracSingletDM_Z2_spectrum, Spectrum)
       ALLOW_MODELS(DiracSingletDM_Z2)
+    #undef FUNCTION
+    #define FUNCTION TH_ProcessCatalog_MDMSM
+      START_FUNCTION(TH_ProcessCatalog)
+      DEPENDENCY(decay_rates, DecayTable)
+      DEPENDENCY(MDMSM_spectrum, Spectrum)
+      BACKEND_REQ(CH_Sigma_V, (), double, (str&, std::vector<str>&, std::vector<str>&, double&, const DecayTable&))
+      ALLOW_MODELS(MDMSM)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1412,6 +1419,10 @@ START_MODULE
     START_FUNCTION(std::string)
     DEPENDENCY(MSSM_spectrum, Spectrum)
     #undef FUNCTION
+    #define FUNCTION DarkMatter_ID_MDMSM
+    START_FUNCTION(std::string)
+    ALLOW_MODELS(MDMSM)
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY DarkMatterConj_ID
@@ -1435,6 +1446,10 @@ START_MODULE
     #define FUNCTION DarkMatterConj_ID_MSSM
     START_FUNCTION(std::string)
     DEPENDENCY(MSSM_spectrum, Spectrum)
+    #undef FUNCTION
+    #define FUNCTION DarkMatterConj_ID_MDMSM
+    START_FUNCTION(std::string)
+    ALLOW_MODELS(MDMSM)
     #undef FUNCTION
   #undef CAPABILITY
 

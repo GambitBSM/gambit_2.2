@@ -1,0 +1,6 @@
+convert model /home/christopher/GAMBIT/TestExtraColliderProcesses/PushtoGadi/gambit/gum/contrib/MadGraph/models/MDMSM
+import model MDMSM
+generate p p > ~chi ~chi
+add process p p > ~chi ~chi j
+display diagrams diagrams
+output pythia8 Pythia_patched

@@ -1041,3 +1041,7 @@ ColliderBit_SLHA_file_model: |
    yaml file that uses this model.
 
    dummy    - a dummy parameter, not used for anything
+
+MDMSM: |
+    MDMSM model, created by GUM, with parameters: gchi, cY, gggY1, gggY2, mchi, mY
+

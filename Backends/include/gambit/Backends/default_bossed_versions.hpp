@@ -27,3 +27,4 @@
 #define  Default_vevacious 1_0
 
 // Defaults added by GUM (do not remove this comment).
+#define  Default_Pythia_MDMSM 8_212
