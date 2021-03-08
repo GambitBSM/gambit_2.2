@@ -442,6 +442,16 @@ START_MODULE
       DEPENDENCY(DiracSingletDM_Z2_spectrum, Spectrum)
       ALLOW_MODELS(DiracSingletDM_Z2)
     #undef FUNCTION
+
+    #define FUNCTION TH_ProcessCatalog_AnnihilatingDM_mixture
+      START_FUNCTION(TH_ProcessCatalog)
+      ALLOW_MODELS(AnnihilatingDM_mixture)
+    #undef FUNCTION
+
+    #define FUNCTION TH_ProcessCatalog_DecayingDM_mixture
+      START_FUNCTION(TH_ProcessCatalog)
+      ALLOW_MODELS(DecayingDM_mixture)
+    #undef FUNCTION
   #undef CAPABILITY
 
   /// Information about the nature of the DM process in question
@@ -1656,6 +1666,14 @@ START_MODULE
 
   #define CAPABILITY DarkMatter_ID
   START_CAPABILITY
+    #define FUNCTION DarkMatter_ID_AnnihilatingDM_mixture
+    START_FUNCTION(std::string)
+    ALLOW_MODELS(AnnihilatingDM_mixture)
+    #undef FUNCTION
+    #define FUNCTION DarkMatter_ID_DecayingDM_mixture
+    START_FUNCTION(std::string)
+    ALLOW_MODELS(DecayingDM_mixture)
+    #undef FUNCTION
     #define FUNCTION DarkMatter_ID_ScalarSingletDM
     START_FUNCTION(std::string)
     ALLOW_MODELS(ScalarSingletDM_Z2, ScalarSingletDM_Z2_running, ScalarSingletDM_Z3, ScalarSingletDM_Z3_running)
@@ -1680,6 +1698,14 @@ START_MODULE
 
   #define CAPABILITY DarkMatterConj_ID
   START_CAPABILITY
+    #define FUNCTION DarkMatterConj_ID_AnnihilatingDM_mixture
+    START_FUNCTION(std::string)
+    ALLOW_MODELS(AnnihilatingDM_mixture)
+    #undef FUNCTION
+    #define FUNCTION DarkMatterConj_ID_DecayingDM_mixture
+    START_FUNCTION(std::string)
+    ALLOW_MODELS(DecayingDM_mixture)
+    #undef FUNCTION
     #define FUNCTION DarkMatterConj_ID_ScalarSingletDM
     START_FUNCTION(std::string)
     ALLOW_MODELS(ScalarSingletDM_Z2, ScalarSingletDM_Z2_running, ScalarSingletDM_Z3, ScalarSingletDM_Z3_running)
