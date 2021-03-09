@@ -16,6 +16,8 @@
 
 #include <cmath>
 #include <vector>
+#include <iostream>
+#include <sstream>
 #include "gambit/Utils/lnlike_modifiers.hpp"
 #include "gambit/Utils/numerical_constants.hpp"
 #include "gambit/Utils/local_info.hpp"
@@ -27,6 +29,23 @@ namespace Gambit
     /// Interface function that calls the correct modifier function based on the name in lnlike_modifier_name
     double run_lnlike_modifier(double lnlike, const str& lnlike_modifier_name, const Options& lnlike_modifier_options)
     {
+      // Just as a reminder to the user, print a warning if any non-default modifier function is activated.
+      static bool first = true;
+      if (first)
+      {
+        if (lnlike_modifier_name != "identity")
+        {
+          std::ostringstream msg;
+          msg << "The option 'use_lnlike_modifier: " << lnlike_modifier_name << "' is activated. ";
+          msg << "This will modify the total log-likelihood function as seen by the scanner.";
+          // Warning to screen
+          std::cout << "WARNING: " << msg.str() << std::endl;
+          // Warning to logs
+          utils_warning().raise(LOCAL_INFO, msg.str());
+        }
+        first = false;
+      }
+
       double modified_lnlike;
 
       if (lnlike_modifier_name == "identity")

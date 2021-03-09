@@ -364,7 +364,8 @@ namespace Gambit
                 (*this)->getPrinter().enable(); // Make sure printer is re-enabled (might have been disabled by invalid point error)
 
                 // Return the value of the function, offset by any offset set
-                return modified_ret_val + (*this)->getPurposeOffset();            }
+                return modified_ret_val + (*this)->getPurposeOffset();
+            }
         };
 
         /// Pure Base class of a plugin Factory function.
