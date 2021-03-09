@@ -83,17 +83,22 @@
 ///         (jonathancornell@weber.edu)
 /// \date 2013 - 2020
 ///
+///  \author Patrick Stoecker
+///          (stoecker@physik.rwth-aachen.de)
+///  \date 2021 Mar
+///
 ///  *********************************************
 
-#ifndef __DarkBit_rollcall_hpp__
-#define __DarkBit_rollcall_hpp__
+#pragma once
 
 #include "gambit/DarkBit/DarkBit_types.hpp"
 
 #define MODULE DarkBit
 START_MODULE
 
-  /// Make sure LocalHalo model is initialized in DarkSUSY
+  // DarkSUSY-specific initialisation functions ========================
+
+  /// Make sure LocalHalo model is initialized in DarkSUSY5
   #define CAPABILITY DarkSUSY5_PointInit_LocalHalo
   START_CAPABILITY
     #define FUNCTION DarkSUSY5_PointInit_LocalHalo_func
@@ -104,10 +109,11 @@ START_MODULE
       BACKEND_REQ(dshmisodf, (ds5), DS_HMISODF)
       BACKEND_REQ(dshmframevelcom, (ds5), DS_HMFRAMEVELCOM)
       BACKEND_REQ(dshmnoclue, (ds5), DS_HMNOCLUE)
-      BACKEND_OPTION((DarkSUSY, 5.1.3), (ds5))  // Only for DarkSUSY5
+      BACKEND_OPTION((DarkSUSY, 5.1.3), (ds5))
     #undef FUNCTION
   #undef CAPABILITY
 
+  /// Make sure LocalHalo model is initialized in DarkSUSY6
   #define CAPABILITY DarkSUSY_PointInit_LocalHalo
   START_CAPABILITY
     #define FUNCTION DarkSUSY_PointInit_LocalHalo_func
@@ -118,17 +124,17 @@ START_MODULE
       BACKEND_REQ(dshmisodf, (ds6), DS_HMISODF)
       BACKEND_REQ(dshmframevelcom, (ds6), DS_HMFRAMEVELCOM)
       BACKEND_REQ(dshmnoclue, (ds6), DS_HMNOCLUE)
-      BACKEND_OPTION((DarkSUSY_MSSM, 6.1.1, 6.2.2), (ds6))  // Only DS6
-      BACKEND_OPTION((DarkSUSY_generic_wimp, 6.1.1, 6.2.2), (ds6))  // Only DS6
+      BACKEND_OPTION((DarkSUSY_MSSM, 6.1.1, 6.2.2), (ds6))
+      BACKEND_OPTION((DarkSUSY_generic_wimp, 6.1.1, 6.2.2), (ds6))
       FORCE_SAME_BACKEND(ds6)
     #undef FUNCTION
   #undef CAPABILITY
 
-  // Relic density -----------------------------------------
+  // Relic density =====================================================
 
   #define CAPABILITY RD_spectrum
   START_CAPABILITY
-    #define FUNCTION RD_spectrum_MSSM  // No longer DS specific!
+    #define FUNCTION RD_spectrum_MSSM
       START_FUNCTION(RD_spectrum_type)
       DEPENDENCY(MSSM_spectrum, Spectrum)
       DEPENDENCY(DarkMatter_ID, std::string)
@@ -357,141 +363,15 @@ START_MODULE
       START_FUNCTION(double)
       DEPENDENCY(RD_oh2, double)
     #undef FUNCTION
-  #undef CAPABILITY
-
-
-  // Cascade decays --------------------------------------------
-
-  /// Function for retrieving list of final states for cascade decays
-  #define CAPABILITY cascadeMC_FinalStates
-  START_CAPABILITY
-    #define FUNCTION cascadeMC_FinalStates
-      START_FUNCTION(std::vector<std::string>)
+   #define FUNCTION RD_fraction_rescaled_LCDM
+      START_FUNCTION(double)
+      ALLOW_MODELS(LCDM, LCDM_theta)
+      DEPENDENCY(RD_oh2, double)
     #undef FUNCTION
   #undef CAPABILITY
 
-  /// Function setting up the decay table used in decay chains
-  #define CAPABILITY cascadeMC_DecayTable
-  START_CAPABILITY
-    #define FUNCTION cascadeMC_DecayTable
-      START_FUNCTION(DecayChain::DecayTable)
-      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
-      DEPENDENCY(SimYieldTable, SimYieldTable)
-    #undef FUNCTION
-  #undef CAPABILITY
 
-  /// Loop manager for cascade decays
-  #define CAPABILITY cascadeMC_LoopManagement
-  START_CAPABILITY
-    #define FUNCTION cascadeMC_LoopManager
-      START_FUNCTION(void, CAN_MANAGE_LOOPS)
-      DEPENDENCY(GA_missingFinalStates, std::vector<std::string>)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  /// Function selecting initial state for decay chain
-  #define CAPABILITY cascadeMC_InitialState
-  START_CAPABILITY
-    #define FUNCTION cascadeMC_InitialState
-      START_FUNCTION(std::string)
-      DEPENDENCY(GA_missingFinalStates, std::vector<std::string>)
-      NEEDS_MANAGER(cascadeMC_LoopManagement)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  /// Event counter for cascade decays
-  #define CAPABILITY cascadeMC_EventCount
-  START_CAPABILITY
-    #define FUNCTION cascadeMC_EventCount
-      START_FUNCTION(stringIntMap)
-      DEPENDENCY(cascadeMC_InitialState, std::string)
-      NEEDS_MANAGER(cascadeMC_LoopManagement)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  /// Function for generating decay chains
-  #define CAPABILITY cascadeMC_ChainEvent
-  START_CAPABILITY
-    #define FUNCTION cascadeMC_GenerateChain
-      START_FUNCTION(DecayChain::ChainContainer)
-      DEPENDENCY(cascadeMC_InitialState, std::string)
-      DEPENDENCY(cascadeMC_DecayTable, DecayChain::DecayTable)
-      NEEDS_MANAGER(cascadeMC_LoopManagement)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  /// Function responsible for histogramming and evaluating end conditions for event loop
-  #define CAPABILITY cascadeMC_Histograms
-  START_CAPABILITY
-    #define FUNCTION cascadeMC_Histograms
-      START_FUNCTION(simpleHistContainter)
-      DEPENDENCY(cascadeMC_InitialState, std::string)
-      DEPENDENCY(cascadeMC_ChainEvent, DecayChain::ChainContainer)
-      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
-      DEPENDENCY(SimYieldTable, SimYieldTable)
-      DEPENDENCY(cascadeMC_FinalStates,std::vector<std::string>)
-      NEEDS_MANAGER(cascadeMC_LoopManagement)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  /// Function requesting and returning gamma ray spectra from cascade decays.
-  #define CAPABILITY cascadeMC_gammaSpectra
-  START_CAPABILITY
-    #define FUNCTION cascadeMC_gammaSpectra
-      START_FUNCTION(stringFunkMap)
-      DEPENDENCY(GA_missingFinalStates, std::vector<std::string>)
-      DEPENDENCY(cascadeMC_FinalStates,std::vector<std::string>)
-      DEPENDENCY(cascadeMC_Histograms, simpleHistContainter)
-      DEPENDENCY(cascadeMC_EventCount, stringIntMap)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  /*
-  /// Function for printing test result of cascade decays
-  #define CAPABILITY cascadeMC_PrintResult
-  START_CAPABILITY
-    #define FUNCTION cascadeMC_PrintResult
-      START_FUNCTION(bool)
-      DEPENDENCY(cascadeMC_Histograms, simpleHistContainter)
-      DEPENDENCY(cascadeMC_EventCount, stringIntMap)
-    #undef FUNCTION
-  #undef CAPABILITY
-  */
-
-  // Gamma rays --------------------------------------------
-
-  #define CAPABILITY GA_missingFinalStates
-  START_CAPABILITY
-    #define FUNCTION GA_missingFinalStates
-      START_FUNCTION(std::vector<std::string>)
-      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
-      DEPENDENCY(SimYieldTable, SimYieldTable)
-      DEPENDENCY(DarkMatter_ID, std::string)
-      DEPENDENCY(DarkMatterConj_ID, std::string)
-      DEPENDENCY(DM_process, std::string)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY GA_Yield
-  START_CAPABILITY
-
-    #define FUNCTION GA_AnnYield_General
-      START_FUNCTION(daFunk::Funk)
-      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
-      DEPENDENCY(SimYieldTable, SimYieldTable)
-      DEPENDENCY(cascadeMC_gammaSpectra, stringFunkMap)
-      DEPENDENCY(DarkMatter_ID, std::string)
-      DEPENDENCY(DarkMatterConj_ID, std::string)
-    #undef FUNCTION
-
-    #define FUNCTION GA_DecayYield_General
-      START_FUNCTION(daFunk::Funk)
-      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
-      DEPENDENCY(SimYieldTable, SimYieldTable)
-      DEPENDENCY(cascadeMC_gammaSpectra, stringFunkMap)
-      DEPENDENCY(DarkMatter_ID, std::string)
-    #undef FUNCTION
-  #undef CAPABILITY
+  // Process catalogue =================================================
 
   #define CAPABILITY TH_ProcessCatalog
   START_CAPABILITY
@@ -510,6 +390,7 @@ START_MODULE
       BACKEND_REQ(dsIBwwdxdy, (ds5), double, (int&, double&, double&))
       BACKEND_REQ(IBintvars, (ds5), DS_IBINTVARS)
       BACKEND_OPTION((DarkSUSY, 5.1.3), (ds5))  // Only for DarkSUSY5
+      FORCE_SAME_BACKEND(ds5)
     #undef FUNCTION
 
     /// Process Catalogue from DarkSUSY6 (MSSM)
@@ -517,6 +398,7 @@ START_MODULE
       START_FUNCTION(TH_ProcessCatalog)
       DEPENDENCY(MSSM_spectrum, Spectrum)
       DEPENDENCY(DarkMatter_ID, std::string)
+      DEPENDENCY(DarkMatterConj_ID, std::string)
       DEPENDENCY(decay_rates,DecayTable)
       BACKEND_REQ(dssigmav0, (ds6), double, (int&,int&))
       BACKEND_REQ(dssigmav0tot, (ds6), double, ())
@@ -566,6 +448,17 @@ START_MODULE
       DEPENDENCY(DiracSingletDM_Z2_spectrum, Spectrum)
       ALLOW_MODELS(DiracSingletDM_Z2)
     #undef FUNCTION
+
+    #define FUNCTION TH_ProcessCatalog_AnnihilatingDM_mixture
+      START_FUNCTION(TH_ProcessCatalog)
+      ALLOW_MODELS(AnnihilatingDM_mixture)
+    #undef FUNCTION
+
+    #define FUNCTION TH_ProcessCatalog_DecayingDM_mixture
+      START_FUNCTION(TH_ProcessCatalog)
+      ALLOW_MODELS(DecayingDM_mixture)
+    #undef FUNCTION
+
     #define FUNCTION TH_ProcessCatalog_WIMP_EFT
       START_FUNCTION(TH_ProcessCatalog)
       DEPENDENCY(decay_rates, DecayTable)
@@ -573,6 +466,7 @@ START_MODULE
       DEPENDENCY(WIMP_properties, WIMPprops)
       DEPENDENCY(generic_WIMP_sigmav, WIMP_annihilation)
     #undef FUNCTION
+
     #define FUNCTION TH_ProcessCatalog_DMEFT
       START_FUNCTION(TH_ProcessCatalog)
       DEPENDENCY(decay_rates, DecayTable)
@@ -582,9 +476,9 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  // Information about the nature of the DM process in question
-  // (i.e. decay or annihilation) to use the correct scaling in 
-  // terms of the DM density, phase space, etc.
+  /// Information about the nature of the DM process in question
+  /// (i.e. decay or annihilation) to use the correct scaling in
+  /// terms of the DM density, phase space, etc.
   #define CAPABILITY DM_process
   START_CAPABILITY
     #define FUNCTION DM_process_from_ProcessCatalog
@@ -593,6 +487,378 @@ START_MODULE
       DEPENDENCY(DarkMatter_ID, std::string)
     #undef FUNCTION
   #undef CAPABILITY
+
+
+  // Simulated annihilation/decay yield tables ==========================================
+
+  #define CAPABILITY FullSimYieldTable
+  START_CAPABILITY
+    #define FUNCTION Combine_SimYields
+    START_FUNCTION(SimYieldTable)
+    DEPENDENCY(GA_SimYieldTable, SimYieldTable)
+    DEPENDENCY(electron_SimYieldTable, SimYieldTable)
+    DEPENDENCY(positron_SimYieldTable, SimYieldTable)
+    DEPENDENCY(antiproton_SimYieldTable, SimYieldTable)
+    DEPENDENCY(antideuteron_SimYieldTable, SimYieldTable)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY GA_SimYieldTable
+  START_CAPABILITY
+    #define FUNCTION GA_SimYieldTable_DarkSUSY
+    START_FUNCTION(SimYieldTable)
+    BACKEND_REQ(dsanyield_sim, (), double, (double&,double&,int&,char*,int&,int&,int&))
+    #undef FUNCTION
+    #define FUNCTION GA_SimYieldTable_DS5 // DS5 only
+    START_FUNCTION(SimYieldTable)
+    BACKEND_REQ(dshayield, (ds5), double, (double&,double&,int&,int&,int&))
+    BACKEND_OPTION((DarkSUSY, 5.1.3), (ds5))  // Only for DarkSUSY5
+    #undef FUNCTION
+    #define FUNCTION GA_SimYieldTable_MicrOmegas
+    START_FUNCTION(SimYieldTable)
+    BACKEND_REQ(dNdE, (), double, (double,double,int,int))
+    #undef FUNCTION
+    #define FUNCTION GA_SimYieldTable_PPPC
+    START_FUNCTION(SimYieldTable)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY positron_SimYieldTable
+  START_CAPABILITY
+    #define FUNCTION positron_SimYieldTable_DarkSUSY
+    START_FUNCTION(SimYieldTable)
+    BACKEND_REQ(dsanyield_sim, (), double, (double&,double&,int&,char*,int&,int&,int&))
+    #undef FUNCTION
+    #define FUNCTION positron_SimYieldTable_MicrOmegas
+    START_FUNCTION(SimYieldTable)
+    BACKEND_REQ(dNdE, (), double, (double,double,int,int))
+    #undef FUNCTION
+    #define FUNCTION positron_SimYieldTable_PPPC
+    START_FUNCTION(SimYieldTable)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY electron_SimYieldTable
+  START_CAPABILITY
+    #define FUNCTION electron_SimYieldTable_from_positron_SimYieldTable
+    START_FUNCTION(SimYieldTable)
+    DEPENDENCY(positron_SimYieldTable, SimYieldTable)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY antiproton_SimYieldTable
+  START_CAPABILITY
+    #define FUNCTION antiproton_SimYieldTable_DarkSUSY
+    START_FUNCTION(SimYieldTable)
+    BACKEND_REQ(dsanyield_sim, (), double, (double&,double&,int&,char*,int&,int&,int&))
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY antideuteron_SimYieldTable
+  START_CAPABILITY
+    #define FUNCTION antideuteron_SimYieldTable_DarkSUSY
+    START_FUNCTION(SimYieldTable)
+    BACKEND_REQ(dsanyield_sim, (), double, (double&,double&,int&,char*,int&,int&,int&))
+    #undef FUNCTION
+  #undef CAPABILITY
+
+
+  // Cascade decays ====================================================
+
+  /// Function for retrieving list of final states for cascade decays
+  #define CAPABILITY cascadeMC_FinalStates
+  START_CAPABILITY
+    #define FUNCTION cascadeMC_FinalStates
+      START_FUNCTION(std::set<std::string>)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  /// Function for determining the list of initial states for cascade decays
+  #define CAPABILITY cascadeMC_InitialStates
+  START_CAPABILITY
+    #define FUNCTION cascadeMC_InitialStates
+      START_FUNCTION(std::set<std::string>)
+      DEPENDENCY(DarkMatter_ID, std::string)
+      DEPENDENCY(DarkMatterConj_ID, std::string)
+      DEPENDENCY(DM_process, std::string)
+      DEPENDENCY(cascadeMC_FinalStates, std::set<std::string>)
+      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+      DEPENDENCY(FullSimYieldTable, SimYieldTable)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  /// Function setting up the decay table used in decay chains
+  #define CAPABILITY cascadeMC_DecayTable
+  START_CAPABILITY
+    #define FUNCTION cascadeMC_DecayTable
+      START_FUNCTION(DecayChain::DecayTable)
+      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+      DEPENDENCY(FullSimYieldTable, SimYieldTable)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  /// Loop manager for cascade decays
+  #define CAPABILITY cascadeMC_LoopManagement
+  START_CAPABILITY
+    #define FUNCTION cascadeMC_LoopManager
+      START_FUNCTION(std::string, CAN_MANAGE_LOOPS)
+      DEPENDENCY(cascadeMC_InitialStates, std::set<std::string>)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  /// Event counter for cascade decays
+  #define CAPABILITY cascadeMC_EventCount
+  START_CAPABILITY
+    #define FUNCTION cascadeMC_EventCount
+      START_FUNCTION(stringIntMap)
+      NEEDS_MANAGER(cascadeMC_LoopManagement, std::string)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  /// Function for generating decay chains
+  #define CAPABILITY cascadeMC_ChainEvent
+  START_CAPABILITY
+    #define FUNCTION cascadeMC_GenerateChain
+      START_FUNCTION(DecayChain::ChainContainer)
+      DEPENDENCY(cascadeMC_DecayTable, DecayChain::DecayTable)
+      NEEDS_MANAGER(cascadeMC_LoopManagement, std::string)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  /// Function responsible for histogramming and evaluating end conditions for event loop
+  #define CAPABILITY cascadeMC_Histograms
+  START_CAPABILITY
+    #define FUNCTION cascadeMC_Histograms
+      START_FUNCTION(simpleHistContainter)
+      DEPENDENCY(cascadeMC_ChainEvent, DecayChain::ChainContainer)
+      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+      DEPENDENCY(FullSimYieldTable, SimYieldTable)
+      DEPENDENCY(cascadeMC_FinalStates,std::set<std::string>)
+      NEEDS_MANAGER(cascadeMC_LoopManagement, std::string)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  /// Function requesting and returning gamma ray spectra from cascade decays.
+  #define CAPABILITY cascadeMC_gammaSpectra
+  START_CAPABILITY
+    #define FUNCTION cascadeMC_gammaSpectra
+      START_FUNCTION(stringFunkMap)
+      DEPENDENCY(cascadeMC_InitialStates, std::set<std::string>)
+      DEPENDENCY(cascadeMC_FinalStates,std::set<std::string>)
+      DEPENDENCY(cascadeMC_Histograms, simpleHistContainter)
+      DEPENDENCY(cascadeMC_EventCount, stringIntMap)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  /// Function requesting and returning electron spectra from cascade decays.
+  #define CAPABILITY cascadeMC_electronSpectra
+  START_CAPABILITY
+    #define FUNCTION cascadeMC_electronSpectra
+      START_FUNCTION(stringFunkMap)
+      DEPENDENCY(cascadeMC_InitialStates, std::set<std::string>)
+      DEPENDENCY(cascadeMC_FinalStates,std::set<std::string>)
+      DEPENDENCY(cascadeMC_Histograms, simpleHistContainter)
+      DEPENDENCY(cascadeMC_EventCount, stringIntMap)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  /// Function requesting and returning positron spectra from cascade decays.
+  #define CAPABILITY cascadeMC_positronSpectra
+  START_CAPABILITY
+    #define FUNCTION cascadeMC_positronSpectra
+      START_FUNCTION(stringFunkMap)
+      DEPENDENCY(cascadeMC_InitialStates, std::set<std::string>)
+      DEPENDENCY(cascadeMC_FinalStates,std::set<std::string>)
+      DEPENDENCY(cascadeMC_Histograms, simpleHistContainter)
+      DEPENDENCY(cascadeMC_EventCount, stringIntMap)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  /// Function requesting and returning antiproton spectra from cascade decays.
+  #define CAPABILITY cascadeMC_antiprotonSpectra
+  START_CAPABILITY
+    #define FUNCTION cascadeMC_antiprotonSpectra
+      START_FUNCTION(stringFunkMap)
+      DEPENDENCY(cascadeMC_InitialStates, std::set<std::string>)
+      DEPENDENCY(cascadeMC_FinalStates,std::set<std::string>)
+      DEPENDENCY(cascadeMC_Histograms, simpleHistContainter)
+      DEPENDENCY(cascadeMC_EventCount, stringIntMap)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  /// Function requesting and returning antideuteron spectra from cascade decays.
+  #define CAPABILITY cascadeMC_antideuteronSpectra
+  START_CAPABILITY
+    #define FUNCTION cascadeMC_antideuteronSpectra
+      START_FUNCTION(stringFunkMap)
+      DEPENDENCY(cascadeMC_InitialStates, std::set<std::string>)
+      DEPENDENCY(cascadeMC_FinalStates,std::set<std::string>)
+      DEPENDENCY(cascadeMC_Histograms, simpleHistContainter)
+      DEPENDENCY(cascadeMC_EventCount, stringIntMap)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  /*
+  /// Function for printing test result of cascade decays
+  #define CAPABILITY cascadeMC_PrintResult
+  START_CAPABILITY
+    #define FUNCTION cascadeMC_PrintResult
+      START_FUNCTION(bool)
+      DEPENDENCY(cascadeMC_Histograms, simpleHistContainter)
+      DEPENDENCY(cascadeMC_EventCount, stringIntMap)
+    #undef FUNCTION
+  #undef CAPABILITY
+  */
+
+
+  // Gamma-ray spectra =================================================
+
+  #define CAPABILITY GA_Yield
+  START_CAPABILITY
+    #define FUNCTION GA_AnnYield_General
+      START_FUNCTION(daFunk::Funk)
+      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+      DEPENDENCY(GA_SimYieldTable, SimYieldTable)
+      DEPENDENCY(cascadeMC_gammaSpectra, stringFunkMap)
+      DEPENDENCY(DarkMatter_ID, std::string)
+      DEPENDENCY(DarkMatterConj_ID, std::string)
+    #undef FUNCTION
+    #define FUNCTION GA_DecayYield_General
+      START_FUNCTION(daFunk::Funk)
+      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+      DEPENDENCY(GA_SimYieldTable, SimYieldTable)
+      DEPENDENCY(cascadeMC_gammaSpectra, stringFunkMap)
+      DEPENDENCY(DarkMatter_ID, std::string)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY dump_gammaSpectrum
+  START_CAPABILITY
+    #define FUNCTION dump_gammaSpectrum
+      START_FUNCTION(int)
+      DEPENDENCY(GA_Yield, daFunk::Funk)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+
+  // e+e- spectra ======================================================
+
+  #define CAPABILITY electron_Yield
+  START_CAPABILITY
+    #define FUNCTION electron_AnnYield_General
+      START_FUNCTION(daFunk::Funk)
+      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+      DEPENDENCY(electron_SimYieldTable, SimYieldTable)
+      DEPENDENCY(cascadeMC_electronSpectra, stringFunkMap)
+      DEPENDENCY(DarkMatter_ID, std::string)
+      DEPENDENCY(DarkMatterConj_ID, std::string)
+    #undef FUNCTION
+    #define FUNCTION electron_DecayYield_General
+      START_FUNCTION(daFunk::Funk)
+      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+      DEPENDENCY(electron_SimYieldTable, SimYieldTable)
+      DEPENDENCY(cascadeMC_electronSpectra, stringFunkMap)
+      DEPENDENCY(DarkMatter_ID, std::string)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY positron_Yield
+  START_CAPABILITY
+    #define FUNCTION positron_AnnYield_General
+      START_FUNCTION(daFunk::Funk)
+      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+      DEPENDENCY(positron_SimYieldTable, SimYieldTable)
+      DEPENDENCY(cascadeMC_positronSpectra, stringFunkMap)
+      DEPENDENCY(DarkMatter_ID, std::string)
+      DEPENDENCY(DarkMatterConj_ID, std::string)
+    #undef FUNCTION
+    #define FUNCTION positron_DecayYield_General
+      START_FUNCTION(daFunk::Funk)
+      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+      DEPENDENCY(positron_SimYieldTable, SimYieldTable)
+      DEPENDENCY(cascadeMC_positronSpectra, stringFunkMap)
+      DEPENDENCY(DarkMatter_ID, std::string)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY dump_electronSpectrum
+  START_CAPABILITY
+    #define FUNCTION dump_electronSpectrum
+      START_FUNCTION(int)
+      DEPENDENCY(electron_Yield, daFunk::Funk)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY dump_positronSpectrum
+  START_CAPABILITY
+    #define FUNCTION dump_positronSpectrum
+      START_FUNCTION(int)
+      DEPENDENCY(positron_Yield, daFunk::Funk)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+
+  // Anti-proton spectra ===============================================
+
+  #define CAPABILITY antiproton_Yield
+  START_CAPABILITY
+    #define FUNCTION antiproton_AnnYield_General
+      START_FUNCTION(daFunk::Funk)
+      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+      DEPENDENCY(antiproton_SimYieldTable, SimYieldTable)
+      DEPENDENCY(cascadeMC_antiprotonSpectra, stringFunkMap)
+      DEPENDENCY(DarkMatter_ID, std::string)
+      DEPENDENCY(DarkMatterConj_ID, std::string)
+    #undef FUNCTION
+    #define FUNCTION antiproton_DecayYield_General
+      START_FUNCTION(daFunk::Funk)
+      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+      DEPENDENCY(antiproton_SimYieldTable, SimYieldTable)
+      DEPENDENCY(cascadeMC_antiprotonSpectra, stringFunkMap)
+      DEPENDENCY(DarkMatter_ID, std::string)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY dump_antiprotonSpectrum
+  START_CAPABILITY
+    #define FUNCTION dump_antiprotonSpectrum
+      START_FUNCTION(int)
+      DEPENDENCY(antiproton_Yield, daFunk::Funk)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+
+  // Anti-deuteron spectra =============================================
+
+  #define CAPABILITY antideuteron_Yield
+  START_CAPABILITY
+    #define FUNCTION antideuteron_AnnYield_General
+      START_FUNCTION(daFunk::Funk)
+      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+      DEPENDENCY(antideuteron_SimYieldTable, SimYieldTable)
+      DEPENDENCY(cascadeMC_antideuteronSpectra, stringFunkMap)
+      DEPENDENCY(DarkMatter_ID, std::string)
+      DEPENDENCY(DarkMatterConj_ID, std::string)
+    #undef FUNCTION
+    #define FUNCTION antideuteron_DecayYield_General
+      START_FUNCTION(daFunk::Funk)
+      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+      DEPENDENCY(antideuteron_SimYieldTable, SimYieldTable)
+      DEPENDENCY(cascadeMC_antideuteronSpectra, stringFunkMap)
+      DEPENDENCY(DarkMatter_ID, std::string)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY dump_antideuteronSpectrum
+  START_CAPABILITY
+    #define FUNCTION dump_antideuteronSpectrum
+      START_FUNCTION(int)
+      DEPENDENCY(antideuteron_Yield, daFunk::Funk)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+
+  // Gamma-ray likelihoods =============================================
 
   #define CAPABILITY set_gamLike_GC_halo
   START_CAPABILITY
@@ -650,13 +916,8 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY dump_GammaSpectrum
-  START_CAPABILITY
-    #define FUNCTION dump_GammaSpectrum
-      START_FUNCTION(double)
-      DEPENDENCY(GA_Yield, daFunk::Funk)
-    #undef FUNCTION
-  #undef CAPABILITY
+
+  // Relic density likelihoods =========================================
 
   #define CAPABILITY lnL_oh2
   START_CAPABILITY
@@ -670,7 +931,28 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  // Local DM density likelihood
+
+  // DM halo functions and likelihoods =================================
+
+  #define CAPABILITY GalacticHalo
+  START_CAPABILITY
+    #define FUNCTION GalacticHalo_gNFW
+    START_FUNCTION(GalacticHaloProperties)
+    ALLOW_MODEL(Halo_gNFW)
+    #undef FUNCTION
+    #define FUNCTION GalacticHalo_Einasto
+    START_FUNCTION(GalacticHaloProperties)
+    ALLOW_MODEL(Halo_Einasto)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY LocalHalo
+  START_CAPABILITY
+    #define FUNCTION ExtractLocalMaxwellianHalo
+    START_FUNCTION(LocalMaxwellianHalo)
+    ALLOW_MODELS(Halo_gNFW, Halo_Einasto)
+    #undef FUNCTION
+  #undef CAPABILITY
 
   #define CAPABILITY lnL_rho0
   START_CAPABILITY
@@ -704,7 +986,7 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  // Simple WIMP property extractors =======================================
+  // Simple WIMP property extractors ===================================
 
   // Retrieve the DM mass in GeV for generic models
   QUICK_FUNCTION(DarkBit, mwimp, NEW_CAPABILITY, mwimp_generic, double, (),
@@ -741,7 +1023,8 @@ START_MODULE
 
   #undef CAPABILITY
 
-  // DIRECT DETECTION ==================================================
+
+  // Direct detection ==================================================
 
   // Function to initialise DDCalc couplings from a given DM interaction basis.
   #define CAPABILITY DDCalc_Couplings
@@ -1096,7 +1379,7 @@ START_MODULE
   SET_BACKEND_OPTION(PICO_60_2019, (DDCalc, 2.2.0))
 
 
-  // INDIRECT DETECTION: NEUTRINOS =====================================
+  // Neutrinos =========================================================
 
   // WIMP spin (x2)
   #define CAPABILITY spinwimpx2
@@ -1241,8 +1524,25 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  // Energy Injection ===================================================
 
-  // Neutrino telescope likelihoods ------------------------
+  // Energy injection yields from ProcessCatalog, SimYield tables and FCMC
+  #define CAPABILITY energy_injection_spectrum
+  START_CAPABILITY
+    #define FUNCTION energy_injection_spectrum_ProcessCatalog
+      START_FUNCTION(DarkAges::Energy_injection_spectrum)
+      ALLOW_MODELS(AnnihilatingDM_general,DecayingDM_general) // Ensure that one of the "energy injection marker" models is in use.
+      DEPENDENCY(DarkMatter_ID, std::string)
+      DEPENDENCY(DarkMatterConj_ID, std::string)
+      DEPENDENCY(DM_process, std::string)
+      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+      DEPENDENCY(GA_Yield, daFunk::Funk)
+      DEPENDENCY(electron_Yield, daFunk::Funk)
+      DEPENDENCY(positron_Yield, daFunk::Funk)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  // Neutrino telescope likelihoods ====================================
 
   #define CAPABILITY IC22_data
   START_CAPABILITY
@@ -1524,6 +1824,9 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+
+  // DarkBit auxiliary module functions ================================
+
   #define CAPABILITY UnitTest_DarkBit
   START_CAPABILITY
     #define FUNCTION UnitTest_DarkBit
@@ -1537,28 +1840,16 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY SimYieldTable
-  START_CAPABILITY
-    #define FUNCTION SimYieldTable_DarkSUSY
-    START_FUNCTION(SimYieldTable)
-    BACKEND_REQ(dsanyield_sim, (), double, (double&,double&,int&,char*,int&,int&,int&))
-    #undef FUNCTION
-    #define FUNCTION SimYieldTable_DS5 // DS5 only
-    START_FUNCTION(SimYieldTable)
-    BACKEND_REQ(dshayield, (ds5), double, (double&,double&,int&,int&,int&))
-    BACKEND_OPTION((DarkSUSY, 5.1.3), (ds5))  // Only for DarkSUSY5
-    #undef FUNCTION
-    #define FUNCTION SimYieldTable_MicrOmegas
-    START_FUNCTION(SimYieldTable)
-    BACKEND_REQ(dNdE, (), double, (double,double,int,int))
-    #undef FUNCTION
-    #define FUNCTION SimYieldTable_PPPC
-    START_FUNCTION(SimYieldTable)
-    #undef FUNCTION
-  #undef CAPABILITY
-
   #define CAPABILITY DarkMatter_ID
   START_CAPABILITY
+    #define FUNCTION DarkMatter_ID_AnnihilatingDM_mixture
+    START_FUNCTION(std::string)
+    ALLOW_MODELS(AnnihilatingDM_mixture)
+    #undef FUNCTION
+    #define FUNCTION DarkMatter_ID_DecayingDM_mixture
+    START_FUNCTION(std::string)
+    ALLOW_MODELS(DecayingDM_mixture)
+    #undef FUNCTION
     #define FUNCTION DarkMatter_ID_ScalarSingletDM
     START_FUNCTION(std::string)
     ALLOW_MODELS(ScalarSingletDM_Z2, ScalarSingletDM_Z2_running, ScalarSingletDM_Z3, ScalarSingletDM_Z3_running)
@@ -1591,6 +1882,14 @@ START_MODULE
 
   #define CAPABILITY DarkMatterConj_ID
   START_CAPABILITY
+    #define FUNCTION DarkMatterConj_ID_AnnihilatingDM_mixture
+    START_FUNCTION(std::string)
+    ALLOW_MODELS(AnnihilatingDM_mixture)
+    #undef FUNCTION
+    #define FUNCTION DarkMatterConj_ID_DecayingDM_mixture
+    START_FUNCTION(std::string)
+    ALLOW_MODELS(DecayingDM_mixture)
+    #undef FUNCTION
     #define FUNCTION DarkMatterConj_ID_ScalarSingletDM
     START_FUNCTION(std::string)
     ALLOW_MODELS(ScalarSingletDM_Z2, ScalarSingletDM_Z2_running, ScalarSingletDM_Z3, ScalarSingletDM_Z3_running)
@@ -1621,29 +1920,7 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  // --- Functions related to the local and global properties of the DM halo ---
-
-  #define CAPABILITY GalacticHalo
-  START_CAPABILITY
-    #define FUNCTION GalacticHalo_gNFW
-    START_FUNCTION(GalacticHaloProperties)
-    ALLOW_MODEL(Halo_gNFW)
-    #undef FUNCTION
-    #define FUNCTION GalacticHalo_Einasto
-    START_FUNCTION(GalacticHaloProperties)
-    ALLOW_MODEL(Halo_Einasto)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY LocalHalo
-  START_CAPABILITY
-    #define FUNCTION ExtractLocalMaxwellianHalo
-    START_FUNCTION(LocalMaxwellianHalo)
-    ALLOW_MODELS(Halo_gNFW, Halo_Einasto)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  // Axion likelihoods and functions -----------------------
+  // Axion likelihoods and functions ===================================
 
   #define CAPABILITY QCDAxion_ZeroTemperatureMass
   START_CAPABILITY
@@ -1883,4 +2160,3 @@ START_MODULE
   #undef CAPABILITY
 
 #undef MODULE
-#endif /* defined(__DarkBit_rollcall_hpp__) */

@@ -512,6 +512,40 @@ StandardModel:
     name: G
     spinx2: 4
 
+  - PDG_context:
+    - 2212
+    - 0
+    chargex3: 3
+    color: 1
+    conjugate: pbar
+    description: proton
+    name: p
+    spinx2: 1
+
+  - DecayBit:
+      Decays: true
+      conjugate: neutron
+      name: neutron_bar
+    PDG_context:
+    - 2112
+    - 0
+    chargex3: 0
+    color: 1
+    conjugate: nbar
+    description: neutron
+    name: n
+    spinx2: 1
+
+  - PDG_context:
+    - 1000010020
+    - 0
+    chargex3: 3
+    color: 1
+    conjugate: Dbar
+    description: deuteron
+    name: D
+    spinx2: 2
+
   - DecayBit:
       Decays: true
       name: pi_0
