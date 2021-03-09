@@ -84,6 +84,37 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  #define CAPABILITY f_eff
+  START_CAPABILITY
+    // Calculate f_eff by convolution with weighting functions
+    #define FUNCTION f_eff_weighted
+    START_FUNCTION(double)
+    ALLOW_MODELS(AnnihilatingDM_general) // Weighting function only known for s-wave annihilation
+    DEPENDENCY(energy_injection_efficiency, DarkAges::Energy_injection_efficiency_table)
+    #undef FUNCTION
+
+    // Calculate f_eff by taking f_eff(z) at given z
+    #define FUNCTION f_eff_at_z
+    START_FUNCTION(double)
+    ALLOW_MODELS(AnnihilatingDM_general,DecayingDM_general)
+    DEPENDENCY(energy_injection_efficiency, DarkAges::Energy_injection_efficiency_table)
+    #undef FUNCTION
+
+    // Set f_eff to a constant that the user can choose
+    #define FUNCTION f_eff_constant
+    START_FUNCTION(double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY p_ann
+  START_CAPABILITY
+    #define FUNCTION p_ann
+    START_FUNCTION(double)
+    ALLOW_MODELS(AnnihilatingDM_general)
+    DEPENDENCY(f_eff, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
   // ----------------------
 
   // capabilities related to setting neutrino masses,
