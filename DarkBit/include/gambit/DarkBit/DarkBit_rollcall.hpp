@@ -521,6 +521,10 @@ START_MODULE
     #define FUNCTION GA_SimYieldTable_PPPC
     START_FUNCTION(SimYieldTable)
     #undef FUNCTION
+    // By-pass to skip specific yields in FullSimYieldTable
+    #define FUNCTION GA_SimYieldTable_empty
+    START_FUNCTION(SimYieldTable)
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY positron_SimYieldTable
@@ -534,6 +538,10 @@ START_MODULE
     BACKEND_REQ(dNdE, (), double, (double,double,int,int))
     #undef FUNCTION
     #define FUNCTION positron_SimYieldTable_PPPC
+    START_FUNCTION(SimYieldTable)
+    #undef FUNCTION
+    // By-pass to skip specific yields in FullSimYieldTable
+    #define FUNCTION positron_SimYieldTable_empty
     START_FUNCTION(SimYieldTable)
     #undef FUNCTION
   #undef CAPABILITY
@@ -552,6 +560,10 @@ START_MODULE
     START_FUNCTION(SimYieldTable)
     BACKEND_REQ(dsanyield_sim, (), double, (double&,double&,int&,char*,int&,int&,int&))
     #undef FUNCTION
+    // By-pass to skip specific yields in FullSimYieldTable
+    #define FUNCTION antiproton_SimYieldTable_empty
+    START_FUNCTION(SimYieldTable)
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY antideuteron_SimYieldTable
@@ -559,6 +571,10 @@ START_MODULE
     #define FUNCTION antideuteron_SimYieldTable_DarkSUSY
     START_FUNCTION(SimYieldTable)
     BACKEND_REQ(dsanyield_sim, (), double, (double&,double&,int&,char*,int&,int&,int&))
+    #undef FUNCTION
+    // By-pass to skip specific yields in FullSimYieldTable
+    #define FUNCTION antideuteron_SimYieldTable_empty
+    START_FUNCTION(SimYieldTable)
     #undef FUNCTION
   #undef CAPABILITY
 
