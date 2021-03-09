@@ -188,14 +188,14 @@ namespace Gambit
     /// Conveninence function to get the gamma yield from the interpolated PPPC tables
     double PPPC_dNdE_gamma(double m, double x, std::string channel)
     {
-      static PPPC_interpolation PPPC_object("DarkBit/data/AtProduction_gammas.dat");
+      static PPPC_interpolation PPPC_object(GAMBIT_DIR "/DarkBit/data/AtProduction_gammas.dat");
       return PPPC_object(channel, m, x);
     }
 
     /// Conveninence function to get the positiron yield from the interpolated PPPC tables
     double PPPC_dNdE_positron(double m, double x, std::string channel)
     {
-      static PPPC_interpolation PPPC_object("DarkBit/data/AtProduction_positrons.dat");
+      static PPPC_interpolation PPPC_object(GAMBIT_DIR "/DarkBit/data/AtProduction_positrons.dat");
       return PPPC_object(channel, m, x);
     }
 
