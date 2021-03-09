@@ -1092,6 +1092,31 @@ namespace Gambit
       }
     }
 
+    /// Bypasses to skip specific yields in FullSimYieldTable
+    void GA_SimYieldTable_empty(SimYieldTable& result)
+    {
+      static const SimYieldTable empty_table;
+      result = empty_table;
+    }
+
+    void positron_SimYieldTable_empty(SimYieldTable& result)
+    {
+      static const SimYieldTable empty_table;
+      result = empty_table;
+    }
+
+    void antiproton_SimYieldTable_empty(SimYieldTable& result)
+    {
+      static const SimYieldTable empty_table;
+      result = empty_table;
+    }
+
+    void antideuteron_SimYieldTable_empty(SimYieldTable& result)
+    {
+      static const SimYieldTable empty_table;
+      result = empty_table;
+    }
+
     /// Electron SimYieldTable based on positron table
     void electron_SimYieldTable_from_positron_SimYieldTable(SimYieldTable& result)
     {
