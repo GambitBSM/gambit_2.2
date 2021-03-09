@@ -362,6 +362,11 @@ START_MODULE
       START_FUNCTION(double)
       DEPENDENCY(RD_oh2, double)
     #undef FUNCTION
+   #define FUNCTION RD_fraction_rescaled_LCDM
+      START_FUNCTION(double)
+      ALLOW_MODELS(LCDM, LCDM_theta)
+      DEPENDENCY(RD_oh2, double)
+    #undef FUNCTION
   #undef CAPABILITY
 
 
