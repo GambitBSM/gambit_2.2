@@ -232,9 +232,9 @@ Rules:
     function: sigmav_late_universe
 
   # Choose to use DarkSUSY yield tables for indirect detection
-  - capability: SimYieldTable
-    function: SimYieldTable_DS5
-    #function: SimYieldTable_DarkSUSY
+  - capability: GA_SimYieldTable
+    function: GA_SimYieldTable_DS5
+    #function: GA_SimYieldTable_DarkSUSY
     options:
       allow_yield_extrapolation: true
 
