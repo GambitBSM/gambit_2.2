@@ -142,11 +142,15 @@ Rules:
       print_table: false
 
   - capability: f_eff
-    function: f_eff_at_z
-    #function: f_eff_constant
+    #function: f_eff_at_z # (This is still experimental for decaying dark matter)
+    function: f_eff_constant
 
   - capability: energy_injection_spectrum
     function:   energy_injection_spectrum_ProcessCatalog
+
+  - capability: classy_parameters_EnergyInjection
+    function: set_classy_parameters_EnergyInjection_DecayingDM
+    #function: set_classy_parameters_EnergyInjection_DecayingDM_onSpot
 
   - capability: GA_Yield
     function: GA_DecayYield_General

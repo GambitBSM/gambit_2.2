@@ -150,6 +150,10 @@ Rules:
   - capability: energy_injection_spectrum
     function:   energy_injection_spectrum_ProcessCatalog
 
+  - capability: classy_parameters_EnergyInjection
+    function: set_classy_parameters_EnergyInjection_AnnihilatingDM
+    #function: set_classy_parameters_EnergyInjection_AnnihilatingDM_onSpot
+
   - capability: GA_Yield
     function: GA_AnnYield_General
 
