@@ -19,6 +19,9 @@
 #ifndef __DMEFT_hpp__
 #define __DMEFT_hpp__
 
+// Make sure that AnnihilatingDM_general is declared first
+#include "gambit/Models/models/CosmoEnergyInjection.hpp"
+
 #define MODEL DMEFT
   START_MODEL
 
@@ -29,6 +32,7 @@
   // In order to enable CMB constraints create a friendship relation
   // to the s-wave annihilation "marker" model AnnihilatingDM_general
   INTERPRET_AS_X_FUNCTION(AnnihilatingDM_general,DMEFT_to_AnnihilatingDM_general)
+  INTERPRET_AS_X_DEPENDENCY(AnnihilatingDM_general,WIMP_properties,WIMPprops)
   INTERPRET_AS_X_DEPENDENCY(AnnihilatingDM_general,sigmav,double)
   INTERPRET_AS_X_DEPENDENCY(AnnihilatingDM_general,RD_fraction,double)
 
@@ -53,15 +57,19 @@
             result.name   = "chi";
         } 
 
-        void DMEFT_to_AnnihilatingDM_general (const ModelParameters &myparams, ModelParameters &friendparams)
+        void DMEFT_to_AnnihilatingDM_general (const ModelParameters& /*myparams*/, ModelParameters &friendparams)
         {
           USE_MODEL_PIPE(AnnihilatingDM_general) // get pipe for "interpret as friend" function
           logger()<<"Running interpret_as_friend calculations for DMEFT -> AnnihilatingDM_general ..."<<EOM;
 
-          friendparams.setValue("mass", myparams["mchi"]);
-          // In AnnihilatingDM_general the parameter "sigmav" is assumed to already include (RD_fraction)^2
-          const double f2 = (*Dep::RD_fraction)*(*Dep::RD_fraction);
-          friendparams.setValue("sigmav", f2*(*Dep::sigmav));
+          const auto wimp_props = *Dep::WIMP_properties;
+          const double k = (wimp_props.sc) ? 1. : 0.5;
+          const double f = *Dep::RD_fraction;
+
+          friendparams.setValue("mass", wimp_props.mass);
+          // In AnnihilatingDM_general the parameter "sigmav" is assumed to already include
+          // (RD_fraction)^2 and the factor k
+          friendparams.setValue("sigmav", k*f*f*(*Dep::sigmav));
         }
       }
     }
