@@ -57,6 +57,7 @@ set(name "FeynRules")
 set(ver "2.3.41")
 set(dl "https://gambit.hepforge.org/downloads/archived_backends/feynrules-${ver}.tar.gz")
 set(md5 "d0a075dc8fa12d4a7ebcc966350e4365")
+set(patch "${CMAKE_SOURCE_DIR}/cmake/patch_${name}.dif")
 set(dir "${CMAKE_SOURCE_DIR}/contrib/${name}")
 set(FEYNRULES_PATH "${dir}")
 set(HAVE_FEYNRULES 1)
@@ -65,7 +66,7 @@ EXTERNALPROJECT_ADD(
     URL ${dl}
     URL_MD5 ${md5}
     UPDATE_COMMAND ""
-    PATCH_COMMAND ""
+    PATCH_COMMAND patch -p1 < ${patch}
     SOURCE_DIR ${dir}
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
@@ -78,6 +79,7 @@ set(name "SARAH")
 set(ver "4.14.0")
 set(dl "https://sarah.hepforge.org/downloads/?f=SARAH-${ver}.tar.gz")
 set(md5 "850b74625e531b93fd43a32c181c825b")
+set(patch "${CMAKE_SOURCE_DIR}/cmake/patch_${name}.dif")
 set(dir "${CMAKE_SOURCE_DIR}/contrib/${name}")
 set(SARAH_VERSION ${ver})
 set(SARAH_PATH "${dir}")
@@ -87,7 +89,7 @@ EXTERNALPROJECT_ADD(
     URL ${dl}
     URL_MD5 ${md5}
     UPDATE_COMMAND ""
-    PATCH_COMMAND ""
+    PATCH_COMMAND patch -p1 < ${patch}
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""
