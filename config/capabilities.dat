@@ -2071,14 +2071,38 @@ lnL_SI_nuclear_parameters: |
 lnL_SD_nuclear_parameters: |
    The log-likehood for the spin-dependent nuclear parameters.
 
-SimYieldTable: |
-   Table of simulated particle yields.
+FullSimYieldTable: |
+   Table of all simulated particle yields.
 
-GA_missingFinalStates: |
-   Final states that are not avaialable with tabulated spectra.
+GA_SimYieldTable: |
+   Table of simulated gamma-ray yields.
+
+electron_SimYieldTable: |
+   Table of simulated electron yields.
+
+positron_SimYieldTable: |
+   Table of simulated positron yields.
+
+antiproton_SimYieldTable: |
+   Table of simulated antiproton yields.
+
+antideuteron_SimYieldTable: |
+   Table of simulated antideuteron yields.
 
 GA_Yield: |
    Calculate the gamma-ray yield from the process catalogue.
+
+electron_Yield: |
+   Calculate the electron yield from the process catalogue.
+
+positron_Yield: |
+   Calculate the positron yield from the process catalogue.
+
+antiproton_Yield: |
+   Calculate the antiproton yield from the process catalogue.
+
+antideuteron_Yield: |
+   Calculate the antideuteron yield from the process catalogue.
 
 DM_process: |
    Returns a string based on the nature of the DM process used for indirect detection (either annihilation or decay).
@@ -2095,11 +2119,25 @@ cascadeMC_DecayTable: |
 cascadeMC_gammaSpectra: |
    Gamma-ray spectrum from cascade decays.
 
+cascadeMC_electronSpectra: |
+   Electron spectrum from cascade decays.
+
+cascadeMC_positronSpectra: |
+   Positron spectrum from cascade decays.
+
+cascadeMC_antiprotonSpectra: |
+   Anti-proton spectrum from cascade decays.
+
+cascadeMC_antideuteronSpectra: |
+   Anti-deuteron spectrum from cascade decays.
+
 cascadeMC_LoopManagement: |
    Controls the loop for the cascade decay Monte Carlo simulation.
 
-cascadeMC_InitialState: |
-   The intial state for the cascade decay chain.
+cascadeMC_InitialStates: |
+   The set of initial states for the cascade decay chain, consisting of
+   those hard process final states for which one or more spectra (gammas,
+   positrons, pbars, etc) are not available already in tabulated form.
 
 cascadeMC_EventCount: |
    Event counter for cascade decays.
@@ -2248,8 +2286,20 @@ DarkSUSY5_PointInit_LocalHalo: |
 DarkSUSY_PointInit_LocalHalo: |
    Initialises Milky Way halo model parameters in DarkSUSY6+
 
-dump_GammaSpectrum: |
+dump_gammaSpectrum: |
    Dumps gamma-ray yield into ASCII table
+
+dump_electronSpectrum: |
+   Dumps electron yield into ASCII table
+
+dump_positronSpectrum: |
+   Dumps positron yield into ASCII table
+
+dump_antiprotonSpectrum: |
+   Dumps antiproton yield into ASCII table
+
+dump_antideuteronSpectrum: |
+   Dumps antideuteron yield into ASCII table
 
 UnitTest_DarkBit: |
    Prints various DarkBit results into YAML file.
@@ -4611,6 +4661,13 @@ DarkAges_1_2_0_init: |
 
 get_energy_injection_efficiency_table: |
    Get the energy injection efficiency table from the DarkAges frontend
+
+f_eff: |
+   Effective energy injection effeciency (constant used for on-the-spot approximation)
+
+p_ann: |
+   Annihilation rate (p_ann = f_eff * f^2 * <sv>/m)
+   Unit: cm^3 s^-1 GeV^-1
 
 #----------------------------
 #  CosmoBit Models

@@ -236,11 +236,28 @@ Rules:
     function: sigmav_late_universe
 
   # Choose to use DarkSUSY yield tables for indirect detection
-  - capability: SimYieldTable
-    function: SimYieldTable_DS5
-    #function: SimYieldTable_DarkSUSY
+  - capability: GA_SimYieldTable
+    function: GA_SimYieldTable_DS5
+    #function: GA_SimYieldTable_DarkSUSY
     options:
       allow_yield_extrapolation: true
+
+  # Also need to choose which tables to use for positrons,
+  # antideuterons, and antiprotons (or opt for empty tables)
+  - capability: positron_SimYieldTable
+    function: positron_SimYieldTable_empty
+    #function: positron_SimYieldTable_DarkSUSY
+  - capability: antiproton_SimYieldTable
+    function: antiproton_SimYieldTable_empty
+    #function: antiproton_SimYieldTable_DarkSUSY
+  - capability: antideuteron_SimYieldTable
+    function: antideuteron_SimYieldTable_empty
+    #function: antideuteron_SimYieldTable_DarkSUSY
+
+  # Take the electron yields directly from the positron yields
+  # (So far it is the only option, may change in the future)
+  - capability: electron_SimYieldTable
+    function: electron_SimYieldTable_from_positron_SimYieldTable
 
   # The model is annihilating DM, not decaying
   - capability: GA_Yield

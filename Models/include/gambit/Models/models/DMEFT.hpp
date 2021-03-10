@@ -25,6 +25,13 @@
   DEFINEPARS(Lambda, C51, C52, C61, C62, C63, C64, C71, C72)
   DEFINEPARS(C73, C74, C75, C76, C77, C78, C79, C710, mchi)
   DEFINEPARS(mtrunIN)
+
+  // In order to enable CMB constraints create a friendship relation
+  // to the s-wave annihilation "marker" model AnnihilatingDM_general
+  INTERPRET_AS_X_FUNCTION(AnnihilatingDM_general,DMEFT_to_AnnihilatingDM_general)
+  INTERPRET_AS_X_DEPENDENCY(AnnihilatingDM_general,sigmav,double)
+  INTERPRET_AS_X_DEPENDENCY(AnnihilatingDM_general,RD_fraction,double)
+
   #define CAPABILITY WIMP_properties
   START_CAPABILITY
      #define FUNCTION DMEFT_WIMP_properties
@@ -45,6 +52,17 @@
             result.sc     = false;
             result.name   = "chi";
         } 
+
+        void DMEFT_to_AnnihilatingDM_general (const ModelParameters &myparams, ModelParameters &friendparams)
+        {
+          USE_MODEL_PIPE(AnnihilatingDM_general) // get pipe for "interpret as friend" function
+          logger()<<"Running interpret_as_friend calculations for DMEFT -> AnnihilatingDM_general ..."<<EOM;
+
+          friendparams.setValue("mass", myparams["mchi"]);
+          // In AnnihilatingDM_general the parameter "sigmav" is assumed to already include (RD_fraction)^2
+          const double f2 = (*Dep::RD_fraction)*(*Dep::RD_fraction);
+          friendparams.setValue("sigmav", f2*(*Dep::sigmav));
+        }
       }
     }
   }
