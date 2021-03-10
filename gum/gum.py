@@ -710,7 +710,8 @@ if args.file:
         print("Now putting the new code into GAMBIT.")
 
         # ParticleDB
-        if len(missing_parts) write_particleDB(particleDB)
+        if len(missing_parts) :
+            write_particleDB(particleDB)
 
         # Models
         m = "Models"
