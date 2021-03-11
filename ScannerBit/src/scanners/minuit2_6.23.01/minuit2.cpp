@@ -25,6 +25,7 @@
 #include <string>
 #include <vector>
 
+#include "gambit/ScannerBit/scanner_utils.hpp"
 #include "gambit/ScannerBit/scanner_plugin.hpp"
 #include "gambit/ScannerBit/scanners/minuit2/minuit2.hpp"
 #include "gambit/Utils/yaml_options.hpp"
@@ -44,7 +45,7 @@ void check_node_keys(YAML::Node node, std::vector<std::string> keys)
       const auto key = s.first.as<std::string>();
       if (std::find(keys.begin(), keys.end(), key) == keys.end())
       {
-        throw std::runtime_error("Minuit2: unexpected key = " + key);
+        Gambit::Scanner::scan_error().raise(LOCAL_INFO, "Minuit2: unexpected key = " + key);
       }
     }
   }
@@ -76,7 +77,7 @@ scanner_plugin(minuit2, version(6, 23, 01))
     const int elements = dim * (dim - 1) / 2;
     if (size > elements)
     {
-      throw std::runtime_error("Minuit2: require no. processes <= 1/2 dim (dim - 1)");
+      scan_error().raise(LOCAL_INFO, "Minuit2: require no. processes <= 1/2 dim (dim - 1)");
     }
 #endif
 
@@ -103,7 +104,8 @@ scanner_plugin(minuit2, version(6, 23, 01))
 
     if (hypercube_start_node && physical_start_node)
     {
-      throw std::runtime_error("Minuit2: start specified by unit hypercube or physical parameters");
+      std::string msg = "Minuit2: start specified by unit hypercube or physical parameters";
+      scan_error().raise(LOCAL_INFO, msg);
     }
 
     check_node_keys(physical_start_node ? physical_start_node : hypercube_start_node, names);
@@ -139,7 +141,8 @@ scanner_plugin(minuit2, version(6, 23, 01))
 
     if (hypercube_step_node && physical_step_node)
     {
-      throw std::runtime_error("Minuit2: step specified by unit hypercube or physical parameters");
+      std::string msg = "Minuit2: step specified by unit hypercube or physical parameters";
+      scan_error().raise(LOCAL_INFO, msg);
     }
 
     check_node_keys(physical_step_node ? physical_step_node : hypercube_step_node, names);
@@ -208,7 +211,8 @@ scanner_plugin(minuit2, version(6, 23, 01))
     }
     else
     {
-      throw std::runtime_error("Minuit2: Unknown algorithm: " + algorithm);
+      std::string msg = "Minuit2: Unknown algorithm: " + algorithm;
+      scan_error().raise(LOCAL_INFO, msg);
     }
 
     ROOT::Math::Minimizer* min = new ROOT::Minuit2::Minuit2Minimizer(kalgorithm);
@@ -245,7 +249,7 @@ scanner_plugin(minuit2, version(6, 23, 01))
       }
       else
       {
-        throw std::runtime_error("could not add parameter");
+        scan_error().raise(LOCAL_INFO, "could not add parameter");
       }
     }
 
@@ -276,17 +280,22 @@ scanner_plugin(minuit2, version(6, 23, 01))
       case 0:
         break;
       case 1:
-        throw std::runtime_error("Minuit2: Covar was made pos def");
+        scan_error().raise(LOCAL_INFO, "Minuit2: Covar was made pos def");
+        break;
       case 2:
-        throw std::runtime_error("Minuit2: Hesse is not valid");
+        scan_error().raise(LOCAL_INFO, "Minuit2: Hesse is not valid");
+        break;
       case 3:
-        throw std::runtime_error("Minuit2: Edm is above max");
+        scan_error().raise(LOCAL_INFO, "Minuit2: Edm is above max");
+        break;
       case 4:
-        throw std::runtime_error("Minuit2: Reached call limit");
+        scan_error().raise(LOCAL_INFO, "Minuit2: Reached call limit");
+        break;
       case 5:
-        throw std::runtime_error("Minuit2: Covar is not pos def");
+        scan_error().raise(LOCAL_INFO, "Minuit2: Covar is not pos def");
+        break;
       default:
-        throw std::runtime_error("Minuit2: Unknown error: " + std::to_string(status));
+        scan_error().raise(LOCAL_INFO, "Minuit2: Unknown error: " + std::to_string(status));
      }
 
     // manually delete the pointer
