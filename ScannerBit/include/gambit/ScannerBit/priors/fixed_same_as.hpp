@@ -89,20 +89,20 @@ namespace Gambit
 
             std::vector<double> inverse_transform(const std::unordered_map<std::string, double> &physical) const override
             {
-              const double rtol = 1e-4;
-              for (int i = 0, n = this->size(); i < n; i++)
-              {
-                  const double a = physical.at(param_names[i]);
-                  const double b = value[i];
-                  const double rdiff = std::abs(a - b) / std::max(std::abs(a), std::abs(b));
-                  if (rdiff > rtol)
-                  {
-                    throw std::runtime_error("no inverse as physical does not match fixed value");
-                  }
-              }
-              // arbitrary as every value of unit hypercube maps to the same fixed parameter
-              std::vector<double> u(this->size(), 0.5);
-              return u;
+                const double rtol = 1e-4;
+                for (int i = 0, n = this->size(); i < n; i++)
+                {
+                    const double a = physical.at(param_names[i]);
+                    const double b = value[i];
+                    const double rdiff = std::abs(a - b) / std::max(std::abs(a), std::abs(b));
+                    if (rdiff > rtol)
+                    {
+                        throw std::runtime_error("no inverse as physical does not match fixed value");
+                    }
+                }
+                // arbitrary as every value of unit hypercube maps to the same fixed parameter
+                std::vector<double> u(this->size(), 0.5);
+                return u;
             }
         };
 
@@ -179,20 +179,20 @@ namespace Gambit
 
             std::vector<double> inverse_transform(const std::unordered_map<std::string, double> &physical) const override
             {
-              const double rtol = 1e-4;
-              for (int i = 0, n = this->size(); i < n; i++)
-              {
-                  const double a = physical.at(param_names[i]);
-                  const double b = scale[i] * physical.at(name) + shift[i];
-                  const double rdiff = std::abs(a - b) / std::max(std::abs(a), std::abs(b));
-                  if (rdiff > rtol)
-                  {
-                    throw std::runtime_error("no inverse as physical does not match same as value");
-                  }
-              }
-              // arbitrary as every value of unit hypercube maps to the same fixed parameter
-              std::vector<double> u(this->size(), 0.5);
-              return u;
+                const double rtol = 1e-4;
+                for (int i = 0, n = this->size(); i < n; i++)
+                {
+                    const double a = physical.at(param_names[i]);
+                    const double b = scale[i] * physical.at(name) + shift[i];
+                    const double rdiff = std::abs(a - b) / std::max(std::abs(a), std::abs(b));
+                    if (rdiff > rtol)
+                    {
+                        throw std::runtime_error("no inverse as physical does not match same as value");
+                    }
+                }
+                // arbitrary as every value of unit hypercube maps to the same fixed parameter
+                std::vector<double> u(this->size(), 0.5);
+                return u;
             }
 
         };

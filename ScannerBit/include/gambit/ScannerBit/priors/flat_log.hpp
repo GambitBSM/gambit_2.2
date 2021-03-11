@@ -221,10 +221,10 @@ namespace Gambit
 
             std::vector<double> inverse_transform(const std::unordered_map<std::string, double> &physical) const override
             {
-              const double p = physical.at(myparameter);
-              const double x = T::limits(scale_out * p + shift_out);
-              const double u = (x - lower) / (upper - lower);
-              return {u};
+                const double p = physical.at(myparameter);
+                const double x = T::limits(scale_out * p + shift_out);
+                const double u = (x - lower) / (upper - lower);
+                return {u};
             }
 
             double operator()(const std::vector<double> &vec) const {return T::prior(vec[0]*scale+shift)*scale;}

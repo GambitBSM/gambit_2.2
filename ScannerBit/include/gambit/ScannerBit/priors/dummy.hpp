@@ -47,12 +47,12 @@ namespace Gambit
 
             std::vector<double> inverse_transform(const std::unordered_map<std::string, double> &physical) const override
             {
-              std::vector<double> u;
-              for (const auto& n : param_names)
-              {
-                u.push_back(physical.at(n));
-              }
-              return u;
+                std::vector<double> u;
+                for (const auto& n : param_names)
+                {
+                    u.push_back(physical.at(n));
+                }
+                return u;
             }
 
         };
