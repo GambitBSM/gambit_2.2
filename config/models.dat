@@ -16,6 +16,10 @@
 #  appear here. The extent of this string is
 #  indicated by indentation.
 
+trivial_nd: |
+   Trivial n-dimensional models for use with test-functions/artificial landscapes in ObjectivesBit.
+   THe parameters are labeled x1, x2, x3 ... xn.
+
 NormalDist: |
    A simple test model consisting of two parameters: the width and central value of a Gaussian distribution.
 

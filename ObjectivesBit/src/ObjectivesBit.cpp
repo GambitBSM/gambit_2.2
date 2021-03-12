@@ -128,7 +128,7 @@ namespace Gambit
                 - M_E - 20.;
     }
 
-    /** @brief Test probem 2 from https://arxiv.org/abs/1306.2144 */
+    /** @brief Test problem 2 from https://arxiv.org/abs/1306.2144 */
     void eggbox(double &loglike)
     {
       using namespace Pipes::eggbox;
@@ -170,7 +170,7 @@ namespace Gambit
       return std::max(x, y) + std::log1p(std::exp(-std::abs(x - y)));
     }
 
-    /** @brief Test probem 1 from https://arxiv.org/abs/1306.2144 */
+    /** @brief Test problem 1 from https://arxiv.org/abs/1306.2144 */
     void shells(double &loglike)
     {
       using namespace Pipes::shells;
