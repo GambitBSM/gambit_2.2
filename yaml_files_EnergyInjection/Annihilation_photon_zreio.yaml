@@ -108,6 +108,7 @@ Rules:
         lensing_verbose: 1
         distortions_verbose: 1
         output_verbose: 1
+        recombination: recfast
 
   - capability: classy_MPLike_input
     function: set_classy_input_no_MPLike
