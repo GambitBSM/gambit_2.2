@@ -43,5 +43,5 @@ Scanner:
 ObsLikes:
   - purpose:      LogLike
     capability:   gaussian
-    module:       TestFunctionBit
+    module:       ObjectivesBit
     type:         double

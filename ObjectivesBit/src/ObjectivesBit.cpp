@@ -2,7 +2,7 @@
 //   *********************************************
 ///  \file
 ///
-///  Functions of module TestFunctionBit
+///  Functions of module ObjectivesBit
 ///
 ///  Put your functions in files like this
 ///  if you wish to add observables or likelihoods
@@ -28,12 +28,12 @@
 #include <vector>
 
 #include "gambit/Elements/gambit_module_headers.hpp"
-#include "gambit/TestFunctionBit/TestFunctionBit_rollcall.hpp"
+#include "gambit/ObjectivesBit/ObjectivesBit_rollcall.hpp"
 
 
 namespace Gambit
 {
-  namespace TestFunctionBit
+  namespace ObjectivesBit
   {
     typedef Gambit::Models::safe_param_map<Gambit::safe_ptr<const double>> map;
 
@@ -293,5 +293,5 @@ namespace Gambit
       loglike = -418.982887 * n + sum;
     }
 
-  }  // namespace TestFunctionBit
+  }  // namespace ObjectivesBit
 }  // namespace Gambit

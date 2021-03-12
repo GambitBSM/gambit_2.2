@@ -2,7 +2,7 @@
 //   *********************************************
 ///  \file
 ///
-///  Rollcall header for module TestFunctionBit.
+///  Rollcall header for module ObjectivesBit.
 ///
 ///  Compile-time registration of available
 ///  observables and likelihoods, as well as their
@@ -28,10 +28,10 @@
 ///  *********************************************
 
 
-#ifndef __TestFunctionBit_rollcall_hpp__
-#define __TestFunctionBit_rollcall_hpp__
+#ifndef __ObjectivesBit_rollcall_hpp__
+#define __ObjectivesBit_rollcall_hpp__
 
-#define MODULE TestFunctionBit
+#define MODULE ObjectivesBit
 START_MODULE
 
   #define CAPABILITY gaussian
@@ -222,4 +222,4 @@ START_MODULE
 
 #undef MODULE
 
-#endif  // __TestFunctionBit_rollcall_hpp__
+#endif  // __ObjectivesBit_rollcall_hpp__
