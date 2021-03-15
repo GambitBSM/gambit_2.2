@@ -44,9 +44,9 @@ Parameters:
     C63: 0
     # axial-vector axial-vector
     C64:
-      range: [0.0, 12.56637]
-      #prior_type: double_log_flat_join
-      #ranges: [0., 0., 1e-06, 12.56637]
+      #range: [0.0, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [0., 0., 1e-06, 12.56637]
     # Dim 7 -- gluons
     C71: 0
     C72: 0
@@ -152,8 +152,8 @@ Rules:
     function: GA_AnnYield_General
 
   - capability: GA_SimYieldTable
-    #function: GA_SimYieldTable_DarkSUSY
-    function: GA_SimYieldTable_PPPC
+    function: GA_SimYieldTable_DarkSUSY
+    #function: GA_SimYieldTable_PPPC
     #function: GA_SimYieldTable_empty
 
   - capability: electron_Yield
@@ -166,8 +166,8 @@ Rules:
     function: positron_AnnYield_General
 
   - capability: positron_SimYieldTable
-    #function: positron_SimYieldTable_DarkSUSY
-    function: positron_SimYieldTable_PPPC
+    function: positron_SimYieldTable_DarkSUSY
+    #function: positron_SimYieldTable_PPPC
     #function: positron_SimYieldTable_empty
 
   - capability: antiproton_SimYieldTable
