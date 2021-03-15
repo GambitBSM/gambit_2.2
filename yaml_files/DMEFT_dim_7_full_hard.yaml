@@ -1,9 +1,9 @@
 ##########################################################################################################
 ## GAMBIT configuration file for a Diver scan of the DMEFT model
 ##
-## Constrains : (correct) relic density, gamma rays, direct detection, full LHC likelihood (profile cut-off). 
+## Constrains : relic density, gamma rays, direct detection, full LHC likelihood (hard cut-off). 
 ## 
-## 6 model parameters (mchi, Lambda, C61-64 (WCs for Dim-6 operators))
+## 16 model parameters (mchi, Lambda, C61-64 and C71-C710 (WCs for Dim-6 & Dim-7 operators))
 ## 8 nuisance parameters (mtrunIN, rho0, v0, vesc, sigmapiN, Deltas, gTs, rs2)
 ##########################################################################################################
 
@@ -29,44 +29,62 @@ Parameters:
     C52: 0.
     # Dim 6 -- qq chi chi bilinears
     # vector vector
-    C61:
-      #range: [-1, 1] # Heavily constrained by direct detection
-      prior_type: double_log_flat_join
-      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
+    C61: 0
     # axial-vector vector
-    C62: 
-      #range: [-12.56637, 12.56637]
-      prior_type: double_log_flat_join
-      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
+    C62: 0
     # vector axial-vector
-    C63: 
-      #range: [-12.56637, 12.56637]
-      prior_type: double_log_flat_join
-      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
+    C63: 0
     # axial-vector axial-vector
-    C64: 
+    C64: 0
+    # Dim 7 -- gluons
+    C71: 
       #range: [-12.56637, 12.56637]
       prior_type: double_log_flat_join
       ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
-    # Dim 7 -- gluons
-    C71: 0
-    C72: 0
-    C73: 0
-    C74: 0
+    C72: 
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
+    C73:
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
+    C74: 
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # Dim 7 -- Higgs induced bilinears
     # Scalar scalar
-    C75: 0
+    C75: 
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # Pseudoscalar scalar
-    C76: 0
+    C76: 
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # Scalar pseudoscalar
-    C77: 0
+    C77: 
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # Pseudoscalar pseudoscalar
-    C78: 0
+    C78: 
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # Dim 7 -- tensor currents
     # sigma sigma
-    C79: 0
+    C79: 
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # sigma*ig5 sigma
-    C710: 0
+    C710: 
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # Top running mass - this overrides the SM top pole mass parameter
     mtrunIN:
       range: [157.05, 168.75]
@@ -147,10 +165,6 @@ ObsLikes:
     module:     ColliderBit
     type: double
 
-  # Get details about the nuisance parameter 'a'
-  - purpose:    Observable
-    capability: DMEFT_profiled_LHC_nuisance_params
-    
   ## Nuisance parameters
   # DM Local Halo likelihoods
   - capability: lnL_rho0
@@ -172,9 +186,9 @@ ObsLikes:
     
 Rules:
 
-  # Choose to implement the relic density likelihood as a detection
+  # Choose to implement the relic density likelihood as an upper bound, not a detection
   - capability: lnL_oh2
-    function: lnL_oh2_Simple
+    function: lnL_oh2_upperlimit
     options: # Planck 2018 values
       oh2_obs: 0.120
       oh2_obserr: 0.001
@@ -274,23 +288,9 @@ Rules:
       nuisance_prof_method: 5
       nuisance_prof_verbosity: 0
 
-  # Profile over the cut-off parameter for pT/ETmiss > Lambda
+  # Hard cut-off of the pT/ETmiss spectrum for pT/ETmiss > Lambda
   - capability: AllAnalysisNumbers
-    function: DMEFT_results_profiled
-
-  - capability: DMEFT_profiled_LHC_nuisance_params
-    function: calc_DMEFT_profiled_LHC_nuisance_params
-    options:
-      # use_fixed_value_a: 1000.0  # This will switch off the profiling
-      init_values_a: [1.0, 2.0, 3.0]
-      range_a: [0.0, 4.0]
-      nuisance_prof_initstep: 0.1
-      nuisance_prof_convtol: 0.1
-      nuisance_prof_maxsteps: 15
-      nuisance_prof_convacc: 0.1
-      nuisance_prof_simplexsize: 1e-5
-      nuisance_prof_method: 6
-      nuisance_prof_verbosity: 0
+    function: DMEFT_results_cutoff
 
   # Use the WIMP properties structure to get WIMP mass etc.
   - capability: mwimp
@@ -332,7 +332,7 @@ Printer:
 
   printer: hdf5
   options:
-    output_file: "DMEFT_dim_6_full_prof_RF_1.hdf5"
+    output_file: "DMEFT_dim_6_7_full_hard.hdf5"
     delete_file_on_restart: false
     buffer_length: 100
     group: "/DMEFT"
@@ -348,7 +348,7 @@ Scanner:
       like: LogLike
       NP: 50000
       verbosity: 1
-      convthresh: 3E-5
+      convthresh: 1E-5
       lambdajDE: false
 
 KeyValues:
@@ -360,10 +360,9 @@ KeyValues:
     model_invalid_for_lnlike_below: -5e5
     model_invalid_for_lnlike_below_alt: -1e5
     print_invalid_points: false
-    disable_print_for_lnlike_below: -113
     debug: false
 
-  default_output_path: "runs/DMEFT/dim_6_full_prof_RF_1/"
+  default_output_path: "runs/DMEFT/dim_6_7_full_hard/"
 
   debug: false
   print_timing_data: false
