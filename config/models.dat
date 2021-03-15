@@ -29,15 +29,15 @@ trivial_3d: |
    The parameters are labeled x1, x2, x3
 
 trivial_4d: |
-   Trivial 2d model for use with test-functions/artificial landscapes in ObjectivesBit.
+   Trivial 4d model for use with test-functions/artificial landscapes in ObjectivesBit.
    The parameters are labeled x1, x2, x3, x4.
 
 trivial_5d: |
-   Trivial 2d model for use with test-functions/artificial landscapes in ObjectivesBit.
+   Trivial 5d model for use with test-functions/artificial landscapes in ObjectivesBit.
    The parameters are labeled x1, x2, ..., x5.
 
 trivial_7d: |
-   Trivial 2d model for use with test-functions/artificial landscapes in ObjectivesBit.
+   Trivial 7d model for use with test-functions/artificial landscapes in ObjectivesBit.
    The parameters are labeled x1, x2, ..., x7.
 
 trivial_10d: |
