@@ -5,8 +5,6 @@
 ## Parameters:
 ##   nuclear_params_ChPT_sigmapiN: !import include/nuclear_params_ChPT_sigmapiN_scan_DMEFT.yaml
 ##
-## This file runs a (3-sigma range) scan over the values of sigmapiN, Deltas, gTs and rs2.
-##
 ## Default values from Direct v2.2.0: https://github.com/DirectDM/directdm-py/blob/master/directdm/num/num_input.py
 ##
 ## All values in GeV where units apply.

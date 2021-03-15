@@ -208,7 +208,7 @@ Rules:
     options:
       allow_yield_extrapolation: true
 
-   # Also need to choose which tables to use for positrons,
+  # Also need to choose which tables to use for positrons,
   # antideuterons, and antiprotons (or opt for empty tables)
   - capability: positron_SimYieldTable
     #function: positron_SimYieldTable_empty
