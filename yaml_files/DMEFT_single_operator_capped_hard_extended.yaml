@@ -308,7 +308,7 @@ Printer:
 
   printer: hdf5
   options:
-    output_file: "DMEFT_dim_6_capped_hard.hdf5"
+    output_file: "DMEFT_single_operator_capped_hard_extended.hdf5"
     delete_file_on_restart: false
     buffer_length: 100
     group: "/DMEFT"
@@ -338,7 +338,7 @@ KeyValues:
     print_invalid_points: false
     debug: false
 
-  default_output_path: "runs/DMEFT/dim_6_capped_hard/"
+  default_output_path: "runs/DMEFT/single_operator_capped_hard_extended/"
 
   debug: false
   print_timing_data: false

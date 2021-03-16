@@ -3,7 +3,7 @@
 ##
 ## Constrains : relic density, gamma rays, direct detection, full LHC likelihood (hard cut-off). 
 ## 
-## 16 model parameters (mchi, Lambda, C61-64 and C71-C710 (WCs for Dim-6 & Dim-7 operators))
+## 12 model parameters (mchi, Lambda and C71-C710 (WCs for Dim-7 operators))
 ## 8 nuisance parameters (mtrunIN, rho0, v0, vesc, sigmapiN, Deltas, gTs, rs2)
 ##########################################################################################################
 
@@ -334,7 +334,7 @@ Printer:
 
   printer: hdf5
   options:
-    output_file: "DMEFT_dim_6_7_full_hard.hdf5"
+    output_file: "DMEFT_dim_7_full_hard.hdf5"
     delete_file_on_restart: false
     buffer_length: 100
     group: "/DMEFT"
@@ -364,7 +364,7 @@ KeyValues:
     print_invalid_points: false
     debug: false
 
-  default_output_path: "runs/DMEFT/dim_6_7_full_hard/"
+  default_output_path: "runs/DMEFT/dim_7_full_hard/"
 
   debug: false
   print_timing_data: false
