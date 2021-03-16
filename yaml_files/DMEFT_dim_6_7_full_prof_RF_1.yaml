@@ -212,7 +212,7 @@ Rules:
 
   # Choose to rescale signals in direct and indirect detection by the relic density fraction
   - capability: RD_fraction
-    function: RD_fraction_rescaled
+    function: RD_fraction_leq_one
     options: # Planck 2018 values
       oh2_obs: 0.120
 
