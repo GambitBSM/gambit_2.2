@@ -95,7 +95,11 @@ Building GAMBIT
 
 The basic build instructions are below.
 
-Note that cmake will fail to find some dependencies on some systems without guidance. More information is provided in the Core paper. For a list of commonly used cmake options, see the file CMAKE_FLAGS.md. Configuration examples for specific computing clusters are available via gambit.hepforge.org.
+Note that cmake will fail to find some dependencies on some systems without guidance. If you encounter problems configuring or building GAMBIT, have a look in BUILD_OPTIONS.md for a list of commonly used build options. 
+
+More information about the GAMBIT cmake system is provided in the Core paper. Configuration examples for specific computing clusters are available via gambit.hepforge.org.
+
+
 
 Assuming that you have retrieved the git repository or the tarball and unpacked it:
 
