@@ -8,7 +8,7 @@
 #include "gambit/ColliderBit/ATLASEfficiencies.hpp"
 #include "gambit/ColliderBit/mt2_bisect.h"
 
-// #define CHECK_CUTFLOW
+//#define CHECK_CUTFLOW
 
 using namespace std;
 
@@ -62,6 +62,7 @@ namespace Gambit
             {"SR2bInc140", EventCounter("SR2bInc140")},
             {"SR2bInc160", EventCounter("SR2bInc160")},
             {"SR2bInc180", EventCounter("SR2bInc180")},
+            {"SR2bInc200", EventCounter("SR2bInc200")},
             {"SR2bInc220", EventCounter("SR2bInc220")},
         };
 
@@ -81,6 +82,7 @@ namespace Gambit
             #ifdef CHECK_CUTFLOW
                 // Book cutflows
                 _cutflows.addCutflow("SR2b",{"no cut",
+                                             "2 leptons",
                                              "2 signal leptons",
                                              "pT(l1) > 25, pT(l2) > 20",
                                              "trigger",
@@ -152,6 +154,7 @@ namespace Gambit
             ATLAS::applyMuonEffR2(baselineMuons);
 
             // AK: Is "Medium" identification included in applyMuonEffR2 efficiency?
+            // TG: No, and it is also missing from the ATLAS efficiencies, but it's generally over 99% effieciency
 
             // Jets
             // 
@@ -201,6 +204,23 @@ namespace Gambit
             }
 
 
+            // Overlap removal
+            // 1) Remove muons with 0.01 of an electron, mimics shared tracks
+            removeOverlap(baselineMuons, baselineElectrons, 0.01);
+            // 2) Remove non-b-jets within DeltaR = 0.2 of electron
+            removeOverlap(baselineNonBJets, baselineElectrons, 0.2);
+            // 3) Also remove b-jets within DeltaR = 0.2 of electron *if* electron has pT > 100
+            removeOverlap(baselineBJets, baselineElectronsPTgt100, 0.2);
+            // 4) If any lepton has Delta R < min(0.4, 0.04 + 10/pT(l)) with a jet, remove the lepton.
+            auto lambda = [](double lepton_pT) { return std::min(0.4, 0.04 + 10./(lepton_pT) ); };
+            removeOverlap(baselineElectrons, baselineNonBJets, lambda);
+            removeOverlap(baselineElectrons, baselineBJets, lambda);
+            removeOverlap(baselineMuons, baselineNonBJets, lambda);
+            removeOverlap(baselineMuons, baselineBJets, lambda);
+
+            int n_baseline_leptons = baselineElectrons.size();
+            n_baseline_leptons += baselineMuons.size();
+
             // Scalar sum of the transverse momenta from all the reconstructed hard objects
             // Needed for calculating ETmiss significance later
             double HT = 0.0;
@@ -208,18 +228,6 @@ namespace Gambit
             for (const HEPUtils::Particle* p : event->photons()) HT += p->pT();
             for (const HEPUtils::Particle* e : baselineElectrons) HT += e->pT();
             for (const HEPUtils::Particle* mu : baselineMuons) HT += mu->pT();
-
-
-            // Overlap removal
-            // 1) Remove non-b-jets within DeltaR = 0.2 of electron
-            removeOverlap(baselineNonBJets, baselineElectrons, 0.2);
-            // 2) Also remove b-jets within DeltaR = 0.2 of electron *if* electron has pT > 100 
-            removeOverlap(baselineBJets, baselineElectronsPTgt100, 0.2);
-            // 3) If any lepton has Delta R < min(0.4, 0.04 + 10/pT(l)) with a jet, remove the lepton.
-            auto lambda = [](double lepton_pT) { return std::min(0.4, 0.04 + 10./(lepton_pT) ); };
-            removeOverlap(baselineElectrons, baselineJets, lambda);
-            removeOverlap(baselineMuons, baselineJets, lambda);
-
 
             // 
             // Signal objects
@@ -268,6 +276,7 @@ namespace Gambit
             // ----- Two-body SRs (SR2b) -----
 
             bool SR2b_2leptons      = false;
+            bool SR2b_2signalleptons= false;
             bool SR2b_pTl1_pTl2     = false;
 
             bool SR2b_trigger       = false;
@@ -303,7 +312,10 @@ namespace Gambit
             while(true)
             {
                 // Require exactly 2 leptons
-                if (signalLeptons.size() == 2) { SR2b_2leptons = true; }
+                if (n_baseline_leptons == 2) { SR2b_2leptons = true; }
+
+                // Require exactly 2 signal leptons
+                if (signalLeptons.size() == 2) { SR2b_2signalleptons = true; }
                 else break;
 
                 // Require pT > 25 GeV and pT > 20 GeV for the two leptons
@@ -352,7 +364,7 @@ namespace Gambit
 
                 // Require ETmiss significance > 12
                 double met_sig = met / sqrt(HT);
-                if (met_sig > 12) { SR2b_ETmiss_sig = true; }
+                if (met_sig > 12.) { SR2b_ETmiss_sig = true; }
                 else break;
 
                 // Require mT2 > 110 GeV
@@ -391,7 +403,8 @@ namespace Gambit
 
             // Fill cutflow
             #ifdef CHECK_CUTFLOW
-                if (SR2b_2leptons) _cutflows["SR2b"].fillnext(w);              // "2 signal leptons"
+                if (SR2b_2leptons) _cutflows["SR2b"].fillnext(w);              // "2 leptons"
+                if (SR2b_2signalleptons) _cutflows["SR2b"].fillnext(w);        // "2 signal leptons"
                 if (SR2b_pTl1_pTl2) _cutflows["SR2b"].fillnext(w);             // "pT(l1) > 25, pT(l2) > 20"
                 if (SR2b_trigger) _cutflows["SR2b"].fillnext(w);               // "trigger"
                 if (SR2b_OS) _cutflows["SR2b"].fillnext(w);                    // "OS leptons"
@@ -405,7 +418,7 @@ namespace Gambit
 
 
             // Fill SR counters
-            if (SR2b_2leptons && SR2b_pTl1_pTl2 && SR2b_trigger && SR2b_OS && SR2b_mll && (SR2b_SF_mll_req || SR2b_DF)
+            if (SR2b_2leptons && SR2b_2signalleptons && SR2b_pTl1_pTl2 && SR2b_trigger && SR2b_OS && SR2b_mll && (SR2b_SF_mll_req || SR2b_DF)
                 && SR2b_nbjets && SR2b_dphiboost && SR2b_ETmiss_sig && SR2b_mT2)
             {
                 // Inclusive bins
@@ -480,7 +493,7 @@ namespace Gambit
 
             #ifdef CHECK_CUTFLOW
                 // Cutflow printout
-                _cutflows["SR2b"].normalize( (37499. / 139.) * 139., 0);
+                _cutflows["SR2b"].normalize(37499., 0);
                 cout << "\nCUTFLOWS:\n" << _cutflows << endl;
                 cout << "\nSRCOUNTS:\n";
                 // for (double x : _srnums) cout << x << "  ";
@@ -525,6 +538,17 @@ namespace Gambit
             add_result(SignalRegionData(_counters.at("SR2bInc180"), 13., { 15.7, 1.7}));
             add_result(SignalRegionData(_counters.at("SR2bInc200"), 10., { 11.3, 1.7}));
             add_result(SignalRegionData(_counters.at("SR2bInc220"),  8., {  8.0, 1.4}));
+
+            #ifdef CHECK_CUTFLOW
+                // Cutflow printout
+                _cutflows["SR2b"].normalize(37499., 0);
+                cout << "\nCUTFLOWS:\n" << _cutflows << endl;
+                cout << "\nSRCOUNTS:\n";
+                // for (double x : _srnums) cout << x << "  ";
+                for (auto& pair : _counters) cout << pair.second.weight_sum() << "  ";
+                cout << "\n" << endl;
+            #endif
+ 
         }
 
     };
@@ -562,6 +586,17 @@ namespace Gambit
             add_result(SignalRegionData(_counters.at("SR2bDF160"),  1., { 2.83, 0.45}));
             add_result(SignalRegionData(_counters.at("SR2bDF180"),  1., { 3.25, 0.45}));
             add_result(SignalRegionData(_counters.at("SR2bDF220"),  3., { 3.11, 0.67}));
+
+            #ifdef CHECK_CUTFLOW
+                // Cutflow printout
+                _cutflows["SR2b"].normalize(37499., 0);
+                cout << "\nCUTFLOWS:\n" << _cutflows << endl;
+                cout << "\nSRCOUNTS:\n";
+                // for (double x : _srnums) cout << x << "  ";
+                for (auto& pair : _counters) cout << pair.second.weight_sum() << "  ";
+                cout << "\n" << endl;
+            #endif
+ 
         }
 
     };
