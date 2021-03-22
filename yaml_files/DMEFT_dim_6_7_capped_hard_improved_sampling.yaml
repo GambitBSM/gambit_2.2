@@ -1,9 +1,9 @@
 ##########################################################################################################
 ## GAMBIT configuration file for a Diver scan of the DMEFT model
 ##
-## Constrains : relic density, gamma rays, direct detection, full LHC likelihood (profile cut-off). 
+## Constrains : relic density, gamma rays, direct detection, capped LHC likelihood (hard cut-off). 
 ## 
-## 6 model parameters (mchi, Lambda, C61-64 (WCs for Dim-6 operators))
+## 16 model parameters (mchi, Lambda, C61-64 and C71-C710 (WCs for Dim-6 & Dim-7 operators))
 ## 8 nuisance parameters (mtrunIN, rho0, v0, vesc, sigmapiN, Deltas, gTs, rs2)
 ##########################################################################################################
 
@@ -30,43 +30,73 @@ Parameters:
     # Dim 6 -- qq chi chi bilinears
     # vector vector
     C61:
-      range: [-1, 1] # Heavily constrained by direct detection
-      #prior_type: double_log_flat_join
-      #ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
+      #range: [-1, 1] # Heavily constrained by direct detection
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # axial-vector vector
     C62: 
-      range: [-12.56637, 12.56637]
-      #prior_type: double_log_flat_join
-      #ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # vector axial-vector
     C63: 
-      range: [-12.56637, 12.56637]
-      #prior_type: double_log_flat_join
-      #ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # axial-vector axial-vector
     C64: 
-      range: [-12.56637, 12.56637]
-      #prior_type: double_log_flat_join
-      #ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # Dim 7 -- gluons
-    C71: 0
-    C72: 0
-    C73: 0
-    C74: 0
+    C71: 
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
+    C72: 
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
+    C73:
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
+    C74: 
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # Dim 7 -- Higgs induced bilinears
     # Scalar scalar
-    C75: 0
+    C75: 
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # Pseudoscalar scalar
-    C76: 0
+    C76: 
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # Scalar pseudoscalar
-    C77: 0
+    C77: 
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # Pseudoscalar pseudoscalar
-    C78: 0
+    C78: 
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # Dim 7 -- tensor currents
     # sigma sigma
-    C79: 0
+    C79: 
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # sigma*ig5 sigma
-    C710: 0
+    C710: 
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # Top running mass - this overrides the SM top pole mass parameter
     mtrunIN:
       range: [157.05, 168.75]
@@ -147,10 +177,6 @@ ObsLikes:
     module:     ColliderBit
     type: double
 
-  # Get details about the nuisance parameter 'a'
-  - purpose:    Observable
-    capability: DMEFT_profiled_LHC_nuisance_params
-    
   ## Nuisance parameters
   # DM Local Halo likelihoods
   - capability: lnL_rho0
@@ -183,6 +209,8 @@ Rules:
   # Choose to rescale signals in direct and indirect detection by the relic density fraction
   - capability: RD_fraction
     function: RD_fraction_leq_one
+    options: # Planck 2018 values
+      oh2_obs: 0.120
 
   # Use DarkSUSY directly , MicrOmegas or the DarkBit native calculator (based on the DarkSUSY Boltzmann solver) for the relic density?
   # Consult the DarkBit manual for the required options in each case
@@ -207,22 +235,22 @@ Rules:
 
   # Choose to use DarkSUSY yield tables for indirect detection
   - capability: GA_SimYieldTable
-    function: GA_SimYieldTable_DS5
-    #function: GA_SimYieldTable_DarkSUSY
+    #function: GA_SimYieldTable_DS5
+    function: GA_SimYieldTable_DarkSUSY
     options:
       allow_yield_extrapolation: true
 
   # Also need to choose which tables to use for positrons,
   # antideuterons, and antiprotons (or opt for empty tables)
   - capability: positron_SimYieldTable
-    function: positron_SimYieldTable_empty
-    #function: positron_SimYieldTable_DarkSUSY
+    #function: positron_SimYieldTable_empty
+    function: positron_SimYieldTable_DarkSUSY
   - capability: antiproton_SimYieldTable
-    function: antiproton_SimYieldTable_empty
-    #function: antiproton_SimYieldTable_DarkSUSY
+    #function: antiproton_SimYieldTable_empty
+    function: antiproton_SimYieldTable_DarkSUSY
   - capability: antideuteron_SimYieldTable
-    function: antideuteron_SimYieldTable_empty
-    #function: antideuteron_SimYieldTable_DarkSUSY
+    #function: antideuteron_SimYieldTable_empty
+    function: antideuteron_SimYieldTable_DarkSUSY
 
   # Take the electron yields directly from the positron yields
   # (So far it is the only option, may change in the future)
@@ -252,7 +280,7 @@ Rules:
     
   - capability: LHC_Combined_LogLike
     options:
-      cap_loglike: false
+      cap_loglike: true
       skip_analyses:
         - CMS_13TeV_MONOJET_36invfb_interpolated_nocovar
 
@@ -274,23 +302,9 @@ Rules:
       nuisance_prof_method: 5
       nuisance_prof_verbosity: 0
 
-  # Profile over the cut-off parameter for pT/ETmiss > Lambda
+  # Hard cut-off of the pT/ETmiss spectrum for pT/ETmiss > Lambda
   - capability: AllAnalysisNumbers
-    function: DMEFT_results_profiled
-
-  - capability: DMEFT_profiled_LHC_nuisance_params
-    function: calc_DMEFT_profiled_LHC_nuisance_params
-    options:
-      # use_fixed_value_a: 1000.0  # This will switch off the profiling
-      init_values_a: [1.0, 2.0, 3.0]
-      range_a: [0.0, 4.0]
-      nuisance_prof_initstep: 0.1
-      nuisance_prof_convtol: 0.1
-      nuisance_prof_maxsteps: 15
-      nuisance_prof_convacc: 0.1
-      nuisance_prof_simplexsize: 1e-5
-      nuisance_prof_method: 6
-      nuisance_prof_verbosity: 0
+    function: DMEFT_results_cutoff
 
   # Use the WIMP properties structure to get WIMP mass etc.
   - capability: mwimp
@@ -332,16 +346,22 @@ Printer:
 
   printer: hdf5
   options:
-    output_file: "DMEFT_dim_6_full_prof_flat.hdf5"
+    output_file: "DMEFT_dim_6_7_capped_hard_improved_sampling.hdf5"
     delete_file_on_restart: false
     buffer_length: 100
     group: "/DMEFT"
 
 Scanner:
 
-  use_scanner: diver
+  use_scanner: multinest
 
   scanners:
+
+    multinest:
+      plugin: multinest
+      like:  LogLike
+      nlive: 20000
+      tol: 0.0001
 
     diver:
       plugin: diver
@@ -362,7 +382,21 @@ KeyValues:
     print_invalid_points: false
     debug: false
 
-  default_output_path: "runs/DMEFT/dim_6_full_prof_flat/"
+    use_lnlike_modifier: gaussian
+    lnlike_modifiers:
+      gaussian:
+        mu: -106.548908989 # TODO: Use value mu = <LogLike of best-fit point from dim_6_7_capped_hard scan> - 3.1
+        sigma: 0.5
+        # use_limit: lower
+        use_delta_lnlike: false
+      gaussian_plateau:
+        mu_dn: -3.2
+        sigma_dn: 0.5
+        mu_up: -3.0
+        sigma_up: 3.0
+        use_delta_lnlike: false
+
+  default_output_path: "runs/DMEFT/dim_6_7_capped_hard_improved_sampling/"
 
   debug: false
   print_timing_data: false

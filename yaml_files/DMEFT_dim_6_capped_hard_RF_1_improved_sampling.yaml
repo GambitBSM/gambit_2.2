@@ -1,7 +1,7 @@
 ##########################################################################################################
 ## GAMBIT configuration file for a Diver scan of the DMEFT model
 ##
-## Constrains : relic density, gamma rays, direct detection, capped LHC likelihood (hard cut-off). 
+## Constrains : (correct) relic density, gamma rays, direct detection, capped LHC likelihood (hard cut-off). 
 ## 
 ## 6 model parameters (mchi, Lambda, C61-64 (WCs for Dim-6 operators))
 ## 8 nuisance parameters (mtrunIN, rho0, v0, vesc, sigmapiN, Deltas, gTs, rs2)
@@ -30,24 +30,24 @@ Parameters:
     # Dim 6 -- qq chi chi bilinears
     # vector vector
     C61:
-      range: [-1, 1] # Heavily constrained by direct detection
-      #prior_type: double_log_flat_join
-      #ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
+      #range: [-1, 1] # Heavily constrained by direct detection
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # axial-vector vector
     C62: 
-      range: [-12.56637, 12.56637]
-      #prior_type: double_log_flat_join
-      #ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # vector axial-vector
     C63: 
-      range: [-12.56637, 12.56637]
-      #prior_type: double_log_flat_join
-      #ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # axial-vector axial-vector
     C64: 
-      range: [-12.56637, 12.56637]
-      #prior_type: double_log_flat_join
-      #ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
+      #range: [-12.56637, 12.56637]
+      prior_type: double_log_flat_join
+      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # Dim 7 -- gluons
     C71: 0
     C72: 0
@@ -134,6 +134,9 @@ ObsLikes:
   - capability: DarkSide_50_LogLikelihood
     purpose:    LogLike
 
+  - capability: LZ_Signal
+    purpose:    Observable
+
   # Indirect detection
   - capability: lnL_FermiLATdwarfs
     purpose:    LogLike
@@ -168,9 +171,9 @@ ObsLikes:
     
 Rules:
 
-  # Choose to implement the relic density likelihood as an upper bound, not a detection
+  # Choose to implement the relic density likelihood as a detection
   - capability: lnL_oh2
-    function: lnL_oh2_upperlimit
+    function: lnL_oh2_Simple
     options: # Planck 2018 values
       oh2_obs: 0.120
       oh2_obserr: 0.001
@@ -179,6 +182,8 @@ Rules:
   # Choose to rescale signals in direct and indirect detection by the relic density fraction
   - capability: RD_fraction
     function: RD_fraction_leq_one
+    options: # Planck 2018 values
+      oh2_obs: 0.120
 
   # Use DarkSUSY directly , MicrOmegas or the DarkBit native calculator (based on the DarkSUSY Boltzmann solver) for the relic density?
   # Consult the DarkBit manual for the required options in each case
@@ -203,31 +208,31 @@ Rules:
 
   # Choose to use DarkSUSY yield tables for indirect detection
   - capability: GA_SimYieldTable
-    function: GA_SimYieldTable_DS5
-    #function: GA_SimYieldTable_DarkSUSY
+    #function: GA_SimYieldTable_DS5
+    function: GA_SimYieldTable_DarkSUSY
     options:
       allow_yield_extrapolation: true
-
-  # The model is annihilating DM, not decaying
-  - capability: GA_Yield
-    function: GA_AnnYield_General
 
   # Also need to choose which tables to use for positrons,
   # antideuterons, and antiprotons (or opt for empty tables)
   - capability: positron_SimYieldTable
-    function: positron_SimYieldTable_empty
-    #function: positron_SimYieldTable_DarkSUSY
+    #function: positron_SimYieldTable_empty
+    function: positron_SimYieldTable_DarkSUSY
   - capability: antiproton_SimYieldTable
-    function: antiproton_SimYieldTable_empty
-    #function: antiproton_SimYieldTable_DarkSUSY
+    #function: antiproton_SimYieldTable_empty
+    function: antiproton_SimYieldTable_DarkSUSY
   - capability: antideuteron_SimYieldTable
-    function: antideuteron_SimYieldTable_empty
-    #function: antideuteron_SimYieldTable_DarkSUSY
+    #function: antideuteron_SimYieldTable_empty
+    function: antideuteron_SimYieldTable_DarkSUSY
 
   # Take the electron yields directly from the positron yields
   # (So far it is the only option, may change in the future)
   - capability: electron_SimYieldTable
     function: electron_SimYieldTable_from_positron_SimYieldTable
+
+  # The model is annihilating DM, not decaying
+  - capability: GA_Yield
+    function: GA_AnnYield_General
 
   # Choose to get decay rates from DecayBit proper, not an SLHA file
   - capability: decay_rates
@@ -314,16 +319,22 @@ Printer:
 
   printer: hdf5
   options:
-    output_file: "DMEFT_dim_6_capped_hard_flat.hdf5"
+    output_file: "DMEFT_dim_6_capped_hard_RF_1_improved_sampling.hdf5"
     delete_file_on_restart: false
     buffer_length: 100
     group: "/DMEFT"
 
 Scanner:
 
-  use_scanner: diver
+  use_scanner: multinest
 
   scanners:
+
+    multinest:
+      plugin: multinest
+      like:  LogLike
+      nlive: 20000
+      tol: 0.0001
 
     diver:
       plugin: diver
@@ -344,7 +355,21 @@ KeyValues:
     print_invalid_points: false
     debug: false
 
-  default_output_path: "runs/DMEFT/dim_6_capped_hard_flat/"
+    use_lnlike_modifier: gaussian
+    lnlike_modifiers:
+      gaussian:
+        mu: -107.4666203292 # TODO: Use value mu = <LogLike of best-fit point from dim_6_capped_hard_RF_1 scan> - 3.1
+        sigma: 0.5
+        # use_limit: lower
+        use_delta_lnlike: false
+      gaussian_plateau:
+        mu_dn: -3.2
+        sigma_dn: 0.5
+        mu_up: -3.0
+        sigma_up: 3.0
+        use_delta_lnlike: false
+
+  default_output_path: "runs/DMEFT/dim_6_capped_hard_RF_1_improved_sampling/"
 
   debug: false
   print_timing_data: false

@@ -3,7 +3,7 @@
 ##
 ## Constrains : relic density, gamma rays, direct detection, full LHC likelihood (hard cut-off). 
 ## 
-## 16 model parameters (mchi, Lambda, C61-64 and C71-C710 (WCs for Dim-6 & Dim-7 operators))
+## 12 model parameters (mchi, Lambda and C71-C710 (WCs for Dim-7 operators))
 ## 8 nuisance parameters (mtrunIN, rho0, v0, vesc, sigmapiN, Deltas, gTs, rs2)
 ##########################################################################################################
 
@@ -197,6 +197,8 @@ Rules:
   # Choose to rescale signals in direct and indirect detection by the relic density fraction
   - capability: RD_fraction
     function: RD_fraction_leq_one
+    options: # Planck 2018 values
+      oh2_obs: 0.120
 
   # Use DarkSUSY directly , MicrOmegas or the DarkBit native calculator (based on the DarkSUSY Boltzmann solver) for the relic density?
   # Consult the DarkBit manual for the required options in each case
@@ -221,22 +223,22 @@ Rules:
 
   # Choose to use DarkSUSY yield tables for indirect detection
   - capability: GA_SimYieldTable
-    function: GA_SimYieldTable_DS5
-    #function: GA_SimYieldTable_DarkSUSY
+    #function: GA_SimYieldTable_DS5
+    function: GA_SimYieldTable_DarkSUSY
     options:
       allow_yield_extrapolation: true
 
   # Also need to choose which tables to use for positrons,
   # antideuterons, and antiprotons (or opt for empty tables)
   - capability: positron_SimYieldTable
-    function: positron_SimYieldTable_empty
-    #function: positron_SimYieldTable_DarkSUSY
+    #function: positron_SimYieldTable_empty
+    function: positron_SimYieldTable_DarkSUSY
   - capability: antiproton_SimYieldTable
-    function: antiproton_SimYieldTable_empty
-    #function: antiproton_SimYieldTable_DarkSUSY
+    #function: antiproton_SimYieldTable_empty
+    function: antiproton_SimYieldTable_DarkSUSY
   - capability: antideuteron_SimYieldTable
-    function: antideuteron_SimYieldTable_empty
-    #function: antideuteron_SimYieldTable_DarkSUSY
+    #function: antideuteron_SimYieldTable_empty
+    function: antideuteron_SimYieldTable_DarkSUSY
 
   # Take the electron yields directly from the positron yields
   # (So far it is the only option, may change in the future)
@@ -332,7 +334,7 @@ Printer:
 
   printer: hdf5
   options:
-    output_file: "DMEFT_dim_6_7_full_hard.hdf5"
+    output_file: "DMEFT_dim_7_full_hard.hdf5"
     delete_file_on_restart: false
     buffer_length: 100
     group: "/DMEFT"
@@ -362,7 +364,7 @@ KeyValues:
     print_invalid_points: false
     debug: false
 
-  default_output_path: "runs/DMEFT/dim_6_7_full_hard/"
+  default_output_path: "runs/DMEFT/dim_7_full_hard/"
 
   debug: false
   print_timing_data: false

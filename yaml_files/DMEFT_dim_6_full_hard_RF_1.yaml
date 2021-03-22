@@ -179,6 +179,8 @@ Rules:
   # Choose to rescale signals in direct and indirect detection by the relic density fraction
   - capability: RD_fraction
     function: RD_fraction_leq_one
+    options: # Planck 2018 values
+      oh2_obs: 0.120
 
   # Use DarkSUSY directly , MicrOmegas or the DarkBit native calculator (based on the DarkSUSY Boltzmann solver) for the relic density?
   # Consult the DarkBit manual for the required options in each case
@@ -203,22 +205,22 @@ Rules:
 
   # Choose to use DarkSUSY yield tables for indirect detection
   - capability: GA_SimYieldTable
-    function: GA_SimYieldTable_DS5
-    #function: GA_SimYieldTable_DarkSUSY
+    #function: GA_SimYieldTable_DS5
+    function: GA_SimYieldTable_DarkSUSY
     options:
       allow_yield_extrapolation: true
 
-   # Also need to choose which tables to use for positrons,
+  # Also need to choose which tables to use for positrons,
   # antideuterons, and antiprotons (or opt for empty tables)
   - capability: positron_SimYieldTable
-    function: positron_SimYieldTable_empty
-    #function: positron_SimYieldTable_DarkSUSY
+    #function: positron_SimYieldTable_empty
+    function: positron_SimYieldTable_DarkSUSY
   - capability: antiproton_SimYieldTable
-    function: antiproton_SimYieldTable_empty
-    #function: antiproton_SimYieldTable_DarkSUSY
+    #function: antiproton_SimYieldTable_empty
+    function: antiproton_SimYieldTable_DarkSUSY
   - capability: antideuteron_SimYieldTable
-    function: antideuteron_SimYieldTable_empty
-    #function: antideuteron_SimYieldTable_DarkSUSY
+    #function: antideuteron_SimYieldTable_empty
+    function: antideuteron_SimYieldTable_DarkSUSY
 
   # Take the electron yields directly from the positron yields
   # (So far it is the only option, may change in the future)
