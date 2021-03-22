@@ -18,8 +18,8 @@
 
 #define BACKENDNAME CaptnGeneral
 #define BACKENDLANG FORTRAN
-#define VERSION 2.0
-#define SAFE_VERSION 2_0
+#define VERSION 2.1
+#define SAFE_VERSION 2_1
 
 // Load the library
 LOAD_LIBRARY
