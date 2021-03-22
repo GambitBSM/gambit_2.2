@@ -44,12 +44,6 @@ namespace Gambit
     namespace CosmoBit_utils
     {
 
-      // set value of Neff that is assumed by default. 
-      // Note: the reason why it's not fixed here, is that 
-      // the SM value is also needed in the CosmoBit type 'SM_time_evo'
-      // where we don't have access to the result of a capability
-      double set_Neff_SM_value();
-
       // fast interpolation for grids defined on equally-spaced log space
       class fast_interpolation {
         private:

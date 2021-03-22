@@ -212,7 +212,7 @@ namespace Gambit
 
       std::valarray<double> t_grid(grid_size), T_evo(grid_size), Tnu_grid(grid_size), na_grid(grid_size), injection_grid(grid_size); // arrays containing time dependence of variables
 
-      SM_time_evo SM(t0,tf,grid_size);  // set time evolution of SM
+      SM_time_evo SM(t0,tf,grid_size,3.045);  // set time evolution of SM
       t_grid = SM.get_t_grid();         // has to be updated when solving the differential equation
       T_evo = SM.get_T_evo();
 

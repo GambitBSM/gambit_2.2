@@ -77,7 +77,7 @@ namespace Gambit
         For times after CMB release you can get these values from the class background structure.
      */
       public:
-        SM_time_evo(double t0, double tf, double grid_size);
+        SM_time_evo(double t0, double tf, double grid_size, double Neff_SM);
 
         // SM photon temperature (keV) as a function of time (seconds)
         // T_g [keV] = T_cmb [keV] / sqrt(2*H0*(Omega_r0)^0.5

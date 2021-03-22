@@ -43,7 +43,7 @@ namespace Gambit
   namespace CosmoBit
   {
 
-    SM_time_evo::SM_time_evo(double t0, double tf, double N_t) : grid_size(N_t), t_grid(N_t), T_evo(N_t), Tnu_evo(N_t), H_evo(N_t), H_int(N_t)
+    SM_time_evo::SM_time_evo(double t0, double tf, double N_t, double Neff_SM) : grid_size(N_t), t_grid(N_t), T_evo(N_t), Tnu_evo(N_t), H_evo(N_t), H_int(N_t)
     {
 
       // check if implemented routines are valid for given initial time
@@ -60,7 +60,6 @@ namespace Gambit
       {
         t_grid[jj] = exp(log(t0) + jj*Delta_logt);
       }
-      double Neff_SM = CosmoBit_utils::set_Neff_SM_value();
       double g_star_SM = 2.+2.*7./8.*Neff_SM*pow(4./11.,4./3.); // contribution from photons & neutrinos with Neff = 3.046
 
       // factor needed to calculate temperature evolution. For details see definition of functions set_T_evo(),.. in CosmoBit_types.hpp header
