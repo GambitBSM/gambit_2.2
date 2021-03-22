@@ -15,6 +15,7 @@ AlterBBN:
 
 CaptnGeneral:
   1.0:         ./Backends/installed/capgen/1.0/gencaplib.so
+  2.1:         ./Backends/installed/capgen/2.1/gencaplib.so
 
 classy:
   2.6.3:       ./Backends/installed/classy/2.6.3/lib/classy_2_6_3.py

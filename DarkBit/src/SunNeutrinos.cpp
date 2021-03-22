@@ -34,7 +34,7 @@ namespace Gambit
 
   namespace DarkBit
   {
- 
+
     //////////////////////////////////////////////////////////////////////////
     //
     //            Neutrino telescope likelihoods and observables
@@ -91,7 +91,7 @@ namespace Gambit
       double resultSI;
       double maxcap;
 
-      BEreq::cap_sun_saturation(*Dep::mwimp,maxcap);
+      maxcap = BEreq::cap_sun_saturation(*Dep::mwimp);
       BEreq::cap_Sun_v0q0_isoscalar(*Dep::mwimp,*Dep::sigma_SD_p,*Dep::sigma_SI_p,resultSD,resultSI);
       result = resultSI + resultSD;
 
@@ -118,7 +118,7 @@ namespace Gambit
       const int nelems = 29;
       double maxcap;
 
-      BEreq::cap_sun_saturation(*Dep::mwimp,maxcap);
+      maxcap = BEreq::cap_sun_saturation(*Dep::mwimp);
 
       resultSI = 0e0;
       resultSD = 0e0;
@@ -189,7 +189,7 @@ namespace Gambit
       double maxcap;
       const int niso = 16;
 
-      BEreq::cap_sun_saturation(Dep::WIMP_properties->mass,maxcap);
+      maxcap = BEreq::cap_sun_saturation(Dep::WIMP_properties->mass);
 
       /*
       use pipe to access parameters of model (0c1...1c15) here (3.2.3 of gambit paper)
@@ -198,10 +198,10 @@ namespace Gambit
       call populate Array with the value found in the C++ array and the position in the C++ array
       */
       // cout << "The capability grabbed via Pipes, *Dep::c0_1_cap: " << *Dep::c0_1_cap << endl;
-      // bjf> Modified to use a custom object to carry these couplings (makes for a better 
+      // bjf> Modified to use a custom object to carry these couplings (makes for a better
       // dependency structure)
       cout << "DD_nonrel_WCs capabilitiy grabbed via Pipes, e.g. Dep::DD_nonrel_WCs->c0.at(1) " << Dep::DD_nonrel_WCs->c0.at(1) << endl;
-      
+
       // FK: IMPORTANT! I made a temporary fix below to ensure that GAMBIT compiles, but the result is maybe not what is desired
       // There needs to be a check of which basis is being used for the DD_nonrel_WCs to ensure that they are interpreted correctly
       // See DDCalc interface for details / examples
@@ -215,7 +215,7 @@ namespace Gambit
           BEreq::populate_array(Dep::DD_nonrel_WCs->c1.at(coupleNum), coupleNum, 1);
         }
       }
-      
+
 
       /*
       Code to sum over all elements in solar model simultaneously.
@@ -1052,4 +1052,3 @@ namespace Gambit
 
   }
 }
-
