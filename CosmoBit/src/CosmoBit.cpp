@@ -84,7 +84,7 @@ namespace Gambit
     {
       using namespace Pipes::get_Neff_SM;
 
-      result = Neff_SM;
+      result = Gambit::Neff_SM;
     }
 
     // returning the total mass sum of SM neutrino
