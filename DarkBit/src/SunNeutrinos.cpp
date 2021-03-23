@@ -223,7 +223,7 @@ namespace Gambit
        any other integer (than 1 to 16) tells it to sum over all elements together.
       */
       //cout << "Before calling captn_NREO, capped: " << capped << endl;
-      BEreq::captn_NREO(Dep::WIMP_properties->mass,Dep::WIMP_properties->spinx2/2.,niso,0,capped);
+      BEreq::captn_NREO(Dep::WIMP_properties->mass,Dep::WIMP_properties->spinx2/2.,niso,capped);
       cout << "From captn_NREO;" << endl << "mwimp: " << Dep::WIMP_properties->mass << "GeV" << endl << "capped: " << capped << " captures/second" << endl;
 
       /// Loop to sum over each element in solar model individually.

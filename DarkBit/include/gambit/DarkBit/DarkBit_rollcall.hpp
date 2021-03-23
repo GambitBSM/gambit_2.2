@@ -1487,7 +1487,7 @@ START_MODULE
     ///Capture rate of dark matter with NREO method (s^-1), using backend Captn' General
     #define FUNCTION capture_rate_Sun_NREO
     START_FUNCTION(double)
-    BACKEND_REQ(captn_NREO,(CaptnGeneral),void,(const double&,const double&,const int&,const int&,double&))
+    BACKEND_REQ(captn_NREO,(CaptnGeneral),void,(const double&,const double&,const int&,double&))
     BACKEND_REQ(cap_sun_saturation,(CaptnGeneral),double,(const double&))
     BACKEND_REQ(populate_array,(CaptnGeneral),void,(const double&,const int&,const int&))
     DEPENDENCY(WIMP_properties, WIMPprops)
@@ -1524,7 +1524,8 @@ START_MODULE
     #define FUNCTION nuyield_from_DS
     START_FUNCTION(nuyield_info)
     ALLOW_MODELS(MSSM63atQ, ScalarSingletDM_Z2_running, ScalarSingletDM_Z3_running,
-                 MajoranaSingletDM_Z2, DiracSingletDM_Z2, VectorSingletDM_Z2)
+                 MajoranaSingletDM_Z2, DiracSingletDM_Z2, VectorSingletDM_Z2,
+                 NREO_scalarDM, NREO_MajoranaDM, NREO_DiracDM)
     DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
     DEPENDENCY(mwimp, double)
     DEPENDENCY(sigmav, double)
