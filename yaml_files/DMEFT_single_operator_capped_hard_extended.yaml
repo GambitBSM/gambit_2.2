@@ -60,24 +60,19 @@ Parameters:
     # sigma*ig5 sigma
     C710: 0
     # Top running mass - this overrides the SM top pole mass parameter
-    mtrunIN:
-      range: 162.9
+    mtrunIN: 162.9
 
   # NFW profile
   Halo_gNFW_rho0:
-    rho0:
-      range: 0.4
-    v0:
-      range: 240
-    vesc:
-      range: 528
-    vrot: 
-      same_as: Halo_gNFW_rho0::v0
-    rs: 20.0
-    r_sun: 8.5
-    alpha: 1
-    beta: 3
-    gamma: 1
+    rho0  : 0.4
+    v0    : 240
+    vesc  : 528
+    vrot  : 240
+    rs    : 20.0
+    r_sun : 8.5
+    alpha : 1
+    beta  : 3
+    gamma : 1
 
   # Chiral nuclear parameters for DirectDM
   nuclear_params_ChPT_sigmapiN: !import include/nuclear_params_ChPT_sigmapiN_fixed_DMEFT.yaml
