@@ -518,14 +518,15 @@ namespace Gambit
         // Checks to go ahead with interpolation
         // cout << "Check things 6"<<mass[0]<<endl;  
 
-
-        if (m<mass[0] || m>mass[data_INC-1]){
-          cout<<" Error! Mass param out of range with value "<< m << " Itterator location = " << mass[data_INC-1]<< " Exiting..."<<endl;
-          std::exit(EXIT_SUCCESS);
+        if (m<mass[0]){
+          ColliderBit_error().raise(LOCAL_INFO, "Mass parameter below range of high-mass region."); // This shouldn't ever happen as long as the grid is not modified
         }
-        else if (th<theta[0] || th>theta[data_INC-1]){
-          cout<<" Error! Theta param out of range with value " << th << " Exiting..."<<endl;
-          std::exit(EXIT_SUCCESS);
+        if (m>mass[data_INC-1]){
+          ColliderBit_warning().raise(LOCAL_INFO, "Mass parameter above range of high-mass region. Setting signal to zero.");
+          Norm = 0;  // Slightly hacky way to set the signal to zero in this case 
+        }
+        if (th<theta[0] || th>theta[data_INC-1]){
+          ColliderBit_error().raise(LOCAL_INFO, "Theta parameter out of range.");
         }
         // cout << " Acceptance_CS_dim6 DEBUG: 4" << endl;
 
@@ -1004,14 +1005,17 @@ namespace Gambit
         // cout << "Check things 6"<<mass[0]<<endl;  
 
 
-        if (m<mass_low[0] || m>mass_low[data_INC_low-1]){
-          cout<<" Error! Mass param out of range with value "<< m << " Itterator location = " << mass_low[data_INC_low-1]<< " Exiting..."<<endl;
-          std::exit(EXIT_SUCCESS);
+        if (m<mass_low[0]){
+          ColliderBit_warning().raise(LOCAL_INFO, "Mass parameter below range of low-mass region. Increasing mass to smallest tabulated value.");
+          m = mass_low[0];
         }
-        else if (th<theta_low[0] || th>theta_low[data_INC_low-1]){
-          cout<<" Error! Theta param out of range with value " << th << " Exiting..."<<endl;
-          std::exit(EXIT_SUCCESS);
+        if (m>mass_low[data_INC_low-1]){
+          ColliderBit_error().raise(LOCAL_INFO, "Mass parameter above range of low-mass region."); // This shouldn't ever happen as long as the grid is not modified
         }
+        if (th<theta[0] || th>theta[data_INC-1]){
+          ColliderBit_error().raise(LOCAL_INFO, "Theta parameter out of range.");
+        }
+
         // cout << " Acceptance_CS_dim6 DEBUG: 4" << endl;
 
         
@@ -1577,9 +1581,15 @@ namespace Gambit
         }
       }
 
-      if (m<mass[0] || m>mass[data_INC_d7-1]){
-        cout<<" Error! Mass param out of range with value "<< m << " Itterator location = " << mass[data_INC_d7-1]<< " Exiting..."<<endl;
-        std::exit(EXIT_SUCCESS);
+      double Norm= pow(Opp,2);
+
+      if (m<mass[0]){
+        ColliderBit_warning().raise(LOCAL_INFO, "Mass parameter below tabulated range. Increasing mass to smallest tabulated value.");
+        m = mass_low[0];
+      }
+      if (m>mass[data_INC_d7-1]){
+        ColliderBit_warning().raise(LOCAL_INFO, "Mass parameter above tabulated region. Setting signal to zero.");
+        Norm = 0;  // Slightly hacky way to set the signal to zero in this case 
       }
 
       double x1,x2;
@@ -1652,7 +1662,6 @@ namespace Gambit
 
           double A   = LinearInterpolation(x2,x1,m,Q1[Emiss],Q2[Emiss]);
           double B   = LinearInterpolation(x2,x1,m,C1,C2);
-          double Norm= pow(Opp,2);
           // double res =  36000.0*Norm*A*Norm*B; 
           double res =  36000.0*A*Norm*B; 
           double lambda_scaling = float(pow(1000.0,6))/float(pow(lambda,6));
