@@ -1012,7 +1012,7 @@ namespace Gambit
         if (m>mass_low[data_INC_low-1]){
           ColliderBit_error().raise(LOCAL_INFO, "Mass parameter above range of low-mass region."); // This shouldn't ever happen as long as the grid is not modified
         }
-        if (th<theta[0] || th>theta[data_INC-1]){
+        if (th<theta_low[0] || th>theta_low[data_INC_low-1]){
           ColliderBit_error().raise(LOCAL_INFO, "Theta parameter out of range.");
         }
 
@@ -1585,7 +1585,7 @@ namespace Gambit
 
       if (m<mass[0]){
         ColliderBit_warning().raise(LOCAL_INFO, "Mass parameter below tabulated range. Increasing mass to smallest tabulated value.");
-        m = mass_low[0];
+        m = mass[0];
       }
       if (m>mass[data_INC_d7-1]){
         ColliderBit_warning().raise(LOCAL_INFO, "Mass parameter above tabulated region. Setting signal to zero.");
