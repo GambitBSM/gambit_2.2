@@ -28,10 +28,12 @@ namespace Gambit
       // set T_in_eV = True if T is in eV
       double entropy_density_SM(double T, bool T_in_eV)
       {
+        const double N_eff = 3.045;
+        const double gstar_s = 2. + 2. * N_eff * 7./8. * 4./11.;
 
         if(T_in_eV == true) {T = T/kB_eV_over_K;}
 
-        return (2.*pow(pi,2)/45.) * (43./11.) * pow((kB_eV_over_K*T),3);
+        return (2.*pow(pi,2)/45.) * gstar_s * pow((kB_eV_over_K*T),3);
       }
     }
   }
