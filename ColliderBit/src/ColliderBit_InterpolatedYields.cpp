@@ -35,6 +35,7 @@
 #include "gambit/ColliderBit/ColliderBit_rollcall.hpp"
 #include "gambit/Utils/ascii_table_reader.hpp"
 #include "gambit/Utils/file_lock.hpp"
+#include "gambit/ColliderBit/Utils.hpp"
 
 
 // #define COLLIDERBIT_DEBUG_PROFILING
@@ -2059,6 +2060,9 @@ namespace Gambit
       double current_bestfit_a = init_values_a.at(0);
       double current_bestfit_loglike = -minus_loglike_bestfit;
 
+      // Mute stderr while running multimin (due to verbose gsl output)?
+      static bool silence_multimin = runOptions->getValueOrDef<bool>(true, "silence_multimin");
+
       // Do profiling n_runs times
       while (run_i < n_runs)
       {
@@ -2083,12 +2087,20 @@ namespace Gambit
         */
 
         // Call the optimiser
-        multimin::multimin(n_profile_pars, &nuisances[0], &minus_loglike_bestfit,
-                 &boundary_types[0], &nuisances_min[0], &nuisances_max[0],
-                 &_gsl_target_func,
-                 nullptr,  // If available: function returning the gradient of the target function
-                 nullptr,  // If available: function returning the value *and* the gradient of the target function
-                 &fpars, oparams);
+        if (silence_multimin)
+        {
+          CALL_WITH_SILENCED_STDERR(
+            multimin::multimin(n_profile_pars, &nuisances[0], &minus_loglike_bestfit,
+                     &boundary_types[0], &nuisances_min[0], &nuisances_max[0],
+                     &_gsl_target_func, nullptr, nullptr, &fpars, oparams) 
+          )
+        }
+        else
+        {
+          multimin::multimin(n_profile_pars, &nuisances[0], &minus_loglike_bestfit,
+                   &boundary_types[0], &nuisances_min[0], &nuisances_max[0],
+                   &_gsl_target_func, nullptr, nullptr, &fpars, oparams);
+        }
 
         double run_i_bestfit_a = nuisances[0];
         double run_i_bestfit_loglike = -minus_loglike_bestfit;
