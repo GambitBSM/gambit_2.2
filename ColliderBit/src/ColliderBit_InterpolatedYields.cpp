@@ -15,7 +15,12 @@
 ///          (andre.scaffidi@adelaide.edu.au)
 ///  \date 2019 Aug
 ///
+///  \author Tomas Gonzalo
+///          (gonzalo@physik.rwth-aachen.de)
+///  \date 2021 Apr
+///
 ///  Analyses based on: arxiv:1711.03301 and https://journals.aps.org/prd/abstract/10.1103/PhysRevD.97.092005
+///  139invfb analysis based on arXiv:2102.10874 
 ///
 ///  *********************************************
 
@@ -76,20 +81,28 @@ namespace Gambit
       #define atlas_bin_size  10
 
 
-      const char* met_ATLAS_23               = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C62_C63.txt";
-      const char* met_ATLAS_14               = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C61_C64.txt";
+      const char* met_ATLAS_36invfb_23       = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_36invfb_C62_C63.txt";
+      const char* met_ATLAS_36invfb_14       = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_36invfb_C61_C64.txt";
+      const char* met_ATLAS_139invfb_23      = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_139invfb_C62_C63.txt";
+      const char* met_ATLAS_139invfb_14      = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_139invfb_C61_C64.txt";
       const char* met_CMS_23                 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C62_C63.txt";
       const char* met_CMS_14                 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C61_C64.txt";
           
-      const char* met_ATLAS_23_low           = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C62_C63_low.txt";
-      const char* met_ATLAS_14_low           = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C61_C64_low.txt";
+      const char* met_ATLAS_36invfb_23_low   = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_36invfb_C62_C63_low.txt";
+      const char* met_ATLAS_36invfb_14_low   = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_36invfb_C61_C64_low.txt";
+      const char* met_ATLAS_139invfb_23_low  = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_139invfb_C62_C63_low.txt";
+      const char* met_ATLAS_139invfb_14_low  = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_139invfb_C61_C64_low.txt";
       const char* met_CMS_23_low             = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C62_C63_low.txt";
       const char* met_CMS_14_low             = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C61_C64_low.txt";
           
-      const char* met_ATLAS_71               = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C71.txt";
-      const char* met_ATLAS_72               = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C72.txt";
-      const char* met_ATLAS_73               = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C73.txt";
-      const char* met_ATLAS_74               = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C74.txt";
+      const char* met_ATLAS_36invfb_71       = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_36invfb_C71.txt";
+      const char* met_ATLAS_36invfb_72       = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_36invfb_C72.txt";
+      const char* met_ATLAS_36invfb_73       = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_36invfb_C73.txt";
+      const char* met_ATLAS_36invfb_74       = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_36invfb_C74.txt";
+      const char* met_ATLAS_139invfb_71       = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_139invfb_C71.txt";
+      const char* met_ATLAS_139invfb_72      = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_139invfb_C72.txt";
+      const char* met_ATLAS_139invfb_73      = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_139invfb_C73.txt";
+      const char* met_ATLAS_139invfb_74      = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_139invfb_C74.txt";
       const char* met_CMS_71                 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C71.txt";
       const char* met_CMS_72                 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C72.txt";
       const char* met_CMS_73                 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C73.txt";
@@ -111,12 +124,18 @@ namespace Gambit
 
       static Eigen::MatrixXd m_BKGCOV(22,22);
 
-      static const double ATLAS_OBSNUM[atlas_bin_size] = {111203,67475,35285,27843,8583,2975,1142,512,223,245};
-      static const double ATLAS_BKGNUM[atlas_bin_size] = {111100,67100,33820,27640,8360,2825,1094,463,213,226};
-      static const double ATLAS_BKGERR[atlas_bin_size] = {2300  ,1400 ,940  ,610  ,190 ,78  ,33  ,19 ,9  ,16 };
+      static const double ATLAS_36invfb_OBSNUM[atlas_bin_size] = {111203,67475,35285,27843,8583,2975,1142,512,223,245};
+      static const double ATLAS_36invfb_BKGNUM[atlas_bin_size] = {111100,67100,33820,27640,8360,2825,1094,463,213,226};
+      static const double ATLAS_36invfb_BKGERR[atlas_bin_size] = {2300  ,1400 ,940  ,610  ,190 ,78  ,33  ,19 ,9  ,16 };
+      // TODO: These are for now just a verbatim copy of the 36 invfb analysis
+      static const double ATLAS_139invfb_OBSNUM[atlas_bin_size] = {111203,67475,35285,27843,8583,2975,1142,512,223,245};
+      static const double ATLAS_139invfb_BKGNUM[atlas_bin_size] = {111100,67100,33820,27640,8360,2825,1094,463,213,226};
+      static const double ATLAS_139invfb_BKGERR[atlas_bin_size] = {2300  ,1400 ,940  ,610  ,190 ,78  ,33  ,19 ,9  ,16 };
 
       // Define ATLAS and CMS exclusive signal regions: These are arrays of the MIN met in the bin. 
-      static const double METMINS_ATLAS[atlas_bin_size]     = {250., 300., 350., 400., 500., 600., 700., 800., 900., 1000.};
+      static const double METMINS_ATLAS_36invfb[atlas_bin_size]     = {250., 300., 350., 400., 500., 600., 700., 800., 900., 1000.};
+      // TODO: These are for now just a verbatim copy of the 36 invfb analysis
+      static const double METMINS_ATLAS_139invfb[atlas_bin_size]    = {250., 300., 350., 400., 500., 600., 700., 800., 900., 1000.};
       static const double METMINS_CMS[cms_bin_size]       = {250., 280., 310., 340., 370., 400., 430.,470.,510.,550.,590.,640.,690.,740.,790.,840.,900.,960.,1020.,1090.,1160.,1250.};
 
     double LinearInterpolation(double y2, double y1, double y, double q1,double q2)
@@ -181,10 +200,16 @@ namespace Gambit
       const double* METMINS;
 
       // Choose experiment
-      if (adata.analysis_name.find("ATLAS") != std::string::npos)
+      if (adata.analysis_name.find("ATLAS_36invfb") != std::string::npos)
       {
-        bool is_ATLAS = true;
-        METMINS = METMINS_ATLAS;
+        bool is_ATLAS_36invfb = true;
+        METMINS = METMINS_ATLAS_36invfb;
+        met_bin_size = atlas_bin_size;
+      }
+      else if (adata.analysis_name.find("ATLAS_139invfb") != std::string::npos)
+      {
+        bool is_ATLAS_139invfb = true;
+        METMINS = METMINS_ATLAS_139invfb;
         met_bin_size = atlas_bin_size;
       }
       else if (adata.analysis_name.find("CMS") != std::string::npos)
@@ -229,10 +254,16 @@ namespace Gambit
       const double* METMINS;
 
       // Choose experiment
-      if (adata.analysis_name.find("ATLAS") != std::string::npos)
+      if (adata.analysis_name.find("ATLAS_36invfb") != std::string::npos)
       {
-        bool is_ATLAS = true;
-        METMINS = METMINS_ATLAS;
+        bool is_ATLAS_36invfb = true;
+        METMINS = METMINS_ATLAS_36invfb;
+        met_bin_size = atlas_bin_size;
+      }
+      else if (adata.analysis_name.find("ATLAS_139invfb") != std::string::npos)
+      {
+        bool is_ATLAS_139invfb = true;
+        METMINS = METMINS_ATLAS_139invfb;
         met_bin_size = atlas_bin_size;
       }
       else if (adata.analysis_name.find("CMS") != std::string::npos)
@@ -273,21 +304,29 @@ namespace Gambit
       if (m>150){
 
         static double MET_HIST_CMS_14[data_SIZE][cms_bin_size];
-        static double MET_HIST_ATLAS_14[data_SIZE][atlas_bin_size];
+        static double MET_HIST_ATLAS_36invfb_14[data_SIZE][atlas_bin_size];
+        static double MET_HIST_ATLAS_139invfb_14[data_SIZE][atlas_bin_size];
         static double MET_HIST_CMS_23[data_SIZE][cms_bin_size];
-        static double MET_HIST_ATLAS_23[data_SIZE][atlas_bin_size];
+        static double MET_HIST_ATLAS_36invfb_23[data_SIZE][atlas_bin_size];
+        static double MET_HIST_ATLAS_139invfb_23[data_SIZE][atlas_bin_size];
         static double THETA_CMS_14[data_SIZE];
         static double THETA_CMS_23[data_SIZE];
-        static double THETA_ATLAS_14[data_SIZE];  
-        static double THETA_ATLAS_23[data_SIZE];  
+        static double THETA_ATLAS_36invfb_14[data_SIZE];  
+        static double THETA_ATLAS_36invfb_23[data_SIZE];  
+        static double THETA_ATLAS_139invfb_14[data_SIZE];  
+        static double THETA_ATLAS_139invfb_23[data_SIZE];  
         static double MASS_CMS_14[data_SIZE];
         static double MASS_CMS_23[data_SIZE];
-        static double MASS_ATLAS_14[data_SIZE];  
-        static double MASS_ATLAS_23[data_SIZE];  
+        static double MASS_ATLAS_36invfb_14[data_SIZE];  
+        static double MASS_ATLAS_36invfb_23[data_SIZE];  
+        static double MASS_ATLAS_139invfb_14[data_SIZE];  
+        static double MASS_ATLAS_139invfb_23[data_SIZE];  
         static double CS_CMS_14[data_SIZE];
         static double CS_CMS_23[data_SIZE];
-        static double CS_ATLAS_14[data_SIZE];  
-        static double CS_ATLAS_23[data_SIZE];  
+        static double CS_ATLAS_36invfb_14[data_SIZE];  
+        static double CS_ATLAS_36invfb_23[data_SIZE];  
+        static double CS_ATLAS_139invfb_14[data_SIZE];  
+        static double CS_ATLAS_139invfb_23[data_SIZE];  
         static double nJets[data_SIZE];
         // ----------------------------------//
         // Define just mass and angle arrays // 
@@ -304,7 +343,7 @@ namespace Gambit
 
           cout << "Reading in grids. [Only happens on first itteration per MPI process]."<<endl;
           float var1,var2;
-          FILE * fp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/X_Y_ATLAS_C62_C63.txt","r");   // The masses and thetas are the same for each! 
+          FILE * fp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/X_Y_ATLAS_36invfb_C62_C63.txt","r");   // The masses and thetas are the same for each! 
           for (int ll = 0; ll < data_INC; ++ll){
             fscanf(fp,"%f %f", &var1, &var2);
             mass[ll] = var1;
@@ -314,37 +353,61 @@ namespace Gambit
           fclose(fp); 
           
 
-          std::ifstream mb(met_ATLAS_23);
-
-          for(int row = 0; row < data_SIZE; row++) {  
-            for(int column = 0; column < atlas_bin_size; column++){
-              mb >> MET_HIST_ATLAS_23[row][column];
+          std::ifstream mb(met_ATLAS_36invfb_23);
+          for(int row = 0; row < data_SIZE; row++)
+          {  
+            for(int column = 0; column < atlas_bin_size; column++)
+            {
+              mb >> MET_HIST_ATLAS_36invfb_23[row][column];
             }
           }
           mb.close();
 
-
-          std::ifstream mba14(met_ATLAS_14);
-          for(int row = 0; row < data_SIZE; row++) {  
-            for(int column = 0; column < atlas_bin_size; column++){
-              mba14 >> MET_HIST_ATLAS_14[row][column];
+          std::ifstream mba14(met_ATLAS_36invfb_14);
+          for(int row = 0; row < data_SIZE; row++)
+          {  
+            for(int column = 0; column < atlas_bin_size; column++)
+            {
+              mba14 >> MET_HIST_ATLAS_36invfb_14[row][column];
             }
           }
           mba14.close();
 
+          std::ifstream mb_(met_ATLAS_139invfb_23);
+          for(int row = 0; row < data_SIZE; row++)
+          {  
+            for(int column = 0; column < atlas_bin_size; column++)
+            {
+              mb_ >> MET_HIST_ATLAS_139invfb_23[row][column];
+            }
+          }
+          mb_.close();
+
+          std::ifstream mba14_(met_ATLAS_139invfb_14);
+          for(int row = 0; row < data_SIZE; row++)
+          {  
+            for(int column = 0; column < atlas_bin_size; column++)
+            {
+              mba14_ >> MET_HIST_ATLAS_139invfb_14[row][column];
+            }
+          }
+          mba14_.close();
 
           std::ifstream mbc23(met_CMS_23);
-          for(int row = 0; row < data_SIZE; row++) {  
-            for(int column = 0; column < cms_bin_size; column++){
+          for(int row = 0; row < data_SIZE; row++)
+          {  
+            for(int column = 0; column < cms_bin_size; column++)
+            {
               mbc23 >> MET_HIST_CMS_23[row][column];
             }
           }
           mbc23.close();     
 
-
           std::ifstream mbc14(met_CMS_14);
-          for(int row = 0; row < data_SIZE; row++) {  
-            for(int column = 0; column < cms_bin_size; column++){
+          for(int row = 0; row < data_SIZE; row++)
+          {  
+            for(int column = 0; column < cms_bin_size; column++)
+            {
               mbc14 >> MET_HIST_CMS_14[row][column];
             }
           }
@@ -352,28 +415,51 @@ namespace Gambit
 
 
           float p1,p2,p3,p4;
-          FILE * pp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_C61_C64.txt","r");              // file containing numbers in 5 columns 
-          for (int ll = 0; ll < data_SIZE; ++ll){
+          FILE * pp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_36invfb_C61_C64.txt","r");              // file containing numbers in 5 columns 
+          for (int ll = 0; ll < data_SIZE; ++ll)
+          {
             fscanf(pp,"%f %f %f %f", &p1,&p2,&p3,&p4);
-            MASS_ATLAS_14[ll] = p1; 
-            THETA_ATLAS_14[ll]= p2;
+            MASS_ATLAS_36invfb_14[ll] = p1; 
+            THETA_ATLAS_36invfb_14[ll]= p2;
             nJets[ll]         = p3;
-            CS_ATLAS_14[ll]   = p4;   
+            CS_ATLAS_36invfb_14[ll]   = p4;   
           }
           fclose(pp);
 
-
           float a1,a2,a3,a4;
-          FILE * ap = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_C62_C63.txt","r");             // file containing numbers in 5 columns 
-          for (int ll = 0; ll < data_SIZE; ++ll){
+          FILE * ap = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_36invfb_C62_C63.txt","r");             // file containing numbers in 5 columns 
+          for (int ll = 0; ll < data_SIZE; ++ll)
+          {
             fscanf(ap,"%f %f %f %f", &a1,&a2,&a3,&a4);
-            MASS_ATLAS_23[ll] = a1; 
-            THETA_ATLAS_23[ll]= a2;
+            MASS_ATLAS_36invfb_23[ll] = a1; 
+            THETA_ATLAS_36invfb_23[ll]= a2;
             nJets[ll]         = a3;
-            CS_ATLAS_23[ll]   = a4;   
+            CS_ATLAS_36invfb_23[ll]   = a4;   
           }
           fclose(ap);
           
+          pp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_139invfb_C61_C64.txt","r");              // file containing numbers in 5 columns 
+          for (int ll = 0; ll < data_SIZE; ++ll)
+          {
+            fscanf(pp,"%f %f %f %f", &p1,&p2,&p3,&p4);
+            MASS_ATLAS_139invfb_14[ll] = p1; 
+            THETA_ATLAS_139invfb_14[ll]= p2;
+            nJets[ll]         = p3;
+            CS_ATLAS_139invfb_14[ll]   = p4;   
+          }
+          fclose(pp);
+
+          ap = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_139invfb_C62_C63.txt","r");             // file containing numbers in 5 columns 
+          for (int ll = 0; ll < data_SIZE; ++ll)
+          {
+            fscanf(ap,"%f %f %f %f", &a1,&a2,&a3,&a4);
+            MASS_ATLAS_139invfb_23[ll] = a1; 
+            THETA_ATLAS_139invfb_23[ll]= a2;
+            nJets[ll]         = a3;
+            CS_ATLAS_139invfb_23[ll]   = a4;   
+          }
+          fclose(ap);
+ 
           float d1,d2,d3,d4;
           FILE *dp=fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_CMS_C61_C64.txt","r");              // file containing numbers in 5 columns 
           for (int ll = 0; ll < data_SIZE; ++ll){
@@ -414,21 +500,43 @@ namespace Gambit
         
         // cout << "Check things 2 <<mass[0]"<<endl;  
 
-        if (strcmp(experiment,"ATLAS") == 0 && strcmp(pair,"23") == 0)
+        if (strcmp(experiment,"ATLAS_36invfb") == 0 && strcmp(pair,"23") == 0)
         {
           met_bin_size = atlas_bin_size;
 
           // double** MET_HIST = new double*[data_SIZE];
           for(int i = 0; i < data_SIZE; ++i){
             MET_HIST[i] = new double[met_bin_size];
-            MASS[i]     = MASS_ATLAS_23[i];
-            THETA[i]    = THETA_ATLAS_23[i];
-            CS[i]       = CS_ATLAS_23[i];
+            MASS[i]     = MASS_ATLAS_36invfb_23[i];
+            THETA[i]    = THETA_ATLAS_36invfb_23[i];
+            CS[i]       = CS_ATLAS_36invfb_23[i];
           }
           // Assign met histogram to current experiment
           for (int kk = 0; kk<data_SIZE;++kk){
             for (int j = 0; j<met_bin_size;++j){
-              MET_HIST[kk][j] = MET_HIST_ATLAS_23[kk][j];
+              MET_HIST[kk][j] = MET_HIST_ATLAS_36invfb_23[kk][j];
+            }
+          }
+        }
+
+        else if (strcmp(experiment,"ATLAS_139invfb") == 0 && strcmp(pair,"23") == 0)
+        {
+          met_bin_size = atlas_bin_size;
+
+          // double** MET_HIST = new double*[data_SIZE];
+          for(int i = 0; i < data_SIZE; ++i)
+          {
+            MET_HIST[i] = new double[met_bin_size];
+            MASS[i]     = MASS_ATLAS_139invfb_23[i];
+            THETA[i]    = THETA_ATLAS_139invfb_23[i];
+            CS[i]       = CS_ATLAS_139invfb_23[i];
+          }
+          // Assign met histogram to current experiment
+          for (int kk = 0; kk<data_SIZE;++kk)
+          {
+            for (int j = 0; j<met_bin_size;++j)
+            {
+              MET_HIST[kk][j] = MET_HIST_ATLAS_139invfb_23[kk][j];
             }
           }
         }
@@ -454,20 +562,43 @@ namespace Gambit
           }
         }
 
-        else if (strcmp(experiment,"ATLAS") == 0 && strcmp(pair,"14") == 0){
+        else if (strcmp(experiment,"ATLAS_36invfb") == 0 && strcmp(pair,"14") == 0){
           met_bin_size = atlas_bin_size;
 
           // double** MET_HIST = new double*[data_SIZE];
           for(int i = 0; i < data_SIZE; ++i){
             MET_HIST[i] = new double[met_bin_size];
-            MASS[i]     = MASS_ATLAS_14[i];
-            THETA[i]    = THETA_ATLAS_14[i];
-            CS[i]       = CS_ATLAS_14[i];
+            MASS[i]     = MASS_ATLAS_36invfb_14[i];
+            THETA[i]    = THETA_ATLAS_36invfb_14[i];
+            CS[i]       = CS_ATLAS_36invfb_14[i];
           }
           // Assign met histogram to current experiment
           for (int kk = 0; kk<data_SIZE;++kk){
             for (int j = 0; j<met_bin_size;++j){
-              MET_HIST[kk][j] = MET_HIST_ATLAS_14[kk][j];
+              MET_HIST[kk][j] = MET_HIST_ATLAS_36invfb_14[kk][j];
+
+            }
+          }
+        }
+
+        else if (strcmp(experiment,"ATLAS_139invfb") == 0 && strcmp(pair,"14") == 0)
+        {
+          met_bin_size = atlas_bin_size;
+
+          // double** MET_HIST = new double*[data_SIZE];
+          for(int i = 0; i < data_SIZE; ++i)
+          {
+            MET_HIST[i] = new double[met_bin_size];
+            MASS[i]     = MASS_ATLAS_139invfb_14[i];
+            THETA[i]    = THETA_ATLAS_139invfb_14[i];
+            CS[i]       = CS_ATLAS_139invfb_14[i];
+          }
+          // Assign met histogram to current experiment
+          for (int kk = 0; kk<data_SIZE;++kk)
+          {
+            for (int j = 0; j<met_bin_size;++j)
+            {
+              MET_HIST[kk][j] = MET_HIST_ATLAS_139invfb_14[kk][j];
 
             }
           }
@@ -757,29 +888,42 @@ namespace Gambit
           delete[] MET_HIST;
 
 
-          // MET_HIST_ATLAS[data_SIZE][atlas_bin_size] = {};
+          // MET_HIST_ATLAS_36invfb[data_SIZE][atlas_bin_size] = {};
           // MET_HIST_CMS[data_SIZE][cms_bin_size] = {};
-          // MET_HIST_ATLAS[data_SIZE][atlas_bin_size] = {};
+          // MET_HIST_ATLAS_36invfb[data_SIZE][atlas_bin_size] = {};
           // cout << "Check things after fillinge "<<endl;  
       }
 
       else if (m<=150){
         static double MET_HIST_CMS_14_low[data_SIZE_low][cms_bin_size];
-        static double MET_HIST_ATLAS_14_low[data_SIZE_low][atlas_bin_size];
+        static double MET_HIST_ATLAS_36invfb_14_low[data_SIZE_low][atlas_bin_size];
+        static double MET_HIST_ATLAS_139invfb_14_low[data_SIZE_low][atlas_bin_size];
+ 
         static double MET_HIST_CMS_23_low[data_SIZE_low][cms_bin_size];
-        static double MET_HIST_ATLAS_23_low[data_SIZE_low][atlas_bin_size];
+        static double MET_HIST_ATLAS_36invfb_23_low[data_SIZE_low][atlas_bin_size];
+        static double MET_HIST_ATLAS_139invfb_23_low[data_SIZE_low][atlas_bin_size];
+ 
         static double THETA_CMS_14_low[data_SIZE_low];
         static double THETA_CMS_23_low[data_SIZE_low];
-        static double THETA_ATLAS_14_low[data_SIZE_low];  
-        static double THETA_ATLAS_23_low[data_SIZE_low];  
+        static double THETA_ATLAS_36invfb_14_low[data_SIZE_low];  
+        static double THETA_ATLAS_36invfb_23_low[data_SIZE_low];  
+        static double THETA_ATLAS_139invfb_14_low[data_SIZE_low];  
+        static double THETA_ATLAS_139invfb_23_low[data_SIZE_low];  
+ 
         static double MASS_CMS_14_low[data_SIZE_low];
         static double MASS_CMS_23_low[data_SIZE_low]; 
-        static double MASS_ATLAS_14_low[data_SIZE_low];  
-        static double MASS_ATLAS_23_low[data_SIZE_low];  
+        static double MASS_ATLAS_36invfb_14_low[data_SIZE_low];  
+        static double MASS_ATLAS_36invfb_23_low[data_SIZE_low];  
+        static double MASS_ATLAS_139invfb_14_low[data_SIZE_low];  
+        static double MASS_ATLAS_139invfb_23_low[data_SIZE_low];  
+ 
         static double CS_CMS_14_low[data_SIZE_low];
         static double CS_CMS_23_low[data_SIZE];
-        static double CS_ATLAS_14_low[data_SIZE_low];  
-        static double CS_ATLAS_23_low[data_SIZE_low];  
+        static double CS_ATLAS_36invfb_14_low[data_SIZE_low];  
+        static double CS_ATLAS_36invfb_23_low[data_SIZE_low];  
+        static double CS_ATLAS_139invfb_14_low[data_SIZE_low];  
+        static double CS_ATLAS_139invfb_23_low[data_SIZE_low];  
+ 
         static double nJets_low[data_SIZE_low];
         static double theta_low[data_INC_low];
         static double mass_low[data_INC_low]; 
@@ -792,7 +936,7 @@ namespace Gambit
 
           cout << "Reading in grids. [Only happens on first itteration per MPI process]."<<endl;
           float var1,var2;
-          FILE * fp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/X_Y_ATLAS_C62_C63_low.txt","r");   // The masses and thetas are the same for each! 
+          FILE * fp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/X_Y_ATLAS_36invfb_C62_C63_low.txt","r");   // The masses and thetas are the same for each! 
           for (int ll = 0; ll < data_INC_low; ++ll){
             fscanf(fp,"%f %f", &var1, &var2);
             mass_low[ll] = var1;
@@ -802,23 +946,45 @@ namespace Gambit
           fclose(fp); 
           
 
-          std::ifstream mb(met_ATLAS_23_low);
+          std::ifstream mb(met_ATLAS_36invfb_23_low);
 
           for(int row = 0; row <data_SIZE_low; row++) {  
             for(int column = 0; column < atlas_bin_size; column++){
-              mb >> MET_HIST_ATLAS_23_low[row][column];
+              mb >> MET_HIST_ATLAS_36invfb_23_low[row][column];
             }
           }
           mb.close();
 
 
-          std::ifstream mba14(met_ATLAS_14_low);
+          std::ifstream mba14(met_ATLAS_36invfb_14_low);
           for(int row = 0; row <data_SIZE_low; row++) {  
             for(int column = 0; column < atlas_bin_size; column++){
-              mba14 >> MET_HIST_ATLAS_14_low[row][column];
+              mba14 >> MET_HIST_ATLAS_36invfb_14_low[row][column];
             }
           }
           mba14.close();
+
+          std::ifstream mb_(met_ATLAS_139invfb_23_low);
+          for(int row = 0; row <data_SIZE_low; row++)
+          {  
+            for(int column = 0; column < atlas_bin_size; column++)
+            {
+              mb_ >> MET_HIST_ATLAS_139invfb_23_low[row][column];
+            }
+          }
+          mb_.close();
+
+
+          std::ifstream mba14_(met_ATLAS_139invfb_14_low);
+          for(int row = 0; row <data_SIZE_low; row++)
+          {  
+            for(int column = 0; column < atlas_bin_size; column++)
+            {
+              mba14_ >> MET_HIST_ATLAS_139invfb_14_low[row][column];
+            }
+          }
+          mba14_.close();
+
 
 
           std::ifstream mbc23(met_CMS_23_low);
@@ -840,28 +1006,51 @@ namespace Gambit
 
 
           float p1,p2,p3,p4;
-          FILE * pp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_C61_C64_low.txt","r");              // file containing numbers in 5 columns 
+          FILE * pp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_36invfb_C61_C64_low.txt","r");              // file containing numbers in 5 columns 
           for (int ll = 0; ll <data_SIZE_low; ++ll){
             fscanf(pp,"%f %f %f %f", &p1,&p2,&p3,&p4);
-            MASS_ATLAS_14_low[ll] = p1; 
-            THETA_ATLAS_14_low[ll]= p2;
+            MASS_ATLAS_36invfb_14_low[ll] = p1; 
+            THETA_ATLAS_36invfb_14_low[ll]= p2;
             nJets_low[ll]         = p3;
-            CS_ATLAS_14_low[ll]   = p4;   
+            CS_ATLAS_36invfb_14_low[ll]   = p4;   
           }
           fclose(pp);
 
 
           float a1,a2,a3,a4;
-          FILE * ap = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_C62_C63_low.txt","r");             // file containing numbers in 5 columns 
+          FILE * ap = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_36invfb_C62_C63_low.txt","r");             // file containing numbers in 5 columns 
           for (int ll = 0; ll <data_SIZE_low; ++ll){
             fscanf(ap,"%f %f %f %f", &a1,&a2,&a3,&a4);
-            MASS_ATLAS_23_low[ll] = a1; 
-            THETA_ATLAS_23_low[ll]= a2;
+            MASS_ATLAS_36invfb_23_low[ll] = a1; 
+            THETA_ATLAS_36invfb_23_low[ll]= a2;
             nJets_low[ll]         = a3;
-            CS_ATLAS_23_low[ll]   = a4;   
+            CS_ATLAS_36invfb_23_low[ll]   = a4;   
           }
           fclose(ap);
           
+          pp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_139invfb_C61_C64_low.txt","r");              // file containing numbers in 5 columns 
+          for (int ll = 0; ll <data_SIZE_low; ++ll)
+          {
+            fscanf(pp,"%f %f %f %f", &p1,&p2,&p3,&p4);
+            MASS_ATLAS_139invfb_14_low[ll] = p1; 
+            THETA_ATLAS_139invfb_14_low[ll]= p2;
+            nJets_low[ll]         = p3;
+            CS_ATLAS_139invfb_14_low[ll]   = p4;   
+          }
+          fclose(pp);
+
+
+          ap = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_139invfb_C62_C63_low.txt","r");             // file containing numbers in 5 columns 
+          for (int ll = 0; ll <data_SIZE_low; ++ll)
+          {
+            fscanf(ap,"%f %f %f %f", &a1,&a2,&a3,&a4);
+            MASS_ATLAS_139invfb_23_low[ll] = a1; 
+            THETA_ATLAS_139invfb_23_low[ll]= a2;
+            nJets_low[ll]         = a3;
+            CS_ATLAS_139invfb_23_low[ll]   = a4;   
+          }
+          fclose(ap);
+ 
           float d1,d2,d3,d4;
           FILE *dp=fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_CMS_C61_C64_low.txt","r");              // file containing numbers in 5 columns 
           for (int ll = 0; ll <data_SIZE_low; ++ll){
@@ -900,25 +1089,48 @@ namespace Gambit
         
         // cout << "Check things 2 <<mass[0]"<<endl;  
 
-        if (strcmp(experiment,"ATLAS") == 0 && strcmp(pair,"23") == 0)
+        if (strcmp(experiment,"ATLAS_36invfb") == 0 && strcmp(pair,"23") == 0)
         {
           met_bin_size = atlas_bin_size;
 
           // double** MET_HIST = new double*[data_SIZE];
           for(int i = 0; i <data_SIZE_low; ++i){
             MET_HIST[i] = new double[met_bin_size];
-            MASS[i]     = MASS_ATLAS_23_low[i];
-            THETA[i]    = THETA_ATLAS_23_low[i];
-            CS[i]       = CS_ATLAS_23_low[i];
+            MASS[i]     = MASS_ATLAS_36invfb_23_low[i];
+            THETA[i]    = THETA_ATLAS_36invfb_23_low[i];
+            CS[i]       = CS_ATLAS_36invfb_23_low[i];
           }
           // Assign met histogram to current experiment
           for (int kk = 0; kk<data_SIZE_low;++kk){
             for (int j = 0; j<met_bin_size;++j){
-              MET_HIST[kk][j] = MET_HIST_ATLAS_23_low[kk][j];
+              MET_HIST[kk][j] = MET_HIST_ATLAS_36invfb_23_low[kk][j];
             }
           }
         }
 
+        if (strcmp(experiment,"ATLAS_139invfb") == 0 && strcmp(pair,"23") == 0)
+        {
+          met_bin_size = atlas_bin_size;
+
+          // double** MET_HIST = new double*[data_SIZE];
+          for(int i = 0; i <data_SIZE_low; ++i)
+          {
+            MET_HIST[i] = new double[met_bin_size];
+            MASS[i]     = MASS_ATLAS_139invfb_23_low[i];
+            THETA[i]    = THETA_ATLAS_139invfb_23_low[i];
+            CS[i]       = CS_ATLAS_139invfb_23_low[i];
+          }
+          // Assign met histogram to current experiment
+          for (int kk = 0; kk<data_SIZE_low;++kk)
+          {
+            for (int j = 0; j<met_bin_size;++j)
+            {
+              MET_HIST[kk][j] = MET_HIST_ATLAS_139invfb_23_low[kk][j];
+            }
+          }
+        }
+
+ 
         else if (strcmp(experiment,"CMS") == 0 && strcmp(pair,"23") == 0){
           // std::cout << "BITE" << std::endl;
 
@@ -940,20 +1152,43 @@ namespace Gambit
           }
         }
 
-        else if (strcmp(experiment,"ATLAS") == 0 && strcmp(pair,"14") == 0){
+        else if (strcmp(experiment,"ATLAS_36invfb") == 0 && strcmp(pair,"14") == 0){
           met_bin_size = atlas_bin_size;
 
           // double** MET_HIST = new double*[data_SIZE];
           for(int i = 0; i <data_SIZE_low; ++i){
             MET_HIST[i] = new double[met_bin_size];
-            MASS[i]     = MASS_ATLAS_14_low[i];
-            THETA[i]    = THETA_ATLAS_14_low[i];
-            CS[i]       = CS_ATLAS_14_low[i];
+            MASS[i]     = MASS_ATLAS_36invfb_14_low[i];
+            THETA[i]    = THETA_ATLAS_36invfb_14_low[i];
+            CS[i]       = CS_ATLAS_36invfb_14_low[i];
           }
           // Assign met histogram to current experiment
           for (int kk = 0; kk<data_SIZE_low;++kk){
             for (int j = 0; j<met_bin_size;++j){
-              MET_HIST[kk][j] = MET_HIST_ATLAS_14_low[kk][j];
+              MET_HIST[kk][j] = MET_HIST_ATLAS_36invfb_14_low[kk][j];
+
+            }
+          }
+        }
+
+        else if (strcmp(experiment,"ATLAS_139invfb") == 0 && strcmp(pair,"14") == 0)
+        {
+          met_bin_size = atlas_bin_size;
+
+          // double** MET_HIST = new double*[data_SIZE];
+          for(int i = 0; i <data_SIZE_low; ++i)
+          {
+            MET_HIST[i] = new double[met_bin_size];
+            MASS[i]     = MASS_ATLAS_139invfb_14_low[i];
+            THETA[i]    = THETA_ATLAS_139invfb_14_low[i];
+            CS[i]       = CS_ATLAS_139invfb_14_low[i];
+          }
+          // Assign met histogram to current experiment
+          for (int kk = 0; kk<data_SIZE_low;++kk)
+          {
+            for (int j = 0; j<met_bin_size;++j)
+            {
+              MET_HIST[kk][j] = MET_HIST_ATLAS_139invfb_14_low[kk][j];
 
             }
           }
@@ -1254,21 +1489,37 @@ namespace Gambit
     void Acceptance_CS_dim7(double * accep, float m, float Opp, float lambda ,const char* pair, const char* experiment)
     {
       static double MET_HIST_CMS_71[data_SIZE_d7][cms_bin_size];
-      static double MET_HIST_ATLAS_71[data_SIZE_d7][atlas_bin_size];
+      static double MET_HIST_ATLAS_36invfb_71[data_SIZE_d7][atlas_bin_size];
+      static double MET_HIST_ATLAS_139invfb_71[data_SIZE_d7][atlas_bin_size];
+ 
       static double MET_HIST_CMS_72[data_SIZE_d7][cms_bin_size];
-      static double MET_HIST_ATLAS_72[data_SIZE_d7][atlas_bin_size];
+      static double MET_HIST_ATLAS_36invfb_72[data_SIZE_d7][atlas_bin_size];
+      static double MET_HIST_ATLAS_139invfb_72[data_SIZE_d7][atlas_bin_size];
+ 
       static double MET_HIST_CMS_73[data_SIZE_d7][cms_bin_size];
-      static double MET_HIST_ATLAS_73[data_SIZE_d7][atlas_bin_size];
+      static double MET_HIST_ATLAS_36invfb_73[data_SIZE_d7][atlas_bin_size];
+      static double MET_HIST_ATLAS_139invfb_73[data_SIZE_d7][atlas_bin_size];
+ 
       static double MET_HIST_CMS_74[data_SIZE_d7][cms_bin_size];
-      static double MET_HIST_ATLAS_74[data_SIZE_d7][atlas_bin_size];
+      static double MET_HIST_ATLAS_36invfb_74[data_SIZE_d7][atlas_bin_size];
+      static double MET_HIST_ATLAS_139invfb_74[data_SIZE_d7][atlas_bin_size];
+ 
       static double CS_CMS_71[data_SIZE_d7];
-      static double CS_ATLAS_71[data_SIZE_d7];  
+      static double CS_ATLAS_36invfb_71[data_SIZE_d7];  
+      static double CS_ATLAS_139invfb_71[data_SIZE_d7];  
+ 
       static double CS_CMS_72[data_SIZE_d7];
-      static double CS_ATLAS_72[data_SIZE_d7];  
+      static double CS_ATLAS_36invfb_72[data_SIZE_d7];  
+      static double CS_ATLAS_139invfb_72[data_SIZE_d7];  
+ 
       static double CS_CMS_73[data_SIZE_d7];
-      static double CS_ATLAS_73[data_SIZE_d7];  
+      static double CS_ATLAS_36invfb_73[data_SIZE_d7];  
+      static double CS_ATLAS_139invfb_73[data_SIZE_d7];  
+ 
       static double CS_CMS_74[data_SIZE_d7];
-      static double CS_ATLAS_74[data_SIZE_d7];  
+      static double CS_ATLAS_36invfb_74[data_SIZE_d7];  
+      static double CS_ATLAS_139invfb_74[data_SIZE_d7];  
+ 
       static double mass[data_INC_d7]; 
 
   
@@ -1280,7 +1531,7 @@ namespace Gambit
         
         cout << "Reading in grids. [Only happens on first itteration per MPI process]."<<endl;
         float var1;
-        FILE * fp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/X_Y_ATLAS_C71.txt","r");   // The masses and thetas are the same for each! 
+        FILE * fp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/X_Y_ATLAS_36invfb_C71.txt","r");   // The masses and thetas are the same for each! 
         for (int ll = 0; ll < data_INC_d7; ++ll){
           fscanf(fp,"%f", &var1);
           mass[ll] = var1;
@@ -1288,41 +1539,85 @@ namespace Gambit
         fclose(fp); 
         
 
-        std::ifstream mb(met_ATLAS_71);
+        std::ifstream mb(met_ATLAS_36invfb_71);
         for(int row = 0; row < data_SIZE_d7; row++) {  
           for(int column = 0; column < atlas_bin_size; column++){
-            mb >> MET_HIST_ATLAS_71[row][column];
+            mb >> MET_HIST_ATLAS_36invfb_71[row][column];
           }
         }
         mb.close();
 
 
-        std::ifstream mba72(met_ATLAS_72);
+        std::ifstream mba72(met_ATLAS_36invfb_72);
         for(int row = 0; row < data_SIZE_d7; row++) {  
           for(int column = 0; column < atlas_bin_size; column++){
-            mba72 >> MET_HIST_ATLAS_72[row][column];
+            mba72 >> MET_HIST_ATLAS_36invfb_72[row][column];
           }
         }
         mba72.close();
 
-        std::ifstream mb73(met_ATLAS_73);
+        std::ifstream mb73(met_ATLAS_36invfb_73);
         for(int row = 0; row < data_SIZE_d7; row++) {  
           for(int column = 0; column < atlas_bin_size; column++){
-            mb73 >> MET_HIST_ATLAS_73[row][column];
+            mb73 >> MET_HIST_ATLAS_36invfb_73[row][column];
           }
         }
         mb73.close();
 
-        std::ifstream mba74(met_ATLAS_74);
+        std::ifstream mba74(met_ATLAS_36invfb_74);
         for(int row = 0; row < data_SIZE_d7; row++) {  
           for(int column = 0; column < atlas_bin_size; column++){
-            mba74 >> MET_HIST_ATLAS_74[row][column];
+            mba74 >> MET_HIST_ATLAS_36invfb_74[row][column];
           }
         }
         mba74.close();
 
 
         // -------------------------------- //
+
+        std::ifstream mb_(met_ATLAS_139invfb_71);
+        for(int row = 0; row < data_SIZE_d7; row++)
+        {  
+          for(int column = 0; column < atlas_bin_size; column++)
+          {
+            mb_ >> MET_HIST_ATLAS_139invfb_71[row][column];
+          }
+        }
+        mb_.close();
+
+        std::ifstream mba72_(met_ATLAS_139invfb_72);
+        for(int row = 0; row < data_SIZE_d7; row++)
+        {  
+          for(int column = 0; column < atlas_bin_size; column++)
+          {
+            mba72_ >> MET_HIST_ATLAS_139invfb_72[row][column];
+          }
+        }
+        mba72_.close();
+
+        std::ifstream mb73_(met_ATLAS_139invfb_73);
+        for(int row = 0; row < data_SIZE_d7; row++)
+        {  
+          for(int column = 0; column < atlas_bin_size; column++)
+          {
+            mb73_ >> MET_HIST_ATLAS_139invfb_73[row][column];
+          }
+        }
+        mb73_.close();
+
+        std::ifstream mba74_(met_ATLAS_139invfb_74);
+        for(int row = 0; row < data_SIZE_d7; row++)
+        {
+          for(int column = 0; column < atlas_bin_size; column++)
+          {
+            mba74_ >> MET_HIST_ATLAS_139invfb_74[row][column];
+          }
+        }
+        mba74_.close();
+
+
+        // -------------------------------- //
+
 
         std::ifstream mbc71(met_CMS_71);
         for(int row = 0; row < data_SIZE_d7; row++) {  
@@ -1361,39 +1656,74 @@ namespace Gambit
 
         // -------------------------------------------------//
         float p1,p2;
-        FILE * pp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_C71.txt","r");              // file containing numbers in 5 columns 
+        FILE * pp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_36invfb_C71.txt","r");              // file containing numbers in 5 columns 
         for (int ll = 0; ll < data_SIZE_d7; ++ll){
           fscanf(pp,"%f %f", &p1,&p2);
-          CS_ATLAS_71[ll]   = p2;   
+          CS_ATLAS_36invfb_71[ll]   = p2;   
         }
         fclose(pp);
 
 
         float a1,a4;
-        FILE * ap = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_C72.txt","r");             // file containing numbers in 5 columns 
+        FILE * ap = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_36invfb_C72.txt","r");             // file containing numbers in 5 columns 
         for (int ll = 0; ll < data_SIZE_d7; ++ll){
           fscanf(ap,"%f %f", &a1,&a4);
-          CS_ATLAS_72[ll]   = a4;   
+          CS_ATLAS_36invfb_72[ll]   = a4;   
         }
         fclose(ap);
 
 
         float p4;
-        pp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_C73.txt","r");              // file containing numbers in 5 columns 
+        pp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_36invfb_C73.txt","r");              // file containing numbers in 5 columns 
         for (int ll = 0; ll < data_SIZE_d7; ++ll){
           fscanf(pp,"%f %f", &p1,&p4);
-          CS_ATLAS_73[ll]   = p4;   
+          CS_ATLAS_36invfb_73[ll]   = p4;   
         }
         fclose(pp);
 
 
-        ap = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_C74.txt","r");             // file containing numbers in 5 columns 
+        ap = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_36invfb_C74.txt","r");             // file containing numbers in 5 columns 
         for (int ll = 0; ll < data_SIZE_d7; ++ll){
           fscanf(ap,"%f %f", &a1,&a4);
-          CS_ATLAS_74[ll]   = a4;   
+          CS_ATLAS_36invfb_74[ll]   = a4;   
         }
         fclose(ap);
         
+        pp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_139invfb_C71.txt","r");              // file containing numbers in 5 columns 
+        for (int ll = 0; ll < data_SIZE_d7; ++ll)
+        {
+          fscanf(pp,"%f %f", &p1,&p2);
+          CS_ATLAS_139invfb_71[ll]   = p2;   
+        }
+        fclose(pp);
+
+
+        ap = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_139invfb_C72.txt","r");             // file containing numbers in 5 columns 
+        for (int ll = 0; ll < data_SIZE_d7; ++ll)
+        {
+          fscanf(ap,"%f %f", &a1,&a4);
+          CS_ATLAS_139invfb_72[ll]   = a4;   
+        }
+        fclose(ap);
+
+
+        pp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_139invfb_C73.txt","r");              // file containing numbers in 5 columns 
+        for (int ll = 0; ll < data_SIZE_d7; ++ll)
+        {
+          fscanf(pp,"%f %f", &p1,&p4);
+          CS_ATLAS_139invfb_73[ll]   = p4;   
+        }
+        fclose(pp);
+
+
+        ap = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_139invfb_C74.txt","r");             // file containing numbers in 5 columns 
+        for (int ll = 0; ll < data_SIZE_d7; ++ll)
+        {
+          fscanf(ap,"%f %f", &a1,&a4);
+          CS_ATLAS_139invfb_74[ll]   = a4;   
+        }
+        fclose(ap);
+ 
        
         pp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_CMS_C71.txt","r");              // file containing numbers in 5 columns 
         for (int ll = 0; ll < data_SIZE_d7; ++ll){
@@ -1440,22 +1770,43 @@ namespace Gambit
 
 
 
-      if (strcmp(experiment,"ATLAS") == 0 && strcmp(pair,"71") == 0)
+      if (strcmp(experiment,"ATLAS_36invfb") == 0 && strcmp(pair,"71") == 0)
       {
         met_bin_size = atlas_bin_size;
 
         // double** MET_HIST = new double*[data_SIZE_d7];
         for(int i = 0; i < data_SIZE_d7; ++i){
           MET_HIST[i] = new double[met_bin_size];
-          CS[i]       = CS_ATLAS_71[i];
+          CS[i]       = CS_ATLAS_36invfb_71[i];
         }
         // Assign met histogram to current experiment
         for (int kk = 0; kk<data_SIZE_d7;++kk){
           for (int j = 0; j<met_bin_size;++j){
-            MET_HIST[kk][j] = MET_HIST_ATLAS_71[kk][j];
+            MET_HIST[kk][j] = MET_HIST_ATLAS_36invfb_71[kk][j];
           }
         }
       }
+
+      else if (strcmp(experiment,"ATLAS_139invfb") == 0 && strcmp(pair,"71") == 0)
+      {
+        met_bin_size = atlas_bin_size;
+
+        // double** MET_HIST = new double*[data_SIZE_d7];
+        for(int i = 0; i < data_SIZE_d7; ++i)
+        {
+          MET_HIST[i] = new double[met_bin_size];
+          CS[i]       = CS_ATLAS_139invfb_71[i];
+        }
+        // Assign met histogram to current experiment
+        for (int kk = 0; kk<data_SIZE_d7;++kk)
+        {
+          for (int j = 0; j<met_bin_size;++j)
+          {
+            MET_HIST[kk][j] = MET_HIST_ATLAS_139invfb_71[kk][j];
+          }
+        }
+      }
+
 
       else if (strcmp(experiment,"CMS") == 0 && strcmp(pair,"71") == 0){
         // std::cout << "BITE" << std::endl;
@@ -1476,19 +1827,39 @@ namespace Gambit
         }
       }
 
-      else if (strcmp(experiment,"ATLAS") == 0 && strcmp(pair,"72") == 0){
+      else if (strcmp(experiment,"ATLAS_36invfb") == 0 && strcmp(pair,"72") == 0){
         met_bin_size = atlas_bin_size;
 
         // double** MET_HIST = new double*[data_SIZE_d7];
         for(int i = 0; i < data_SIZE_d7; ++i){
           MET_HIST[i] = new double[met_bin_size];
-          CS[i]       = CS_ATLAS_72[i];
+          CS[i]       = CS_ATLAS_36invfb_72[i];
         }
         // Assign met histogram to current experiment
         for (int kk = 0; kk<data_SIZE_d7;++kk){
           for (int j = 0; j<met_bin_size;++j){
-            MET_HIST[kk][j] = MET_HIST_ATLAS_72[kk][j];
+            MET_HIST[kk][j] = MET_HIST_ATLAS_36invfb_72[kk][j];
 
+          }
+        }
+      }
+
+      else if (strcmp(experiment,"ATLAS_139invfb") == 0 && strcmp(pair,"72") == 0)
+      {
+        met_bin_size = atlas_bin_size;
+
+        // double** MET_HIST = new double*[data_SIZE_d7];
+        for(int i = 0; i < data_SIZE_d7; ++i)
+        {
+          MET_HIST[i] = new double[met_bin_size];
+          CS[i]       = CS_ATLAS_139invfb_72[i];
+        }
+        // Assign met histogram to current experiment
+        for (int kk = 0; kk<data_SIZE_d7;++kk)
+        {
+          for (int j = 0; j<met_bin_size;++j)
+          {
+            MET_HIST[kk][j] = MET_HIST_ATLAS_139invfb_72[kk][j];
           }
         }
       }
@@ -1511,18 +1882,39 @@ namespace Gambit
         }
       }
 
-      else if (strcmp(experiment,"ATLAS") == 0 && strcmp(pair,"73") == 0){
+      else if (strcmp(experiment,"ATLAS_36invfb") == 0 && strcmp(pair,"73") == 0){
         met_bin_size = atlas_bin_size;
 
         // double** MET_HIST = new double*[data_SIZE_d7];
         for(int i = 0; i < data_SIZE_d7; ++i){
           MET_HIST[i] = new double[met_bin_size];
-          CS[i]       = CS_ATLAS_73[i];
+          CS[i]       = CS_ATLAS_36invfb_73[i];
         }
         // Assign met histogram to current experiment
         for (int kk = 0; kk<data_SIZE_d7;++kk){
           for (int j = 0; j<met_bin_size;++j){
-            MET_HIST[kk][j] = MET_HIST_ATLAS_73[kk][j];
+            MET_HIST[kk][j] = MET_HIST_ATLAS_36invfb_73[kk][j];
+
+          }
+        }
+      }
+
+      else if (strcmp(experiment,"ATLAS_139invfb") == 0 && strcmp(pair,"73") == 0)
+      {
+        met_bin_size = atlas_bin_size;
+
+        // double** MET_HIST = new double*[data_SIZE_d7];
+        for(int i = 0; i < data_SIZE_d7; ++i)
+        {
+          MET_HIST[i] = new double[met_bin_size];
+          CS[i]       = CS_ATLAS_139invfb_73[i];
+        }
+        // Assign met histogram to current experiment
+        for (int kk = 0; kk<data_SIZE_d7;++kk)
+        {
+          for (int j = 0; j<met_bin_size;++j)
+          {
+            MET_HIST[kk][j] = MET_HIST_ATLAS_139invfb_73[kk][j];
 
           }
         }
@@ -1547,18 +1939,39 @@ namespace Gambit
       }
 
 
-      else if (strcmp(experiment,"ATLAS") == 0 && strcmp(pair,"74") == 0){
+      else if (strcmp(experiment,"ATLAS_36invfb") == 0 && strcmp(pair,"74") == 0){
         met_bin_size = atlas_bin_size;
 
         // double** MET_HIST = new double*[data_SIZE_d7];
         for(int i = 0; i < data_SIZE_d7; ++i){
           MET_HIST[i] = new double[met_bin_size];
-          CS[i]       = CS_ATLAS_74[i];
+          CS[i]       = CS_ATLAS_36invfb_74[i];
         }
         // Assign met histogram to current experiment
         for (int kk = 0; kk<data_SIZE_d7;++kk){
           for (int j = 0; j<met_bin_size;++j){
-            MET_HIST[kk][j] = MET_HIST_ATLAS_74[kk][j];
+            MET_HIST[kk][j] = MET_HIST_ATLAS_36invfb_74[kk][j];
+
+          }
+        }
+      }
+
+      else if (strcmp(experiment,"ATLAS_139invfb") == 0 && strcmp(pair,"74") == 0)
+      {
+        met_bin_size = atlas_bin_size;
+
+        // double** MET_HIST = new double*[data_SIZE_d7];
+        for(int i = 0; i < data_SIZE_d7; ++i)
+        {
+          MET_HIST[i] = new double[met_bin_size];
+          CS[i]       = CS_ATLAS_139invfb_74[i];
+        }
+        // Assign met histogram to current experiment
+        for (int kk = 0; kk<data_SIZE_d7;++kk)
+        {
+          for (int j = 0; j<met_bin_size;++j)
+          {
+            MET_HIST[kk][j] = MET_HIST_ATLAS_139invfb_74[kk][j];
 
           }
         }
@@ -1702,7 +2115,8 @@ namespace Gambit
 
       int met_bin_size;
 
-      if (strcmp(exper_,"ATLAS") == 0){
+      if (strcmp(exper_,"ATLAS_36invfb") == 0 or strcmp(exper_,"ATLAS_139invfb"))
+      {
         met_bin_size = atlas_bin_size;
       }
       else if (strcmp(exper_,"CMS") == 0){
@@ -1757,8 +2171,12 @@ namespace Gambit
       thread_local AnalysisData cmsData_nocovar("CMS_13TeV_MONOJET_36invfb_interpolated_nocovar");
       cmsData_nocovar.clear();
 
-      thread_local AnalysisData atlasData("ATLAS_13TeV_MONOJET_36invfb_interpolated");
-      atlasData.clear();
+      thread_local AnalysisData atlasData_36invfb("ATLAS_13TeV_MONOJET_36invfb_interpolated");
+      atlasData_36invfb.clear();
+
+      thread_local AnalysisData atlasData_139invfb("ATLAS_13TeV_MONOJET_139invfb_interpolated");
+      atlasData_139invfb.clear();
+
 
 
       // cout << "void is run"<< endl;
@@ -1867,9 +2285,9 @@ namespace Gambit
 
 
       // **----------------------------------------------------------------------------------------------------//
-      // **-------------------------------------ATLAS----------------------------------------------------------//
+      // **-------------------------------------ATLAS 36invfb----------------------------------------------------------//
 
-      // Now put the ATLAS data into an equivalent object
+      // Now put the ATLAS 36invfb data into an equivalent object
       // Andre to add the relevant lines
       
 
@@ -1877,8 +2295,8 @@ namespace Gambit
 
       // cout<<"Just b4 atlas srnums"<<endl;
 
-      double _srnums_ATLAS[atlas_bin_size];
-      L_Acc_Eff_CS(_srnums_ATLAS,mchi,C61,C62,C63,C64,C71,C72,C73,C74,lambda,"ATLAS"); 
+      double _srnums_ATLAS_36invfb[atlas_bin_size];
+      L_Acc_Eff_CS(_srnums_ATLAS_36invfb,mchi,C61,C62,C63,C64,C71,C72,C73,C74,lambda,"ATLAS_36invfb"); 
 
       // cout << "Atlas srnums defined" <<endl;
 
@@ -1895,25 +2313,70 @@ namespace Gambit
         // Construct a SignalRegionData instance and add it to atlasBinnedResults
         SignalRegionData sr;
         sr.sr_label = ss.str();
-        sr.n_obs = ATLAS_OBSNUM[ibin];
-        sr.n_sig_MC = _srnums_ATLAS[ibin];
-        sr.n_sig_scaled = _srnums_ATLAS[ibin];  // We have already scaled the signals in _srnums_ATLAS to xsec * lumi
-        // cout << "Check output: "<< sr.sr_label<< "  " << _srnums_ATLAS[ibin] <<endl;
+        sr.n_obs = ATLAS_36invfb_OBSNUM[ibin];
+        sr.n_sig_MC = _srnums_ATLAS_36invfb[ibin];
+        sr.n_sig_scaled = _srnums_ATLAS_36invfb[ibin];  // We have already scaled the signals in _srnums_ATLAS_36invfb to xsec * lumi
+        // cout << "Check output: "<< sr.sr_label<< "  " << _srnums_ATLAS_36invfb[ibin] <<endl;
         sr.n_sig_MC_sys = 0.;
-        sr.n_bkg = ATLAS_BKGNUM[ibin];
-        sr.n_bkg_err = ATLAS_BKGERR[ibin];
+        sr.n_bkg = ATLAS_36invfb_BKGNUM[ibin];
+        sr.n_bkg_err = ATLAS_36invfb_BKGERR[ibin];
         atlasBinnedResults.push_back(sr);
       }
 
-      // Save the results in atlasData
-      atlasData.srdata = atlasBinnedResults;
+      // Save the results in atlasData_36invfb
+      atlasData_36invfb.srdata = atlasBinnedResults;
+
+      // **----------------------------------------------------------------------------------------------------//
+      // **-------------------------------------ATLAS 139invfb----------------------------------------------------------//
+
+      // Now put the ATLAS 139invfb data into an equivalent object
+      // Andre to add the relevant lines
+      
+
+      // std::cout << "Making signal numbers" << std::endl; 
+
+      // cout<<"Just b4 atlas srnums"<<endl;
+
+      double _srnums_ATLAS_139invfb[atlas_bin_size];
+      L_Acc_Eff_CS(_srnums_ATLAS_139invfb,mchi,C61,C62,C63,C64,C71,C72,C73,C74,lambda,"ATLAS_139invfb"); 
+
+      // cout << "Atlas srnums defined" <<endl;
+
+
+
+      // cout << "After static atlas" <<endl;
+
+      std::vector<SignalRegionData> atlas139invfbBinnedResults;
+
+      for (size_t ibin = 0; ibin < atlas_bin_size; ++ibin)
+      {
+
+        // Generate an 'sr-N' label 
+        std::stringstream ss; ss << "sr-" << ibin;
+        // Construct a SignalRegionData instance and add it to atlas139invfbBinnedResults
+        SignalRegionData sr;
+        sr.sr_label = ss.str();
+        sr.n_obs = ATLAS_139invfb_OBSNUM[ibin];
+        sr.n_sig_MC = _srnums_ATLAS_139invfb[ibin];
+        sr.n_sig_scaled = _srnums_ATLAS_139invfb[ibin];  // We have already scaled the signals in _srnums_ATLAS_139invfb to xsec * lumi
+        // cout << "Check output: "<< sr.sr_label<< "  " << _srnums_ATLAS_139invfb[ibin] <<endl;
+        sr.n_sig_MC_sys = 0.;
+        sr.n_bkg = ATLAS_139invfb_BKGNUM[ibin];
+        sr.n_bkg_err = ATLAS_139invfb_BKGERR[ibin];
+        atlas139invfbBinnedResults.push_back(sr);
+      }
+
+      // Save the results in atlasData_139invfb
+      atlasData_139invfb.srdata = atlas139invfbBinnedResults;
+
 
 
       // ******** Create total results ***********// 
       // //--------------------------------------//
 
       // Saving the addresses to the thread_local AnalysisData instances.
-      result.push_back(&atlasData);
+      result.push_back(&atlasData_36invfb);
+      result.push_back(&atlasData_139invfb);
       result.push_back(&cmsData);
       result.push_back(&cmsData_nocovar);
 
