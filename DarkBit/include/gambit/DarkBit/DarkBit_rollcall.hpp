@@ -1525,7 +1525,7 @@ START_MODULE
     START_FUNCTION(nuyield_info)
     ALLOW_MODELS(MSSM63atQ, ScalarSingletDM_Z2_running, ScalarSingletDM_Z3_running,
                  MajoranaSingletDM_Z2, DiracSingletDM_Z2, VectorSingletDM_Z2,
-                 NREO_scalarDM, NREO_MajoranaDM, NREO_DiracDM)
+                 NREO_scalarDM, NREO_MajoranaDM, NREO_DiracDM,DMEFT)
     DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
     DEPENDENCY(mwimp, double)
     DEPENDENCY(sigmav, double)
