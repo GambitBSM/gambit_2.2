@@ -40,6 +40,7 @@
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/ColliderBit/ColliderBit_rollcall.hpp"
 #include "gambit/Utils/statistics.hpp" 
+#include "gambit/ColliderBit/Utils.hpp"
 
 #include "multimin/multimin.hpp"
 #include "Eigen/Eigenvalues"
@@ -255,13 +256,31 @@ namespace Gambit
 
       // Pass to the minimiser
       double minusbestll = 999;
-      // _gsl_calc_Analysis_MinusLogLike(nSR, &nuisances[0], &fixeds[0], &minusbestll);
-      multimin::multimin(nSR, &nuisances[0], &minusbestll,
-               nullptr, nullptr, nullptr,
-               _gsl_calc_Analysis_MinusLogLike,
-               _gsl_calc_Analysis_MinusLogLikeGrad,
-               _gsl_calc_Analysis_MinusLogLikeAndGrad,
-               &fixeds[0], oparams);
+
+      // Call minimizer with stderr temporarily silenced (due to gsl output)?
+      static bool silence_multimin = runOptions->getValueOrDef<bool>(true, "silence_multimin");
+
+      // Call the minimizer
+      if (silence_multimin)
+      {
+        CALL_WITH_SILENCED_STDERR(
+          multimin::multimin(nSR, &nuisances[0], &minusbestll,
+                   nullptr, nullptr, nullptr,
+                   _gsl_calc_Analysis_MinusLogLike,
+                   _gsl_calc_Analysis_MinusLogLikeGrad,
+                   _gsl_calc_Analysis_MinusLogLikeAndGrad,
+                   &fixeds[0], oparams) 
+        )
+      }
+      else
+      {
+        multimin::multimin(nSR, &nuisances[0], &minusbestll,
+                 nullptr, nullptr, nullptr,
+                 _gsl_calc_Analysis_MinusLogLike,
+                 _gsl_calc_Analysis_MinusLogLikeGrad,
+                 _gsl_calc_Analysis_MinusLogLikeAndGrad,
+                 &fixeds[0], oparams);
+      }
 
       return -minusbestll;
     }

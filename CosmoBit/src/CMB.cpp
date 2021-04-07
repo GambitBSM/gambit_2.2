@@ -49,6 +49,7 @@
 
 #include <gsl/gsl_spline.h>
 
+#include "gambit/Utils/statistics.hpp"
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/Utils/ascii_table_reader.hpp"
 
@@ -395,6 +396,23 @@ namespace Gambit
       double f_eff = *Dep::f_eff;
 
       result = f_eff * f2_sv / m;
+    }
+
+    // Profiled likelihood on p_ann.
+    // Used Datasets:
+    //  - P18 highl TT+TE+EE (lite)
+    //  - P18 lowl TT+EE
+    //  - P18 lensing
+    //  - BAO ("smallz 2014" + BOSS DR12)
+    void lnL_p_ann_P18_TTTEEE_lowE_lensing_BAO(double& result)
+    {
+      using namespace Pipes::lnL_p_ann_P18_TTTEEE_lowE_lensing_BAO;
+
+      const double p_ann28 = (*Dep::p_ann)*1e28;
+
+      // The likelihood is given by a Gaussian in p_ann28
+      // centered around -0.48 with a width of 2.48/sqrt(2)
+      result = Stats::gaussian_loglikelihood(p_ann28, -0.48, 0.0, 2.48/sqrt(2.), true);
     }
 
     /// The energy injection spectrum from the AnnihilatingDM model hierarchy.
