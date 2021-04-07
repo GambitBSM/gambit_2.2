@@ -200,21 +200,20 @@ namespace Gambit
       const double* METMINS;
 
       // Choose experiment
-      if (adata.analysis_name.find("ATLAS_36invfb") != std::string::npos)
+      if (adata.analysis_name.find("ATLAS") != std::string::npos)
       {
-        bool is_ATLAS_36invfb = true;
-        METMINS = METMINS_ATLAS_36invfb;
-        met_bin_size = atlas_bin_size;
-      }
-      else if (adata.analysis_name.find("ATLAS_139invfb") != std::string::npos)
-      {
-        bool is_ATLAS_139invfb = true;
-        METMINS = METMINS_ATLAS_139invfb;
+        if (adata.analysis_name.find("36invfb") != std::string::npos)
+        {
+          METMINS = METMINS_ATLAS_36invfb;
+        }
+        else if (adata.analysis_name.find("139invfb") != std::string::npos)
+        {
+          METMINS = METMINS_ATLAS_139invfb;
+        }
         met_bin_size = atlas_bin_size;
       }
       else if (adata.analysis_name.find("CMS") != std::string::npos)
       {
-        bool is_CMS = false;
         METMINS = METMINS_CMS;
         met_bin_size = cms_bin_size;
       }
@@ -2099,7 +2098,6 @@ namespace Gambit
 
 
           // Luminosity scaling gets applied at the end...
-
           double A   = LinearInterpolation(x2,x1,m,Q1[Emiss],Q2[Emiss]);
           double B   = LinearInterpolation(x2,x1,m,C1,C2);
           // double res =  36000.0*Norm*A*Norm*B; 
