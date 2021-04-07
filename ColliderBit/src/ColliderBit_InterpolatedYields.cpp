@@ -127,14 +127,14 @@ namespace Gambit
       static const double ATLAS_36invfb_OBSNUM[atlas_bin_size] = {111203,67475,35285,27843,8583,2975,1142,512,223,245};
       static const double ATLAS_36invfb_BKGNUM[atlas_bin_size] = {111100,67100,33820,27640,8360,2825,1094,463,213,226};
       static const double ATLAS_36invfb_BKGERR[atlas_bin_size] = {2300  ,1400 ,940  ,610  ,190 ,78  ,33  ,19 ,9  ,16 };
-      // TODO: These are for now just a verbatim copy of the 36 invfb analysis
-      static const double ATLAS_139invfb_OBSNUM[atlas_bin_size] = {111203,67475,35285,27843,8583,2975,1142,512,223,245};
-      static const double ATLAS_139invfb_BKGNUM[atlas_bin_size] = {111100,67100,33820,27640,8360,2825,1094,463,213,226};
-      static const double ATLAS_139invfb_BKGERR[atlas_bin_size] = {2300  ,1400 ,940  ,610  ,190 ,78  ,33  ,19 ,9  ,16 };
+
+      // For the 139invfb analysis we have ignored the first MET bin, and combined the yields from the last three bins
+      static const double ATLAS_139invfb_OBSNUM[atlas_bin_size] = {752328,313912,141036,102888,29458,10203,3986,1663,738,413+187+207};
+      static const double ATLAS_139invfb_BKGNUM[atlas_bin_size] = {753000,314000,140100,101600,29200,10000,3870,1640,754,359+182+218};
+      static const double ATLAS_139invfb_BKGERR[atlas_bin_size] = {9000  ,3500  ,1600  ,1200  ,400  ,180  ,80  ,40  ,20 ,sqrt(10*10+6*6+9*9) };
 
       // Define ATLAS and CMS exclusive signal regions: These are arrays of the MIN met in the bin. 
       static const double METMINS_ATLAS_36invfb[atlas_bin_size]     = {250., 300., 350., 400., 500., 600., 700., 800., 900., 1000.};
-      // TODO: These are for now just a verbatim copy of the 36 invfb analysis
       static const double METMINS_ATLAS_139invfb[atlas_bin_size]    = {250., 300., 350., 400., 500., 600., 700., 800., 900., 1000.};
       static const double METMINS_CMS[cms_bin_size]       = {250., 280., 310., 340., 370., 400., 430.,470.,510.,550.,590.,640.,690.,740.,790.,840.,900.,960.,1020.,1090.,1160.,1250.};
 
@@ -254,16 +254,16 @@ namespace Gambit
       const double* METMINS;
 
       // Choose experiment
-      if (adata.analysis_name.find("ATLAS_36invfb") != std::string::npos)
+      if (adata.analysis_name.find("ATLAS") != std::string::npos)
       {
-        bool is_ATLAS_36invfb = true;
-        METMINS = METMINS_ATLAS_36invfb;
-        met_bin_size = atlas_bin_size;
-      }
-      else if (adata.analysis_name.find("ATLAS_139invfb") != std::string::npos)
-      {
-        bool is_ATLAS_139invfb = true;
-        METMINS = METMINS_ATLAS_139invfb;
+        if (adata.analysis_name.find("36invfb") != std::string::npos)
+        {
+          METMINS = METMINS_ATLAS_36invfb;
+        }
+        else if (adata.analysis_name.find("139invfb") != std::string::npos)
+        {
+          METMINS = METMINS_ATLAS_139invfb;
+        }
         met_bin_size = atlas_bin_size;
       }
       else if (adata.analysis_name.find("CMS") != std::string::npos)
@@ -493,6 +493,7 @@ namespace Gambit
         // Define temp. arrays for storing yields. 
         // cout << "Check things "<<mass[0]<<endl;  
         int met_bin_size;
+        double Lumi; // Luminosity in inverse picobarns
         double ** MET_HIST = new double*[data_SIZE];
         double THETA[data_SIZE];
         double MASS[data_SIZE];
@@ -503,6 +504,7 @@ namespace Gambit
         if (strcmp(experiment,"ATLAS_36invfb") == 0 && strcmp(pair,"23") == 0)
         {
           met_bin_size = atlas_bin_size;
+          Lumi = 36.1 * pow(10,3);
 
           // double** MET_HIST = new double*[data_SIZE];
           for(int i = 0; i < data_SIZE; ++i){
@@ -522,6 +524,7 @@ namespace Gambit
         else if (strcmp(experiment,"ATLAS_139invfb") == 0 && strcmp(pair,"23") == 0)
         {
           met_bin_size = atlas_bin_size;
+          Lumi = 139.0 * pow(10,3);
 
           // double** MET_HIST = new double*[data_SIZE];
           for(int i = 0; i < data_SIZE; ++i)
@@ -545,6 +548,7 @@ namespace Gambit
           // std::cout << "BITE" << std::endl;
 
           met_bin_size = cms_bin_size;
+          Lumi = 35.9 * pow(10,3);
 
           // double** MET_HIST = new double*[data_SIZE];
           for(int i = 0; i < data_SIZE; ++i){
@@ -564,6 +568,7 @@ namespace Gambit
 
         else if (strcmp(experiment,"ATLAS_36invfb") == 0 && strcmp(pair,"14") == 0){
           met_bin_size = atlas_bin_size;
+          Lumi = 36.1 * pow(10,3);
 
           // double** MET_HIST = new double*[data_SIZE];
           for(int i = 0; i < data_SIZE; ++i){
@@ -584,6 +589,7 @@ namespace Gambit
         else if (strcmp(experiment,"ATLAS_139invfb") == 0 && strcmp(pair,"14") == 0)
         {
           met_bin_size = atlas_bin_size;
+          Lumi = 139.0 * pow(10,3);
 
           // double** MET_HIST = new double*[data_SIZE];
           for(int i = 0; i < data_SIZE; ++i)
@@ -607,6 +613,7 @@ namespace Gambit
 
         else if (strcmp(experiment,"CMS") == 0 && strcmp(pair,"14") == 0){
           met_bin_size = cms_bin_size;
+          Lumi = 35.9 * pow(10,3);
 
           // double** MET_HIST = new double*[data_SIZE];
           for(int i = 0; i < data_SIZE; ++i){
@@ -837,11 +844,11 @@ namespace Gambit
 
             // cout << " Acceptance_CS_dim6 DEBUG: 5 - Fixed" << endl;
 
-            // Luminoscity scaling gets applied at the end...
+            // Luminosity scaling gets applied at the end...
             double A   = BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th,yalpha);
             double B   = BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th,yalpha);
             // double res =  36000.0*float(Norm)*A*float(Norm)*B; 
-            double res =  36000.0*A*float(Norm)*B; 
+            double res =  Lumi*A*float(Norm)*B; 
             
             // double res =  Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th)*Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th); 
 
@@ -1082,6 +1089,7 @@ namespace Gambit
         // Define temp. arrays for storing yields. 
         // cout << "Check things "<<mass[0]<<endl;  
         int met_bin_size;
+        double Lumi; // Luminosity in inverse picobarns
         double ** MET_HIST = new double*[data_SIZE_low];
         double THETA[data_SIZE_low];
         double MASS[data_SIZE_low];
@@ -1092,6 +1100,7 @@ namespace Gambit
         if (strcmp(experiment,"ATLAS_36invfb") == 0 && strcmp(pair,"23") == 0)
         {
           met_bin_size = atlas_bin_size;
+          Lumi = 36.1 * pow(10,3);
 
           // double** MET_HIST = new double*[data_SIZE];
           for(int i = 0; i <data_SIZE_low; ++i){
@@ -1111,6 +1120,7 @@ namespace Gambit
         if (strcmp(experiment,"ATLAS_139invfb") == 0 && strcmp(pair,"23") == 0)
         {
           met_bin_size = atlas_bin_size;
+          Lumi = 139.0 * pow(10,3);
 
           // double** MET_HIST = new double*[data_SIZE];
           for(int i = 0; i <data_SIZE_low; ++i)
@@ -1135,6 +1145,7 @@ namespace Gambit
           // std::cout << "BITE" << std::endl;
 
           met_bin_size = cms_bin_size;
+          Lumi = 35.9 * pow(10,3);
 
           // double** MET_HIST = new double*[data_SIZE];
           for(int i = 0; i <data_SIZE_low; ++i){
@@ -1154,6 +1165,7 @@ namespace Gambit
 
         else if (strcmp(experiment,"ATLAS_36invfb") == 0 && strcmp(pair,"14") == 0){
           met_bin_size = atlas_bin_size;
+          Lumi = 36.1 * pow(10,3); 
 
           // double** MET_HIST = new double*[data_SIZE];
           for(int i = 0; i <data_SIZE_low; ++i){
@@ -1174,6 +1186,7 @@ namespace Gambit
         else if (strcmp(experiment,"ATLAS_139invfb") == 0 && strcmp(pair,"14") == 0)
         {
           met_bin_size = atlas_bin_size;
+          Lumi = 139.0 * pow(10,3);
 
           // double** MET_HIST = new double*[data_SIZE];
           for(int i = 0; i <data_SIZE_low; ++i)
@@ -1197,6 +1210,7 @@ namespace Gambit
 
         else if (strcmp(experiment,"CMS") == 0 && strcmp(pair,"14") == 0){
           met_bin_size = cms_bin_size;
+          Lumi = 35.9 * pow(10,3);
 
           // double** MET_HIST = new double*[data_SIZE];
           for(int i = 0; i <data_SIZE_low; ++i){
@@ -1429,11 +1443,10 @@ namespace Gambit
 
             // cout << " Acceptance_CS_dim6 DEBUG: 5 - Fixed" << endl;
 
-            // Luminoscity scaling gets applied at the end...
+            // Luminosity scaling gets applied at the end...
             double A   = BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th,yalpha);
             double B   = BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th,yalpha);
-            // double res =  36000.0*Norm*A*Norm*B;
-            double res =  36000.0*A*float(Norm)*B; 
+            double res =  Lumi*A*float(Norm)*B; 
 
             // double res =  Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th)*Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th); 
           
@@ -1764,6 +1777,7 @@ namespace Gambit
 
 
       int met_bin_size;
+      double Lumi; // Luminosity in inverse picobarns
       double ** MET_HIST = new double*[data_SIZE_d7];
       double CS[data_SIZE_d7];
       
@@ -1773,6 +1787,7 @@ namespace Gambit
       if (strcmp(experiment,"ATLAS_36invfb") == 0 && strcmp(pair,"71") == 0)
       {
         met_bin_size = atlas_bin_size;
+        Lumi = 36.1 * pow(10,3);
 
         // double** MET_HIST = new double*[data_SIZE_d7];
         for(int i = 0; i < data_SIZE_d7; ++i){
@@ -1790,6 +1805,7 @@ namespace Gambit
       else if (strcmp(experiment,"ATLAS_139invfb") == 0 && strcmp(pair,"71") == 0)
       {
         met_bin_size = atlas_bin_size;
+        Lumi = 139.0 * pow(10,3);
 
         // double** MET_HIST = new double*[data_SIZE_d7];
         for(int i = 0; i < data_SIZE_d7; ++i)
@@ -1812,6 +1828,7 @@ namespace Gambit
         // std::cout << "BITE" << std::endl;
 
         met_bin_size = cms_bin_size;
+        Lumi = 35.9 * pow(10,3);
 
         // double** MET_HIST = new double*[data_SIZE_d7];
         for(int i = 0; i < data_SIZE_d7; ++i){
@@ -1829,6 +1846,7 @@ namespace Gambit
 
       else if (strcmp(experiment,"ATLAS_36invfb") == 0 && strcmp(pair,"72") == 0){
         met_bin_size = atlas_bin_size;
+        Lumi = 36.1 * pow(10,3);
 
         // double** MET_HIST = new double*[data_SIZE_d7];
         for(int i = 0; i < data_SIZE_d7; ++i){
@@ -1847,6 +1865,7 @@ namespace Gambit
       else if (strcmp(experiment,"ATLAS_139invfb") == 0 && strcmp(pair,"72") == 0)
       {
         met_bin_size = atlas_bin_size;
+        Lumi = 139.0 * pow(10,3);
 
         // double** MET_HIST = new double*[data_SIZE_d7];
         for(int i = 0; i < data_SIZE_d7; ++i)
@@ -1867,6 +1886,7 @@ namespace Gambit
 
       else if (strcmp(experiment,"CMS") == 0 && strcmp(pair,"72") == 0){
         met_bin_size = cms_bin_size;
+        Lumi = 35.9 * pow(10,3);
 
         // double** MET_HIST = new double*[data_SIZE_d7];
         for(int i = 0; i < data_SIZE_d7; ++i){
@@ -1884,6 +1904,7 @@ namespace Gambit
 
       else if (strcmp(experiment,"ATLAS_36invfb") == 0 && strcmp(pair,"73") == 0){
         met_bin_size = atlas_bin_size;
+        Lumi = 36.1 * pow(10,3);
 
         // double** MET_HIST = new double*[data_SIZE_d7];
         for(int i = 0; i < data_SIZE_d7; ++i){
@@ -1902,6 +1923,7 @@ namespace Gambit
       else if (strcmp(experiment,"ATLAS_139invfb") == 0 && strcmp(pair,"73") == 0)
       {
         met_bin_size = atlas_bin_size;
+        Lumi = 139.0 * pow(10,3);
 
         // double** MET_HIST = new double*[data_SIZE_d7];
         for(int i = 0; i < data_SIZE_d7; ++i)
@@ -1923,6 +1945,7 @@ namespace Gambit
 
       else if (strcmp(experiment,"CMS") == 0 && strcmp(pair,"73") == 0){
         met_bin_size = cms_bin_size;
+        Lumi = 35.9 * pow(10,3);
 
         // double** MET_HIST = new double*[data_SIZE_d7];
         for(int i = 0; i < data_SIZE_d7; ++i){
@@ -1941,6 +1964,7 @@ namespace Gambit
 
       else if (strcmp(experiment,"ATLAS_36invfb") == 0 && strcmp(pair,"74") == 0){
         met_bin_size = atlas_bin_size;
+        Lumi = 36.1 * pow(10,3);
 
         // double** MET_HIST = new double*[data_SIZE_d7];
         for(int i = 0; i < data_SIZE_d7; ++i){
@@ -1959,6 +1983,7 @@ namespace Gambit
       else if (strcmp(experiment,"ATLAS_139invfb") == 0 && strcmp(pair,"74") == 0)
       {
         met_bin_size = atlas_bin_size;
+        Lumi = 139.0 * pow(10,3);
 
         // double** MET_HIST = new double*[data_SIZE_d7];
         for(int i = 0; i < data_SIZE_d7; ++i)
@@ -1980,6 +2005,7 @@ namespace Gambit
 
       else if (strcmp(experiment,"CMS") == 0 && strcmp(pair,"74") == 0){
         met_bin_size = cms_bin_size;
+        Lumi = 35.9 * pow(10,3);
 
         // double** MET_HIST = new double*[data_SIZE_d7];
         for(int i = 0; i < data_SIZE_d7; ++i){
@@ -2072,12 +2098,12 @@ namespace Gambit
 
 
 
-          // Luminoscity scaling gets applied at the end...
+          // Luminosity scaling gets applied at the end...
 
           double A   = LinearInterpolation(x2,x1,m,Q1[Emiss],Q2[Emiss]);
           double B   = LinearInterpolation(x2,x1,m,C1,C2);
           // double res =  36000.0*Norm*A*Norm*B; 
-          double res =  36000.0*A*Norm*B; 
+          double res =  Lumi*A*Norm*B; 
           double lambda_scaling = float(pow(1000.0,6))/float(pow(lambda,6));
   
           accep[Emiss] = res*lambda_scaling;
@@ -2113,9 +2139,9 @@ namespace Gambit
       char const *sth= "73";
       char const *sf = "74";            
 
-      int met_bin_size;
+      int met_bin_size = 0;
 
-      if (strcmp(exper_,"ATLAS_36invfb") == 0 or strcmp(exper_,"ATLAS_139invfb"))
+      if (strcmp(exper_,"ATLAS_36invfb") == 0 or strcmp(exper_,"ATLAS_139invfb") == 0)
       {
         met_bin_size = atlas_bin_size;
       }
@@ -2183,29 +2209,16 @@ namespace Gambit
 
       const Spectrum& spec = *Dep::DMEFT_spectrum;
 
-      // TODO change floats -> doubles
-      float C61 = spec.get(Par::dimensionless, "C61");
-      float C62 = spec.get(Par::dimensionless, "C62");
-      float C63 = spec.get(Par::dimensionless, "C63");
-      float C64 = spec.get(Par::dimensionless, "C64");
-      float C71 = spec.get(Par::dimensionless, "C71");
-      float C72 = spec.get(Par::dimensionless, "C72");
-      float C73 = spec.get(Par::dimensionless, "C73");
-      float C74 = spec.get(Par::dimensionless, "C74");
-      float lambda = spec.get(Par::mass1, "Lambda");      
-      float mchi = spec.get(Par::Pole_Mass, "chi");
-
-      // Do not get segfault when I do a get data here.....
-      // float C61   = *Pipes::DMEFT_results::Param["C61"]; 
-      // float C62   = *Pipes::DMEFT_results::Param["C62"];
-      // float C63   = *Pipes::DMEFT_results::Param["C63"];
-      // float C64   = *Pipes::DMEFT_results::Param["C64"];
-      // float C71   = *Pipes::DMEFT_results::Param["C71"]; 
-      // float C72   = *Pipes::DMEFT_results::Param["C72"];
-      // float C73   = *Pipes::DMEFT_results::Param["C73"];
-      // float C74   = *Pipes::DMEFT_results::Param["C74"];
-      // float mchi  = *Pipes::DMEFT_results::Param["mchi"]; 
-      // float lambda= *Pipes::DMEFT_results::Param["Lambda"];
+      double C61 = spec.get(Par::dimensionless, "C61");
+      double C62 = spec.get(Par::dimensionless, "C62");
+      double C63 = spec.get(Par::dimensionless, "C63");
+      double C64 = spec.get(Par::dimensionless, "C64");
+      double C71 = spec.get(Par::dimensionless, "C71");
+      double C72 = spec.get(Par::dimensionless, "C72");
+      double C73 = spec.get(Par::dimensionless, "C73");
+      double C74 = spec.get(Par::dimensionless, "C74");
+      double lambda = spec.get(Par::mass1, "Lambda");      
+      double mchi = spec.get(Par::Pole_Mass, "chi");
 
       // **--------------------------------------------------------------------------------------------//
       //** --------------------------------CMS---------------------------------------------------------//
@@ -2283,7 +2296,6 @@ namespace Gambit
       // Save a copy of the results *without* the covariance matrix in cmsData_nocovar
       cmsData_nocovar.srdata = cmsBinnedResults;
 
-
       // **----------------------------------------------------------------------------------------------------//
       // **-------------------------------------ATLAS 36invfb----------------------------------------------------------//
 
@@ -2302,7 +2314,7 @@ namespace Gambit
 
 
 
-      // cout << "After static atlas" <<endl;
+      //cout << "After static atlas" <<endl;
 
       std::vector<SignalRegionData> atlasBinnedResults;
 
@@ -2333,7 +2345,7 @@ namespace Gambit
       // Andre to add the relevant lines
       
 
-      // std::cout << "Making signal numbers" << std::endl; 
+      //std::cout << "Making signal numbers" << std::endl; 
 
       // cout<<"Just b4 atlas srnums"<<endl;
 

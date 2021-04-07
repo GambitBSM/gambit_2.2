@@ -67,7 +67,7 @@
 //#define DEPRES_DEBUG
 
 // Verbose flag (not debug per se, just basic dependency resolution information)
-#define VERBOSE_DEP_RES
+//#define VERBOSE_DEP_RES
 
 namespace Gambit
 {
