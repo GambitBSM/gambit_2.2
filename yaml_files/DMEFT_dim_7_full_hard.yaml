@@ -271,6 +271,7 @@ Rules:
       cap_loglike: false
       skip_analyses:
         - CMS_13TeV_MONOJET_36invfb_interpolated_nocovar
+        - ATLAS_13TeV_MONOJET_139invfb_interpolated
 
   - capability: LHC_LogLikes
     backends:
