@@ -662,6 +662,7 @@ namespace Gambit
         if (m>mass[data_INC-1]){
           ColliderBit_warning().raise(LOCAL_INFO, "Mass parameter above range of high-mass region. Setting signal to zero.");
           Norm = 0;  // Slightly hacky way to set the signal to zero in this case 
+          m=mass[data_INC-1];
         }
         if (th<theta[0] || th>theta[data_INC-1]){
           ColliderBit_error().raise(LOCAL_INFO, "Theta parameter out of range.");
@@ -2029,6 +2030,7 @@ namespace Gambit
       if (m>mass[data_INC_d7-1]){
         ColliderBit_warning().raise(LOCAL_INFO, "Mass parameter above tabulated region. Setting signal to zero.");
         Norm = 0;  // Slightly hacky way to set the signal to zero in this case 
+        m=mass[data_INC_d7-1];
       }
 
       double x1,x2;
