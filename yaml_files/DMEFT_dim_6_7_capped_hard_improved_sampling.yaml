@@ -283,6 +283,7 @@ Rules:
       cap_loglike: true
       skip_analyses:
         - CMS_13TeV_MONOJET_36invfb_interpolated_nocovar
+        - ATLAS_13TeV_MONOJET_139invfb_interpolated
 
   - capability: LHC_LogLikes
     backends:
@@ -385,7 +386,7 @@ KeyValues:
     use_lnlike_modifier: gaussian
     lnlike_modifiers:
       gaussian:
-        mu: # TODO: Use value mu = <LogLike of best-fit point from dim_6_7_capped_hard scan> - 3.1
+        mu: -106.548908989 # TODO: Use value mu = <LogLike of best-fit point from dim_6_7_capped_hard scan> - 3.1
         sigma: 0.5
         # use_limit: lower
         use_delta_lnlike: false
