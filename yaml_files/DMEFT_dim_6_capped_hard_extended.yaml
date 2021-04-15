@@ -20,35 +20,36 @@ Parameters:
     # DM mass
     mchi:
       prior_type: log
-      range: [5.,1.e5]
+      range: [5.,1.5e5]
     # Scale of new physics
     Lambda: 
       prior_type: log
-      range: [20.,2.e5]
+      range: [20.,3.e5]
     # EM interactions (only turn on at loop-level -- not concerned with these)
     C51: 0.
     C52: 0.
     # Dim 6 -- qq chi chi bilinears
     # vector vector
     C61:
+      range: [-12.56637, 12.56637]
       #range: [-1, 1] # Heavily constrained by direct detection
-      prior_type: double_log_flat_join
-      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
+      #prior_type: double_log_flat_join
+      #ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # axial-vector vector
     C62: 
-      #range: [-12.56637, 12.56637]
-      prior_type: double_log_flat_join
-      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
+      range: [-12.56637, 12.56637]
+      #prior_type: double_log_flat_join
+      #ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # vector axial-vector
     C63: 
-      #range: [-12.56637, 12.56637]
-      prior_type: double_log_flat_join
-      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
+      range: [-12.56637, 12.56637]
+      #prior_type: double_log_flat_join
+      #ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # axial-vector axial-vector
     C64: 
-      #range: [-12.56637, 12.56637]
-      prior_type: double_log_flat_join
-      ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
+      range: [-12.56637, 12.56637]
+      #prior_type: double_log_flat_join
+      #ranges: [-12.56637, -1e-06, 1e-06, 12.56637]
     # Dim 7 -- gluons
     C71: 0
     C72: 0
