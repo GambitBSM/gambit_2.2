@@ -1156,12 +1156,12 @@ START_MODULE
 
   #undef CAPABILITY
 
-  // Relativistic Wilson coefficients defined above the EW scale      
+  // Relativistic Wilson coefficients defined above the EW scale
   #define CAPABILITY DD_rel_WCs_EW
   START_CAPABILITY
-  
-      // S.B. removed DiracSingletDM_Z2 function as the Higgs portal 
-      // models are all defined *after* EWSB. 
+
+      // S.B. removed DiracSingletDM_Z2 function as the Higgs portal
+      // models are all defined *after* EWSB.
 
       // #define FUNCTION DD_rel_WCs_EW_DiracSingletDM_Z2
       // START_FUNCTION(map_str_dbl)
@@ -1206,7 +1206,7 @@ START_MODULE
       DEPENDENCY(DirectDMNuisanceParameters, map_str_dbl)
       BACKEND_REQ(get_NR_WCs_EW, (), NREO_DM_nucleon_couplings, (map_str_dbl&, double&, double&, double&, double&, std::string&, map_str_dbl&))
       #undef FUNCTION
-      
+
       // Non-relativistic WCs computed directly for fermionic Higgs portal models.
       #define FUNCTION DD_nonrel_WCs_DiracSingletDM_Z2
       START_FUNCTION(NREO_DM_nucleon_couplings)
@@ -1259,7 +1259,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION ExtractDirectDMNuisanceParameters
       START_FUNCTION(map_str_dbl)
-      DEPENDENCY(SMINPUTS, SMInputs)      
+      DEPENDENCY(SMINPUTS, SMInputs)
       ALLOW_MODELS(nuclear_params_ChPT)
     #undef FUNCTION
   #undef CAPABILITY
@@ -1462,7 +1462,7 @@ START_MODULE
     DEPENDENCY(sigma_SI_p, double)
     DEPENDENCY(sigma_SD_p, double)
     BACKEND_REQ(cap_Sun_v0q0_isoscalar,(cg),void,(const double&,const double&,const double&,double&,double&))
-    BACKEND_REQ(cap_sun_saturation,(cg),void,(const double&,double&))
+    BACKEND_REQ(cap_sun_saturation,(cg),double,(const double&))
     BACKEND_OPTION((CaptnGeneral),(cg))
     FORCE_SAME_BACKEND(cg)
     #undef FUNCTION
@@ -1474,7 +1474,7 @@ START_MODULE
     DEPENDENCY(sigma_SD_p, map_intpair_dbl)
     DEPENDENCY(sigma_SI_p, map_intpair_dbl)
     BACKEND_REQ(cap_Sun_vnqn_isoscalar,(cg),void,(const double&,const double&,const int&,const int&,const int&,double&))
-    BACKEND_REQ(cap_sun_saturation,(cg),void,(const double&,double&))
+    BACKEND_REQ(cap_sun_saturation,(cg),double,(const double&))
     BACKEND_OPTION((CaptnGeneral),(cg))
     FORCE_SAME_BACKEND(cg)
     #undef FUNCTION
@@ -1487,8 +1487,8 @@ START_MODULE
     ///Capture rate of dark matter with NREO method (s^-1), using backend Captn' General
     #define FUNCTION capture_rate_Sun_NREO
     START_FUNCTION(double)
-    BACKEND_REQ(captn_NREO,(CaptnGeneral),void,(const double&,const double&,const int&,const int&,double&))
-    BACKEND_REQ(cap_sun_saturation,(CaptnGeneral),void,(const double&,double&))
+    BACKEND_REQ(captn_NREO,(CaptnGeneral),void,(const double&,const double&,const int&,double&))
+    BACKEND_REQ(cap_sun_saturation,(CaptnGeneral),double,(const double&))
     BACKEND_REQ(populate_array,(CaptnGeneral),void,(const double&,const int&,const int&))
     DEPENDENCY(WIMP_properties, WIMPprops)
     DEPENDENCY(DD_nonrel_WCs,NREO_DM_nucleon_couplings)
@@ -1524,7 +1524,8 @@ START_MODULE
     #define FUNCTION nuyield_from_DS
     START_FUNCTION(nuyield_info)
     ALLOW_MODELS(MSSM63atQ, ScalarSingletDM_Z2_running, ScalarSingletDM_Z3_running,
-                 MajoranaSingletDM_Z2, DiracSingletDM_Z2, VectorSingletDM_Z2)
+                 MajoranaSingletDM_Z2, DiracSingletDM_Z2, VectorSingletDM_Z2,
+                 NREO_scalarDM, NREO_MajoranaDM, NREO_DiracDM,DMEFT)
     DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
     DEPENDENCY(mwimp, double)
     DEPENDENCY(sigmav, double)

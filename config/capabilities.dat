@@ -5400,6 +5400,10 @@ RHN_coupling_slide: |
 CaptnGeneral_1_0_init: |
   Initialize Captn' general backend.
 
+  CaptnGeneral_2_1_init: |
+    Initialize Captn' general 2.1 backend.
+
+
 captn_init: |
   Actually initialize Captn' general.
 
