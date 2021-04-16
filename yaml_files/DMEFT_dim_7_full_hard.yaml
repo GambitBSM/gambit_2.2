@@ -159,6 +159,10 @@ ObsLikes:
   - capability: sigmav
     purpose:    Observable
 
+  - capability: IC79_loglike
+    purpose: LogLike
+
+  # Cosmo likelihoods and observables
   - capability: lnL_p_ann
     purpose: LogLike
 
@@ -263,6 +267,9 @@ Rules:
 
   - capability: positron_Yield
     function: positron_AnnYield_General
+
+  - capability: capture_rate_Sun
+    function: capture_rate_Sun_NREO
 
   # Tell DarkAges to calculate f_eff(z)
   - capability: DarkAges_1_2_0_init
