@@ -171,6 +171,15 @@ ObsLikes:
   - capability: sigmav
     purpose:    Observable
 
+  - capability: lnL_p_ann
+    purpose: LogLike
+
+  - capability: p_ann
+    purpose: Observable
+
+  - capability: f_eff
+    purpose: Observable
+
   # LHC likelihoods
   - purpose:    LogLike
     capability: LHC_Combined_LogLike
@@ -261,6 +270,21 @@ Rules:
   - capability: GA_Yield
     function: GA_AnnYield_General
 
+  - capability: electron_Yield
+    function: electron_AnnYield_General
+
+  - capability: positron_Yield
+    function: positron_AnnYield_General
+
+  # Tell DarkAges to calculate f_eff(z)
+  - capability: DarkAges_1_2_0_init
+    options:
+      f_eff_mode: true
+
+  # Calculate the constant f_eff by convolution of f_eff(z) with a weighting function
+  - capability: f_eff
+    function: f_eff_weighted
+
   # Choose to get decay rates from DecayBit proper, not an SLHA file
   - capability: decay_rates
     function: all_decays
@@ -283,7 +307,7 @@ Rules:
       cap_loglike: false
       skip_analyses:
         - CMS_13TeV_MONOJET_36invfb_interpolated_nocovar
-        - ATLAS_13TeV_MONOJET_139invfb_interpolated
+        - ATLAS_13TeV_MONOJET_36invfb_interpolated
 
   - capability: LHC_LogLikes
     backends:
