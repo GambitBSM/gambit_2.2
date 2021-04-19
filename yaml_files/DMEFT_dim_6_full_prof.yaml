@@ -1,11 +1,11 @@
-##########################################################################################################
+###########################################################################################################################
 ## GAMBIT configuration file for a Diver scan of the DMEFT model
 ##
-## Constrains : relic density, gamma rays, direct detection, full LHC likelihood (profile cut-off). 
+## Constrains: relic density, gamma rays, solar neutrinos, CMB, direct detection, full LHC likelihood (profile cut-off). 
 ## 
 ## 6 model parameters (mchi, Lambda, C61-64 (WCs for Dim-6 operators))
 ## 8 nuisance parameters (mtrunIN, rho0, v0, vesc, sigmapiN, Deltas, gTs, rs2)
-##########################################################################################################
+###########################################################################################################################
 
 
 Parameters:
