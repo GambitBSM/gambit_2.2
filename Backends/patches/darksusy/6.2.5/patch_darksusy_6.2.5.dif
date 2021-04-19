@@ -1,0 +1,26 @@
+diff -rupN darksusy-6.2.5_original/src_models/mssm/ge_slha/dsgive_model_SLHA.F darksusy-6.2.5_patched/src_models/mssm/ge_slha/dsgive_model_SLHA.F
+--- darksusy-6.2.5_original/src_models/mssm/ge_slha/dsgive_model_SLHA.F
++++ darksusy-6.2.5_patched/src_models/mssm/ge_slha/dsgive_model_SLHA.F
+@@ -76,7 +76,7 @@ c...Read it in
+  
+  ! We want to get the model ID from the file eventually
+  ! For now, just use the filename, trimming away the path 
+-      idtag=file(index(file,'/',BACK=.true.)+1:lnblnk(file)) 
++      idtag=file(index(file,'/',BACK=.true.)+1:LEN_TRIM(file))
+ 
+ c...Transfer stuff from the SLHA data structure to DarkSUSY
+       call dsfromslha
+diff -rupN darksusy-6.2.5/makefile.in ../installed/darksusy/6.2.5/makefile.in
+--- darksusy-6.2.5/makefile.in	2021-03-10 22:37:33.000000000 +0100
++++ ../installed/darksusy/6.2.5/makefile.in	2021-04-19 22:08:09.000000000 +0200
+@@ -514,8 +514,8 @@ pdf-manual-long-debug pdf-Manual-long-de
+ 
+ # Below are instructions for shared libraries, currently used by GAMBIT
+ 
+-ds_mssm_shared : lib/libds_mssm.a lib/libds_empty.a lib/libds_core.a lib/libHS.a lib/libHB.a lib/libFH.a lib/libisospin.a lib/libisajet.a
+-	$(ADD_SCR) $(DS_INSTALL)/lib/libds_core_mssm.so $(DS_INSTALL)/lib/libds_mssm.a $(DS_INSTALL)/lib/libds_empty.a $(DS_INSTALL)/lib/libds_core.a $(DS_INSTALL)/lib/libHS.a $(DS_INSTALL)/lib/libHB.a $(DS_INSTALL)/lib/libFH.a $(DS_INSTALL)/lib/libisospin.a $(DS_INSTALL)/lib/libisajet.a $(DS_INSTALL)/lib/libhealpix.a $(DS_INSTALL)/lib/libcfitsio.a
++ds_mssm_shared : lib/libds_mssm.a lib/libds_empty.a lib/libds_core.a lib/libHS.a lib/libHB.a lib/libFH.a lib/libsuperiso.a lib/libisajet.a
++	$(ADD_SCR) $(DS_INSTALL)/lib/libds_core_mssm.so $(DS_INSTALL)/lib/libds_mssm.a $(DS_INSTALL)/lib/libds_empty.a $(DS_INSTALL)/lib/libds_core.a $(DS_INSTALL)/lib/libHS.a $(DS_INSTALL)/lib/libHB.a $(DS_INSTALL)/lib/libFH.a $(DS_INSTALL)/lib/libsuperiso.a $(DS_INSTALL)/lib/libisajet.a $(DS_INSTALL)/lib/libhealpix.a $(DS_INSTALL)/lib/libcfitsio.a
+ 
+ ds_generic_decayingDM_shared : lib/libds_generic_decayingDM.a lib/libds_empty.a lib/libds_core.a
+ 	$(ADD_SCR) $(DS_INSTALL)/lib/libds_core_generic_decayingDM.so $(DS_INSTALL)/lib/libds_generic_decayingDM.a $(DS_INSTALL)/lib/libds_empty.a $(DS_INSTALL)/lib/libds_core.a $(DS_INSTALL)/lib/libhealpix.a $(DS_INSTALL)/lib/libcfitsio.a
