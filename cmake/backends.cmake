@@ -1479,7 +1479,7 @@ if(NOT ditched_${name}_${ver})
               COMMAND ${CMAKE_COMMAND} -E copy ${dir}/c_source/strfun/pdf_dummy.c ${dir}/c_source/num/pdf_dummy.c
     PATCH_COMMAND patch -p0 < ${patchdir}/patch_${name}_${ver}.dif
           COMMAND sed ${dashi} -e "s#GAMBITDIR#${PROJECT_SOURCE_DIR}#g" ${dir}/c_source/dynamicME/vp_dynam.c
-    BUILD_COMMAND ${MAKE_PARALLEL}
+    BUILD_COMMAND ${MAKE_SERIAL}
     INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/Models/ ${dir}/models/
   )
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} "yes | clean")
