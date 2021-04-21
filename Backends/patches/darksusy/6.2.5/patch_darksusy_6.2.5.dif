@@ -201,4 +201,71 @@ diff -rupN darksusy-6.2.5_original/contrib/isajet788-for-darksusy/isajet/zgeev.f
            DMAX = DABS(DX(I))
     30 CONTINUE
        RETURN
+diff -rupN darksusy-6.2.5_original/src_models/mssm/an/dsandwdcosnn.f darksusy-6.2.5_patched/src_models/mssm/an/dsandwdcosnn.f
+--- darksusy-6.2.5_original/src_models/mssm/an/dsandwdcosnn.f	2021-03-10 22:37:34.000000000 +0100
++++ darksusy-6.2.5_patched/src_models/mssm/an/dsandwdcosnn.f	2021-04-21 13:17:02.000000000 +0200
+@@ -39,7 +39,7 @@ c=======================================
+       real*8 dsandwdcosnn
+       integer h,i,ii,j,c,kh(3),f,ksf,k,kp1,kp2,ind1,ind2
+       logical qcdcorr(7:12)
+-      real*8 w,p,costheta,tmp, vzero,
++      real*8 w,wqq,p,costheta,tmp, vzero,
+      & sumf,imres,reres,gluons,gammas,zgam,qqv0(20:25,42:45),qqgv0(20:25,42:45)
+       common /qqv0/ qqv0 
+       save gluons,gammas,zgam, /qqv0/, qqgv0
+@@ -422,16 +422,24 @@ c---------------------------------------
+       w=w+prtial(17)            ! mu+ mu-
+       w=w+prtial(18)            ! nutau nutaubar
+       w=w+prtial(19)            ! tau+ tau-
+-      w=w+prtial(20)            ! u ubar
+-      w=w+prtial(21)            ! d dbar
+-      w=w+prtial(22)            ! c cbar
+-      w=w+prtial(23)            ! s sbar
+-      w=w+prtial(24)            ! t tbar
+-      w=w+prtial(25)            ! b bbar
+-c... loop diagrams
+-      if (prtial(26)+prtial(27).lt.0.0d0) stop
+-      w=w+prtial(26)            ! glue glue
+-      w=w+prtial(27)            ! qq glue
++      wqq=0.0d0
++      wqq=wqq+prtial(20)            ! u ubar
++      wqq=wqq+prtial(21)            ! d dbar
++      wqq=wqq+prtial(22)            ! c cbar
++      wqq=wqq+prtial(23)            ! s sbar
++      wqq=wqq+prtial(24)            ! t tbar
++      wqq=wqq+prtial(25)            ! b bbar
++      wqq=wqq+prtial(27)            ! qq glue
++      wqq=wqq+prtial(26)            ! glue glue
++      if (wqq.lt.0.0d0) then
++        if (prtlevel.gt.1) then
++          write(*,*) 'WARNING in dsandwdcosnn: '
++          write(*,*) 'Neglecting annihilation rate to quarks (negative wqq!)...'
++        endif
++      else
++        w=w+wqq
++      endif
++c... further loop diagrams
+       w=w+prtial(28)            ! gamma gamma
+       w=w+prtial(29)            ! z gamma
+
+diff -rupN darksusy-6.2.5_original/src_models/empty/rd/dsrddofDS.f darksusy-6.2.5_patched/src_models/empty/rd/dsrddofDS.f
+--- ddarksusy-6.2.5_original/src_models/empty/rd/dsrddofDS.f	2021-03-10 22:37:34.000000000 +0100
++++ darksusy-6.2.5_patched/src_models/empty/rd/dsrddofDS.f	2021-04-21 14:52:04.000000000 +0200
+@@ -22,11 +22,11 @@ c=======================================
+ 
+       real*8 Td
+       
+-      write(*,*) 'WARNING: you are calling routine dsrddofDS in',
+-     &     ' module empty.'
+-      write(*,*) 'You need to modify this routine.'
++c      write(*,*) 'WARNING: you are calling routine dsrddofDS in',
++c     &     ' module empty.'
++c      write(*,*) 'You need to modify this routine.'
+       
+-      dsrddofDS = 1.d0
++      dsrddofDS = 0.d0
+  
+       return
+       end
+ 
 
