@@ -291,6 +291,7 @@ set(ver "6.2.5")
 set(dl "https://darksusy.hepforge.org/tars/${name}-${ver}.tgz")
 set(md5 "9d9d85b2220d14d82a535ef45dcb4537")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+set(patchdir "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/")
 set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}.dif")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_.${name}_${ver}_base)
@@ -299,6 +300,7 @@ if(NOT ditched_.${name}_${ver}_base)
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
     PATCH_COMMAND patch -p1 < ${patch}
+    COMMAND ${CMAKE_COMMAND} -E copy ${patchdir}/dshealpixave.patch ${dir}/src/aux/dshealpixave.patch
     CONFIGURE_COMMAND ./configure FC=${CMAKE_Fortran_COMPILER} FCFLAGS=${BACKEND_Fortran_FLAGS} FFLAGS=${BACKEND_Fortran_FLAGS} CC=${CMAKE_C_COMPILER} CFLAGS=${BACKEND_C_FLAGS} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${BACKEND_CXX_FLAGS}
     BUILD_COMMAND ${MAKE_PARALLEL} makedirs healpix tspack ds_core ds_common ds_empty install_tables
     INSTALL_COMMAND ""

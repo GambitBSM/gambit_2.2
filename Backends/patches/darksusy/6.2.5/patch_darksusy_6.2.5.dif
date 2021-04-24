@@ -12,7 +12,7 @@ diff -rupN darksusy-6.2.5_original/src_models/mssm/ge_slha/dsgive_model_SLHA.F d
        call dsfromslha
 diff -rupN darksusy-6.2.5_original/makefile.in darksusy-6.2.5_patched/makefile.in
 --- darksusy-6.2.5_original/makefile.in	2021-04-20 07:58:42.000000000 +0200
-+++ darksusy-6.2.5_patched/makefile.in	2021-04-21 08:00:18.000000000 +0200
++++ darksusy-6.2.5_patched/makefile.in	2021-04-23 14:00:15.000000000 +0200
 @@ -2,7 +2,7 @@
  # Technical questions about this makefile should be directed to
  # Joakim Edsjo, edsjo@fysik.su.se
@@ -22,7 +22,21 @@ diff -rupN darksusy-6.2.5_original/makefile.in darksusy-6.2.5_patched/makefile.i
  # Note that this file follows a certain structure and it is also updated
  # automatically, e.g. when modules are added/deleted by the script
  # scr/update_mainmf.pl. Hence, don't delete comments below which are needed for
-@@ -283,7 +283,7 @@ healpix: cfitsio
+@@ -267,9 +267,10 @@ healpix: cfitsio
+ 	cd lib;\
+ 	if [ ! -f ../include/pix_tools.mod ] ; then \
+ 		if [ ! -f ../build/mod/pix_tools.mod ] ; then \
+-			echo "${RED}ERROR${RESET} -- something went wrong!"; \
+-			echo "(Maybe a missing libcurl? See ${HEALPIXDIR}/DS_contrib_log*.txt for more details...)"; \
+-			echo "${RED}DarkSUSY cannot compile without pix_tools.mod.${RESET}"; \
++			echo "${RED}WARNING${RESET} -- pix_tools.mod not found!"; \
++			echo "(Maybe a missing libcurl-dev? See ${HEALPIXDIR}/DS_contrib_log*.txt for more details...)"; \
++			echo "${RED}Building DarkSUSY libraries without HealPIX support...${RESET}"; \
++			patch -u -b $(DS_INSTALL)/src/aux/dshealpixave.f -i $(DS_INSTALL)/src/aux/dshealpixave.patch;\
+ 		else \
+ 			cp -p ../build/mod/pix_tools.mod $(DS_INSTALL)/src/include ;\
+ 		fi; \
+@@ -283,10 +284,10 @@ healpix: cfitsio
  		cp -p libgif.a $(DS_INSTALL)/lib/ ;\
  		cp -p libhealpix.a $(DS_INSTALL)/lib/ ;\
  		cp -p libhpxgif.a $(DS_INSTALL)/lib/ ;\
@@ -30,8 +44,23 @@ diff -rupN darksusy-6.2.5_original/makefile.in darksusy-6.2.5_patched/makefile.i
 +		cp -p libsharp.a $(DS_INSTALL)/lib/libsharp_healpix_f.a ;\
  		echo "[done]";\
  	else \
- 		echo "${RED}WARNING${RESET} -- something went wrong!"; \
-@@ -514,20 +514,22 @@ pdf-manual-long-debug pdf-Manual-long-de
+-		echo "${RED}WARNING${RESET} -- something went wrong!"; \
++		echo "${RED}WARNING${RESET} -- missing HealPIX libraries!"; \
+ 		echo "(See ${HEALPIXDIR}/DS_contrib_log.txt for more details...)"; \
+ 		echo "You will not be able to compile main files that require HealPIX."; \
+ 	fi; \
+@@ -449,6 +450,10 @@ clean_contrib:
+ 		$(MAKE) distclean; rm -f DS_contrib_log.txt DS_contrib_log_prep.txt; \
+ 		rm -rf $(HEALPIXDIR)/bin/sky_ng_sim*; \
+ 	fi;
++# undo patch applied in case healpix installation was unsuccessful
++	if [ -f $(DS_INSTALL)/src/aux/dshealpixave.f.orig ] ; then \
++		mv $(DS_INSTALL)/src/aux/dshealpixave.f.orig $(DS_INSTALL)/src/aux/dshealpixave.f;\
++	fi;
+ 	cd $(DS_ROOT)
+ 	cp -r lib libtmp; rm -f lib/*
+ 	mv -f libtmp/libds* lib/; rm -rf libtmp
+@@ -514,20 +519,22 @@ pdf-manual-long-debug pdf-Manual-long-de
  
  # Below are instructions for shared libraries, currently used by GAMBIT
  
