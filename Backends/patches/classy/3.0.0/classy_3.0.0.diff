@@ -1,3 +1,22 @@
+diff --git a/Makefile b/Makefile
+index 9e4a8a77..65bb4d74 100644
+--- a/Makefile
++++ b/Makefile
+@@ -195,12 +195,12 @@ ifdef OMPFLAG
+ else
+ 	grep -v "lgomp" python/setup.py > python/autosetup.py
+ endif
+-	cd python; export CC=$(CC); $(PYTHON) autosetup.py install || $(PYTHON) autosetup.py install --user
++	cd python; export CC=$(CC); $(PYTHON) autosetup.py build || $(PYTHON) autosetup.py build --user
+ 	rm python/autosetup.py
+ 
+ clean: .base
+ 	rm -rf $(WRKDIR);
+-	rm -f libclass.a
++	rm -rf libclass.a lib
+ 	rm -f $(MDIR)/python/classy.c
+ 	rm -rf $(MDIR)/python/build
+ 	rm -f python/autosetup.py
 diff --git a/explanatory.ini b/explanatory.ini
 index e05444d4..79a3ac5d 100644
 --- a/explanatory.ini
@@ -350,6 +369,28 @@ index cb6f8065..a30efb6e 100644
      def Neff(self):
          return self.ba.Neff
  
+diff --git a/python/setup.py b/python/setup.py
+index 0d0d2b9f..ebd00a90 100644
+--- a/python/setup.py
++++ b/python/setup.py
+@@ -13,7 +13,7 @@ GCCPATH_STRING = sbp.Popen(
+     stdout=sbp.PIPE).communicate()[0]
+ GCCPATH = osp.normpath(osp.dirname(GCCPATH_STRING)).decode()
+ 
+-liblist = ["class"]
++liblist = ["class","irc","svml","imf"]
+ MVEC_STRING = sbp.Popen(
+     ['gcc', '-lmvec'],
+     stderr=sbp.PIPE).communicate()[1]
+@@ -41,7 +41,7 @@ classy_ext = Extension("classy", [os.path.join(classy_folder, "classy.pyx")],
+                            include_dirs=[nm.get_include(), include_folder, heat_folder, recfast_folder, hyrec_folder],
+                            libraries=liblist,
+                            library_dirs=[root_folder, GCCPATH],
+-                           extra_link_args=['-lgomp']
++                           extra_link_args=["-liomp5",'-lgomp']
+                        )
+ import sys
+ classy_ext.cython_directives = {'language_level': "3" if sys.version_info.major>=3 else "2"}
 diff --git a/source/input.c b/source/input.c
 index cc739890..97c053ef 100644
 --- a/source/input.c
@@ -765,10 +806,18 @@ index 2196e2f6..b6ddb48a 100644
      dlnk = log(10.)/ppr->k_per_decade_primordial;
  
 diff --git a/source/thermodynamics.c b/source/thermodynamics.c
-index 5aafb3b5..aae45fef 100644
+index 5aafb3b5..310ccb3d 100644
 --- a/source/thermodynamics.c
 +++ b/source/thermodynamics.c
-@@ -2800,7 +2800,7 @@ int thermodynamics_reionization_get_tau(
+@@ -2550,6 +2550,7 @@ int thermodynamics_derivs(
+     dy[index_ti]=-dy[index_ti];
+   }
+ 
++
+   return _SUCCESS_;
+ }
+ 
+@@ -2800,7 +2801,7 @@ int thermodynamics_reionization_get_tau(
               pth->error_message,
               "reionization start = %e > largest redshift in thermodynamics table",pth->z_table[index_reio_start]);
  
@@ -777,3 +826,36 @@ index 5aafb3b5..aae45fef 100644
      /* the global minimum of xe(z) is at z=0. This is possible in
         models no reionization and no exotic energy
         injection. According to our definition of the reionization
+diff --git a/tools/evolver_ndf15.c b/tools/evolver_ndf15.c
+index 0d293723..9e7e3743 100644
+--- a/tools/evolver_ndf15.c
++++ b/tools/evolver_ndf15.c
+@@ -1215,6 +1215,7 @@ int numjac(
+   double **dFdy,*fac;
+   int *Ap=NULL, *Ai=NULL;
+ 
++
+   dFdy = jac->dfdy; /* Assign pointer to dfdy directly for easier notation. */
+   fac = jac->jacvec;
+   if (jac->use_sparse){
+@@ -1306,7 +1307,11 @@ int numjac(
+                error_message,error_message);
+ 
+     *nfe+=1;
+-    for(i=1;i<=neq;i++) nj_ws->ydel_Fdel[i][j] = nj_ws->ffdel[i];
++    for(i=1;i<=neq;i++){
++      class_test(nj_ws->ffdel[i] != nj_ws->ffdel[i], error_message, "A derivative passed to numjac was NaN.");
++      nj_ws->ydel_Fdel[i][j] = nj_ws->ffdel[i];
++       
++    }
+   }
+ 
+ 
+@@ -1405,6 +1410,7 @@ int numjac(
+           Fdiff_absrm = 0.0;
+           for(i=1;i<=neq;i++){
+             Fdiff_absrm = MAX(Fdiff_absrm,fabs(Fdiff_new));
++            class_test(nj_ws->ffdel[i] != nj_ws->ffdel[i], error_message, "A derivative passed to numjac was NaN.");
+             Fdiff_new = nj_ws->ffdel[i]-fval[i];
+             nj_ws->tmp[i] = Fdiff_new/del2;
+             if(fabs(Fdiff_new)>=Fdiff_absrm){
