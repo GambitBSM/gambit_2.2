@@ -182,7 +182,9 @@ namespace Gambit
     //Capture rate for Non-Relataivistic Effective Operator (NREO)
     void capture_rate_Sun_NREO(double &result)
     {
-      cout << "Starting capture_rate_Sun_NREO ..." << endl;
+      #ifdef DARKBIT_DEBUG
+        cout << "Starting capture_rate_Sun_NREO ..." << endl;
+      #endif
       using namespace Pipes::capture_rate_Sun_NREO;
 
       double capped;
