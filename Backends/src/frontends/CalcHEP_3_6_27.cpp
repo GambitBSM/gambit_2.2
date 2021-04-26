@@ -67,9 +67,13 @@ BE_INI_FUNCTION
       sprintf(modeltoset, "%s", path);
     }
 
-    int error = setModel(modeltoset, 1);
-    if (error != 0) backend_error().raise(LOCAL_INFO, "Unable to set model" + std::string(modeltoset) +
-          " in CalcHEP. CalcHEP error code: " + std::to_string(error) + ". Please check your model files.\n");
+    // CH is not threadsafe so make critical sections everywhere
+    #pragma omp critical
+    {
+      int error = setModel(modeltoset, 1);
+      if (error != 0) backend_error().raise(LOCAL_INFO, "Unable to set model" + std::string(modeltoset) +
+            " in CalcHEP. CalcHEP error code: " + std::to_string(error) + ". Please check your model files.\n");
+    }
 
     // Get the MPI rank, only let the first rank make the processes...
     int rank = 0;
@@ -92,7 +96,7 @@ BE_INI_FUNCTION
     }
     #ifdef WITH_MPI
       // Wait here until the first rank has generated all matrix elements.
-      MPI_Barrier(MPI_COMM_WORLD);
+      GMPI::Comm().Barrier();
     #endif
 
     free(modeltoset);
