@@ -1,22 +1,3 @@
-diff --git a/Makefile b/Makefile
-index 9e4a8a77..65bb4d74 100644
---- a/Makefile
-+++ b/Makefile
-@@ -195,12 +195,12 @@ ifdef OMPFLAG
- else
- 	grep -v "lgomp" python/setup.py > python/autosetup.py
- endif
--	cd python; export CC=$(CC); $(PYTHON) autosetup.py install || $(PYTHON) autosetup.py install --user
-+	cd python; export CC=$(CC); $(PYTHON) autosetup.py build || $(PYTHON) autosetup.py build --user
- 	rm python/autosetup.py
- 
- clean: .base
- 	rm -rf $(WRKDIR);
--	rm -f libclass.a
-+	rm -rf libclass.a lib
- 	rm -f $(MDIR)/python/classy.c
- 	rm -rf $(MDIR)/python/build
- 	rm -f python/autosetup.py
 diff --git a/explanatory.ini b/explanatory.ini
 index e05444d4..79a3ac5d 100644
 --- a/explanatory.ini
@@ -369,28 +350,6 @@ index cb6f8065..a30efb6e 100644
      def Neff(self):
          return self.ba.Neff
  
-diff --git a/python/setup.py b/python/setup.py
-index 0d0d2b9f..ebd00a90 100644
---- a/python/setup.py
-+++ b/python/setup.py
-@@ -13,7 +13,7 @@ GCCPATH_STRING = sbp.Popen(
-     stdout=sbp.PIPE).communicate()[0]
- GCCPATH = osp.normpath(osp.dirname(GCCPATH_STRING)).decode()
- 
--liblist = ["class"]
-+liblist = ["class","irc","svml","imf"]
- MVEC_STRING = sbp.Popen(
-     ['gcc', '-lmvec'],
-     stderr=sbp.PIPE).communicate()[1]
-@@ -41,7 +41,7 @@ classy_ext = Extension("classy", [os.path.join(classy_folder, "classy.pyx")],
-                            include_dirs=[nm.get_include(), include_folder, heat_folder, recfast_folder, hyrec_folder],
-                            libraries=liblist,
-                            library_dirs=[root_folder, GCCPATH],
--                           extra_link_args=['-lgomp']
-+                           extra_link_args=["-liomp5",'-lgomp']
-                        )
- import sys
- classy_ext.cython_directives = {'language_level': "3" if sys.version_info.major>=3 else "2"}
 diff --git a/source/input.c b/source/input.c
 index cc739890..97c053ef 100644
 --- a/source/input.c
