@@ -706,6 +706,14 @@ etaBBN: |
 
    eta_BBN             - baryon-to-photon ratio during BBN (eta at CMB set by omega_b)
 
+etaBBN_rBBN_dNurBBN: |
+
+   Child model of etaBBN_rBBN_rCMB_dNurBBN_dNurCMB. Parameters as in parent but rCMB and dNurCMB are calculated externally.
+
+rBBN_dNurBBN: |
+
+   Child model of etaBBN_rBBN_dNurBBN. Parameters as in parent but etaBBN is calculated through "eta0" (baryon-to-photon ratio today) and "eta_ratio".
+
 rBBN_rCMB_dNurBBN_dNurCMB: |
 
    Child model of etaBBN_rBBN_rCMB_dNurBBN_dNurCMB. Parameters as in parent but with etaBBN = eta0 (calculated from omega_b from a LCDM model)

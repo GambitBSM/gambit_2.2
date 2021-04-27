@@ -4617,6 +4617,12 @@ etaBBN_rBBN_rCMB_dNurBBN_dNurCMB_parameters: |
 etaBBN_parameters: |
    Child model of etaBBN_rBBN_rCMB_dNurBBN_dNurCMB with only etaBBN as free parameter. See ./gambit etaBBN for more details.
 
+etaBBN_rBBN_dNurBBN_parameters: |
+   Child model of etaBBN_rBBN_rCMB_dNurBBN_dNurCMB. See ./gambit etaBBN_rBBN_dNurBBN for more details.
+
+rBBN_dNurBBN_parameters: |
+   Child model of etaBBN_rBBN_dNurBBN. See ./gambit rBBN_dNurBBN for more details.
+
 rBBN_rCMB_dNurBBN_dNurCMB_parameters: |
    Child model of etaBBN_rBBN_rCMB_dNurBBN_dNurCMB. See ./gambit rBBN_rCMB_dNurBBN_dNurCMB for more details.
 
@@ -4826,8 +4832,11 @@ lensed_Cl_TE: |
 lensed_Cl_PhiPhi: |
    Returns the lensed dimensionless CMB lensing potential.
 
-ExtNeffCMB: |
-   Capability to set or compute non-standard values of dNeff at CMB release. E.g. needed for the CosmoALP model.
+Neff_evolution: |
+   Set or compute non-standard values of dNeff and r (T_nu/T_nu_SM) at CMB release.
+
+eta_ratio: |
+   Set or compute the ratio of the values of the baryon-to-photon ratio at BBN and today.
 
 external_dNeff_etaBBN: |
    Compute dNeff @CMB and etaBBN for non-standard models. E.g. needed for the CosmoALP model.
