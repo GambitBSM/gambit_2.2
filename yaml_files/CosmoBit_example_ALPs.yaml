@@ -69,6 +69,10 @@ Parameters:
     neutron_lifetime:
       range: [875,895]
 
+  rBBN_dNurBBN:
+    r_BBN: 1.0
+    dNur_BBN: 0.0
+
 Priors:
 
 Printer:
@@ -184,13 +188,6 @@ ObsLikes:
     type:         ModelParameters
 
 Rules:
-
-  # When scanning the 'CosmoALP' model, 'etaBBN_rBBN_rCMB_dNurBBN_dNurCMB' is only activated as a
-  # friend model such that there is no clear preference which function should be used to resolve 
-  # the capability "T_ncdm".
-  # The options are "T_ncdm_SM" (all models) and "T_ncdm" (only etaBBN_rBBN_rCMB_dNurBBN_dNurCMB)
-  - capability: T_ncdm
-    function: T_ncdm
 
   - capability: AlterBBN_Input
     options:

@@ -283,6 +283,22 @@ namespace Gambit
 
     }
 
+    void eta_ratio_ALP(double& result)
+    {
+      result = (*Pipes::eta_ratio_ALP::Dep::external_dNeff_etaBBN).at("eta_ratio");
+    }
+
+    void Neff_evolution_ALP(map_str_dbl& result)
+    {
+      using namespace Pipes::Neff_evolution_ALP;
+
+      // Delete results of previous iteration
+      result.clear();
+
+      result["dNur_CMB"] = 0.0;
+      result["r_CMB"] = pow((*Dep::external_dNeff_etaBBN).at("Neff_ratio"), 1./4.);
+    }
+
   } // namespace CosmoBit
 
 } // namespace Gambit

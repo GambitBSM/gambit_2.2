@@ -130,9 +130,27 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION compute_dNeff_etaBBN_ALP
     START_FUNCTION(map_str_dbl)
-    ALLOW_MODELS(GeneralCosmoALP)
+    ALLOW_JOINT_MODEL(GeneralCosmoALP,rBBN_dNurBBN)
     DEPENDENCY(total_DM_abundance, double)
     DEPENDENCY(lifetime, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY eta_ratio
+  START_CAPABILITY
+    #define FUNCTION eta_ratio_ALP
+    START_FUNCTION(double)
+    ALLOW_MODELS(GeneralCosmoALP)
+    DEPENDENCY(external_dNeff_etaBBN, map_str_dbl)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY Neff_evolution
+  START_CAPABILITY
+    #define FUNCTION Neff_evolution_ALP
+    START_FUNCTION(map_str_dbl)
+    ALLOW_MODELS(GeneralCosmoALP)
+    DEPENDENCY(external_dNeff_etaBBN, map_str_dbl)
     #undef FUNCTION
   #undef CAPABILITY
 
