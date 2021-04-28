@@ -4951,6 +4951,13 @@ energy_injection_spectrum: |
 energy_injection_efficiency: |
    Gets the energy injection efficiency table from the darkages frontend.
 
+f_eff: |
+   Effective energy injection effeciency (constant used for on-the-spot approximation)
+
+p_ann: |
+   Annihilation rate (p_ann = f_eff * f^2 * <sv>/m)
+   Unit: cm^3 s^-1 GeV^-1
+
 # -----------
 # AlterBBN
 # -----------
