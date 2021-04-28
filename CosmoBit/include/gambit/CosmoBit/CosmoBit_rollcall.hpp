@@ -22,7 +22,7 @@
 ///  \date 2018 Jan,Feb, Mar
 ///  \date 2019 Jan, Feb, June
 ///  \date 2020 Nov
-///  \date 2021 Jan, Mar
+///  \date 2021 Jan, Mar, Apr
 ///
 ///  \author Janina Renk
 ///          (janina.renk@fysik.su.se)
@@ -196,6 +196,7 @@ START_MODULE
     // Set f_eff to a constant that the user can choose
     #define FUNCTION f_eff_constant
     START_FUNCTION(double)
+    ALLOW_MODELS(AnnihilatingDM_general,DecayingDM_general)
     #undef FUNCTION
   #undef CAPABILITY
 
