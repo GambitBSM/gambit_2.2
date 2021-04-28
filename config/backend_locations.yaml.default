@@ -21,7 +21,6 @@ classy:
   2.9.3:       ./Backends/installed/classy/2.9.3/lib/classy_2_9_3.py
   2.9.4:       ./Backends/installed/classy/2.9.4/lib/classy_2_9_4.py
   3.0.0:       ./Backends/installed/classy/3.0.0/lib/classy_3_0_0.py
-  3.0.0_beta:  ./Backends/installed/classy/3.0.0_beta/lib/classy_3_0_0_beta.py
 
   exo_2.7.2:   ./Backends/installed/classy/exo_2.7.2/lib/classy_exo_2_7_2.py
 

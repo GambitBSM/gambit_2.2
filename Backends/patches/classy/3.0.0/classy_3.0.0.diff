@@ -765,10 +765,18 @@ index 2196e2f6..b6ddb48a 100644
      dlnk = log(10.)/ppr->k_per_decade_primordial;
  
 diff --git a/source/thermodynamics.c b/source/thermodynamics.c
-index 5aafb3b5..aae45fef 100644
+index 5aafb3b5..310ccb3d 100644
 --- a/source/thermodynamics.c
 +++ b/source/thermodynamics.c
-@@ -2800,7 +2800,7 @@ int thermodynamics_reionization_get_tau(
+@@ -2550,6 +2550,7 @@ int thermodynamics_derivs(
+     dy[index_ti]=-dy[index_ti];
+   }
+ 
++
+   return _SUCCESS_;
+ }
+ 
+@@ -2800,7 +2801,7 @@ int thermodynamics_reionization_get_tau(
               pth->error_message,
               "reionization start = %e > largest redshift in thermodynamics table",pth->z_table[index_reio_start]);
  
@@ -777,3 +785,36 @@ index 5aafb3b5..aae45fef 100644
      /* the global minimum of xe(z) is at z=0. This is possible in
         models no reionization and no exotic energy
         injection. According to our definition of the reionization
+diff --git a/tools/evolver_ndf15.c b/tools/evolver_ndf15.c
+index 0d293723..9e7e3743 100644
+--- a/tools/evolver_ndf15.c
++++ b/tools/evolver_ndf15.c
+@@ -1215,6 +1215,7 @@ int numjac(
+   double **dFdy,*fac;
+   int *Ap=NULL, *Ai=NULL;
+ 
++
+   dFdy = jac->dfdy; /* Assign pointer to dfdy directly for easier notation. */
+   fac = jac->jacvec;
+   if (jac->use_sparse){
+@@ -1306,7 +1307,11 @@ int numjac(
+                error_message,error_message);
+ 
+     *nfe+=1;
+-    for(i=1;i<=neq;i++) nj_ws->ydel_Fdel[i][j] = nj_ws->ffdel[i];
++    for(i=1;i<=neq;i++){
++      class_test(nj_ws->ffdel[i] != nj_ws->ffdel[i], error_message, "A derivative passed to numjac was NaN.");
++      nj_ws->ydel_Fdel[i][j] = nj_ws->ffdel[i];
++       
++    }
+   }
+ 
+ 
+@@ -1405,6 +1410,7 @@ int numjac(
+           Fdiff_absrm = 0.0;
+           for(i=1;i<=neq;i++){
+             Fdiff_absrm = MAX(Fdiff_absrm,fabs(Fdiff_new));
++            class_test(nj_ws->ffdel[i] != nj_ws->ffdel[i], error_message, "A derivative passed to numjac was NaN.");
+             Fdiff_new = nj_ws->ffdel[i]-fval[i];
+             nj_ws->tmp[i] = Fdiff_new/del2;
+             if(fabs(Fdiff_new)>=Fdiff_absrm){

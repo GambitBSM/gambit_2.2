@@ -96,6 +96,32 @@
  #undef PARENT
 #undef MODEL
 
+// As etaBBN_rBBN_rCMB_dNurBBN_dNurCMB, but with rCMB and dNurCMB
+// being calculated externally through "Neff_evolution"
+#define MODEL etaBBN_rBBN_dNurBBN
+ #define PARENT etaBBN_rBBN_rCMB_dNurBBN_dNurCMB
+  START_MODEL
+  DEFINEPARS(eta_BBN)
+  DEFINEPARS(r_BBN)
+  DEFINEPARS(dNur_BBN)
+  INTERPRET_AS_PARENT_FUNCTION(etaBBN_rBBN_dNurBBN_to_etaBBN_rBBN_rCMB_dNurBBN_dNurCMB)
+  INTERPRET_AS_PARENT_DEPENDENCY(Neff_evolution, map_str_dbl)
+ #undef PARENT
+#undef MODEL
+
+// As etaBBN_rBBN_dNurBBN, but the baryon-to-photon ratio η at BBN
+// is given by η today multiplied with "eta_ratio".
+#define MODEL rBBN_dNurBBN
+ #define PARENT etaBBN_rBBN_dNurBBN
+  START_MODEL
+  DEFINEPARS(r_BBN)
+  DEFINEPARS(dNur_BBN)
+  INTERPRET_AS_PARENT_FUNCTION(rBBN_dNurBBN_to_etaBBN_rBBN_dNurBBN)
+  INTERPRET_AS_PARENT_DEPENDENCY(eta_ratio, double)
+  INTERPRET_AS_PARENT_DEPENDENCY(eta0,double)
+ #undef PARENT
+#undef MODEL
+
 // As etaBBN_rBBN_rCMB_dNurBBN_dNurCMB, but with the
 // baryon-to-photon ratio η at BBN set equal to η today.
 #define MODEL rBBN_rCMB_dNurBBN_dNurCMB
