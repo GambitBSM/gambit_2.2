@@ -1746,20 +1746,6 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  /* #define CAPABILITY DM_current_density */
-  /* START_CAPABILITY */
-  /*   #define FUNCTION SuperRenormHP_current_density */
-  /*   START_FUNCTION(double) */
-  /*   DEPENDENCY(DM_relic_density, double) */
-  /*   DEPENDENCY(Omega0_r, double) */
-  /*   DEPENDENCY(Omega0_m, double) */
-  /*   DEPENDENCY(Omega0_cdm, double) */
-  /*   DEPENDENCY(H0, double) */
-  /*   DEPENDENCY(Omega0_Lambda, double) */
-  /*   DEPENDENCY(DM_lifetime, double) */
-  /*   #undef FUNCTION */
-  /* #undef CAPABILITY */
-
   #define CAPABILITY J_factor_INTEGRAL_CO
   START_CAPABILITY
     #define FUNCTION get_J_factor_INTEGRAL_CO
@@ -1778,25 +1764,8 @@ START_MODULE
     DEPENDENCY(Omega0_cdm, double)
     DEPENDENCY(H0, double)
     DEPENDENCY(Omega0_Lambda, double)
-    DEPENDENCY(DM_relic_density, double)
-    DEPENDENCY(DarkMatter_ID, std::string)
-    DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+    ALLOW_MODEL(DecayingDM_mixture)
     DEPENDENCY(J_factor_INTEGRAL_CO, double)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY DM_DecayFluxG
-  START_CAPABILITY
-    #define FUNCTION SuperRenormHP_DecayFluxG
-    START_FUNCTION(double)
-    DEPENDENCY(Omega0_r, double)
-    DEPENDENCY(Omega0_m, double)
-    DEPENDENCY(Omega0_cdm, double)
-    DEPENDENCY(H0, double)
-    DEPENDENCY(Omega0_Lambda, double)
-    DEPENDENCY(DM_relic_density, double)
-    DEPENDENCY(DarkMatter_ID, std::string)
-    DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1813,8 +1782,11 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_INTEGRAL_ang_b
     START_FUNCTION(double)
-    DEPENDENCY(DM_DecayFluxG, double)
-    DEPENDENCY(DM_mass, double)
+    DEPENDENCY(Omega0_r, double)
+    DEPENDENCY(Omega0_m, double)
+    DEPENDENCY(H0, double)
+    DEPENDENCY(Omega0_Lambda, double)
+    ALLOW_MODEL(DecayingDM_mixture)
     DEPENDENCY(J_factor_INTEGRAL_ang_b, std::vector<double>)
     #undef FUNCTION
   #undef CAPABILITY
@@ -1832,8 +1804,11 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_INTEGRAL_ang_l
     START_FUNCTION(double)
-    DEPENDENCY(DM_DecayFluxG, double)
-    DEPENDENCY(DM_mass, double)
+    DEPENDENCY(Omega0_r, double)
+    DEPENDENCY(Omega0_m, double)
+    DEPENDENCY(H0, double)
+    DEPENDENCY(Omega0_Lambda, double)
+    ALLOW_MODEL(DecayingDM_mixture)
     DEPENDENCY(J_factor_INTEGRAL_ang_l, std::vector<double>)
     #undef FUNCTION
   #undef CAPABILITY
@@ -1856,9 +1831,7 @@ START_MODULE
     DEPENDENCY(Omega0_cdm, double)
     DEPENDENCY(H0, double)
     DEPENDENCY(Omega0_Lambda, double)
-    DEPENDENCY(DM_relic_density, double)
-    DEPENDENCY(DarkMatter_ID, std::string)
-    DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+    ALLOW_MODEL(DecayingDM_mixture)
     #undef FUNCTION
   #undef CAPABILITY
 

@@ -631,61 +631,33 @@ namespace Gambit
 
     //------------- Functions to compute X-ray likelihoods -------------//
 
-    // capability returning the decay photon flux in [photons/cm²/s] (assuming DM decays into a monochromatic line)
-    // only used for the INTEGRAL_ang_b/l likelihoods
-    void SuperRenormHP_DecayFluxG (double &result)
-    {
-      using namespace Pipes::SuperRenormHP_DecayFluxG;
-
-      double density = *Dep::DM_relic_density;
-
-      double H0 = *Dep::H0;
-
-      double OmegaDM = *Dep::Omega0_cdm;
-
-      double H0_s = H0/Mpc_2_km; // H0 in 1/s
-
-      double OmegaM = *Dep::Omega0_m, OmegaR = *Dep::Omega0_r;
-
-      double OmegaLambda = *Dep::Omega0_Lambda;
-
-      double rhoC = 3*pow(H0_s, 2)*pow(Mp, 2)/(8*pi)/hbar_GeV/pow(cs, 3); // critical density un Gev/cm^3
-
-      std::string DM_ID = *Dep::DarkMatter_ID;
-
-      TH_ProcessCatalog catalog = *Dep::TH_ProcessCatalog;
-      auto f = catalog.getProcess(DM_ID).find({"gamma", "gamma"})->genRate;
-      auto fb = f->bind();
-      double gamma = fb->eval()/hbar_GeV;
-
-      double mass = catalog.getParticleProperty(DM_ID).mass;
-
-      double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
-
-      result = 2.*(gamma*density*exp(-t0*gamma))/(4.*pi*mass*OmegaDM*rhoC);
-    }
 
     // useful structure
-    struct XrayLikelihood_params {double mass; double gamma; double density; Xray experiment; double H0; double OmegaM; double OmegaR; double OmegaLambda; double OmegaDM;};
+    struct XrayLikelihood_params {double mass; double tau; double gamma_ph; double fraction; Xray experiment; double H0; double OmegaM; double OmegaR; double OmegaLambda; double OmegaDM; double ageUniverse;};
 
     // extra-galactic contribution to the differential photon flux [photons/eV/cm²/s]
     double dPhiEG(double const& E, XrayLikelihood_params *params)
     {
-      double mass = params->mass, gamma = params->gamma, density = params->density;
+      double mass = params->mass, tau = params->tau, gamma_ph = params->gamma_ph, fraction = params->fraction;
       Xray experiment = params->experiment;
 
       double H0 = params->H0;
       double OmegaM = params->OmegaM;
+      double OmegaDM = params->OmegaDM;
       double OmegaR = params->OmegaR;
       double OmegaLambda = params->OmegaLambda;
       double OmegaK = 0.;
+
+      double rhoC = 3*pow(H0, 2)*pow(Mp, 2)/(8*pi)/hbar_GeV/pow(cs, 3)*1e9; // critical density un ev/cm^3
+
+      double density = fraction*OmegaDM*rhoC;
 
       double x = mass/2./E;
       double z = x - 1.;
 
       double t = ageUniverse(z, OmegaM, OmegaR, OmegaLambda, H0)[0];
 
-      return experiment.getDeltaOmega()*2.*1./(4*pi)*(gamma*density*cs*exp(-gamma*t))/(mass*H0*E)/sqrt( OmegaM*pow(x, 3.) + OmegaLambda + OmegaK*pow(x, 2.) + OmegaR*pow(x, 4.) );
+      return experiment.getDeltaOmega()*2.*1./(4*pi)*(gamma_ph*density*cs*exp(-t/tau))/(mass*H0*E)/sqrt( OmegaM*pow(x, 3.) + OmegaLambda + OmegaK*pow(x, 2.) + OmegaR*pow(x, 4.) );
     }
 
     const double s(1./3.); // standard deviation of the gaussian for the galactic emission line = s*energy dispersion instrument
@@ -693,24 +665,16 @@ namespace Gambit
     // galactic (Milky Way) contribution to the differential photon flux [photons/eV/cm²/s]
     double dPhiG(double const& E, XrayLikelihood_params *params)
     {
-      double mass = params->mass, gamma = params->gamma, density = params->density;
+      double mass = params->mass, tau = params->tau, gamma_ph = params->gamma_ph, fraction = params->fraction;
       Xray experiment = params->experiment;
 
       double J = experiment.getJ();
 
-      double H0 = params->H0;
-      double OmegaM = params->OmegaM;
-      double OmegaR = params->OmegaR;
-      double OmegaLambda = params->OmegaLambda;
-
-      double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0)[0];
-      double OmegaDM = params->OmegaDM;
-
-      double rhoC = 3*pow(H0, 2)*pow(Mp, 2)/(8*pi)/hbar_GeV/pow(cs, 3)*1e9; // critical density un ev/cm^3
+      double t0 = params->ageUniverse;
 
       double sigma = s*experiment.deltaE(E); // standard deviation of the gaussian modelling the enery dispersion of the instrument
 
-      return 2.*(gamma*J*density*exp(-t0*gamma))/(4.*pi*mass*OmegaDM*rhoC)/sqrt(2*pi*sigma*sigma)*exp(-pow(E-mass/2.,2)/(2*sigma*sigma));
+      return 2.*(gamma_ph*J*fraction*exp(-t0/tau))/(4.*pi*mass)/sqrt(2*pi*sigma*sigma)*exp(-pow(E-mass/2.,2)/(2*sigma*sigma));
     }
 
     // total predicted differential photon flux for a given X-ray experiment [photons/eV/cm²/s]
@@ -897,28 +861,31 @@ namespace Gambit
     {
       using namespace Pipes::calc_lnL_INTEGRAL_CO;
 
-      double J_factor = *Dep::J_factor_INTEGRAL_CO*1e9; //J in eV/cm^2
+      double H0 = *Dep::H0;
 
-      static Xray experiment = Xray("INTEGRAL", J_factor);
-
-      double density = *Dep::DM_relic_density*1e9;
-
-      double OmegaDM = *Dep::Omega0_cdm, H0 = *Dep::H0;
+      double H0_s = H0/Mpc_2_km; // H0 in 1/s
 
       double OmegaM = *Dep::Omega0_m, OmegaR = *Dep::Omega0_r;
 
       double OmegaLambda = *Dep::Omega0_Lambda;
 
-      std::string DM_ID = *Dep::DarkMatter_ID;
+      double OmegaDM = *Dep::Omega0_cdm;
 
-      TH_ProcessCatalog catalog = *Dep::TH_ProcessCatalog;
-      auto f = catalog.getProcess(DM_ID).find({"gamma", "gamma"})->genRate;
-      auto fb = f->bind();
-      double gamma = fb->eval();
+      double tau = *Param["lifetime"];
 
-      double mass = catalog.getParticleProperty(DM_ID).mass*1e9;
+      double gamma_ph = 1/tau * *Param["BR_ph"];
 
-      XrayLikelihood_params params = {mass, gamma/hbar_GeV, density, experiment, H0*1e-19/3.085, OmegaM, OmegaR, OmegaLambda, OmegaDM};
+      double mass = *Param["mass"]*1e9; // mass in eV
+
+      double fraction = *Param["fraction"];
+
+      double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
+
+      double J_factor = *Dep::J_factor_INTEGRAL_CO*1e9; //J in eV/cm^2
+
+      static Xray experiment = Xray("INTEGRAL", J_factor);
+
+      XrayLikelihood_params params = {mass, tau, gamma_ph, fraction, experiment, H0_s, OmegaM, OmegaR, OmegaLambda, OmegaDM, t0};
 
       double Emin = experiment.getEmin(), Emax = experiment.getEmax(), E, lik1, lik2;
 
@@ -946,6 +913,13 @@ namespace Gambit
       }
 
       else { result = 0; }
+    }
+
+    // function returning the decay photon flux in [photons/cm²/s] (assuming DM decays into a monochromatic line)
+    // only used for the INTEGRAL_ang_b/l likelihoods
+    double DecayFluxG (double gamma_ph, double fraction, double mass, double tau, double t0, double J_factor)
+    {
+      return 2.*(gamma_ph*fraction*exp(-t0/tau))/(4.*pi*mass)*J_factor;
     }
 
     void get_J_factor_INTEGRAL_ang_b (std::vector<double> &result)
@@ -1000,11 +974,29 @@ namespace Gambit
     {
       using namespace Pipes::calc_lnL_INTEGRAL_ang_b;
 
+      double H0 = *Dep::H0;
+
+      double H0_s = H0/Mpc_2_km; // H0 in 1/s
+
+      double OmegaM = *Dep::Omega0_m, OmegaR = *Dep::Omega0_r;
+
+      double OmegaLambda = *Dep::Omega0_Lambda;
+
+      double tau = *Param["lifetime"];
+
+      double gamma_ph = 1/tau * *Param["BR_ph"];
+
+      double mass = *Param["mass"]; // mass in GeV
+
+      double mass_keV = mass*1e-6; // mass in keV
+
+      double fraction = *Param["fraction"];
+
+      double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
+
       std::vector<double> J_factor = *Dep::J_factor_INTEGRAL_ang_b;
 
-      double mass = *Dep::DM_mass*1e6; // mass in keV
-
-      double DecayFluxG = *Dep::DM_DecayFluxG;
+      double FluxG = DecayFluxG(gamma_ph, fraction, mass, tau, t0, J_factor[0]);
 
       static ASCIItableReader INTEGRAL = ASCIItableReader(GAMBIT_DIR "/DarkBit/data/INTEGRAL/INTEGRAL_b.dat");
 
@@ -1015,9 +1007,9 @@ namespace Gambit
       std::vector<double> Omega = {1.6119, 4.1858};
 
       // no constraints available above the electron threshold, we need to take into account the decay into charged particles
-      if (mass >= 1e3) { result = 0; }
+      if (mass_keV >= 1e3) { result = 0; }
 
-      else if (mass < 2.**std::min_element(Emin.begin(), Emin.end())) { result = 0; }
+      else if (mass_keV < 2.**std::min_element(Emin.begin(), Emin.end())) { result = 0; }
 
       else
       {
@@ -1027,7 +1019,7 @@ namespace Gambit
 
         for (size_t i = 0; i < Emin.size()-1; ++i)
         {
-          PredictedFlux = ( (mass >= 2*Emin[i]) && (mass < 2*Emax[i]) ) ? DecayFluxG*J_factor[0]/Omega[0] : 0;
+          PredictedFlux = ( (mass_keV >= 2*Emin[i]) && (mass_keV < 2*Emax[i]) ) ? FluxG/Omega[0] : 0;
           ObservedFlux = Flux[i];
           Error = Sigma[i];
           likelihood *= (PredictedFlux < ObservedFlux) ? 1 : exp(-pow(ObservedFlux - PredictedFlux, 2)/pow(Error, 2));
@@ -1089,11 +1081,29 @@ namespace Gambit
     {
       using namespace Pipes::calc_lnL_INTEGRAL_ang_l;
 
+      double H0 = *Dep::H0;
+
+      double H0_s = H0/Mpc_2_km; // H0 in 1/s
+
+      double OmegaM = *Dep::Omega0_m, OmegaR = *Dep::Omega0_r;
+
+      double OmegaLambda = *Dep::Omega0_Lambda;
+
+      double tau = *Param["lifetime"];
+
+      double gamma_ph = 1/tau * *Param["BR_ph"];
+
+      double mass = *Param["mass"]; // mass in GeV
+
+      double mass_keV = mass*1e-6; // mass in keV
+
+      double fraction = *Param["fraction"];
+
+      double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
+
       std::vector<double> J_factor = *Dep::J_factor_INTEGRAL_ang_l;
 
-      double mass = *Dep::DM_mass*1e6; // mass in keV
-
-      double DecayFluxG = *Dep::DM_DecayFluxG;
+      double FluxG = DecayFluxG(gamma_ph, fraction, mass, tau, t0, J_factor[0]);
 
       static ASCIItableReader INTEGRAL = ASCIItableReader(GAMBIT_DIR "/DarkBit/data/INTEGRAL/INTEGRAL_l.dat");
 
@@ -1104,9 +1114,9 @@ namespace Gambit
       std::vector<double> Omega = {1.4224, 1.7919};
 
       // no constraints available above the electron threshold, we need to take into account the decay into charged particles
-      if (mass >= 1e3) { result = 0; }
+      if (mass_keV >= 1e3) { result = 0; }
 
-      else if (mass < 2.**std::min_element(Emin.begin(), Emin.end())) { result = 0; }
+      else if (mass_keV < 2.**std::min_element(Emin.begin(), Emin.end())) { result = 0; }
 
       else
       {
@@ -1116,7 +1126,7 @@ namespace Gambit
 
         for (size_t i = 0; i < Emin.size()-1; ++i)
         {
-          PredictedFlux = ( (mass >= 2*Emin[i]) && (mass < 2*Emax[i]) ) ? DecayFluxG*J_factor[0]/Omega[0] : 0;
+          PredictedFlux = ( (mass_keV >= 2*Emin[i]) && (mass_keV < 2*Emax[i]) ) ? FluxG/Omega[0] : 0;
           ObservedFlux = Flux[i];
           Error = Sigma[i];
           likelihood *= (PredictedFlux < ObservedFlux) ? 1 : exp(-pow(ObservedFlux - PredictedFlux, 2)/pow(Error, 2));
@@ -1171,26 +1181,29 @@ namespace Gambit
     {
       using namespace Pipes::calc_lnL_HEAO;
 
-      static Xray experiment = Xray("HEAO", 9.894*1e9*3.0856775814913684e21); // J in ev / cm^2
+      double H0 = *Dep::H0;
 
-      double density = *Dep::DM_relic_density*1e9;
-
-      double OmegaDM = *Dep::Omega0_cdm, H0 = *Dep::H0;
+      double H0_s = H0/Mpc_2_km; // H0 in 1/s
 
       double OmegaM = *Dep::Omega0_m, OmegaR = *Dep::Omega0_r;
 
       double OmegaLambda = *Dep::Omega0_Lambda;
 
-      std::string DM_ID = *Dep::DarkMatter_ID;
+      double OmegaDM = *Dep::Omega0_cdm;
 
-      TH_ProcessCatalog catalog = *Dep::TH_ProcessCatalog;
-      auto f = catalog.getProcess(DM_ID).find({"gamma", "gamma"})->genRate;
-      auto fb = f->bind();
-      double gamma = fb->eval();
+      double tau = *Param["lifetime"];
 
-      double mass = catalog.getParticleProperty(DM_ID).mass*1e9;
+      double gamma_ph = 1/tau * *Param["BR_ph"];
 
-      XrayLikelihood_params params = {mass, gamma/hbar_GeV, density, experiment, H0*1e-19/3.085, OmegaM, OmegaR, OmegaLambda, OmegaDM};
+      double mass = *Param["mass"]*1e9; // mass in eV
+
+      double fraction = *Param["fraction"];
+
+      double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
+
+      static Xray experiment = Xray("HEAO", 9.894*1e9*3.0856775814913684e21); // J in ev / cm^2
+
+      XrayLikelihood_params params = {mass, tau, gamma_ph, fraction, experiment, H0*1e-19/3.085, OmegaM, OmegaR, OmegaLambda, OmegaDM, t0};
 
       const double Emin = experiment.getEmin(), Emax = experiment.getEmax();
       double E, lik1, lik2;

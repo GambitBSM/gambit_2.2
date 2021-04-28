@@ -576,7 +576,7 @@ namespace Gambit
 
       double width = *Dep::DM_width;
 
-      result = 1/width/hbar_GeV;
+      result = 1/width*hbar_GeV;
     }
 
     void RD_oh2_SuperRenormHP (double &result)
