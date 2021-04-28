@@ -191,6 +191,17 @@ Rules:
         function: RD_oh2_SuperRenormHP
         module: DarkBit
 
+  # Do not use Energy injection in CLASS.
+  # To this end, assume the "on-the-spot" treatment (even it will not be used) and
+  # set f_eff to 0. This way the energy injection inputs for CLASS are skipped.
+  - capability: classy_parameters_EnergyInjection
+    function: set_classy_parameters_EnergyInjection_DecayingDM_onSpot
+
+  - capability: f_eff
+    function: f_eff_constant
+    options:
+      f_eff: 0.0
+
   - capability: classy_MPLike_input
     function: set_classy_input_with_MPLike
     module: CosmoBit

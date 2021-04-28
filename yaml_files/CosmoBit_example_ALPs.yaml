@@ -210,6 +210,10 @@ Rules:
       print_table: false   # Print the table to stdout. Useful for debugging
       z_max: 1.e7          # Constant continuation of efficiency table up to a given redshift. (f(z) = const. for 2.7e3 < z < z_max)
 
+  # Use the full f(z) treatment for CMB energy injection
+  - capability: classy_parameters_EnergyInjection
+    function: set_classy_parameters_EnergyInjection_DecayingDM
+
   - capability: external_dNeff_etaBBN
     options:
       grid_size: 3000   # set grid size of time grid to solve differntial equation to compute dNeff and etaBBN for CosmoALP model (default: 3000)
