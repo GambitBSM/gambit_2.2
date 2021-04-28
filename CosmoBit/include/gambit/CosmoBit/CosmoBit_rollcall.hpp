@@ -22,7 +22,7 @@
 ///  \date 2018 Jan,Feb, Mar
 ///  \date 2019 Jan, Feb, June
 ///  \date 2020 Nov
-///  \date 2021 Jan
+///  \date 2021 Jan, Mar
 ///
 ///  \author Janina Renk
 ///          (janina.renk@fysik.su.se)
@@ -329,10 +329,22 @@ START_MODULE
       DEPENDENCY(energy_injection_efficiency, DarkAges::Energy_injection_efficiency_table)
       #undef FUNCTION
 
+      #define FUNCTION set_classy_parameters_EnergyInjection_AnnihilatingDM_onSpot
+      START_FUNCTION(pybind11::dict)
+      ALLOW_MODELS(AnnihilatingDM_general)
+      DEPENDENCY(f_eff, double)
+      #undef FUNCTION
+
       #define FUNCTION set_classy_parameters_EnergyInjection_DecayingDM
       START_FUNCTION(pybind11::dict)
       ALLOW_MODELS(DecayingDM_general)
       DEPENDENCY(energy_injection_efficiency, DarkAges::Energy_injection_efficiency_table)
+      #undef FUNCTION
+
+      #define FUNCTION set_classy_parameters_EnergyInjection_DecayingDM_onSpot
+      START_FUNCTION(pybind11::dict)
+      ALLOW_MODELS(DecayingDM_general)
+      DEPENDENCY(f_eff, double)
       #undef FUNCTION
     #undef CAPABILITY
 
