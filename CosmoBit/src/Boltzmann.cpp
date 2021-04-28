@@ -444,6 +444,10 @@ namespace Gambit
 
         // Copy fz to cache
         cached_fz = fz;
+
+        // If "sigmav" is zero, clear the whole dictionary again
+        // as no energy injection is considered.
+        if (!(*Param["sigmav"] > 0.0)) result.clear();
       }
 
       void set_classy_parameters_EnergyInjection_AnnihilatingDM_onSpot(pybind11::dict &result)
@@ -463,6 +467,10 @@ namespace Gambit
 
         // Tell CLASS to use the on-the-spot approximation;
         result["f_eff_type"] = "on_the_spot";
+
+        // If "sigmav" or "f_eff" is zero, clear the whole dictionary again
+        // as no energy injection is considered.
+        if (!(*Param["sigmav"] > 0.0  && f_eff > 0.0)) result.clear();
       }
 
       /// Set the parameters for exoCLASS for a scenario with decaying dark matter.
@@ -527,6 +535,10 @@ namespace Gambit
 
         // Copy fz to cache
         cached_fz = fz;
+
+        // If "fraction" is zero, clear the whole dictionary again
+        // as no energy injection is considered.
+        if (!(*Param["fraction"] > 0.0)) result.clear();
       }
 
       /// Set the parameters for exoCLASS for a scenario with decaying dark matter.
@@ -547,6 +559,10 @@ namespace Gambit
 
         // Tell CLASS to use the on-the-spot approximation;
         result["f_eff_type"] = "on_the_spot";
+
+        // If "fraction" or "f_eff" is zero, clear the whole dictionary again
+        // as no energy injection is considered.
+        if (!(*Param["fraction"] > 0.0  && f_eff > 0.0)) result.clear();
       }
 
       /// Add all inputs for CLASS needed to produce the correct output to be
