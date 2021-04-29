@@ -57,12 +57,12 @@ Parameters:
   DecayingDM_photon:
    # mass in GeV
    mass:
-     range: [1e-7, 1e-3]
+     range: [5e-7, 5e-3]
      prior_type: log
 
    # lifetime in s
    lifetime:
-     range: [1e25, 1e30]
+     range: [1e10, 1e30]
      prior_type: log
 
    # (initial) fraction of decaying species to all of omega_cdm
@@ -97,7 +97,7 @@ Scanner:
     grid_sq:
       plugin: square_grid
       like: LogLike
-      grid_pts: 20
+      grid_pts: 50
 
     random:
       plugin: random
@@ -127,16 +127,36 @@ ObsLikes:
     capability:   lnL_INTEGRAL_ang_b
     module:       DarkBit
     type:         double
-#
+
   - purpose:      LogLike
     capability:   lnL_INTEGRAL_ang_l
     module:       DarkBit
     type:         double
 
-  # - purpose:      LogLike
-  #   capability:   lnL_HEAO
-  #   module:       DarkBit
-  #   type:         double
+  - purpose:      LogLike
+    capability:   lnL_INTEGRAL_CO
+    module:       DarkBit
+    type:         double
+
+  - purpose:      LogLike
+    capability:   lnL_HEAO
+    module:       DarkBit
+    type:         double
+
+  - purpose:      LogLike
+    capability:   lnL_Xray_Integral_SPI_sterile_nu
+    module:       DarkBit
+    type:         double
+
+  - purpose:      LogLike
+    capability:   lnL_Xray_M31_sterile_nu
+    module:       DarkBit
+    type:         double
+
+  - purpose:      LogLike
+    capability:   lnL_Xray_NuSTAR_sterile_nu
+    module:       DarkBit
+    type:         double
 
   # - purpose:      LogLike
     # capability:   lnL_oh2
@@ -216,7 +236,7 @@ Logger:
 
 KeyValues:
 
-  default_output_path: "runs/Xray_test"
+  default_output_path: "runs/Xray_test_3"
 
   print_timing_data: false
 

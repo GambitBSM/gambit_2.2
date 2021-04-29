@@ -323,6 +323,7 @@ namespace Gambit
     const double hbar_GeV = Gambit::hbar; // reduced Planck constant [GeV.s]
     const double cs = Gambit::s2cm; // speed of light [cm/s]
     const double Mpc_2_km = 3.0857e19; // Mpc to km
+    const double t_universe = 4.32e17; // Age of the universe in seconds (https://www.physicsoftheuniverse.com/numbers.html)
 
     ////////////////////////////////////////////////////////////////////
     //         Support class to handle X-ray experiments              //
@@ -879,7 +880,8 @@ namespace Gambit
 
       double fraction = *Param["fraction"];
 
-      double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
+      // double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
+      double t0 = t_universe;
 
       double J_factor = *Dep::J_factor_INTEGRAL_CO*1e9; //J in eV/cm^2
 
@@ -988,11 +990,12 @@ namespace Gambit
 
       double mass = *Param["mass"]; // mass in GeV
 
-      double mass_keV = mass*1e-6; // mass in keV
+      double mass_keV = mass*1e6; // mass in keV
 
       double fraction = *Param["fraction"];
 
-      double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
+      // double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
+      double t0 = t_universe;
 
       std::vector<double> J_factor = *Dep::J_factor_INTEGRAL_ang_b;
 
@@ -1095,11 +1098,12 @@ namespace Gambit
 
       double mass = *Param["mass"]; // mass in GeV
 
-      double mass_keV = mass*1e-6; // mass in keV
+      double mass_keV = mass*1e6; // mass in keV
 
       double fraction = *Param["fraction"];
 
-      double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
+      // double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
+      double t0 = t_universe;
 
       std::vector<double> J_factor = *Dep::J_factor_INTEGRAL_ang_l;
 
@@ -1199,11 +1203,12 @@ namespace Gambit
 
       double fraction = *Param["fraction"];
 
-      double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
+      // double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
+      double t0 = t_universe;
 
       static Xray experiment = Xray("HEAO", 9.894*1e9*3.0856775814913684e21); // J in ev / cm^2
 
-      XrayLikelihood_params params = {mass, tau, gamma_ph, fraction, experiment, H0*1e-19/3.085, OmegaM, OmegaR, OmegaLambda, OmegaDM, t0};
+      XrayLikelihood_params params = {mass, tau, gamma_ph, fraction, experiment, H0_s, OmegaM, OmegaR, OmegaLambda, OmegaDM, t0};
 
       const double Emin = experiment.getEmin(), Emax = experiment.getEmax();
       double E, lik1, lik2;

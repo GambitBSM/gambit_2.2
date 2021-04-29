@@ -56,10 +56,10 @@ Parameters:
   SuperRenormHP:
     mS:
       prior_type: log
-      range: [1e-6, 1e-3]
+      range: [5e-7, 5e-3]
     theta:
       prior_type: log
-      range: [1e-10, 1e-11]
+      range: [1e-6, 1e-13]
 
   # SuperRenormHP_solar_neutrino:
   #   alpha: 5
@@ -120,7 +120,7 @@ Scanner:
     grid_sq:
       plugin: square_grid
       like: LogLike
-      grid_pts: 20
+      grid_pts: 50
 
     random:
       plugin: random
@@ -181,10 +181,10 @@ ObsLikes:
     module:       DarkBit
     type:         double
 
-  # - purpose:      LogLike
-  #   capability:   lnL_HEAO
-  #   module:       DarkBit
-  #   type:         double
+  - purpose:      LogLike
+    capability:   lnL_HEAO
+    module:       DarkBit
+    type:         double
 
   # - purpose:      LogLike
   #   capability:   lnL_solar_neutrino_B8
@@ -226,11 +226,11 @@ ObsLikes:
 
 Rules:
 
-  - capability: DarkAges_1_2_0_init
-    options:
-      f_eff_mode: true    # Calculate the single f_eff(z) rather than the full f_c(z) table? By default f_c(z) is calculated
-      print_table: false   # Print the table to stdout. Useful for debugging
-      z_max: 1.e7          # Constant continuation of efficiency table up to a given redshift. (f(z) = const. for 2.7e3 < z < z_max)
+        #- capability: DarkAges_1_2_0_init
+        #options:
+        #f_eff_mode: true    # Calculate the single f_eff(z) rather than the full f_c(z) table? By default f_c(z) is calculated
+        #print_table: false   # Print the table to stdout. Useful for debugging
+        #z_max: 1.e7          # Constant continuation of efficiency table up to a given redshift. (f(z) = const. for 2.7e3 < z < z_max)
 
   # error calculation precision settings for AltterBBN
   # (use 1 and 0 to speed up Helium abundance calculation for testing)
@@ -263,6 +263,21 @@ Rules:
     function: get_Omega0_r_classy
     module: CosmoBit
 
+  # Do not use Energy injection in CLASS.
+  # To this end, assume the "on-the-spot" treatment (even it will not be used) and
+  # set f_eff to 0. This way the energy injection inputs for CLASS are skipped.
+  - capability: classy_parameters_EnergyInjection
+    function: set_classy_parameters_EnergyInjection_DecayingDM_onSpot
+
+  - capability: f_eff
+    function: f_eff_constant
+    options:
+      f_eff: 0.0
+
+  - capability: classy_MPLike_input
+    function: set_classy_input_with_MPLike
+    module: CosmoBit
+
   - capability: lnL_solar_neutrino_B8
     options:
       profile_systematics: false
@@ -292,10 +307,6 @@ Rules:
       - capability: RD_oh2
         function: RD_oh2_SuperRenormHP
         module: DarkBit
-
-  - capability: classy_MPLike_input
-    function: set_classy_input_with_MPLike
-    module: CosmoBit
 
   # - module: CosmoBit
   #   options:
