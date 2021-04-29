@@ -300,7 +300,6 @@ if(NOT ditched_.${name}_${ver}_base)
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
     PATCH_COMMAND patch -p1 < ${patch}
-    COMMAND ${CMAKE_COMMAND} -E copy ${patchdir}/dshealpixave.patch ${dir}/src/aux/dshealpixave.patch
     CONFIGURE_COMMAND ./configure FC=${CMAKE_Fortran_COMPILER} FCFLAGS=${BACKEND_Fortran_FLAGS} FFLAGS=${BACKEND_Fortran_FLAGS} CC=${CMAKE_C_COMPILER} CFLAGS=${BACKEND_C_FLAGS} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${BACKEND_CXX_FLAGS}
     BUILD_COMMAND ${MAKE_PARALLEL} makedirs healpix tspack ds_core ds_common ds_empty install_tables
     INSTALL_COMMAND ""
