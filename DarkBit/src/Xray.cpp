@@ -325,6 +325,9 @@ namespace Gambit
     const double Mpc_2_km = 3.0857e19; // Mpc to km
     const double t_universe = 4.32e17; // Age of the universe in seconds (https://www.physicsoftheuniverse.com/numbers.html)
 
+    // Minimum finite result returnable from log(double x);
+    const double logmin = log(std::numeric_limits<double>::min());
+
     ////////////////////////////////////////////////////////////////////
     //         Support class to handle X-ray experiments              //
     ////////////////////////////////////////////////////////////////////
@@ -880,8 +883,8 @@ namespace Gambit
 
       double fraction = *Param["fraction"];
 
-      // double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
-      double t0 = t_universe;
+      double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
+      // double t0 = t_universe;
 
       double J_factor = *Dep::J_factor_INTEGRAL_CO*1e9; //J in eV/cm^2
 
@@ -994,8 +997,8 @@ namespace Gambit
 
       double fraction = *Param["fraction"];
 
-      // double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
-      double t0 = t_universe;
+      double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
+      // double t0 = t_universe;
 
       std::vector<double> J_factor = *Dep::J_factor_INTEGRAL_ang_b;
 
@@ -1016,7 +1019,7 @@ namespace Gambit
 
       else
       {
-        double likelihood = 1;
+        double loglik = 0.;
 
         double PredictedFlux, ObservedFlux, Error;
 
@@ -1025,10 +1028,10 @@ namespace Gambit
           PredictedFlux = ( (mass_keV >= 2*Emin[i]) && (mass_keV < 2*Emax[i]) ) ? FluxG/Omega[0] : 0;
           ObservedFlux = Flux[i];
           Error = Sigma[i];
-          likelihood *= (PredictedFlux < ObservedFlux) ? 1 : exp(-pow(ObservedFlux - PredictedFlux, 2)/pow(Error, 2));
+          loglik += (PredictedFlux < ObservedFlux) ? 0 : -pow(ObservedFlux - PredictedFlux, 2)/(2.*pow(Error, 2));
         }
 
-        result = log(likelihood);
+        result = loglik;
       }
     }
 
@@ -1102,8 +1105,8 @@ namespace Gambit
 
       double fraction = *Param["fraction"];
 
-      // double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
-      double t0 = t_universe;
+      double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
+      // double t0 = t_universe;
 
       std::vector<double> J_factor = *Dep::J_factor_INTEGRAL_ang_l;
 
@@ -1124,7 +1127,7 @@ namespace Gambit
 
       else
       {
-        double likelihood = 1;
+        double loglik = 0.;
 
         double PredictedFlux, ObservedFlux, Error;
 
@@ -1133,10 +1136,10 @@ namespace Gambit
           PredictedFlux = ( (mass_keV >= 2*Emin[i]) && (mass_keV < 2*Emax[i]) ) ? FluxG/Omega[0] : 0;
           ObservedFlux = Flux[i];
           Error = Sigma[i];
-          likelihood *= (PredictedFlux < ObservedFlux) ? 1 : exp(-pow(ObservedFlux - PredictedFlux, 2)/pow(Error, 2));
+          loglik += (PredictedFlux < ObservedFlux) ? 0 : -pow(ObservedFlux - PredictedFlux, 2)/(2.*pow(Error, 2));
         }
 
-        result = log(likelihood);
+        result = loglik;
       }
     }
 
@@ -1203,8 +1206,8 @@ namespace Gambit
 
       double fraction = *Param["fraction"];
 
-      // double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
-      double t0 = t_universe;
+      double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
+      // double t0 = t_universe;
 
       static Xray experiment = Xray("HEAO", 9.894*1e9*3.0856775814913684e21); // J in ev / cm^2
 

@@ -62,7 +62,7 @@ Parameters:
 
    # lifetime in s
    lifetime:
-     range: [1e10, 1e30]
+     range: [1e12, 1e30]
      prior_type: log
 
    # (initial) fraction of decaying species to all of omega_cdm
@@ -97,7 +97,7 @@ Scanner:
     grid_sq:
       plugin: square_grid
       like: LogLike
-      grid_pts: 50
+      grid_pts: 100
 
     random:
       plugin: random

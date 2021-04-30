@@ -120,7 +120,7 @@ Scanner:
     grid_sq:
       plugin: square_grid
       like: LogLike
-      grid_pts: 50
+      grid_pts: 100
 
     random:
       plugin: random
@@ -170,7 +170,7 @@ ObsLikes:
     capability:   lnL_INTEGRAL_ang_b
     module:       DarkBit
     type:         double
-#
+
   - purpose:      LogLike
     capability:   lnL_INTEGRAL_ang_l
     module:       DarkBit
