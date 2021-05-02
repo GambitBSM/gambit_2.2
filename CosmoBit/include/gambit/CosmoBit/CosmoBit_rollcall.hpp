@@ -700,6 +700,15 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  /// Get t(z) in s
+  #define CAPABILITY age_universe
+  START_CAPABILITY
+    #define FUNCTION get_age_universe_classy
+    START_FUNCTION(double)
+    BACKEND_REQ(class_get_tz,(),double,(double))
+    #undef FUNCTION
+  #undef CAPABILITY
+
   /// number density of photons today
   #define CAPABILITY n0_g
   START_CAPABILITY

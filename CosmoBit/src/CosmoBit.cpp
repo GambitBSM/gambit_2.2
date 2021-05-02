@@ -266,6 +266,16 @@ namespace Gambit
       result = c_SI*BEreq::class_get_H0()/1000;
     }
 
+    /// Age of the universe
+    void get_age_universe_classy(double &result)
+    {
+      using namespace Pipes::get_age_universe_classy;
+
+      // As CLASS uses units of Mpc, the time is returned in Mpc.
+      // Convert Mpc into m and divide by c to get the result in s.
+      result = BEreq::class_get_tz(0.0) * Gambit::Mpc_SI / Gambit::c_SI;
+    }
+
     /// Energy densities *today* (Omega0)
 
     /// Dark Energy

@@ -288,6 +288,13 @@
       return H_z;
     }
 
+    // Returns time at given redshift (in Mpc)
+    double class_get_tz(double z)
+    {
+      double t_in_Mpc = cosmo.attr("proper_time")(z).cast<double>();
+      return t_in_Mpc;
+    }
+
     // returns Omega radiation today
     double class_get_Omega0_r()
     {

@@ -4453,6 +4453,9 @@ class_get_Dl: |
 class_get_Hz: |
     Returns Hubble parameter at given z.
 
+class_get_tz: |
+    Returns time since big bang at given z, as computed by CLASS in Mpc (assuming c=1)
+
 class_get_rs: |
     Returns comoving sound horizon at baryon drag.
 
@@ -4771,6 +4774,9 @@ Omega0_b: |
 
 H0: |
    The Hubble rate today [km/s/Mpc].
+
+age_universe: |
+   Age of the universe [s].
 
 helium_abundance: |
    The He4 abundance.

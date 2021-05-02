@@ -123,6 +123,9 @@ ObsLikes:
     capability:   BBN_abundances
     sub_capabilities: [He4]
 
+  - purpose:      Observable
+    capability:   age_universe
+
   - purpose:      LogLike
     capability:   lnL_INTEGRAL_ang_b
     module:       DarkBit
