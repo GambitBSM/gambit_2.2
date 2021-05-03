@@ -4775,6 +4775,9 @@ Omega0_b: |
 H0: |
    The Hubble rate today [km/s/Mpc].
 
+time_at_z: |
+   Returns functor that calculates the time since big bang at given redshift z [s]
+
 age_universe: |
    Age of the universe [s].
 

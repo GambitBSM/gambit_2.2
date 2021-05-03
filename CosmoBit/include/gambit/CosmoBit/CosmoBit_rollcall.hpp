@@ -700,12 +700,21 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  /// Get t(z) in s
+  /// Get time since big bang at z in s
+  #define CAPABILITY time_at_z
+  START_CAPABILITY
+    #define FUNCTION get_time_at_z_classy
+    START_FUNCTION(daFunk::Funk)
+    BACKEND_REQ(class_get_tz,(),double,(double))
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  /// Get t(z=0) in s
   #define CAPABILITY age_universe
   START_CAPABILITY
-    #define FUNCTION get_age_universe_classy
+    #define FUNCTION get_age_universe_from_time_at_z
     START_FUNCTION(double)
-    BACKEND_REQ(class_get_tz,(),double,(double))
+    DEPENDENCY(time_at_z,daFunk::Funk)
     #undef FUNCTION
   #undef CAPABILITY
 

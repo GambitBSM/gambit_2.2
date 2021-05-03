@@ -266,14 +266,25 @@ namespace Gambit
       result = c_SI*BEreq::class_get_H0()/1000;
     }
 
-    /// Age of the universe
-    void get_age_universe_classy(double &result)
+    /// Functor that calculates time since big bang at redshift z [s]
+    void get_time_at_z_classy(daFunk::Funk &result)
     {
-      using namespace Pipes::get_age_universe_classy;
+      using  namespace Pipes::get_time_at_z_classy;
+
+      result = daFunk::zero("z");
+      result = result + daFunk::func(BEreq::class_get_tz.pointer(), daFunk::var("z"));
 
       // As CLASS uses units of Mpc, the time is returned in Mpc.
       // Convert Mpc into m and divide by c to get the result in s.
-      result = BEreq::class_get_tz(0.0) * Gambit::Mpc_SI / Gambit::c_SI;
+      result = result * daFunk::cnst(Gambit::Mpc_SI / Gambit::c_SI);
+    }
+
+    /// Age of the universe (time since big bang at z=0) [s]
+    void get_age_universe_from_time_at_z(double &result)
+    {
+      using namespace Pipes::get_age_universe_from_time_at_z;
+
+      result = (*Dep::time_at_z)->bind("z")->eval(0.0);
     }
 
     /// Energy densities *today* (Omega0)
