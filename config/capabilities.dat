@@ -4772,6 +4772,9 @@ Omega0_ncdm: |
 Omega0_b: |
    Returns the total baryon content today, Omega_b.
 
+H_at_z: |
+   Returns functor that calculates the Hubble rate at given redshift z [km/s/Mpc].
+
 H0: |
    The Hubble rate today [km/s/Mpc].
 

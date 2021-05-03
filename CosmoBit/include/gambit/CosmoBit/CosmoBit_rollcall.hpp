@@ -700,6 +700,15 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  /// Get Hubble rate at z in km/s/Mpc
+  #define CAPABILITY H_at_z
+  START_CAPABILITY
+    #define FUNCTION get_H_at_z_classy
+    START_FUNCTION(daFunk::Funk)
+    BACKEND_REQ(class_get_Hz,(),double,(double))
+    #undef FUNCTION
+  #undef CAPABILITY
+
   /// Get time since big bang at z in s
   #define CAPABILITY time_at_z
   START_CAPABILITY

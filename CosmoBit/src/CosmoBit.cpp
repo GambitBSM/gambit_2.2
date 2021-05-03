@@ -266,6 +266,19 @@ namespace Gambit
       result = c_SI*BEreq::class_get_H0()/1000;
     }
 
+    /// Functor that calculates Hubble rate at redshift z [km/s/Mpc]
+    void get_H_at_z_classy(daFunk::Funk &result)
+    {
+      using  namespace Pipes::get_H_at_z_classy;
+
+      result = daFunk::zero("z");
+      result = result + daFunk::func(BEreq::class_get_Hz.pointer(), daFunk::var("z"));
+
+      // As CLASS uses units of Mpc, the Hubble rate is returned in 1/Mpc.
+      // Multiply with c (in m/s) and divide by 1e3 to get the result in km/s/Mpc.
+      result = result * daFunk::cnst(Gambit::c_SI / 1e3);
+    }
+
     /// Functor that calculates time since big bang at redshift z [s]
     void get_time_at_z_classy(daFunk::Funk &result)
     {
