@@ -12,6 +12,10 @@
 ///          (stoecker@physik.rwth-aachen.de)
 ///  \date 2019 Sep
 ///
+///  \author Iñigo Saez Casares
+///          (inigo.saez_casares@ens-paris-saclay.fr)
+///  \date 2021 April, May
+///
 ///  *********************************************
 
 #include <gsl/gsl_math.h>
@@ -180,7 +184,7 @@ namespace Gambit
         first = false;
       }
 
-      const double t_universe = 4.32e17; // Age of the universe in seconds (https://www.physicsoftheuniverse.com/numbers.html)
+      double t_universe = *Dep::age_universe; // Age of the Universe in seconds
 
       double logm = log10(*Param["mass"]) + 9; // In "DecayingDM_mixture", the mass is given in GeV. Need to convert it into eV
       double tau = *Param["lifetime"];   // lifetime is already in untis of s. No tranformation needed.
@@ -216,7 +220,7 @@ namespace Gambit
         first = false;
       }
 
-      const double t_universe = 4.32e17; // Age of the universe in seconds (https://www.physicsoftheuniverse.com/numbers.html)
+      double t_universe = *Dep::age_universe; // Age of the Universe in seconds
 
       double mass = *Param["mass"] * 1e6; // In "DecayingDM_mixture", the mass is given in GeV. Need to convert it into keV
       double tau = *Param["lifetime"];   // lifetime is already in untis of s. No tranformation needed.
@@ -253,7 +257,7 @@ namespace Gambit
         first = false;
       }
 
-      const double t_universe = 4.32e17; // Age of the universe in seconds (https://www.physicsoftheuniverse.com/numbers.html)
+      double t_universe = *Dep::age_universe; // Age of the Universe in seconds
 
       double mass = *Param["mass"] * 1e6; // In "DecayingDM_mixture", the mass is given in GeV. Need to convert it into keV
       double tau = *Param["lifetime"];   // lifetime is already in untis of s. No tranformation needed.
@@ -290,7 +294,7 @@ namespace Gambit
         first = false;
       }
 
-      const double t_universe = 4.32e17; // Age of the universe in seconds (https://www.physicsoftheuniverse.com/numbers.html)
+      double t_universe = *Dep::age_universe; // Age of the Universe in seconds
 
       double mass = *Param["mass"] * 1e6; // In "DecayingDM_mixture", the mass is given in GeV. Need to convert it into keV
       double tau = *Param["lifetime"];   // lifetime is already in untis of s. No tranformation needed.
@@ -323,7 +327,6 @@ namespace Gambit
     const double hbar_GeV = Gambit::hbar; // reduced Planck constant [GeV.s]
     const double cs = Gambit::s2cm; // speed of light [cm/s]
     const double Mpc_2_km = 3.0857e19; // Mpc to km
-    const double t_universe = 4.32e17; // Age of the universe in seconds (https://www.physicsoftheuniverse.com/numbers.html)
 
     // Minimum finite result returnable from log(double x);
     const double logmin = log(std::numeric_limits<double>::min());
@@ -884,7 +887,7 @@ namespace Gambit
       double fraction = *Param["fraction"];
 
       double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
-      // double t0 = t_universe;
+      // double t0 = *Dep::age_universe;
 
       double J_factor = *Dep::J_factor_INTEGRAL_CO*1e9; //J in eV/cm^2
 
@@ -979,14 +982,6 @@ namespace Gambit
     {
       using namespace Pipes::calc_lnL_INTEGRAL_ang_b;
 
-      double H0 = *Dep::H0;
-
-      double H0_s = H0/Mpc_2_km; // H0 in 1/s
-
-      double OmegaM = *Dep::Omega0_m, OmegaR = *Dep::Omega0_r;
-
-      double OmegaLambda = *Dep::Omega0_Lambda;
-
       double tau = *Param["lifetime"];
 
       double gamma_ph = 1/tau * *Param["BR_ph"];
@@ -997,8 +992,7 @@ namespace Gambit
 
       double fraction = *Param["fraction"];
 
-      double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
-      // double t0 = t_universe;
+      double t0 = *Dep::age_universe; // Age of the Universe in seconds
 
       std::vector<double> J_factor = *Dep::J_factor_INTEGRAL_ang_b;
 
@@ -1087,14 +1081,6 @@ namespace Gambit
     {
       using namespace Pipes::calc_lnL_INTEGRAL_ang_l;
 
-      double H0 = *Dep::H0;
-
-      double H0_s = H0/Mpc_2_km; // H0 in 1/s
-
-      double OmegaM = *Dep::Omega0_m, OmegaR = *Dep::Omega0_r;
-
-      double OmegaLambda = *Dep::Omega0_Lambda;
-
       double tau = *Param["lifetime"];
 
       double gamma_ph = 1/tau * *Param["BR_ph"];
@@ -1105,8 +1091,7 @@ namespace Gambit
 
       double fraction = *Param["fraction"];
 
-      double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
-      // double t0 = t_universe;
+      double t0 = *Dep::age_universe; // Age of the Universe in seconds
 
       std::vector<double> J_factor = *Dep::J_factor_INTEGRAL_ang_l;
 
@@ -1207,7 +1192,6 @@ namespace Gambit
       double fraction = *Param["fraction"];
 
       double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
-      // double t0 = t_universe;
 
       static Xray experiment = Xray("HEAO", 9.894*1e9*3.0856775814913684e21); // J in ev / cm^2
 

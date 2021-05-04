@@ -176,15 +176,15 @@ ObsLikes:
     module:       DarkBit
     type:         double
 
-  - purpose:      LogLike
-    capability:   lnL_INTEGRAL_CO
-    module:       DarkBit
-    type:         double
-
-  - purpose:      LogLike
-    capability:   lnL_HEAO
-    module:       DarkBit
-    type:         double
+  # - purpose:      LogLike
+    # capability:   lnL_INTEGRAL_CO
+    # module:       DarkBit
+    # type:         double
+#
+  # - purpose:      LogLike
+    # capability:   lnL_HEAO
+    # module:       DarkBit
+    # type:         double
 
   # - purpose:      LogLike
   #   capability:   lnL_solar_neutrino_B8

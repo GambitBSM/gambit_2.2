@@ -90,6 +90,7 @@
 /// \author Iñigo Saez Casares
 ///          (inigo.saez_casares@ens-paris-saclay.fr)
 /// \date 2019 - 2020
+/// \date 2021 April, May
 ///
 ///  *********************************************
 
@@ -582,6 +583,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION compute_lnL_Xray_WISPy
     START_FUNCTION(double)
+    DEPENDENCY(age_universe, double)
     ALLOW_MODEL(DecayingDM_mixture)
     #undef FUNCTION
   #undef CAPABILITY
@@ -590,6 +592,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION compute_lnL_Xray_Integral_SPI_sterile_nu
     START_FUNCTION(double)
+    DEPENDENCY(age_universe, double)
     ALLOW_MODEL(DecayingDM_mixture)
     #undef FUNCTION
   #undef CAPABILITY
@@ -598,6 +601,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION compute_lnL_Xray_M31_sterile_nu
     START_FUNCTION(double)
+    DEPENDENCY(age_universe, double)
     ALLOW_MODEL(DecayingDM_mixture)
     #undef FUNCTION
   #undef CAPABILITY
@@ -606,6 +610,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION compute_lnL_Xray_NuSTAR_sterile_nu
     START_FUNCTION(double)
+    DEPENDENCY(age_universe, double)
     ALLOW_MODEL(DecayingDM_mixture)
     #undef FUNCTION
   #undef CAPABILITY
@@ -1761,9 +1766,9 @@ START_MODULE
     START_FUNCTION(double)
     DEPENDENCY(Omega0_r, double)
     DEPENDENCY(Omega0_m, double)
-    DEPENDENCY(Omega0_cdm, double)
     DEPENDENCY(H0, double)
     DEPENDENCY(Omega0_Lambda, double)
+    DEPENDENCY(Omega0_cdm, double)
     ALLOW_MODEL(DecayingDM_mixture)
     DEPENDENCY(J_factor_INTEGRAL_CO, double)
     #undef FUNCTION
@@ -1782,10 +1787,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_INTEGRAL_ang_b
     START_FUNCTION(double)
-    DEPENDENCY(Omega0_r, double)
-    DEPENDENCY(Omega0_m, double)
-    DEPENDENCY(H0, double)
-    DEPENDENCY(Omega0_Lambda, double)
+    DEPENDENCY(age_universe, double)
     ALLOW_MODEL(DecayingDM_mixture)
     DEPENDENCY(J_factor_INTEGRAL_ang_b, std::vector<double>)
     #undef FUNCTION
@@ -1804,10 +1806,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_INTEGRAL_ang_l
     START_FUNCTION(double)
-    DEPENDENCY(Omega0_r, double)
-    DEPENDENCY(Omega0_m, double)
-    DEPENDENCY(H0, double)
-    DEPENDENCY(Omega0_Lambda, double)
+    DEPENDENCY(age_universe, double)
     ALLOW_MODEL(DecayingDM_mixture)
     DEPENDENCY(J_factor_INTEGRAL_ang_l, std::vector<double>)
     #undef FUNCTION
