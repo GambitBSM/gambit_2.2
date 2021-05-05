@@ -404,16 +404,18 @@ def get_invisibles(invisible_pdgs):
     
     new_invisibles = [pdg for pdg in invisible_pdgs if pdg not in
                       existing_invisibles]
+    to_write = ""
 
-    pdg_string = "p->pid() == {0}".format(new_invisibles[0])
-    for i,pdg in enumerate(new_invisibles):
-        if i != 0:
-            pdg_string = pdg_string + "|| p->pid() == {0} ".format(pdg)
+    if (len(new_invisibles) != 0):
+        pdg_string = "p->pid() == {0}".format(new_invisibles[0])
+        for i,pdg in enumerate(new_invisibles):
+            if i != 0:
+                pdg_string = pdg_string + "|| p->pid() == {0} ".format(pdg)
     
-    to_write = ("      else if (" + pdg_string + ") \n"
-    "      { \n"
-    "        _invisibles.push_back(p); \n"
-    "        _cinvisibles.push_back(p); \n"
-    "      } \n")
+        to_write = ("      else if (" + pdg_string + ") \n"
+        "      { \n"
+        "        _invisibles.push_back(p); \n"
+        "        _cinvisibles.push_back(p); \n"
+        "      } \n")
     
     return to_write

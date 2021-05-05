@@ -219,7 +219,7 @@ def fill_gum_object(data):
     if 'invisibles' in data:
         invisibles = data['invisibles']
     else:
-        invisibles = None  
+        invisibles = []
 
     backends = ['calchep', 'pythia', 'spheno', 'ufo',
                 'micromegas', 'vevacious']
