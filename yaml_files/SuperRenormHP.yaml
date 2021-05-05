@@ -166,25 +166,25 @@ ObsLikes:
     capability:   BBN_abundances
     sub_capabilities: [He4]
 
-  - purpose:      LogLike
-    capability:   lnL_INTEGRAL_ang_b
-    module:       DarkBit
-    type:         double
-
-  - purpose:      LogLike
-    capability:   lnL_INTEGRAL_ang_l
-    module:       DarkBit
-    type:         double
-
   # - purpose:      LogLike
-    # capability:   lnL_INTEGRAL_CO
+    # capability:   lnL_INTEGRAL_ang_b
     # module:       DarkBit
     # type:         double
 #
   # - purpose:      LogLike
-    # capability:   lnL_HEAO
+    # capability:   lnL_INTEGRAL_ang_l
     # module:       DarkBit
     # type:         double
+#
+  - purpose:      LogLike
+    capability:   lnL_INTEGRAL_CO
+    module:       DarkBit
+    type:         double
+
+  - purpose:      LogLike
+    capability:   lnL_HEAO
+    module:       DarkBit
+    type:         double
 
   # - purpose:      LogLike
   #   capability:   lnL_solar_neutrino_B8

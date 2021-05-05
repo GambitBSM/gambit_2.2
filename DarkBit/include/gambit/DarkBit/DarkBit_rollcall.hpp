@@ -1764,12 +1764,8 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_INTEGRAL_CO
     START_FUNCTION(double)
-    DEPENDENCY(Omega0_r, double)
-    DEPENDENCY(Omega0_m, double)
-    DEPENDENCY(H0, double)
-    DEPENDENCY(Omega0_Lambda, double)
-    DEPENDENCY(Omega0_cdm, double)
     ALLOW_MODEL(DecayingDM_mixture)
+    DEPENDENCY(age_universe, double)
     DEPENDENCY(J_factor_INTEGRAL_CO, double)
     #undef FUNCTION
   #undef CAPABILITY
@@ -1787,8 +1783,8 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_INTEGRAL_ang_b
     START_FUNCTION(double)
-    DEPENDENCY(age_universe, double)
     ALLOW_MODEL(DecayingDM_mixture)
+    DEPENDENCY(age_universe, double)
     DEPENDENCY(J_factor_INTEGRAL_ang_b, std::vector<double>)
     #undef FUNCTION
   #undef CAPABILITY
@@ -1806,8 +1802,8 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_INTEGRAL_ang_l
     START_FUNCTION(double)
-    DEPENDENCY(age_universe, double)
     ALLOW_MODEL(DecayingDM_mixture)
+    DEPENDENCY(age_universe, double)
     DEPENDENCY(J_factor_INTEGRAL_ang_l, std::vector<double>)
     #undef FUNCTION
   #undef CAPABILITY
@@ -1825,11 +1821,10 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_HEAO
     START_FUNCTION(double)
-    DEPENDENCY(Omega0_r, double)
-    DEPENDENCY(Omega0_m, double)
+    DEPENDENCY(time_at_z, daFunk::Funk)
+    DEPENDENCY(H_at_z, daFunk::Funk)
+    DEPENDENCY(age_universe, double)
     DEPENDENCY(Omega0_cdm, double)
-    DEPENDENCY(H0, double)
-    DEPENDENCY(Omega0_Lambda, double)
     ALLOW_MODEL(DecayingDM_mixture)
     #undef FUNCTION
   #undef CAPABILITY

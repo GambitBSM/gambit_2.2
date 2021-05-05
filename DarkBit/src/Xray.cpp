@@ -640,31 +640,39 @@ namespace Gambit
 
 
     // useful structure
-    struct XrayLikelihood_params {double mass; double tau; double gamma_ph; double fraction; Xray experiment; double H0; double OmegaM; double OmegaR; double OmegaLambda; double OmegaDM; double ageUniverse;};
+    struct XrayLikelihood_params {double mass; double tau; double gamma_ph; double fraction; Xray experiment; double OmegaDM; daFunk::Funk H_z; daFunk::Funk t_z; double ageUniverse;};
 
     // extra-galactic contribution to the differential photon flux [photons/eV/cm²/s]
     double dPhiEG(double const& E, XrayLikelihood_params *params)
     {
-      double mass = params->mass, tau = params->tau, gamma_ph = params->gamma_ph, fraction = params->fraction;
-      Xray experiment = params->experiment;
-
-      double H0 = params->H0;
-      double OmegaM = params->OmegaM;
-      double OmegaDM = params->OmegaDM;
-      double OmegaR = params->OmegaR;
-      double OmegaLambda = params->OmegaLambda;
-      double OmegaK = 0.;
-
-      double rhoC = 3*pow(H0, 2)*pow(Mp, 2)/(8*pi)/hbar_GeV/pow(cs, 3)*1e9; // critical density un ev/cm^3
-
-      double density = fraction*OmegaDM*rhoC;
-
+      double mass = params->mass; 
       double x = mass/2./E;
       double z = x - 1.;
 
-      double t = ageUniverse(z, OmegaM, OmegaR, OmegaLambda, H0)[0];
+      if (z<0) { return 0.; }
 
-      return experiment.getDeltaOmega()*2.*1./(4*pi)*(gamma_ph*density*cs*exp(-t/tau))/(mass*H0*E)/sqrt( OmegaM*pow(x, 3.) + OmegaLambda + OmegaK*pow(x, 2.) + OmegaR*pow(x, 4.) );
+      else
+      {
+      Xray experiment = params->experiment;
+
+      double tau = params->tau, gamma_ph = params->gamma_ph, fraction = params->fraction;
+      double OmegaDM = params->OmegaDM;
+
+      daFunk::Funk H_z = params->H_z;
+      boost::shared_ptr<daFunk::FunkBound> H_z_bound = H_z->bind("z");
+
+      double H0 = H_z_bound->eval(0)/Mpc_2_km; // H0 in 1/s
+      double rhoC = 3*pow(H0, 2)*pow(Mp, 2)/(8*pi)/hbar_GeV/pow(cs, 3)*1e9; // critical density un ev/cm^3
+      double density = fraction*OmegaDM*rhoC;
+      double H = H_z_bound->eval(x)/Mpc_2_km; // H(x) in 1/s
+
+      daFunk::Funk t_z = params->t_z;
+      boost::shared_ptr<daFunk::FunkBound> t_z_bound = t_z->bind("z");
+
+      double t = t_z_bound->eval(z);
+
+      return experiment.getDeltaOmega()*2.*1./(4*pi)*(gamma_ph*density*cs*exp(-t/tau))/(mass*E)/H;
+      }
     }
 
     const double s(1./3.); // standard deviation of the gaussian for the galactic emission line = s*energy dispersion instrument
@@ -703,7 +711,6 @@ namespace Gambit
           throw std::runtime_error("Wrong value for m_fluxOrigin in Xray class, allowed values are 1 (galactic flux), 2 (extra-galactic flux) and 3 (both)");
           break;
       }
-
     }
 
     // auxiliary function for gsl integration
@@ -868,16 +875,6 @@ namespace Gambit
     {
       using namespace Pipes::calc_lnL_INTEGRAL_CO;
 
-      double H0 = *Dep::H0;
-
-      double H0_s = H0/Mpc_2_km; // H0 in 1/s
-
-      double OmegaM = *Dep::Omega0_m, OmegaR = *Dep::Omega0_r;
-
-      double OmegaLambda = *Dep::Omega0_Lambda;
-
-      double OmegaDM = *Dep::Omega0_cdm;
-
       double tau = *Param["lifetime"];
 
       double gamma_ph = 1/tau * *Param["BR_ph"];
@@ -886,21 +883,20 @@ namespace Gambit
 
       double fraction = *Param["fraction"];
 
-      double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
-      // double t0 = *Dep::age_universe;
+      double t0 = *Dep::age_universe;
 
       double J_factor = *Dep::J_factor_INTEGRAL_CO*1e9; //J in eV/cm^2
 
       static Xray experiment = Xray("INTEGRAL", J_factor);
 
-      XrayLikelihood_params params = {mass, tau, gamma_ph, fraction, experiment, H0_s, OmegaM, OmegaR, OmegaLambda, OmegaDM, t0};
+      XrayLikelihood_params params = {mass, tau, gamma_ph, fraction, experiment, 0., daFunk::zero("z"), daFunk::zero("z"), t0};
 
       double Emin = experiment.getEmin(), Emax = experiment.getEmax(), E, lik1, lik2;
 
       // no constraints available above the electron threshold, we need to take into account the decay into charged particles
       if (mass >= 1e6) { result = 0; }
 
-      else if (mass >= 2.*Emin)
+      else if (mass > 2.*Emin)
       {
         // modifies the gsl error handler and stores the default one
         gsl_error_handler_t *old_handler = gsl_set_error_handler (&handler);
@@ -1173,15 +1169,10 @@ namespace Gambit
     {
       using namespace Pipes::calc_lnL_HEAO;
 
-      double H0 = *Dep::H0;
-
-      double H0_s = H0/Mpc_2_km; // H0 in 1/s
-
-      double OmegaM = *Dep::Omega0_m, OmegaR = *Dep::Omega0_r;
-
-      double OmegaLambda = *Dep::Omega0_Lambda;
-
       double OmegaDM = *Dep::Omega0_cdm;
+      
+      daFunk::Funk H_z = *Dep::H_at_z;
+      daFunk::Funk t_z = *Dep::time_at_z;
 
       double tau = *Param["lifetime"];
 
@@ -1191,11 +1182,11 @@ namespace Gambit
 
       double fraction = *Param["fraction"];
 
-      double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
+      double t0 = *Dep::age_universe;
 
       static Xray experiment = Xray("HEAO", 9.894*1e9*3.0856775814913684e21); // J in ev / cm^2
 
-      XrayLikelihood_params params = {mass, tau, gamma_ph, fraction, experiment, H0_s, OmegaM, OmegaR, OmegaLambda, OmegaDM, t0};
+      XrayLikelihood_params params = {mass, tau, gamma_ph, fraction, experiment, OmegaDM, H_z, t_z, t0};
 
       const double Emin = experiment.getEmin(), Emax = experiment.getEmax();
       double E, lik1, lik2;
@@ -1203,7 +1194,7 @@ namespace Gambit
       // no constraints available above the electron threshold, we need to take into account the decay into charged particles
       if (mass >= 1e6) { result = 0; }
 
-      else if (mass >= 2.*Emin)
+      else if (mass > 2.*Emin)
       {
         // modifies the gsl error handler and stores the default one
         gsl_error_handler_t *old_handler = gsl_set_error_handler (&handler);
