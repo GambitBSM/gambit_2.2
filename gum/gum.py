@@ -819,7 +819,6 @@ if args.file:
             amend_file("heputils/include/HEPUtils/Event.h", "contrib", get_invisibles(gum.invisibles_pdg),
                            num+1, reset_contents)
 
-
         # HiggsBounds interface
         if output_opts.spheno:
             if len(higgses) == 1:

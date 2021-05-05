@@ -417,16 +417,3 @@ def get_invisibles(invisible_pdgs):
     "      } \n")
     
     return to_write
-    
-  
-  
-
-
-
-
-
-
-
-
-
-
