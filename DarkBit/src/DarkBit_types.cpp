@@ -121,7 +121,9 @@ namespace Gambit
       msg << "SimYieldChannel for " << p1 << " " << p2 <<
        " final state(s): Requested center-of-mass energy out of range (";
       msg << Ecm_min << "-" << Ecm_max << " GeV).";
-      auto error = daFunk::raiseInvalidPoint(msg.str());
+      // TODO: temporary fix, check if it makes sense longterm
+      // auto error = daFunk::raiseInvalidPoint(msg.str());
+      auto error= daFunk::zero("E", "Ecm");
       auto Ecm = daFunk::var("Ecm");
       this->dNdE = daFunk::ifelse(Ecm - Ecm_min, daFunk::ifelse(Ecm_max - Ecm, dNdE, error), error);
       dNdE_bound = this->dNdE->bind("E", "Ecm");
