@@ -70,8 +70,7 @@ namespace GUM
     if(link == (WSLINK)0 || WSerrno != WSEOK)
     {
       std::cout << "Unable to create link to the Kernel!" << std::endl;
-      std::cout << "GUM expects the executable 'math' to be executable from the command line." << std::endl;
-      std::cout << "If you can't do this, please add the executable 'math' to your $PATH, and try again." << std::endl;
+      std::cout << "Something went wrong with the Mathematica Kernel, make sure you have a working Mathematica installation." << std::endl;
       WSNewPacket(link);
       throw std::runtime_error("WSTP Error: Unable to create link to Kernel");
     }
