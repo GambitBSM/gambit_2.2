@@ -323,6 +323,24 @@ namespace Gambit
         result["C72"] -= C76/pow(Lambda, 3.);
         result["C73"] += C77/pow(Lambda, 3.);
         result["C74"] += C78/pow(Lambda, 3.);
+
+        double sw2 = 0.23122;
+        double vev = 246.;
+        double PI = 3.14159265;
+        double prefactoru = (8.*sw2-3.) * pow(mtatmt/(2.*vev*PI), 2.) * log(mtatmt/Lambda);
+        double prefactord = (3.-4.*sw2) * pow(mtatmt/(2.*vev*PI), 2.) * log(mtatmt/Lambda);
+
+        double C61u = C61/pow(Lambda, 2.) + prefactoru * C63/pow(Lambda, 2.);
+        double C61d = C61/pow(Lambda, 2.) + prefactord * C63/pow(Lambda, 2.);
+
+        double IVratio = -1.125;
+
+        double C61uIV = IVratio/(IVratio-1.)*(C61u-C61d);
+        double C61dIV = 1./(IVratio-1.)*(C61u-C61d);
+
+        result["C61d"] = C61dIV;
+        result["C61u"] = C61uIV;
+
       }
 
     } // DD_rel_WCs_flavscheme_DMEFT
