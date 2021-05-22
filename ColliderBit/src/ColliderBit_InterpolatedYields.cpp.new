@@ -1,0 +1,1058 @@
+//   GAMBIT: Global and Modular BSM Inference Tool
+//   *********************************************
+///  \file
+///
+///  Functions for LHC analyses that use table interpolations
+///  rather than direct MC simulation. For now this functionality
+///  is specific to the DMEFT model, but it will be turned into
+///  a general option in ColliderBit..
+///  
+///  *********************************************
+///
+///  Authors (add name and date if you modify):
+///
+///  \author Martin White
+///          (martin.white@adelaide.edu.au)
+///
+///  \author Andre Scaffidi
+///          (andre.scaffidi@adelaide.edu.au)
+///  \date 2019 Aug
+///
+///  \author Tomas Gonzalo
+///          (gonzalo@physik.rwth-aachen.de)
+///  \date 2021 Apr
+///
+///  \author Anders Kvellestad
+///          (anders.kvellestad@fys.uio.no)
+///  \date 2021 May
+///
+///  Analyses based on: arxiv:1711.03301 and https://journals.aps.org/prd/abstract/10.1103/PhysRevD.97.092005
+///  139invfb analysis based on arXiv:2102.10874 
+///
+///  *********************************************
+
+// Needs GSL 2 
+#include <gsl/gsl_math.h>
+#include <gsl/gsl_interp2d.h>
+#include <gsl/gsl_spline2d.h>
+#include <gsl/gsl_sf_gamma.h>
+
+#include "Eigen/Eigenvalues"
+#include "Eigen/Eigen"
+
+#include "multimin/multimin.hpp"
+
+#include "gambit/ColliderBit/analyses/Analysis.hpp"
+#include "gambit/Elements/gambit_module_headers.hpp"
+#include "gambit/ColliderBit/ColliderBit_rollcall.hpp"
+#include "gambit/Utils/ascii_table_reader.hpp"
+#include "gambit/Utils/file_lock.hpp"
+#include "gambit/ColliderBit/Utils.hpp"
+
+
+// #define COLLIDERBIT_DEBUG_PROFILING
+// #define COLLIDERBIT_DEBUG
+// #define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
+
+namespace Gambit
+{
+
+  namespace ColliderBit
+  {  
+
+    // =========== Useful structs ===========
+
+    /// A struct with analysis info, currently specific to the DMEFT
+    struct DMEFT_analysis_info
+    {
+      string name;
+      double lumi;
+
+      int data_INC;
+      int data_INC_d7;
+      int data_SIZE;
+      int data_SIZE_d7;
+      int bin_size;
+
+      string met_hist_C61_C64;
+      string met_hist_C62_C63;
+      string met_hist_C71;
+      string met_hist_C72;
+      string met_hist_C73;
+      string met_hist_C74;
+
+      vector<int> OBSNUM;
+      vector<double> BKGNUM;
+      vector<double> BKGERR;
+
+      vector<double> METMINS;
+    };
+  
+    /// A struct to contain parameters for the GSL optimiser target function
+    struct _gsl_target_func_params
+    {
+      float lambda;
+      AnalysisDataPointers adata_ptrs_original;
+      std::vector<str> skip_analyses;
+      bool use_covar;
+      bool use_marg;
+      bool combine_nocovar_SRs;
+    };
+
+
+    // =========== Forward declarations ===========
+
+    /// Forward declaration of funtion in LHC_likelihoods
+    AnalysisLogLikes calc_loglikes_for_analysis(const AnalysisData&, bool, bool, bool, bool);
+
+    /// Forward declarations of functions in this file
+    void DMEFT_results_profiled(AnalysisDataPointers&);
+
+    void DMEFT_results_cutoff(AnalysisDataPointers&);
+
+    void DMEFT_results(AnalysisDataPointers&);
+
+    void calc_DMEFT_profiled_LHC_nuisance_params(map_str_dbl&);
+
+    void InterpolatedMCInfo(MCLoopInfo&);
+
+
+    double LinearInterpolation(double, double, double, double, double);
+
+    double BilinearInterpolation(double, double, double, double, 
+                                 double, double, double, double, 
+                                 double, double, double, bool);
+
+    void signal_modifier_function(AnalysisData&, double, double);
+
+    void signal_cutoff_function(AnalysisData&, double);
+
+    void Acceptance_CS_dim6(vector<double>&, const string, const DMEFT_analysis_info&, double, double, double, double);
+
+    void Acceptance_CS_dim7(vector<double>&, const string, const DMEFT_analysis_info&, double, double, double);
+
+    void L_Acc_Eff_CS(vector<double>&, const DMEFT_analysis_info&, double, double, double, double, double, double, double, double, double, double);
+
+    void _gsl_target_func(const size_t, const double*, void*, double*);
+
+
+
+    // =========== Functions ===========
+
+    /// Results from DMEFT analyses after profiling over the 'a' parameter in the smooth cut-off of the MET spectrum
+    void DMEFT_results_profiled(AnalysisDataPointers& result)
+    {
+      using namespace Pipes::DMEFT_results_profiled;
+
+      // Clear previous vectors, etc.
+      result.clear();
+
+      // Get the original AnalysisDataPointers that we will adjust
+      result = *Dep::AllAnalysisNumbersUnmodified;
+
+      // Get the best-fit nuisance parameter(s)
+      map_str_dbl bestfit_nuisance_pars = *Dep::DMEFT_profiled_LHC_nuisance_params;
+      float a_bestfit = bestfit_nuisance_pars.at("a");
+
+      // Get Lambda
+      const Spectrum& spec = *Dep::DMEFT_spectrum;
+      float lambda = spec.get(Par::mass1, "Lambda");
+
+      // Recalculate AnalysisData instances in "result", using the best-fit a-value
+      for (AnalysisData* adata_ptr : result)
+      {
+        signal_modifier_function(*adata_ptr, lambda, a_bestfit);
+      }
+    }
+
+
+    /// Results from DMEFT analyses after imposing a hard cut-off of the MET spectrum
+    void DMEFT_results_cutoff(AnalysisDataPointers& result)
+    {
+      using namespace Pipes::DMEFT_results_cutoff;
+
+      // Clear previous vectors, etc.
+      result.clear();
+
+      // Get the original AnalysisDataPointers that we will adjust
+      result = *Dep::AllAnalysisNumbersUnmodified;
+
+      // Get Lambda
+      const Spectrum& spec = *Dep::DMEFT_spectrum;
+      float lambda = spec.get(Par::mass1, "Lambda");
+
+      // Apply the function signal_cutoff_function to each of the 
+      // AnalysisData instances in "result"
+      for (AnalysisData* adata_ptr : result)
+      {
+        signal_cutoff_function(*adata_ptr, lambda);
+      }
+    }
+
+
+    /// Results from DMEFT analyses before any modification of the MET spectrum
+    void DMEFT_results(AnalysisDataPointers& result)
+    { 
+      using namespace Pipes::DMEFT_results;
+
+      static bool first = true;
+
+      // Clear previous vectors, etc.
+      result.clear();
+
+      // Create the thread_local AnalysisData instances we need, 
+      // and make sure they are properly cleared for each new point
+      thread_local AnalysisData analysis_data_CMS("CMS_13TeV_MONOJET_36invfb_interpolated");
+      analysis_data_CMS.clear();
+
+      thread_local AnalysisData analysis_data_ATLAS("ATLAS_13TeV_MONOJET_139invfb_interpolated");
+      analysis_data_ATLAS.clear();
+
+      // Create the DMEFT_analysis_info instances we need and 
+      // initialize them the first time this function is run
+      static DMEFT_analysis_info analysis_info_CMS;
+      static DMEFT_analysis_info analysis_info_ATLAS;
+
+      if (first)
+      {
+        // CMS analysis info
+        analysis_info_CMS.name = "CMS_13TeV_MONOJET_36invfb_interpolated";
+        analysis_info_CMS.lumi = 36.1;
+        analysis_info_CMS.data_INC = 15;     // 15 points in both dimensions (mass, theta)
+        analysis_info_CMS.data_SIZE = 225;   // 15 * 15
+        analysis_info_CMS.data_INC_d7 = 19;  // only one dimension (mass)
+        analysis_info_CMS.data_SIZE_d7 = 19; 
+        analysis_info_CMS.met_hist_C61_C64 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C61_C64.txt";
+        analysis_info_CMS.met_hist_C62_C63 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C62_C63.txt";
+        analysis_info_CMS.met_hist_C71 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C71.txt";
+        analysis_info_CMS.met_hist_C72 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C72.txt";
+        analysis_info_CMS.met_hist_C73 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C73.txt";
+        analysis_info_CMS.met_hist_C74 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C74.txt";
+        analysis_info_CMS.METMINS = {250., 280., 310., 340., 370., 400., 430., 470., 510., 550., 590.,
+                                     640., 690., 740., 790., 840., 900., 960., 1020., 1090., 1160., 1250.}
+        analysis_info_CMS.OBSNUM = {136865, 74340, 42540, 25316, 15653, 10092, 8298, 4906, 2987, 2032, 1514,
+                                    926, 557, 316, 233, 172, 101, 65, 46, 26, 31, 29};
+        analysis_info_CMS.BKGNUM = {134500., 73400., 42320., 25490., 15430., 10160., 8480., 4865., 2970., 1915., 1506.,
+                                    844., 526., 325., 223., 169., 107., 88.1, 52.8, 25.0, 25.5, 26.9};
+        analysis_info_CMS.BKGERR = {3700., 2000., 810., 490., 310., 170., 140., 95., 49., 33., 32.,
+                                    18., 14., 12., 9., 8., 6., 5.3, 3.9, 2.5, 2.6, 2.8};
+        assert(analysis_info_CMS.OBSNUM.size() == analysis_info_CMS.METMINS.size());
+        assert(analysis_info_CMS.OBSNUM.size() == analysis_info_CMS.BKGERR.size());
+        assert(analysis_info_CMS.OBSNUM.size() == analysis_info_CMS.BKGERR.size());
+        analysis_info_CMS.bin_size = analysis_info_CMS.OBSNUM.size(); // = 22
+
+        // ATLAS analysis info
+        analysis_info_ATLAS.name = "ATLAS_13TeV_MONOJET_139invfb_interpolated"; 
+        analysis_info_ATLAS.lumi = 139.0;
+        analysis_info_ATLAS.data_INC = 15;     // 15 points in both dimensions (mass, theta)
+        analysis_info_ATLAS.data_SIZE = 225;   // 15 * 15
+        analysis_info_ATLAS.data_INC_d7 = 19;  // only one dimension (mass)
+        analysis_info_ATLAS.data_SIZE_d7 = 19; 
+        analysis_info_ATLAS.met_hist_C61_C64 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_139invfb_C61_C64.txt";
+        analysis_info_ATLAS.met_hist_C62_C63 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_139invfb_C62_C63.txt";
+        analysis_info_ATLAS.met_hist_C71 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_139invfb_C71.txt";
+        analysis_info_ATLAS.met_hist_C72 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_139invfb_C72.txt";
+        analysis_info_ATLAS.met_hist_C73 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_139invfb_C73.txt";
+        analysis_info_ATLAS.met_hist_C74 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_139invfb_C74.txt";
+        analysis_info_ATLAS.METMINS = {200., 250., 300., 350., 400., 500., 600., 700., 800., 900., 1000.};
+        analysis_info_ATLAS.OBSNUM = {1791624, 752328, 313912, 141036, 102888, 29458, 10203, 3986, 1663, 738, 413+187+207};
+        analysis_info_ATLAS.BKGNUM = {1783000., 753000., 314000., 140100., 101600., 29200., 10000., 3870., 1640., 754., 359.+182.+218.};
+        analysis_info_ATLAS.BKGERR = {26000., 9000., 3500., 1600., 1200., 400., 180., 80., 40., 20., sqrt(10*10+6*6+9*9)};
+        assert(analysis_info_ATLAS.OBSNUM.size() == analysis_info_ATLAS.METMINS.size());
+        assert(analysis_info_ATLAS.OBSNUM.size() == analysis_info_ATLAS.BKGNUM.size());
+        assert(analysis_info_ATLAS.OBSNUM.size() == analysis_info_ATLAS.BKGERR.size());
+        analysis_info_ATLAS.bin_size = analysis_info_ATLAS.OBSNUM.size(); 
+
+        first = false;
+      }
+
+      // Get the theory spectrum to extract masses and parameters
+      const Spectrum& spec = *Dep::DMEFT_spectrum;
+      double C61 = spec.get(Par::dimensionless, "C61");
+      double C62 = spec.get(Par::dimensionless, "C62");
+      double C63 = spec.get(Par::dimensionless, "C63");
+      double C64 = spec.get(Par::dimensionless, "C64");
+      double C71 = spec.get(Par::dimensionless, "C71");
+      double C72 = spec.get(Par::dimensionless, "C72");
+      double C73 = spec.get(Par::dimensionless, "C73");
+      double C74 = spec.get(Par::dimensionless, "C74");
+      double lambda = spec.get(Par::mass1, "Lambda");      
+      double mchi = spec.get(Par::Pole_Mass, "chi");
+
+
+      // Now go through each analysis, fill the corresponding AnalysisData instance 
+      // and store the AnalysisData pointer in the result variable
+
+      // 
+      // ====== Analysis: CMS_13TeV_MONOJET_36invfb_interpolated ======
+      // 
+
+      // Vector to contain signal yield predictions
+      vector<double> sr_nums_CMS(analysis_info_CMS.bin_size, 0.);
+
+      // Fill the signal yield vector
+      L_Acc_Eff_CS(sr_nums_CMS, analysis_info_CMS, mchi, C61, C62, C63, C64, C71, C72, C73, C74, lambda);
+      
+      // Create vector of SignalRegionData instances
+      std::vector<SignalRegionData> CMS_binned_results;
+
+      for (size_t ibin = 0; ibin < analysis_info_CMS.bin_size; ++ibin) 
+      {
+        // Generate an 'sr-N' label 
+        std::stringstream ss; ss << "sr-" << ibin;
+
+        // Construct a SignalRegionData instance and add it to CMS_binned_results
+        SignalRegionData sr;
+        sr.sr_label = ss.str();
+        sr.n_obs = analysis_info_CMS.OBSNUM.at(ibin);
+        sr.n_sig_MC = sr_nums_CMS.at(ibin);
+        sr.n_sig_scaled = sr_nums_CMS.at(ibin);  // We have already scaled the signals in sr_nums_CMS to xsec * lumi
+        sr.n_sig_MC_sys = 0.;
+        sr.n_bkg = analysis_info_CMS.BKGNUM.at(ibin);
+        sr.n_bkg_err = analysis_info_CMS.CMS_BKGERR.at(ibin);
+
+        CMS_binned_results.push_back(sr);
+      }
+
+      // The covariance matrix
+      static const std::vector< std::vector<double> > BKGCOV = {
+            {  1.37e+07,  7.18e+06,  2.58e+06,  1.54e+06,  9.29e+05,  4.28e+05,  3.26e+05,  2.04e+05,  8.34e+04,  5.37e+04,  4.62e+04,  2.33e+04,  1.45e+04,  1.20e+04,  6.66e+03,  7.99e+03,  4.00e+03,  1.57e+03,  0.00e+00,  1.30e+03,  3.85e+02, -4.14e+02 },
+            {  7.18e+06,  4.00e+06,  1.38e+06,  8.43e+05,  5.02e+05,  2.28e+05,  1.74e+05,  1.05e+05,  4.51e+04,  2.84e+04,  2.30e+04,  1.22e+04,  7.56e+03,  6.48e+03,  3.24e+03,  4.00e+03,  2.28e+03,  1.06e+03,  1.56e+02,  8.00e+02,  3.64e+02, -1.68e+02 },
+            {  2.58e+06,  1.38e+06,  6.56e+05,  3.57e+05,  2.18e+05,  1.07e+05,  8.73e+04,  5.31e+04,  2.34e+04,  1.50e+04,  1.35e+04,  7.00e+03,  4.20e+03,  3.30e+03,  2.26e+03,  1.81e+03,  1.12e+03,  6.44e+02,  2.21e+02,  3.04e+02,  1.47e+02,  2.27e+01 },
+            {  1.54e+06,  8.43e+05,  3.57e+05,  2.40e+05,  1.32e+05,  6.58e+04,  5.14e+04,  3.17e+04,  1.44e+04,  9.22e+03,  8.15e+03,  4.06e+03,  2.88e+03,  2.00e+03,  1.32e+03,  1.25e+03,  7.06e+02,  3.64e+02,  5.73e+01,  1.59e+02,  7.64e+01, -2.74e+01 },
+            {  9.29e+05,  5.02e+05,  2.18e+05,  1.32e+05,  9.61e+04,  4.11e+04,  3.21e+04,  1.88e+04,  8.81e+03,  5.73e+03,  5.46e+03,  2.57e+03,  1.78e+03,  1.34e+03,  6.98e+02,  9.18e+02,  4.28e+02,  1.64e+02,  3.63e+01,  1.32e+02,  1.05e+02, -8.68e+00 },
+            {  4.28e+05,  2.28e+05,  1.07e+05,  6.58e+04,  4.11e+04,  2.89e+04,  1.76e+04,  1.07e+04,  5.16e+03,  2.92e+03,  2.83e+03,  1.62e+03,  9.76e+02,  8.77e+02,  3.82e+02,  4.49e+02,  2.04e+02,  1.08e+02,  9.94e+01,  1.02e+02,  3.98e+01,  4.76e+00 },
+            {  3.26e+05,  1.74e+05,  8.73e+04,  5.14e+04,  3.21e+04,  1.76e+04,  1.96e+04,  9.18e+03,  4.39e+03,  2.82e+03,  2.46e+03,  1.39e+03,  9.21e+02,  7.39e+02,  5.17e+02,  3.70e+02,  2.35e+02,  9.65e+01,  8.19e+01,  4.20e+01,  1.82e+01,  3.14e+01 },
+            {  2.04e+05,  1.04e+05,  5.31e+04,  3.17e+04,  1.88e+04,  1.07e+04,  9.18e+03,  9.02e+03,  2.61e+03,  1.72e+03,  1.70e+03,  8.55e+02,  4.52e+02,  4.67e+02,  2.48e+02,  2.66e+02,  1.54e+02,  5.04e+01,  3.33e+01,  1.19e+01,  3.21e+01,  7.98e+00 },
+            {  8.34e+04,  4.51e+04,  2.34e+04,  1.44e+04,  8.81e+03,  5.16e+03,  4.39e+03,  2.61e+03,  2.40e+03,  9.22e+02,  8.94e+02,  4.67e+02,  2.13e+02,  2.41e+02,  1.41e+02,  1.29e+02,  4.70e+01,  4.41e+01,  7.64e+00,  2.08e+01,  2.55e+01,  5.49e+00 },
+            {  5.37e+04,  2.84e+04,  1.50e+04,  9.22e+03,  5.73e+03,  2.92e+03,  2.82e+03,  1.72e+03,  9.22e+02,  1.09e+03,  5.17e+02,  3.03e+02,  1.62e+02,  1.47e+02,  8.91e+01,  8.18e+01,  3.17e+01,  2.10e+01,  1.29e+00,  7.42e+00,  7.72e+00,  4.62e+00 },
+            {  4.62e+04,  2.30e+04,  1.35e+04,  8.15e+03,  5.46e+03,  2.83e+03,  2.46e+03,  1.70e+03,  8.94e+02,  5.17e+02,  1.02e+03,  2.65e+02,  1.57e+02,  1.61e+02,  9.22e+01,  7.94e+01,  3.84e+01,  3.39e+00, -1.25e+00,  1.44e+01,  3.33e+00, -8.96e-01 },
+            {  2.33e+04,  1.22e+04,  7.00e+03,  4.06e+03,  2.57e+03,  1.62e+03,  1.39e+03,  8.55e+02,  4.67e+02,  3.03e+02,  2.65e+02,  3.24e+02,  8.57e+01,  9.07e+01,  5.83e+01,  3.02e+01,  2.70e+01,  2.00e+01,  7.02e+00,  2.25e+00,  5.15e+00,  7.06e+00 },
+            {  1.45e+04,  7.56e+03,  4.20e+03,  2.88e+03,  1.78e+03,  9.76e+02,  9.21e+02,  4.52e+02,  2.13e+02,  1.62e+02,  1.57e+02,  8.57e+01,  1.96e+02,  5.21e+01,  3.91e+01,  3.92e+01,  2.69e+01,  8.90e+00,  6.55e+00,  0.00e+00,  1.46e+00,  1.57e+00 },
+            {  1.20e+04,  6.48e+03,  3.30e+03,  2.00e+03,  1.34e+03,  8.77e+02,  7.39e+02,  4.67e+02,  2.41e+02,  1.47e+02,  1.61e+02,  9.07e+01,  5.21e+01,  1.44e+02,  3.02e+01,  2.02e+01,  1.44e+01,  3.18e+00,  4.68e-01,  4.50e+00,  2.18e+00,  3.02e+00 },
+            {  6.66e+03,  3.24e+03,  2.26e+03,  1.32e+03,  6.98e+02,  3.82e+02,  5.17e+02,  2.48e+02,  1.41e+02,  8.91e+01,  9.22e+01,  5.83e+01,  3.91e+01,  3.02e+01,  8.10e+01,  1.15e+01,  1.19e+01,  7.63e+00,  3.16e+00, -2.25e-01,  1.40e+00,  2.52e+00 },
+            {  7.99e+03,  4.00e+03,  1.81e+03,  1.25e+03,  9.18e+02,  4.49e+02,  3.70e+02,  2.66e+02,  1.29e+02,  8.18e+01,  7.94e+01,  3.02e+01,  3.92e+01,  2.02e+01,  1.15e+01,  6.40e+01,  1.92e+00, -1.27e+00, -3.12e-01,  1.40e+00,  2.70e+00, -6.72e-01 },
+            {  4.00e+03,  2.28e+03,  1.12e+03,  7.06e+02,  4.28e+02,  2.04e+02,  2.35e+02,  1.54e+02,  4.70e+01,  3.17e+01,  3.84e+01,  2.70e+01,  2.69e+01,  1.44e+01,  1.19e+01,  1.92e+00,  3.60e+01,  5.09e+00,  3.74e+00, -1.65e+00,  1.40e+00,  1.51e+00 },
+            {  1.57e+03,  1.06e+03,  6.44e+02,  3.64e+02,  1.64e+02,  1.08e+02,  9.65e+01,  5.04e+01,  4.41e+01,  2.10e+01,  3.39e+00,  2.00e+01,  8.90e+00,  3.18e+00,  7.63e+00, -1.27e+00,  5.09e+00,  2.81e+01,  6.20e-01, -1.19e+00,  5.51e-01, -4.45e-01 },
+            {  0.00e+00,  1.56e+02,  2.21e+02,  5.73e+01,  3.63e+01,  9.95e+01,  8.19e+01,  3.33e+01,  7.64e+00,  1.29e+00, -1.25e+00,  7.02e+00,  6.55e+00,  4.68e-01,  3.16e+00, -3.12e-01,  3.74e+00,  6.20e-01,  1.52e+01,  7.80e-01,  3.04e-01,  1.64e+00 },
+            {  1.30e+03,  8.00e+02,  3.04e+02,  1.59e+02,  1.32e+02,  1.02e+02,  4.20e+01,  1.19e+01,  2.08e+01,  7.42e+00,  1.44e+01,  2.25e+00,  0.00e+00,  4.50e+00, -2.25e-01,  1.40e+00, -1.65e+00, -1.19e+00,  7.80e-01,  6.25e+00,  1.30e-01,  6.30e-01 },
+            {  3.85e+02,  3.64e+02,  1.47e+02,  7.64e+01,  1.05e+02,  3.98e+01,  1.82e+01,  3.21e+01,  2.55e+01,  7.72e+00,  3.33e+00,  5.15e+00,  1.46e+00,  2.18e+00,  1.40e+00,  2.70e+00,  1.40e+00,  5.51e-01,  3.04e-01,  1.30e-01,  6.76e+00,  5.82e-01 },
+            { -4.14e+02, -1.68e+02,  2.27e+01, -2.74e+01, -8.68e+00,  4.76e+00,  3.14e+01,  7.98e+00,  5.49e+00,  4.62e+00, -8.96e-01,  7.06e+00,  1.57e+00,  3.02e+00,  2.52e+00, -6.72e-01,  1.51e+00, -4.45e-01,  1.64e+00,  6.30e-01,  5.82e-01,  7.84e+00 }
+      };
+      assert(BKGCOV.size() == analysis_info_CMS.bin_size);
+      assert(BKGCOV[0].size() == analysis_info_CMS.bin_size);
+
+      // Convert to Eigen matrix
+      static Eigen::MatrixXd m_BKGCOV(analysis_info_CMS.bin_size, analysis_info_CMS.bin_size);
+      static bool first_c = true;
+      if (first_c)
+      {
+        for (int i = 0; i < analysis_info_CMS.bin_size; i++)
+        {
+          m_BKGCOV.row(i) = Eigen::VectorXd::Map(&BKGCOV[i][0],BKGCOV[i].size()); 
+        }
+        first_c = false;
+      }
+
+      // Save the analysis results + covariance matrix in analysis_data_CMS
+      analysis_data_CMS.srdata = CMS_binned_results;
+      analysis_data_CMS.srcov = m_BKGCOV;
+
+      // Save a pointer to analysis_data_CMS in the 'result' variable
+      result.push_back(&analysis_data_CMS);
+
+
+      // 
+      // ====== Analysis: ATLAS_13TeV_MONOJET_139invfb_interpolated ======
+      // 
+
+      // Vector to contain signal yield predictions
+      vector<double> sr_nums_ATLAS(analysis_info_ATLAS.bin_size, 0.);
+
+      // Fill the signal yield vector
+      L_Acc_Eff_CS(sr_nums_ATLAS, analysis_info_ATLAS, mchi, C61, C62, C63, C64, C71, C72, C73, C74, lambda);
+      
+      // Create vector of SignalRegionData instances
+      std::vector<SignalRegionData> ATLAS_binned_results;
+
+      for (size_t ibin = 0; ibin < analysis_info_ATLAS.bin_size; ++ibin) 
+      {
+        // Generate an 'sr-N' label 
+        std::stringstream ss; ss << "sr-" << ibin;
+
+        // Construct a SignalRegionData instance and add it to ATLAS_binned_results
+        SignalRegionData sr;
+        sr.sr_label = ss.str();
+        sr.n_obs = analysis_info_ATLAS.OBSNUM.at(ibin);
+        sr.n_sig_MC = sr_nums_ATLAS.at(ibin);
+        sr.n_sig_scaled = sr_nums_ATLAS.at(ibin);  // We have already scaled the signals in sr_nums_ATLAS to xsec * lumi
+        sr.n_sig_MC_sys = 0.;
+        sr.n_bkg = analysis_info_ATLAS.BKGNUM.at(ibin);
+        sr.n_bkg_err = analysis_info_ATLAS.ATLAS_BKGERR.at(ibin);
+
+        ATLAS_binned_results.push_back(sr);
+      }
+
+      // Save the analysis results in analysis_data_ATLAS
+      analysis_data_ATLAS.srdata = ATLAS_binned_results;
+
+      // Save a pointer to analysis_data_ATLAS in the 'result' variable
+      result.push_back(&analysis_data_ATLAS);
+
+    };
+
+
+    /// Fill the input vector with the total DMEFT signal prediction for each SR in the given LHC analysis
+    void L_Acc_Eff_CS(vector<double>& sr_nums, const DMEFT_analysis_info& analysis_info, 
+                      double m, double C61, double C62, double C63, double C64, 
+                      double C71, double C72, double C73,  double C74, double lambda)
+    {
+
+      // Get the dim-6 yields
+
+      // C61+C64
+      vector<double> A14(analysis_info.bin_size, 0.);
+      Acceptance_CS_dim6(A14, m, C61, C64, lambda, "14", analysis_info);
+
+      // C62+C63
+      vector<double> A23(analysis_info.bin_size, 0.);
+      Acceptance_CS_dim6(A23, m, C62, C63, lambda, "23", analysis_info);
+
+      // Get the dim-7 yields
+
+      // C71
+      vector<double> A71(analysis_info.bin_size, 0.);
+      Acceptance_CS_dim7(A71, m, C71, lambda, "71", analysis_info);
+      
+      // C72
+      vector<double> A72(analysis_info.bin_size, 0.);
+      Acceptance_CS_dim7(A72, m, C72, lambda, "72", analysis_info);
+
+      // C73
+      vector<double> A73(analysis_info.bin_size, 0.);
+      Acceptance_CS_dim7(A73, m, C73, lambda, "73", analysis_info);
+
+      // C74
+      vector<double> A74(analysis_info.bin_size, 0.);
+      Acceptance_CS_dim7(A74, m, C74, lambda, "74", analysis_info);
+
+      // Add yields and save in sr_num
+      for (size_t i = 0; i < analysis.info.bin_size; ++i)
+      {
+        sr_nums[i] = A14[i] + A23[i] + A71[i] + A72[i] + A73[i] + A74[i];
+      }
+    }
+
+
+    // _Anders
+    /// Fill the input vector with the DMEFT signal prediction for a given set of dim-6 operators
+    void Acceptance_CS_dim6(double * accep, float m,float O1,float O2, float lambda ,const char* pair, const char* experiment)
+    {
+
+
+      if (m>150){
+
+        static double MET_HIST_CMS_14[data_SIZE][cms_bin_size];
+        static double MET_HIST_ATLAS_36invfb_14[data_SIZE][atlas_bin_size];
+        static double MET_HIST_ATLAS_139invfb_14[data_SIZE][atlas_bin_size_139];
+        static double MET_HIST_CMS_23[data_SIZE][cms_bin_size];
+        static double MET_HIST_ATLAS_36invfb_23[data_SIZE][atlas_bin_size];
+        static double MET_HIST_ATLAS_139invfb_23[data_SIZE][atlas_bin_size_139];
+        static double THETA_CMS_14[data_SIZE];
+        static double THETA_CMS_23[data_SIZE];
+        static double THETA_ATLAS_36invfb_14[data_SIZE];  
+        static double THETA_ATLAS_36invfb_23[data_SIZE];  
+        static double THETA_ATLAS_139invfb_14[data_SIZE];  
+        static double THETA_ATLAS_139invfb_23[data_SIZE];  
+        static double MASS_CMS_14[data_SIZE];
+        static double MASS_CMS_23[data_SIZE];
+        static double MASS_ATLAS_36invfb_14[data_SIZE];  
+        static double MASS_ATLAS_36invfb_23[data_SIZE];  
+        static double MASS_ATLAS_139invfb_14[data_SIZE];  
+        static double MASS_ATLAS_139invfb_23[data_SIZE];  
+        static double CS_CMS_14[data_SIZE];
+        static double CS_CMS_23[data_SIZE];
+        static double CS_ATLAS_36invfb_14[data_SIZE];  
+        static double CS_ATLAS_36invfb_23[data_SIZE];  
+        static double CS_ATLAS_139invfb_14[data_SIZE];  
+        static double CS_ATLAS_139invfb_23[data_SIZE];  
+        static double nJets[data_SIZE];
+        // ----------------------------------//
+        // Define just mass and angle arrays // 
+        static double theta[data_INC];
+        static double mass[data_INC]; 
+
+        
+    
+        static bool first = true;
+        if (first)
+        {
+          Utils::ProcessLock mylock("Acceptance_CS_dim6_high");
+          mylock.get_lock();
+
+          cout << "Reading in grids. [Only happens on first itteration per MPI process]."<<endl;
+          float var1,var2;
+          FILE * fp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/X_Y_ATLAS_36invfb_C62_C63.txt","r");   // The masses and thetas are the same for each! 
+          for (int ll = 0; ll < data_INC; ++ll){
+            fscanf(fp,"%f %f", &var1, &var2);
+            mass[ll] = var1;
+            theta[ll]= var2;
+            // cout << mass[ll]<<endl;
+          }
+          fclose(fp); 
+          
+
+          std::ifstream mb(met_ATLAS_36invfb_23);
+          for(int row = 0; row < data_SIZE; row++)
+          {  
+            for(int column = 0; column < atlas_bin_size; column++)
+            {
+              mb >> MET_HIST_ATLAS_36invfb_23[row][column];
+            }
+          }
+          mb.close();
+
+          std::ifstream mba14(met_ATLAS_36invfb_14);
+          for(int row = 0; row < data_SIZE; row++)
+          {  
+            for(int column = 0; column < atlas_bin_size; column++)
+            {
+              mba14 >> MET_HIST_ATLAS_36invfb_14[row][column];
+            }
+          }
+          mba14.close();
+
+          std::ifstream mb_(met_ATLAS_139invfb_23);
+          for(int row = 0; row < data_SIZE; row++)
+          {  
+            for(int column = 0; column < atlas_bin_size_139; column++)
+            {
+              mb_ >> MET_HIST_ATLAS_139invfb_23[row][column];
+            }
+          }
+          mb_.close();
+
+          std::ifstream mba14_(met_ATLAS_139invfb_14);
+          for(int row = 0; row < data_SIZE; row++)
+          {  
+            for(int column = 0; column < atlas_bin_size_139; column++)
+            {
+              mba14_ >> MET_HIST_ATLAS_139invfb_14[row][column];
+            }
+          }
+          mba14_.close();
+
+          std::ifstream mbc23(met_CMS_23);
+          for(int row = 0; row < data_SIZE; row++)
+          {  
+            for(int column = 0; column < cms_bin_size; column++)
+            {
+              mbc23 >> MET_HIST_CMS_23[row][column];
+            }
+          }
+          mbc23.close();     
+
+          std::ifstream mbc14(met_CMS_14);
+          for(int row = 0; row < data_SIZE; row++)
+          {  
+            for(int column = 0; column < cms_bin_size; column++)
+            {
+              mbc14 >> MET_HIST_CMS_14[row][column];
+            }
+          }
+          mbc14.close();
+
+
+          float p1,p2,p3,p4;
+          FILE * pp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_36invfb_C61_C64.txt","r");              // file containing numbers in 5 columns 
+          for (int ll = 0; ll < data_SIZE; ++ll)
+          {
+            fscanf(pp,"%f %f %f %f", &p1,&p2,&p3,&p4);
+            MASS_ATLAS_36invfb_14[ll] = p1; 
+            THETA_ATLAS_36invfb_14[ll]= p2;
+            nJets[ll]         = p3;
+            CS_ATLAS_36invfb_14[ll]   = p4;   
+          }
+          fclose(pp);
+
+          float a1,a2,a3,a4;
+          FILE * ap = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_36invfb_C62_C63.txt","r");             // file containing numbers in 5 columns 
+          for (int ll = 0; ll < data_SIZE; ++ll)
+          {
+            fscanf(ap,"%f %f %f %f", &a1,&a2,&a3,&a4);
+            MASS_ATLAS_36invfb_23[ll] = a1; 
+            THETA_ATLAS_36invfb_23[ll]= a2;
+            nJets[ll]         = a3;
+            CS_ATLAS_36invfb_23[ll]   = a4;   
+          }
+          fclose(ap);
+          
+          pp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_139invfb_C61_C64.txt","r");              // file containing numbers in 5 columns 
+          for (int ll = 0; ll < data_SIZE; ++ll)
+          {
+            fscanf(pp,"%f %f %f %f", &p1,&p2,&p3,&p4);
+            MASS_ATLAS_139invfb_14[ll] = p1; 
+            THETA_ATLAS_139invfb_14[ll]= p2;
+            nJets[ll]         = p3;
+            CS_ATLAS_139invfb_14[ll]   = p4;   
+          }
+          fclose(pp);
+
+          ap = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_139invfb_C62_C63.txt","r");             // file containing numbers in 5 columns 
+          for (int ll = 0; ll < data_SIZE; ++ll)
+          {
+            fscanf(ap,"%f %f %f %f", &a1,&a2,&a3,&a4);
+            MASS_ATLAS_139invfb_23[ll] = a1; 
+            THETA_ATLAS_139invfb_23[ll]= a2;
+            nJets[ll]         = a3;
+            CS_ATLAS_139invfb_23[ll]   = a4;   
+          }
+          fclose(ap);
+ 
+          float d1,d2,d3,d4;
+          FILE *dp=fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_CMS_C61_C64.txt","r");              // file containing numbers in 5 columns 
+          for (int ll = 0; ll < data_SIZE; ++ll){
+            fscanf(dp,"%f %f %f %f", &d1,&d2,&d3,&d4);
+            MASS_CMS_14[ll] = d1; 
+            THETA_CMS_14[ll]= d2;
+            nJets[ll]       = d3;
+            CS_CMS_14[ll]   = d4;   
+          }
+          fclose(dp);
+
+          float b1,b2,b3,b4;
+          FILE * bp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_CMS_C62_C63.txt","r");              // file containing numbers in 5 columns 
+          for (int ll = 0; ll < data_SIZE; ++ll){
+            fscanf(bp,"%f %f %f %f", &b1,&b2,&b3,&b4);
+            MASS_CMS_23[ll] = b1; 
+            THETA_CMS_23[ll]= b2;
+            nJets[ll]       = b3;
+            CS_CMS_23[ll]   = b4;   
+          }
+          fclose(bp);
+          
+          mylock.release_lock();
+
+          first = false;
+
+        }
+
+
+
+        // Define temp. arrays for storing yields. 
+        // cout << "Check things "<<mass[0]<<endl;  
+        int met_bin_size;
+        double Lumi; // Luminosity in inverse picobarns
+        double ** MET_HIST = new double*[data_SIZE];
+        double THETA[data_SIZE];
+        double MASS[data_SIZE];
+        double CS[data_SIZE];
+        
+        // cout << "Check things 2 <<mass[0]"<<endl;  
+
+        if (strcmp(experiment,"ATLAS_36invfb") == 0 && strcmp(pair,"23") == 0)
+        {
+          met_bin_size = atlas_bin_size;
+          Lumi = 36.1 * pow(10,3);
+
+          // double** MET_HIST = new double*[data_SIZE];
+          for(int i = 0; i < data_SIZE; ++i){
+            MET_HIST[i] = new double[met_bin_size];
+            MASS[i]     = MASS_ATLAS_36invfb_23[i];
+            THETA[i]    = THETA_ATLAS_36invfb_23[i];
+            CS[i]       = CS_ATLAS_36invfb_23[i];
+          }
+          // Assign met histogram to current experiment
+          for (int kk = 0; kk<data_SIZE;++kk){
+            for (int j = 0; j<met_bin_size;++j){
+              MET_HIST[kk][j] = MET_HIST_ATLAS_36invfb_23[kk][j];
+            }
+          }
+        }
+
+        else if (strcmp(experiment,"ATLAS_139invfb") == 0 && strcmp(pair,"23") == 0)
+        {
+          met_bin_size = atlas_bin_size_139;
+          Lumi = 139.0 * pow(10,3);
+
+          // double** MET_HIST = new double*[data_SIZE];
+          for(int i = 0; i < data_SIZE; ++i)
+          {
+            MET_HIST[i] = new double[met_bin_size];
+            MASS[i]     = MASS_ATLAS_139invfb_23[i];
+            THETA[i]    = THETA_ATLAS_139invfb_23[i];
+            CS[i]       = CS_ATLAS_139invfb_23[i];
+          }
+          // Assign met histogram to current experiment
+          for (int kk = 0; kk<data_SIZE;++kk)
+          {
+            for (int j = 0; j<met_bin_size;++j)
+            {
+              MET_HIST[kk][j] = MET_HIST_ATLAS_139invfb_23[kk][j];
+            }
+          }
+        }
+
+        else if (strcmp(experiment,"CMS") == 0 && strcmp(pair,"23") == 0){
+          // std::cout << "BITE" << std::endl;
+
+          met_bin_size = cms_bin_size;
+          Lumi = 35.9 * pow(10,3);
+
+          // double** MET_HIST = new double*[data_SIZE];
+          for(int i = 0; i < data_SIZE; ++i){
+            MET_HIST[i] = new double[met_bin_size];
+            MASS[i]     = MASS_CMS_23[i];
+            THETA[i]    = THETA_CMS_23[i];
+            CS[i]       = CS_CMS_23[i];
+          }
+          // Assign met histogram to current experiment
+          for (int kk = 0; kk<data_SIZE;++kk){
+            for (int j = 0; j<met_bin_size;++j){
+              MET_HIST[kk][j] = MET_HIST_CMS_23[kk][j];
+
+            }
+          }
+        }
+
+        else if (strcmp(experiment,"ATLAS_36invfb") == 0 && strcmp(pair,"14") == 0){
+          met_bin_size = atlas_bin_size;
+          Lumi = 36.1 * pow(10,3);
+
+          // double** MET_HIST = new double*[data_SIZE];
+          for(int i = 0; i < data_SIZE; ++i){
+            MET_HIST[i] = new double[met_bin_size];
+            MASS[i]     = MASS_ATLAS_36invfb_14[i];
+            THETA[i]    = THETA_ATLAS_36invfb_14[i];
+            CS[i]       = CS_ATLAS_36invfb_14[i];
+          }
+          // Assign met histogram to current experiment
+          for (int kk = 0; kk<data_SIZE;++kk){
+            for (int j = 0; j<met_bin_size;++j){
+              MET_HIST[kk][j] = MET_HIST_ATLAS_36invfb_14[kk][j];
+
+            }
+          }
+        }
+
+        else if (strcmp(experiment,"ATLAS_139invfb") == 0 && strcmp(pair,"14") == 0)
+        {
+          met_bin_size = atlas_bin_size_139;
+          Lumi = 139.0 * pow(10,3);
+
+          // double** MET_HIST = new double*[data_SIZE];
+          for(int i = 0; i < data_SIZE; ++i)
+          {
+            MET_HIST[i] = new double[met_bin_size];
+            MASS[i]     = MASS_ATLAS_139invfb_14[i];
+            THETA[i]    = THETA_ATLAS_139invfb_14[i];
+            CS[i]       = CS_ATLAS_139invfb_14[i];
+          }
+          // Assign met histogram to current experiment
+          for (int kk = 0; kk<data_SIZE;++kk)
+          {
+            for (int j = 0; j<met_bin_size;++j)
+            {
+              MET_HIST[kk][j] = MET_HIST_ATLAS_139invfb_14[kk][j];
+
+            }
+          }
+        }
+
+
+        else if (strcmp(experiment,"CMS") == 0 && strcmp(pair,"14") == 0){
+          met_bin_size = cms_bin_size;
+          Lumi = 35.9 * pow(10,3);
+
+          // double** MET_HIST = new double*[data_SIZE];
+          for(int i = 0; i < data_SIZE; ++i){
+            MET_HIST[i] = new double[met_bin_size];
+            MASS[i]     = MASS_CMS_14[i];
+            THETA[i]    = THETA_CMS_14[i];
+            CS[i]       = CS_CMS_14[i];
+          }
+          // Assign met histogram to current experiment
+          for (int kk = 0; kk<data_SIZE;++kk){
+            for (int j = 0; j<met_bin_size;++j){
+              MET_HIST[kk][j] = MET_HIST_CMS_14[kk][j];
+
+            }
+          }
+        }
+        // cout << "Check things 5"<<mass[0]<<endl;  
+
+          
+        // Calculate normalisation
+        double Norm,th;
+
+        Norm = pow(O1,2) + pow(O2,2);
+
+        if (O2==0){
+          th   = pi/float(2);
+          // cout << " O2 is zero"<< endl;
+        }
+        else{
+          th    = atan(float(O1/O2));
+          if (O1/O2 < 0){
+            th = th + pi;
+          }
+        }
+
+        if (Norm < 0.0)
+        {
+          ColliderBit_error().raise(LOCAL_INFO, "Norm < 0 in function Acceptance_CS_dim6.");
+        }
+
+        // Checks to go ahead with interpolation
+        // cout << "Check things 6"<<mass[0]<<endl;  
+
+        if (m<mass[0]){
+          ColliderBit_error().raise(LOCAL_INFO, "Mass parameter below range of high-mass region."); // This shouldn't ever happen as long as the grid is not modified
+        }
+        if (m>mass[data_INC-1]){
+          ColliderBit_warning().raise(LOCAL_INFO, "Mass parameter above range of high-mass region. Setting signal to zero.");
+          Norm = 0;  // Slightly hacky way to set the signal to zero in this case 
+          m=mass[data_INC-1];
+        }
+        if (th<theta[0] || th>theta[data_INC-1]){
+          ColliderBit_error().raise(LOCAL_INFO, "Theta parameter out of range.");
+        }
+        // cout << " Acceptance_CS_dim6 DEBUG: 4" << endl;
+
+        
+        // Get x1,2 y1,2 : Mass and theta coordinates for interpolation
+        double x1,x2,y1,y2;
+        int xi,yj;
+        for(int ii = 0; ii < data_INC-1; ++ii) {
+          if (m >= mass[ii] && m <= mass[ii+1]){
+            x1 = mass[ii];
+            x2 = mass[ii+1]; 
+            xi = ii;
+            break;
+          }
+        }
+        for(int jj = 0; jj < data_INC-1; ++jj) {
+          if (th >= theta[jj] && th <= theta[jj+1]){
+            y1 = theta[jj];
+            y2 = theta[jj+1];
+            yj = jj;
+            break;
+          }
+        }
+
+        // cout << "Check things 7"<<mass[0]<<endl;  
+
+        // Get C's
+        double C11=0.0 ,C12=0.0,C21=0.0,C22=0.0,yalpha=0;
+
+        // Define Q's as array: One Q type for each met bin.
+
+        double Q11[met_bin_size];
+        double Q12[met_bin_size];
+        double Q21[met_bin_size];
+        double Q22[met_bin_size];
+
+        // cout << "Check things 8"<<mass[0]<<endl;  
+
+        // NJets and Cross-section
+        // // !!!!!!!!!!!!!!!!!!!! HERE AGAIN BUGS !!!!! << endl;
+
+        // std::cout << "met_bin_size: " << met_bin_size << std::endl;
+
+        for (int Emiss = 0; Emiss < met_bin_size; Emiss++ ) 
+        {
+          Q11[Emiss] = 0.0;
+          Q12[Emiss] = 0.0;
+          Q21[Emiss] = 0.0;
+          Q22[Emiss] = 0.0;
+          
+          // cout << " Emiss = "<< Emiss<< " Inital Q's: "<< Q11[Emiss]<<" "<< Q12[Emiss]<<" "<< Q12[Emiss] <<" "<< Q22[Emiss]<<endl;
+          while (Q11[Emiss]==0.0 || Q12[Emiss]==0.0 || Q21[Emiss]== 0.0 || Q22[Emiss]==0.0 || C11==0.0 || C12==0.0 || C21== 0.0 || C22==0.0)
+          { 
+            // cout << Q11[Emiss]<<" "<< Q12[Emiss]<<" "<< Q21[Emiss] <<" "<< Q22[Emiss]<<endl;
+            // cout << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+            for(int kk = 0; kk < data_SIZE; ++kk) 
+            {
+              // cout << MASS[kk]<<" "<< THETA[kk]<< " Emiss = "<< Emiss <<"|  |"<<MET_HIST[kk][Emiss]<<" " << kk<< " |     |" << x2<<" " << y2<<" "<< Q11[Emiss]<<" "<< Q12[Emiss]<<" "<< Q12[Emiss] <<" "<< Q22[Emiss]<<endl;
+              
+              if (MASS[kk]==x1 && THETA[kk]==y1)
+              {
+                // Q11[Emiss] = nJets[kk];
+                  if (MET_HIST[kk][Emiss] < 0){
+                    Q11[Emiss] = -1*MET_HIST[kk-1][Emiss];
+                    if ( std::isnan(Q11[Emiss])){
+                      cout << "NAN in dodgey!!! Emiss = "<< Emiss<< ", " << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+                    }
+                    C11        = -1*CS[kk-1];
+                    yalpha     = THETA[kk-1];
+                    // cout << "Have made the hack" << endl;
+                  }
+                  
+                  else {
+                    Q11[Emiss] = MET_HIST[kk][Emiss];
+                    if ( std::isnan(Q11[Emiss])){
+                      cout << "NAN!!! Emiss = "<< Emiss<< ", " << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+                    }
+                    C11 = CS[kk];
+                    // cout << "Q11 = " << Q22[Emiss] << " mass, th = "    << MASS[kk]<< "  "<< THETA[kk]<<endl;
+                  } 
+                  if (Q11[Emiss] == 0){
+                    cout << "Q11 not set" << Q11[Emiss]<< " "<< Emiss<< " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+                }
+              }
+              else if (MASS[kk]==x1 && THETA[kk]==y2)
+              {
+                // cout << "Here in loop. K = "<< kk<< " x1 = "<< x1<< " y2 = "<< y2<< " met_hist = " << MET_HIST[kk][Emiss]<<endl;
+                
+                if (MET_HIST[kk][Emiss] < 0)
+                {
+                    Q12[Emiss] = -1*MET_HIST[kk+1][Emiss];
+                    if ( std::isnan(Q12[Emiss]))
+                    {
+                      cout << "NAN in dodgey!!! Emiss = "<< Emiss<< ", " << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+                    }
+
+                    C12        = -1*CS[kk+1];
+                    yalpha     = THETA[kk+1];
+                    // cout << "Have made the hack" << endl;
+                }
+                else {
+                    Q12[Emiss] = MET_HIST[kk][Emiss];
+                    if ( std::isnan(Q12[Emiss])){
+                      cout << "NAN!!! Emiss = "<< Emiss<< ", " << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+                    }
+
+                    C12 = CS[kk];
+                }
+                if (Q12[Emiss] == 0){
+                  cout << "Q12 not set" << Q12[Emiss]<< " "<< Emiss<< " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+                }
+              }
+
+              else if (MASS[kk]==x2 && THETA[kk]==y1)
+              {
+
+                if (MET_HIST[kk][Emiss] < 0)
+                {
+                  Q21[Emiss] = -1*MET_HIST[kk-1][Emiss];
+
+                  if ( std::isnan(Q21[Emiss])){
+                    cout << "NAN in dodgey!!! Emiss = "<< Emiss<< ", " << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+                  }
+                  C21        = -1*CS[kk-1];
+                  yalpha     = THETA[kk-1];
+                  // cout << "Have made the hack" << endl;
+                } 
+
+                else
+                {
+                  Q21[Emiss] = MET_HIST[kk][Emiss];
+                    if ( std::isnan(Q21[Emiss])){
+                      cout << "NAN!!! Emiss = "<< Emiss<< ", " << " X1 Y X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+                    }
+
+                  C21 = CS[kk];
+                }
+                if (Q21[Emiss] == 0){
+                  cout << "Q21 not set" << Q21[Emiss]<< " "<< Emiss<< " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+                }
+              }  
+
+              else if (MASS[kk]==x2 && THETA[kk]==y2)
+              {
+
+                  if (MET_HIST[kk][Emiss] < 0)
+                  {
+                    Q22[Emiss] = -1*MET_HIST[kk+1][Emiss];
+
+                    if ( std::isnan(Q22[Emiss])){
+                      cout << "NAN in dodgey!!! Emiss = "<< Emiss<< ", " << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+                    }  
+                    C22        = -1*CS[kk+1];
+                    yalpha     = THETA[kk+1];
+                    // cout << "Have made the hack " << Q22[Emiss]<< " "<< C22<< " "<< yalpha <<  endl;
+                  } 
+
+                  else 
+                  {
+                    Q22[Emiss] = MET_HIST[kk][Emiss];
+                      if ( std::isnan(Q22[Emiss])){
+                        cout << "NAN!!! Emiss = "<< Emiss<< ", " << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+                      }
+                    C22 = CS[kk];
+                  }
+                  // cout << " Q22"<< " "<< Q22[Emiss]<<endl;
+                  if (Q22[Emiss] == 0){
+                    cout << "Q22 not set" << Q22[Emiss]<< " "<< Emiss<< " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+                  }
+                } 
+              } // Loop over kk 
+            } // While loop
+
+            // cout << "Exited while loop..." << endl;
+            // cout << "Check things 9"<<mass[0]<<endl;  
+
+            // cout << " Acceptance_CS_dim6 DEBUG: 5 - Fixed" << endl;
+
+            // Luminosity scaling gets applied at the end...
+            double A   = BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th,yalpha);
+            double B   = BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th,yalpha);
+            // double res =  36000.0*float(Norm)*A*float(Norm)*B; 
+            double res =  Lumi*A*float(Norm)*B; 
+            
+            // double res =  Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th)*Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th); 
+
+
+            if (std::isnan(res))
+            {
+              cout << " Test within function: Experiment =  "<< experiment << " res =  "<< res << " Pair  = " << pair <<" CS = "<<Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th,0,true)<< " Yield = "<< Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th,true) <<" Emiss = "<< Emiss << " Q's: "<< Q11[Emiss]<<" " << Q12[Emiss]<<" " << Q21[Emiss]<<" " <<Q22[Emiss]<<" "<< endl;
+              cout << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+              cout << "th is the problem = "<< th<<endl;
+            }
+            // cout << "Check things 10"<<mass[0]<<endl;  
+            
+            //  cout << "Res = "<< res << " Mass, theta = "<< m <<" , "<<th<<" A = "<<A<<" B = "<<B<<endl;
+            
+            double lambda_scaling = float(pow(1000.0,4))/float(pow(lambda,4));
+
+            accep[Emiss] = res*lambda_scaling;
+
+          } // Loop over Emiss
+
+          // cout << &accep << std::endl;
+          // cout << sizeof(accep) << std::endl;
+          // cout << "Check things after accep"<<endl;  
+
+          // for(int j=0; j<22; j++) {
+          //   cout << &accep[j] << std::endl;
+          //    cout << accep[j] << std::endl;
+          // }
+
+
+          // cout << "Check things b4 filling"<<endl;  
+
+          std::fill_n(THETA,data_SIZE,0);
+          std::fill_n(MASS,data_SIZE,0);
+          std::fill_n(CS,data_SIZE,0);
+
+
+          // MET_HIST[data_SIZE][met_bin_size] = {};
+              //Free each sub-array
+          for(int i = 0; i < data_SIZE; ++i) {
+              delete[] MET_HIST[i];   
+          }
+          //Free the array of pointers
+          delete[] MET_HIST;
+
+
+          // MET_HIST_ATLAS_36invfb[data_SIZE][atlas_bin_size] = {};
+          // MET_HIST_CMS[data_SIZE][cms_bin_size] = {};
+          // MET_HIST_ATLAS_36invfb[data_SIZE][atlas_bin_size] = {};
+          // cout << "Check things after fillinge "<<endl;  
+      }
+
+
+
+  } // namespace ColliderBit
+    
+} // namespace Gambit
