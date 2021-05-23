@@ -42,6 +42,7 @@
 
 #include "multimin/multimin.hpp"
 
+#include "gambit/ColliderBit/interp_collection.hpp"
 #include "gambit/ColliderBit/analyses/Analysis.hpp"
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/ColliderBit/ColliderBit_rollcall.hpp"
@@ -60,34 +61,39 @@ namespace Gambit
   namespace ColliderBit
   {  
 
-    // =========== Useful structs ===========
+    // =========== Useful stuff ===========
 
     /// A struct with analysis info, currently specific to the DMEFT
     struct DMEFT_analysis_info
     {
       string name;
-      double lumi;
+      double lumi_invfb;
 
-      int data_INC;
-      int data_INC_d7;
-      int data_SIZE;
-      int data_SIZE_d7;
-      int bin_size;
+      // int data_INC;
+      // int data_INC_d7;
+      // int data_SIZE;
+      // int data_SIZE_d7;
+      // int bin_size;
 
-      string met_hist_C61_C64;
-      string met_hist_C62_C63;
-      string met_hist_C71;
-      string met_hist_C72;
-      string met_hist_C73;
-      string met_hist_C74;
-
+      size_t n_signal_regions;
       vector<int> OBSNUM;
       vector<double> BKGNUM;
       vector<double> BKGERR;
 
       vector<double> METMINS;
+
+      // string met_hist_C61_C64;
+      // string met_hist_C62_C63;
+      // string met_hist_C71;
+      // string met_hist_C72;
+      // string met_hist_C73;
+      // string met_hist_C74;
+
+      map<string,interp1d_collection> interp1d;
+      map<string,interp2d_collection> interp2d;
     };
   
+
     /// A struct to contain parameters for the GSL optimiser target function
     struct _gsl_target_func_params
     {
@@ -98,6 +104,8 @@ namespace Gambit
       bool use_marg;
       bool combine_nocovar_SRs;
     };
+
+
 
 
     // =========== Forward declarations ===========
@@ -117,21 +125,26 @@ namespace Gambit
     void InterpolatedMCInfo(MCLoopInfo&);
 
 
-    double LinearInterpolation(double, double, double, double, double);
+    // double LinearInterpolation(double, double, double, double, double);
 
-    double BilinearInterpolation(double, double, double, double, 
-                                 double, double, double, double, 
-                                 double, double, double, bool);
+    // double BilinearInterpolation(double, double, double, double, 
+    //                              double, double, double, double, 
+    //                              double, double, double, bool);
 
     void signal_modifier_function(AnalysisData&, double, double);
 
     void signal_cutoff_function(AnalysisData&, double);
 
-    void Acceptance_CS_dim6(vector<double>&, const string, const DMEFT_analysis_info&, double, double, double, double);
+    // void Acceptance_CS_dim6(vector<double>&, const string, const DMEFT_analysis_info&, double, double, double, double);
 
-    void Acceptance_CS_dim7(vector<double>&, const string, const DMEFT_analysis_info&, double, double, double);
+    // void Acceptance_CS_dim7(vector<double>&, const string, const DMEFT_analysis_info&, double, double, double);
 
-    void L_Acc_Eff_CS(vector<double>&, const DMEFT_analysis_info&, double, double, double, double, double, double, double, double, double, double);
+    // void get_DMEFT_signal_yields(vector<double>&, const DMEFT_analysis_info&, double, double, double, double, double, double, double, double, double, double);
+    void get_DMEFT_signal_yields(vector<double>&, const DMEFT_analysis_info&, const Spectrum&);
+
+    void get_DMEFT_signal_yields_dim6(vector<double>&, const string, const DMEFT_analysis_info&, double, double, double, double);
+
+    void get_DMEFT_signal_yields_dim7(vector<double>&, const string, const DMEFT_analysis_info&, double, double, double);
 
     void _gsl_target_func(const size_t, const double*, void*, double*);
 
@@ -215,19 +228,20 @@ namespace Gambit
 
       if (first)
       {
+        vector<string> colnames;
+
+        // 
         // CMS analysis info
+        // 
+
         analysis_info_CMS.name = "CMS_13TeV_MONOJET_36invfb_interpolated";
-        analysis_info_CMS.lumi = 36.1;
-        analysis_info_CMS.data_INC = 15;     // 15 points in both dimensions (mass, theta)
-        analysis_info_CMS.data_SIZE = 225;   // 15 * 15
-        analysis_info_CMS.data_INC_d7 = 19;  // only one dimension (mass)
-        analysis_info_CMS.data_SIZE_d7 = 19; 
-        analysis_info_CMS.met_hist_C61_C64 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C61_C64.txt";
-        analysis_info_CMS.met_hist_C62_C63 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C62_C63.txt";
-        analysis_info_CMS.met_hist_C71 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C71.txt";
-        analysis_info_CMS.met_hist_C72 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C72.txt";
-        analysis_info_CMS.met_hist_C73 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C73.txt";
-        analysis_info_CMS.met_hist_C74 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C74.txt";
+        analysis_info_CMS.lumi_invfb = 36.1;
+
+        // analysis_info_CMS.data_INC = 15;     // 15 points in both dimensions (mass, theta)
+        // analysis_info_CMS.data_SIZE = 225;   // 15 * 15
+        // analysis_info_CMS.data_INC_d7 = 19;  // only one dimension (mass)
+        // analysis_info_CMS.data_SIZE_d7 = 19; 
+
         analysis_info_CMS.METMINS = {250., 280., 310., 340., 370., 400., 430., 470., 510., 550., 590.,
                                      640., 690., 740., 790., 840., 900., 960., 1020., 1090., 1160., 1250.}
         analysis_info_CMS.OBSNUM = {136865, 74340, 42540, 25316, 15653, 10092, 8298, 4906, 2987, 2032, 1514,
@@ -239,21 +253,69 @@ namespace Gambit
         assert(analysis_info_CMS.OBSNUM.size() == analysis_info_CMS.METMINS.size());
         assert(analysis_info_CMS.OBSNUM.size() == analysis_info_CMS.BKGERR.size());
         assert(analysis_info_CMS.OBSNUM.size() == analysis_info_CMS.BKGERR.size());
-        analysis_info_CMS.bin_size = analysis_info_CMS.OBSNUM.size(); // = 22
+        // analysis_info_CMS.bin_size = analysis_info_CMS.OBSNUM.size(); // = 22
+        analysis_info_CMS.n_signal_regions = analysis_info_CMS.OBSNUM.size(); // = 22
 
+        // Create interpolated functions for the CMS analysis
+        // - 2d cross-sections
+        colnames = {"mass", "theta", "xsec"}
+        interp2d["xsec_C61_C64"] = interp2d_collection("mass_theta_xsec_CMS_C61_C64", 
+                                                       GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_xsec_CMS_C61_C64.txt", 
+                                                       colnames);
+        interp2d["xsec_C62_C63"] = interp2d_collection("mass_theta_xsec_CMS_C62_C63", 
+                                                       GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_xsec_CMS_C62_C63.txt", 
+                                                       colnames);
+        // - 1d cross-sections
+        colnames = {"mass", "xsec"}
+        interp1d["xsec_C71"] = interp1d_collection("mass_xsec_CMS_C71", 
+                                                   GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_CMS_C71.txt", 
+                                                   colnames);
+        interp1d["xsec_C72"] = interp1d_collection("mass_xsec_CMS_C72", 
+                                                   GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_CMS_C72.txt", 
+                                                   colnames);
+        interp1d["xsec_C73"] = interp1d_collection("mass_xsec_CMS_C73", 
+                                                   GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_CMS_C73.txt", 
+                                                   colnames);
+        interp1d["xsec_C74"] = interp1d_collection("mass_xsec_CMS_C74", 
+                                                   GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_CMS_C74.txt", 
+                                                   colnames);
+        // - 2d signal efficiencies
+        colnames = {"mass", "theta", "SR1", "SR2", "SR3", "SR4", "SR5", "SR6", "SR7", "SR8", "SR9", "SR10",
+                    "SR11", "SR12", "SR13", "SR14", "SR15", "SR16", "SR17", "SR18", "SR19", "SR20", "SR21", "SR22"};
+        interp2d["eff_C61_C64"] = interp2d_collection("mass_theta_eff_CMS_C61_C64", 
+                                                       GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_eff_CMS_C61_C64.txt", 
+                                                       colnames);
+        interp2d["eff_C62_C63"] = interp2d_collection("mass_theta_eff_CMS_C62_C63", 
+                                                       GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_eff_CMS_C62_C63.txt", 
+                                                       colnames);
+        // - 1d signal efficiencies
+        colnames = {"mass", "SR1", "SR2", "SR3", "SR4", "SR5", "SR6", "SR7", "SR8", "SR9", "SR10",
+                    "SR11", "SR12", "SR13", "SR14", "SR15", "SR16", "SR17", "SR18", "SR19", "SR20", "SR21", "SR22"};
+        interp1d["eff_C71"] = interp1d_collection("mass_eff_CMS_C71", 
+                                                  GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_eff_CMS_C71.txt", 
+                                                  colnames);
+        interp1d["eff_C72"] = interp1d_collection("mass_eff_CMS_C72", 
+                                                  GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_eff_CMS_C72.txt", 
+                                                  colnames);
+        interp1d["eff_C73"] = interp1d_collection("mass_eff_CMS_C73", 
+                                                  GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_eff_CMS_C73.txt", 
+                                                  colnames);
+        interp1d["eff_C74"] = interp1d_collection("mass_eff_CMS_C74", 
+                                                  GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_eff_CMS_C74.txt", 
+                                                  colnames);
+
+        // 
         // ATLAS analysis info
+        // 
+
         analysis_info_ATLAS.name = "ATLAS_13TeV_MONOJET_139invfb_interpolated"; 
-        analysis_info_ATLAS.lumi = 139.0;
-        analysis_info_ATLAS.data_INC = 15;     // 15 points in both dimensions (mass, theta)
-        analysis_info_ATLAS.data_SIZE = 225;   // 15 * 15
-        analysis_info_ATLAS.data_INC_d7 = 19;  // only one dimension (mass)
-        analysis_info_ATLAS.data_SIZE_d7 = 19; 
-        analysis_info_ATLAS.met_hist_C61_C64 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_139invfb_C61_C64.txt";
-        analysis_info_ATLAS.met_hist_C62_C63 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_139invfb_C62_C63.txt";
-        analysis_info_ATLAS.met_hist_C71 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_139invfb_C71.txt";
-        analysis_info_ATLAS.met_hist_C72 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_139invfb_C72.txt";
-        analysis_info_ATLAS.met_hist_C73 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_139invfb_C73.txt";
-        analysis_info_ATLAS.met_hist_C74 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_139invfb_C74.txt";
+        analysis_info_ATLAS.lumi_invfb = 139.0;
+
+        // analysis_info_ATLAS.data_INC = 15;     // 15 points in both dimensions (mass, theta)
+        // analysis_info_ATLAS.data_SIZE = 225;   // 15 * 15
+        // analysis_info_ATLAS.data_INC_d7 = 19;  // only one dimension (mass)
+        // analysis_info_ATLAS.data_SIZE_d7 = 19; 
+
         analysis_info_ATLAS.METMINS = {200., 250., 300., 350., 400., 500., 600., 700., 800., 900., 1000.};
         analysis_info_ATLAS.OBSNUM = {1791624, 752328, 313912, 141036, 102888, 29458, 10203, 3986, 1663, 738, 413+187+207};
         analysis_info_ATLAS.BKGNUM = {1783000., 753000., 314000., 140100., 101600., 29200., 10000., 3870., 1640., 754., 359.+182.+218.};
@@ -261,23 +323,60 @@ namespace Gambit
         assert(analysis_info_ATLAS.OBSNUM.size() == analysis_info_ATLAS.METMINS.size());
         assert(analysis_info_ATLAS.OBSNUM.size() == analysis_info_ATLAS.BKGNUM.size());
         assert(analysis_info_ATLAS.OBSNUM.size() == analysis_info_ATLAS.BKGERR.size());
-        analysis_info_ATLAS.bin_size = analysis_info_ATLAS.OBSNUM.size(); 
+        // analysis_info_ATLAS.bin_size = analysis_info_ATLAS.OBSNUM.size(); 
+        analysis_info_ATLAS.n_signal_regions = analysis_info_ATLAS.OBSNUM.size();
+
+        // Create interpolated functions for the ATLAS analysis
+        // - 2d cross-sections
+        colnames = {"mass", "theta", "xsec"}
+        interp2d["xsec_C61_C64"] = interp2d_collection("mass_theta_xsec_ATLAS_C61_C64", 
+                                                       GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_xsec_ATLAS_C61_C64.txt", 
+                                                       colnames);
+        interp2d["xsec_C62_C63"] = interp2d_collection("mass_theta_xsec_ATLAS_C62_C63", 
+                                                       GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_xsec_ATLAS_C62_C63.txt", 
+                                                       colnames);
+        // - 1d cross-sections
+        colnames = {"mass", "xsec"}
+        interp1d["xsec_C71"] = interp1d_collection("mass_xsec_ATLAS_C71", 
+                                                   GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_ATLAS_C71.txt", 
+                                                   colnames);
+        interp1d["xsec_C72"] = interp1d_collection("mass_xsec_ATLAS_C72", 
+                                                   GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_ATLAS_C72.txt", 
+                                                   colnames);
+        interp1d["xsec_C73"] = interp1d_collection("mass_xsec_ATLAS_C73", 
+                                                   GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_ATLAS_C73.txt", 
+                                                   colnames);
+        interp1d["xsec_C74"] = interp1d_collection("mass_xsec_ATLAS_C74", 
+                                                   GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_ATLAS_C74.txt", 
+                                                   colnames);
+        // - 2d signal efficiencies
+        colnames = {"mass", "theta", "SR1", "SR2", "SR3", "SR4", "SR5", "SR6", "SR7", "SR8", "SR9", "SR10", "SR11"};
+        interp2d["eff_C61_C64"] = interp2d_collection("mass_theta_eff_ATLAS_C61_C64", 
+                                                       GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_eff_ATLAS_C61_C64.txt", 
+                                                       colnames);
+        interp2d["eff_C62_C63"] = interp2d_collection("mass_theta_eff_ATLAS_C62_C63", 
+                                                       GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_eff_ATLAS_C62_C63.txt", 
+                                                       colnames);
+        // - 1d signal efficiencies
+        colnames = {"mass", "SR1", "SR2", "SR3", "SR4", "SR5", "SR6", "SR7", "SR8", "SR9", "SR10", "SR11"};
+        interp1d["eff_C71"] = interp1d_collection("mass_eff_ATLAS_C71", 
+                                                  GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_eff_ATLAS_C71.txt", 
+                                                  colnames);
+        interp1d["eff_C72"] = interp1d_collection("mass_eff_ATLAS_C72", 
+                                                  GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_eff_ATLAS_C72.txt", 
+                                                  colnames);
+        interp1d["eff_C73"] = interp1d_collection("mass_eff_ATLAS_C73", 
+                                                  GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_eff_ATLAS_C73.txt", 
+                                                  colnames);
+        interp1d["eff_C74"] = interp1d_collection("mass_eff_ATLAS_C74", 
+                                                  GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_eff_ATLAS_C74.txt", 
+                                                  colnames);
 
         first = false;
       }
 
       // Get the theory spectrum to extract masses and parameters
       const Spectrum& spec = *Dep::DMEFT_spectrum;
-      double C61 = spec.get(Par::dimensionless, "C61");
-      double C62 = spec.get(Par::dimensionless, "C62");
-      double C63 = spec.get(Par::dimensionless, "C63");
-      double C64 = spec.get(Par::dimensionless, "C64");
-      double C71 = spec.get(Par::dimensionless, "C71");
-      double C72 = spec.get(Par::dimensionless, "C72");
-      double C73 = spec.get(Par::dimensionless, "C73");
-      double C74 = spec.get(Par::dimensionless, "C74");
-      double lambda = spec.get(Par::mass1, "Lambda");      
-      double mchi = spec.get(Par::Pole_Mass, "chi");
 
 
       // Now go through each analysis, fill the corresponding AnalysisData instance 
@@ -288,15 +387,15 @@ namespace Gambit
       // 
 
       // Vector to contain signal yield predictions
-      vector<double> sr_nums_CMS(analysis_info_CMS.bin_size, 0.);
+      vector<double> sr_nums_CMS(analysis_info_CMS.n_signal_regions, 0.);
 
       // Fill the signal yield vector
-      L_Acc_Eff_CS(sr_nums_CMS, analysis_info_CMS, mchi, C61, C62, C63, C64, C71, C72, C73, C74, lambda);
-      
+      get_DMEFT_signal_yields(sr_nums_CMS, analysis_info_CMS, spec);
+
       // Create vector of SignalRegionData instances
       std::vector<SignalRegionData> CMS_binned_results;
 
-      for (size_t ibin = 0; ibin < analysis_info_CMS.bin_size; ++ibin) 
+      for (size_t ibin = 0; ibin < analysis_info_CMS.n_signal_regions; ++ibin) 
       {
         // Generate an 'sr-N' label 
         std::stringstream ss; ss << "sr-" << ibin;
@@ -339,15 +438,15 @@ namespace Gambit
             {  3.85e+02,  3.64e+02,  1.47e+02,  7.64e+01,  1.05e+02,  3.98e+01,  1.82e+01,  3.21e+01,  2.55e+01,  7.72e+00,  3.33e+00,  5.15e+00,  1.46e+00,  2.18e+00,  1.40e+00,  2.70e+00,  1.40e+00,  5.51e-01,  3.04e-01,  1.30e-01,  6.76e+00,  5.82e-01 },
             { -4.14e+02, -1.68e+02,  2.27e+01, -2.74e+01, -8.68e+00,  4.76e+00,  3.14e+01,  7.98e+00,  5.49e+00,  4.62e+00, -8.96e-01,  7.06e+00,  1.57e+00,  3.02e+00,  2.52e+00, -6.72e-01,  1.51e+00, -4.45e-01,  1.64e+00,  6.30e-01,  5.82e-01,  7.84e+00 }
       };
-      assert(BKGCOV.size() == analysis_info_CMS.bin_size);
-      assert(BKGCOV[0].size() == analysis_info_CMS.bin_size);
+      assert(BKGCOV.size() == analysis_info_CMS.n_signal_regions);
+      assert(BKGCOV[0].size() == analysis_info_CMS.n_signal_regions);
 
       // Convert to Eigen matrix
-      static Eigen::MatrixXd m_BKGCOV(analysis_info_CMS.bin_size, analysis_info_CMS.bin_size);
+      static Eigen::MatrixXd m_BKGCOV(analysis_info_CMS.n_signal_regions, analysis_info_CMS.n_signal_regions);
       static bool first_c = true;
       if (first_c)
       {
-        for (int i = 0; i < analysis_info_CMS.bin_size; i++)
+        for (int i = 0; i < analysis_info_CMS.n_signal_regions; i++)
         {
           m_BKGCOV.row(i) = Eigen::VectorXd::Map(&BKGCOV[i][0],BKGCOV[i].size()); 
         }
@@ -367,15 +466,15 @@ namespace Gambit
       // 
 
       // Vector to contain signal yield predictions
-      vector<double> sr_nums_ATLAS(analysis_info_ATLAS.bin_size, 0.);
+      vector<double> sr_nums_ATLAS(analysis_info_ATLAS.n_signal_regions, 0.);
 
       // Fill the signal yield vector
-      L_Acc_Eff_CS(sr_nums_ATLAS, analysis_info_ATLAS, mchi, C61, C62, C63, C64, C71, C72, C73, C74, lambda);
+      get_DMEFT_signal_yields(sr_nums_ATLAS, analysis_info_ATLAS, spec);
       
       // Create vector of SignalRegionData instances
       std::vector<SignalRegionData> ATLAS_binned_results;
 
-      for (size_t ibin = 0; ibin < analysis_info_ATLAS.bin_size; ++ibin) 
+      for (size_t ibin = 0; ibin < analysis_info_ATLAS.n_signal_regions; ++ibin) 
       {
         // Generate an 'sr-N' label 
         std::stringstream ss; ss << "sr-" << ibin;
@@ -403,654 +502,241 @@ namespace Gambit
 
 
     /// Fill the input vector with the total DMEFT signal prediction for each SR in the given LHC analysis
-    void L_Acc_Eff_CS(vector<double>& sr_nums, const DMEFT_analysis_info& analysis_info, 
-                      double m, double C61, double C62, double C63, double C64, 
-                      double C71, double C72, double C73,  double C74, double lambda)
+    void get_DMEFT_signal_yields(vector<double>& sr_nums, const DMEFT_analysis_info& analysis_info, const Spectrum& spec)
     {
+
+      // Get the parameters we need from the theory spectrum
+      double C61 = spec.get(Par::dimensionless, "C61");
+      double C62 = spec.get(Par::dimensionless, "C62");
+      double C63 = spec.get(Par::dimensionless, "C63");
+      double C64 = spec.get(Par::dimensionless, "C64");
+      double C71 = spec.get(Par::dimensionless, "C71");
+      double C72 = spec.get(Par::dimensionless, "C72");
+      double C73 = spec.get(Par::dimensionless, "C73");
+      double C74 = spec.get(Par::dimensionless, "C74");
+      double lambda = spec.get(Par::mass1, "Lambda");      
+      double mchi = spec.get(Par::Pole_Mass, "chi");
+
 
       // Get the dim-6 yields
 
       // C61+C64
-      vector<double> A14(analysis_info.bin_size, 0.);
-      Acceptance_CS_dim6(A14, m, C61, C64, lambda, "14", analysis_info);
+      vector<double> A14(analysis_info.n_signal_regions, 0.);
+      get_DMEFT_signal_yields_dim6(A14, m, C61, C64, lambda, "C61_C64", analysis_info);
 
       // C62+C63
-      vector<double> A23(analysis_info.bin_size, 0.);
-      Acceptance_CS_dim6(A23, m, C62, C63, lambda, "23", analysis_info);
+      vector<double> A23(analysis_info.n_signal_regions, 0.);
+      get_DMEFT_signal_yields_dim6(A23, m, C62, C63, lambda, "C62_C63", analysis_info);
+
 
       // Get the dim-7 yields
 
       // C71
-      vector<double> A71(analysis_info.bin_size, 0.);
-      Acceptance_CS_dim7(A71, m, C71, lambda, "71", analysis_info);
+      vector<double> A71(analysis_info.n_signal_regions, 0.);
+      get_DMEFT_signal_yields_dim7(A71, m, C71, lambda, "C71", analysis_info);
       
       // C72
-      vector<double> A72(analysis_info.bin_size, 0.);
-      Acceptance_CS_dim7(A72, m, C72, lambda, "72", analysis_info);
+      vector<double> A72(analysis_info.n_signal_regions, 0.);
+      get_DMEFT_signal_yields_dim7(A72, m, C72, lambda, "C72", analysis_info);
 
       // C73
-      vector<double> A73(analysis_info.bin_size, 0.);
-      Acceptance_CS_dim7(A73, m, C73, lambda, "73", analysis_info);
+      vector<double> A73(analysis_info.n_signal_regions, 0.);
+      get_DMEFT_signal_yields_dim7(A73, m, C73, lambda, "C73", analysis_info);
 
       // C74
-      vector<double> A74(analysis_info.bin_size, 0.);
-      Acceptance_CS_dim7(A74, m, C74, lambda, "74", analysis_info);
+      vector<double> A74(analysis_info.n_signal_regions, 0.);
+      get_DMEFT_signal_yields_dim7(A74, m, C74, lambda, "C74", analysis_info);
+
 
       // Add yields and save in sr_num
-      for (size_t i = 0; i < analysis.info.bin_size; ++i)
+      for (size_t i = 0; i < analysis.info.n_signal_regions; ++i)
       {
         sr_nums[i] = A14[i] + A23[i] + A71[i] + A72[i] + A73[i] + A74[i];
       }
     }
 
 
-    // _Anders
     /// Fill the input vector with the DMEFT signal prediction for a given set of dim-6 operators
-    void Acceptance_CS_dim6(double * accep, float m,float O1,float O2, float lambda ,const char* pair, const char* experiment)
+    void get_DMEFT_signal_yields_dim6(vector<double>& signal_yields, const string operator_key, const DMEFT_analysis_info& analysis_info, double m, double O1, double O2, double lambda);
     {
 
-
-      if (m>150){
-
-        static double MET_HIST_CMS_14[data_SIZE][cms_bin_size];
-        static double MET_HIST_ATLAS_36invfb_14[data_SIZE][atlas_bin_size];
-        static double MET_HIST_ATLAS_139invfb_14[data_SIZE][atlas_bin_size_139];
-        static double MET_HIST_CMS_23[data_SIZE][cms_bin_size];
-        static double MET_HIST_ATLAS_36invfb_23[data_SIZE][atlas_bin_size];
-        static double MET_HIST_ATLAS_139invfb_23[data_SIZE][atlas_bin_size_139];
-        static double THETA_CMS_14[data_SIZE];
-        static double THETA_CMS_23[data_SIZE];
-        static double THETA_ATLAS_36invfb_14[data_SIZE];  
-        static double THETA_ATLAS_36invfb_23[data_SIZE];  
-        static double THETA_ATLAS_139invfb_14[data_SIZE];  
-        static double THETA_ATLAS_139invfb_23[data_SIZE];  
-        static double MASS_CMS_14[data_SIZE];
-        static double MASS_CMS_23[data_SIZE];
-        static double MASS_ATLAS_36invfb_14[data_SIZE];  
-        static double MASS_ATLAS_36invfb_23[data_SIZE];  
-        static double MASS_ATLAS_139invfb_14[data_SIZE];  
-        static double MASS_ATLAS_139invfb_23[data_SIZE];  
-        static double CS_CMS_14[data_SIZE];
-        static double CS_CMS_23[data_SIZE];
-        static double CS_ATLAS_36invfb_14[data_SIZE];  
-        static double CS_ATLAS_36invfb_23[data_SIZE];  
-        static double CS_ATLAS_139invfb_14[data_SIZE];  
-        static double CS_ATLAS_139invfb_23[data_SIZE];  
-        static double nJets[data_SIZE];
-        // ----------------------------------//
-        // Define just mass and angle arrays // 
-        static double theta[data_INC];
-        static double mass[data_INC]; 
-
-        
-    
-        static bool first = true;
-        if (first)
+      // Calculate theta
+      double theta;
+      if (O2==0)
+      {
+        theta = 0.5 * pi;
+      }
+      else
+      {
+        theta = atan(O1 / O2);
+        if ( O1 / O2 < 0)
         {
-          Utils::ProcessLock mylock("Acceptance_CS_dim6_high");
-          mylock.get_lock();
-
-          cout << "Reading in grids. [Only happens on first itteration per MPI process]."<<endl;
-          float var1,var2;
-          FILE * fp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/X_Y_ATLAS_36invfb_C62_C63.txt","r");   // The masses and thetas are the same for each! 
-          for (int ll = 0; ll < data_INC; ++ll){
-            fscanf(fp,"%f %f", &var1, &var2);
-            mass[ll] = var1;
-            theta[ll]= var2;
-            // cout << mass[ll]<<endl;
-          }
-          fclose(fp); 
-          
-
-          std::ifstream mb(met_ATLAS_36invfb_23);
-          for(int row = 0; row < data_SIZE; row++)
-          {  
-            for(int column = 0; column < atlas_bin_size; column++)
-            {
-              mb >> MET_HIST_ATLAS_36invfb_23[row][column];
-            }
-          }
-          mb.close();
-
-          std::ifstream mba14(met_ATLAS_36invfb_14);
-          for(int row = 0; row < data_SIZE; row++)
-          {  
-            for(int column = 0; column < atlas_bin_size; column++)
-            {
-              mba14 >> MET_HIST_ATLAS_36invfb_14[row][column];
-            }
-          }
-          mba14.close();
-
-          std::ifstream mb_(met_ATLAS_139invfb_23);
-          for(int row = 0; row < data_SIZE; row++)
-          {  
-            for(int column = 0; column < atlas_bin_size_139; column++)
-            {
-              mb_ >> MET_HIST_ATLAS_139invfb_23[row][column];
-            }
-          }
-          mb_.close();
-
-          std::ifstream mba14_(met_ATLAS_139invfb_14);
-          for(int row = 0; row < data_SIZE; row++)
-          {  
-            for(int column = 0; column < atlas_bin_size_139; column++)
-            {
-              mba14_ >> MET_HIST_ATLAS_139invfb_14[row][column];
-            }
-          }
-          mba14_.close();
-
-          std::ifstream mbc23(met_CMS_23);
-          for(int row = 0; row < data_SIZE; row++)
-          {  
-            for(int column = 0; column < cms_bin_size; column++)
-            {
-              mbc23 >> MET_HIST_CMS_23[row][column];
-            }
-          }
-          mbc23.close();     
-
-          std::ifstream mbc14(met_CMS_14);
-          for(int row = 0; row < data_SIZE; row++)
-          {  
-            for(int column = 0; column < cms_bin_size; column++)
-            {
-              mbc14 >> MET_HIST_CMS_14[row][column];
-            }
-          }
-          mbc14.close();
-
-
-          float p1,p2,p3,p4;
-          FILE * pp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_36invfb_C61_C64.txt","r");              // file containing numbers in 5 columns 
-          for (int ll = 0; ll < data_SIZE; ++ll)
-          {
-            fscanf(pp,"%f %f %f %f", &p1,&p2,&p3,&p4);
-            MASS_ATLAS_36invfb_14[ll] = p1; 
-            THETA_ATLAS_36invfb_14[ll]= p2;
-            nJets[ll]         = p3;
-            CS_ATLAS_36invfb_14[ll]   = p4;   
-          }
-          fclose(pp);
-
-          float a1,a2,a3,a4;
-          FILE * ap = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_36invfb_C62_C63.txt","r");             // file containing numbers in 5 columns 
-          for (int ll = 0; ll < data_SIZE; ++ll)
-          {
-            fscanf(ap,"%f %f %f %f", &a1,&a2,&a3,&a4);
-            MASS_ATLAS_36invfb_23[ll] = a1; 
-            THETA_ATLAS_36invfb_23[ll]= a2;
-            nJets[ll]         = a3;
-            CS_ATLAS_36invfb_23[ll]   = a4;   
-          }
-          fclose(ap);
-          
-          pp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_139invfb_C61_C64.txt","r");              // file containing numbers in 5 columns 
-          for (int ll = 0; ll < data_SIZE; ++ll)
-          {
-            fscanf(pp,"%f %f %f %f", &p1,&p2,&p3,&p4);
-            MASS_ATLAS_139invfb_14[ll] = p1; 
-            THETA_ATLAS_139invfb_14[ll]= p2;
-            nJets[ll]         = p3;
-            CS_ATLAS_139invfb_14[ll]   = p4;   
-          }
-          fclose(pp);
-
-          ap = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_139invfb_C62_C63.txt","r");             // file containing numbers in 5 columns 
-          for (int ll = 0; ll < data_SIZE; ++ll)
-          {
-            fscanf(ap,"%f %f %f %f", &a1,&a2,&a3,&a4);
-            MASS_ATLAS_139invfb_23[ll] = a1; 
-            THETA_ATLAS_139invfb_23[ll]= a2;
-            nJets[ll]         = a3;
-            CS_ATLAS_139invfb_23[ll]   = a4;   
-          }
-          fclose(ap);
- 
-          float d1,d2,d3,d4;
-          FILE *dp=fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_CMS_C61_C64.txt","r");              // file containing numbers in 5 columns 
-          for (int ll = 0; ll < data_SIZE; ++ll){
-            fscanf(dp,"%f %f %f %f", &d1,&d2,&d3,&d4);
-            MASS_CMS_14[ll] = d1; 
-            THETA_CMS_14[ll]= d2;
-            nJets[ll]       = d3;
-            CS_CMS_14[ll]   = d4;   
-          }
-          fclose(dp);
-
-          float b1,b2,b3,b4;
-          FILE * bp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_CMS_C62_C63.txt","r");              // file containing numbers in 5 columns 
-          for (int ll = 0; ll < data_SIZE; ++ll){
-            fscanf(bp,"%f %f %f %f", &b1,&b2,&b3,&b4);
-            MASS_CMS_23[ll] = b1; 
-            THETA_CMS_23[ll]= b2;
-            nJets[ll]       = b3;
-            CS_CMS_23[ll]   = b4;   
-          }
-          fclose(bp);
-          
-          mylock.release_lock();
-
-          first = false;
-
+          theta = theta + pi;
         }
-
-
-
-        // Define temp. arrays for storing yields. 
-        // cout << "Check things "<<mass[0]<<endl;  
-        int met_bin_size;
-        double Lumi; // Luminosity in inverse picobarns
-        double ** MET_HIST = new double*[data_SIZE];
-        double THETA[data_SIZE];
-        double MASS[data_SIZE];
-        double CS[data_SIZE];
-        
-        // cout << "Check things 2 <<mass[0]"<<endl;  
-
-        if (strcmp(experiment,"ATLAS_36invfb") == 0 && strcmp(pair,"23") == 0)
-        {
-          met_bin_size = atlas_bin_size;
-          Lumi = 36.1 * pow(10,3);
-
-          // double** MET_HIST = new double*[data_SIZE];
-          for(int i = 0; i < data_SIZE; ++i){
-            MET_HIST[i] = new double[met_bin_size];
-            MASS[i]     = MASS_ATLAS_36invfb_23[i];
-            THETA[i]    = THETA_ATLAS_36invfb_23[i];
-            CS[i]       = CS_ATLAS_36invfb_23[i];
-          }
-          // Assign met histogram to current experiment
-          for (int kk = 0; kk<data_SIZE;++kk){
-            for (int j = 0; j<met_bin_size;++j){
-              MET_HIST[kk][j] = MET_HIST_ATLAS_36invfb_23[kk][j];
-            }
-          }
-        }
-
-        else if (strcmp(experiment,"ATLAS_139invfb") == 0 && strcmp(pair,"23") == 0)
-        {
-          met_bin_size = atlas_bin_size_139;
-          Lumi = 139.0 * pow(10,3);
-
-          // double** MET_HIST = new double*[data_SIZE];
-          for(int i = 0; i < data_SIZE; ++i)
-          {
-            MET_HIST[i] = new double[met_bin_size];
-            MASS[i]     = MASS_ATLAS_139invfb_23[i];
-            THETA[i]    = THETA_ATLAS_139invfb_23[i];
-            CS[i]       = CS_ATLAS_139invfb_23[i];
-          }
-          // Assign met histogram to current experiment
-          for (int kk = 0; kk<data_SIZE;++kk)
-          {
-            for (int j = 0; j<met_bin_size;++j)
-            {
-              MET_HIST[kk][j] = MET_HIST_ATLAS_139invfb_23[kk][j];
-            }
-          }
-        }
-
-        else if (strcmp(experiment,"CMS") == 0 && strcmp(pair,"23") == 0){
-          // std::cout << "BITE" << std::endl;
-
-          met_bin_size = cms_bin_size;
-          Lumi = 35.9 * pow(10,3);
-
-          // double** MET_HIST = new double*[data_SIZE];
-          for(int i = 0; i < data_SIZE; ++i){
-            MET_HIST[i] = new double[met_bin_size];
-            MASS[i]     = MASS_CMS_23[i];
-            THETA[i]    = THETA_CMS_23[i];
-            CS[i]       = CS_CMS_23[i];
-          }
-          // Assign met histogram to current experiment
-          for (int kk = 0; kk<data_SIZE;++kk){
-            for (int j = 0; j<met_bin_size;++j){
-              MET_HIST[kk][j] = MET_HIST_CMS_23[kk][j];
-
-            }
-          }
-        }
-
-        else if (strcmp(experiment,"ATLAS_36invfb") == 0 && strcmp(pair,"14") == 0){
-          met_bin_size = atlas_bin_size;
-          Lumi = 36.1 * pow(10,3);
-
-          // double** MET_HIST = new double*[data_SIZE];
-          for(int i = 0; i < data_SIZE; ++i){
-            MET_HIST[i] = new double[met_bin_size];
-            MASS[i]     = MASS_ATLAS_36invfb_14[i];
-            THETA[i]    = THETA_ATLAS_36invfb_14[i];
-            CS[i]       = CS_ATLAS_36invfb_14[i];
-          }
-          // Assign met histogram to current experiment
-          for (int kk = 0; kk<data_SIZE;++kk){
-            for (int j = 0; j<met_bin_size;++j){
-              MET_HIST[kk][j] = MET_HIST_ATLAS_36invfb_14[kk][j];
-
-            }
-          }
-        }
-
-        else if (strcmp(experiment,"ATLAS_139invfb") == 0 && strcmp(pair,"14") == 0)
-        {
-          met_bin_size = atlas_bin_size_139;
-          Lumi = 139.0 * pow(10,3);
-
-          // double** MET_HIST = new double*[data_SIZE];
-          for(int i = 0; i < data_SIZE; ++i)
-          {
-            MET_HIST[i] = new double[met_bin_size];
-            MASS[i]     = MASS_ATLAS_139invfb_14[i];
-            THETA[i]    = THETA_ATLAS_139invfb_14[i];
-            CS[i]       = CS_ATLAS_139invfb_14[i];
-          }
-          // Assign met histogram to current experiment
-          for (int kk = 0; kk<data_SIZE;++kk)
-          {
-            for (int j = 0; j<met_bin_size;++j)
-            {
-              MET_HIST[kk][j] = MET_HIST_ATLAS_139invfb_14[kk][j];
-
-            }
-          }
-        }
-
-
-        else if (strcmp(experiment,"CMS") == 0 && strcmp(pair,"14") == 0){
-          met_bin_size = cms_bin_size;
-          Lumi = 35.9 * pow(10,3);
-
-          // double** MET_HIST = new double*[data_SIZE];
-          for(int i = 0; i < data_SIZE; ++i){
-            MET_HIST[i] = new double[met_bin_size];
-            MASS[i]     = MASS_CMS_14[i];
-            THETA[i]    = THETA_CMS_14[i];
-            CS[i]       = CS_CMS_14[i];
-          }
-          // Assign met histogram to current experiment
-          for (int kk = 0; kk<data_SIZE;++kk){
-            for (int j = 0; j<met_bin_size;++j){
-              MET_HIST[kk][j] = MET_HIST_CMS_14[kk][j];
-
-            }
-          }
-        }
-        // cout << "Check things 5"<<mass[0]<<endl;  
-
-          
-        // Calculate normalisation
-        double Norm,th;
-
-        Norm = pow(O1,2) + pow(O2,2);
-
-        if (O2==0){
-          th   = pi/float(2);
-          // cout << " O2 is zero"<< endl;
-        }
-        else{
-          th    = atan(float(O1/O2));
-          if (O1/O2 < 0){
-            th = th + pi;
-          }
-        }
-
-        if (Norm < 0.0)
-        {
-          ColliderBit_error().raise(LOCAL_INFO, "Norm < 0 in function Acceptance_CS_dim6.");
-        }
-
-        // Checks to go ahead with interpolation
-        // cout << "Check things 6"<<mass[0]<<endl;  
-
-        if (m<mass[0]){
-          ColliderBit_error().raise(LOCAL_INFO, "Mass parameter below range of high-mass region."); // This shouldn't ever happen as long as the grid is not modified
-        }
-        if (m>mass[data_INC-1]){
-          ColliderBit_warning().raise(LOCAL_INFO, "Mass parameter above range of high-mass region. Setting signal to zero.");
-          Norm = 0;  // Slightly hacky way to set the signal to zero in this case 
-          m=mass[data_INC-1];
-        }
-        if (th<theta[0] || th>theta[data_INC-1]){
-          ColliderBit_error().raise(LOCAL_INFO, "Theta parameter out of range.");
-        }
-        // cout << " Acceptance_CS_dim6 DEBUG: 4" << endl;
-
-        
-        // Get x1,2 y1,2 : Mass and theta coordinates for interpolation
-        double x1,x2,y1,y2;
-        int xi,yj;
-        for(int ii = 0; ii < data_INC-1; ++ii) {
-          if (m >= mass[ii] && m <= mass[ii+1]){
-            x1 = mass[ii];
-            x2 = mass[ii+1]; 
-            xi = ii;
-            break;
-          }
-        }
-        for(int jj = 0; jj < data_INC-1; ++jj) {
-          if (th >= theta[jj] && th <= theta[jj+1]){
-            y1 = theta[jj];
-            y2 = theta[jj+1];
-            yj = jj;
-            break;
-          }
-        }
-
-        // cout << "Check things 7"<<mass[0]<<endl;  
-
-        // Get C's
-        double C11=0.0 ,C12=0.0,C21=0.0,C22=0.0,yalpha=0;
-
-        // Define Q's as array: One Q type for each met bin.
-
-        double Q11[met_bin_size];
-        double Q12[met_bin_size];
-        double Q21[met_bin_size];
-        double Q22[met_bin_size];
-
-        // cout << "Check things 8"<<mass[0]<<endl;  
-
-        // NJets and Cross-section
-        // // !!!!!!!!!!!!!!!!!!!! HERE AGAIN BUGS !!!!! << endl;
-
-        // std::cout << "met_bin_size: " << met_bin_size << std::endl;
-
-        for (int Emiss = 0; Emiss < met_bin_size; Emiss++ ) 
-        {
-          Q11[Emiss] = 0.0;
-          Q12[Emiss] = 0.0;
-          Q21[Emiss] = 0.0;
-          Q22[Emiss] = 0.0;
-          
-          // cout << " Emiss = "<< Emiss<< " Inital Q's: "<< Q11[Emiss]<<" "<< Q12[Emiss]<<" "<< Q12[Emiss] <<" "<< Q22[Emiss]<<endl;
-          while (Q11[Emiss]==0.0 || Q12[Emiss]==0.0 || Q21[Emiss]== 0.0 || Q22[Emiss]==0.0 || C11==0.0 || C12==0.0 || C21== 0.0 || C22==0.0)
-          { 
-            // cout << Q11[Emiss]<<" "<< Q12[Emiss]<<" "<< Q21[Emiss] <<" "<< Q22[Emiss]<<endl;
-            // cout << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
-            for(int kk = 0; kk < data_SIZE; ++kk) 
-            {
-              // cout << MASS[kk]<<" "<< THETA[kk]<< " Emiss = "<< Emiss <<"|  |"<<MET_HIST[kk][Emiss]<<" " << kk<< " |     |" << x2<<" " << y2<<" "<< Q11[Emiss]<<" "<< Q12[Emiss]<<" "<< Q12[Emiss] <<" "<< Q22[Emiss]<<endl;
-              
-              if (MASS[kk]==x1 && THETA[kk]==y1)
-              {
-                // Q11[Emiss] = nJets[kk];
-                  if (MET_HIST[kk][Emiss] < 0){
-                    Q11[Emiss] = -1*MET_HIST[kk-1][Emiss];
-                    if ( std::isnan(Q11[Emiss])){
-                      cout << "NAN in dodgey!!! Emiss = "<< Emiss<< ", " << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
-                    }
-                    C11        = -1*CS[kk-1];
-                    yalpha     = THETA[kk-1];
-                    // cout << "Have made the hack" << endl;
-                  }
-                  
-                  else {
-                    Q11[Emiss] = MET_HIST[kk][Emiss];
-                    if ( std::isnan(Q11[Emiss])){
-                      cout << "NAN!!! Emiss = "<< Emiss<< ", " << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
-                    }
-                    C11 = CS[kk];
-                    // cout << "Q11 = " << Q22[Emiss] << " mass, th = "    << MASS[kk]<< "  "<< THETA[kk]<<endl;
-                  } 
-                  if (Q11[Emiss] == 0){
-                    cout << "Q11 not set" << Q11[Emiss]<< " "<< Emiss<< " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
-                }
-              }
-              else if (MASS[kk]==x1 && THETA[kk]==y2)
-              {
-                // cout << "Here in loop. K = "<< kk<< " x1 = "<< x1<< " y2 = "<< y2<< " met_hist = " << MET_HIST[kk][Emiss]<<endl;
-                
-                if (MET_HIST[kk][Emiss] < 0)
-                {
-                    Q12[Emiss] = -1*MET_HIST[kk+1][Emiss];
-                    if ( std::isnan(Q12[Emiss]))
-                    {
-                      cout << "NAN in dodgey!!! Emiss = "<< Emiss<< ", " << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
-                    }
-
-                    C12        = -1*CS[kk+1];
-                    yalpha     = THETA[kk+1];
-                    // cout << "Have made the hack" << endl;
-                }
-                else {
-                    Q12[Emiss] = MET_HIST[kk][Emiss];
-                    if ( std::isnan(Q12[Emiss])){
-                      cout << "NAN!!! Emiss = "<< Emiss<< ", " << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
-                    }
-
-                    C12 = CS[kk];
-                }
-                if (Q12[Emiss] == 0){
-                  cout << "Q12 not set" << Q12[Emiss]<< " "<< Emiss<< " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
-                }
-              }
-
-              else if (MASS[kk]==x2 && THETA[kk]==y1)
-              {
-
-                if (MET_HIST[kk][Emiss] < 0)
-                {
-                  Q21[Emiss] = -1*MET_HIST[kk-1][Emiss];
-
-                  if ( std::isnan(Q21[Emiss])){
-                    cout << "NAN in dodgey!!! Emiss = "<< Emiss<< ", " << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
-                  }
-                  C21        = -1*CS[kk-1];
-                  yalpha     = THETA[kk-1];
-                  // cout << "Have made the hack" << endl;
-                } 
-
-                else
-                {
-                  Q21[Emiss] = MET_HIST[kk][Emiss];
-                    if ( std::isnan(Q21[Emiss])){
-                      cout << "NAN!!! Emiss = "<< Emiss<< ", " << " X1 Y X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
-                    }
-
-                  C21 = CS[kk];
-                }
-                if (Q21[Emiss] == 0){
-                  cout << "Q21 not set" << Q21[Emiss]<< " "<< Emiss<< " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
-                }
-              }  
-
-              else if (MASS[kk]==x2 && THETA[kk]==y2)
-              {
-
-                  if (MET_HIST[kk][Emiss] < 0)
-                  {
-                    Q22[Emiss] = -1*MET_HIST[kk+1][Emiss];
-
-                    if ( std::isnan(Q22[Emiss])){
-                      cout << "NAN in dodgey!!! Emiss = "<< Emiss<< ", " << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
-                    }  
-                    C22        = -1*CS[kk+1];
-                    yalpha     = THETA[kk+1];
-                    // cout << "Have made the hack " << Q22[Emiss]<< " "<< C22<< " "<< yalpha <<  endl;
-                  } 
-
-                  else 
-                  {
-                    Q22[Emiss] = MET_HIST[kk][Emiss];
-                      if ( std::isnan(Q22[Emiss])){
-                        cout << "NAN!!! Emiss = "<< Emiss<< ", " << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
-                      }
-                    C22 = CS[kk];
-                  }
-                  // cout << " Q22"<< " "<< Q22[Emiss]<<endl;
-                  if (Q22[Emiss] == 0){
-                    cout << "Q22 not set" << Q22[Emiss]<< " "<< Emiss<< " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
-                  }
-                } 
-              } // Loop over kk 
-            } // While loop
-
-            // cout << "Exited while loop..." << endl;
-            // cout << "Check things 9"<<mass[0]<<endl;  
-
-            // cout << " Acceptance_CS_dim6 DEBUG: 5 - Fixed" << endl;
-
-            // Luminosity scaling gets applied at the end...
-            double A   = BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th,yalpha);
-            double B   = BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th,yalpha);
-            // double res =  36000.0*float(Norm)*A*float(Norm)*B; 
-            double res =  Lumi*A*float(Norm)*B; 
-            
-            // double res =  Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th)*Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th); 
-
-
-            if (std::isnan(res))
-            {
-              cout << " Test within function: Experiment =  "<< experiment << " res =  "<< res << " Pair  = " << pair <<" CS = "<<Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th,0,true)<< " Yield = "<< Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th,true) <<" Emiss = "<< Emiss << " Q's: "<< Q11[Emiss]<<" " << Q12[Emiss]<<" " << Q21[Emiss]<<" " <<Q22[Emiss]<<" "<< endl;
-              cout << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
-              cout << "th is the problem = "<< th<<endl;
-            }
-            // cout << "Check things 10"<<mass[0]<<endl;  
-            
-            //  cout << "Res = "<< res << " Mass, theta = "<< m <<" , "<<th<<" A = "<<A<<" B = "<<B<<endl;
-            
-            double lambda_scaling = float(pow(1000.0,4))/float(pow(lambda,4));
-
-            accep[Emiss] = res*lambda_scaling;
-
-          } // Loop over Emiss
-
-          // cout << &accep << std::endl;
-          // cout << sizeof(accep) << std::endl;
-          // cout << "Check things after accep"<<endl;  
-
-          // for(int j=0; j<22; j++) {
-          //   cout << &accep[j] << std::endl;
-          //    cout << accep[j] << std::endl;
-          // }
-
-
-          // cout << "Check things b4 filling"<<endl;  
-
-          std::fill_n(THETA,data_SIZE,0);
-          std::fill_n(MASS,data_SIZE,0);
-          std::fill_n(CS,data_SIZE,0);
-
-
-          // MET_HIST[data_SIZE][met_bin_size] = {};
-              //Free each sub-array
-          for(int i = 0; i < data_SIZE; ++i) {
-              delete[] MET_HIST[i];   
-          }
-          //Free the array of pointers
-          delete[] MET_HIST;
-
-
-          // MET_HIST_ATLAS_36invfb[data_SIZE][atlas_bin_size] = {};
-          // MET_HIST_CMS[data_SIZE][cms_bin_size] = {};
-          // MET_HIST_ATLAS_36invfb[data_SIZE][atlas_bin_size] = {};
-          // cout << "Check things after fillinge "<<endl;  
       }
 
+      // Calculate normalisation
+      double norm = O1*O1 + O2*O2;
+      if (norm < 0.0)
+      {
+        ColliderBit_error().raise(LOCAL_INFO, "ERROR! norm < 0 in function get_DMEFT_signal_yields_dim6.");
+      }
+
+      // Get the interpolator collections for the given operator_key
+      const interp2d_collection& xsec_interp = analysis_info.interp2d["xsec_" + operator_key];
+      const interp2d_collection& eff_interp = analysis_info.interp2d["eff_" + operator_key];
+
+      // Compute the signal yield for each signal region
+      for (size_t sr_i = 0; sr_i < analysis.info.n_signal_regions; ++sr_i)
+      {
+
+        // 
+        // Get the cross-section at the point (m,theta)
+        // 
+
+        double xsec = 0.;
+        // Check if (m,theta) point is inside interpolation region
+        if (not xsec_interp.is_inside_range(m,theta))
+        {
+          if (theta < xsec_interp.y_min || theta > xsec_interp.y_max)
+          {
+            ColliderBit_error().raise(LOCAL_INFO, "ERROR! Theta parameter out of range.");
+          }
+
+          if (m < xsec_interp.x_min)
+          {
+            ColliderBit_error().raise(LOCAL_INFO, "Mass parameter below lowest mass point in the cross-section table.");
+          }
+
+          if (m > xsec_interp.x_min)
+          {
+            // Set cross-section to 0 for masses above the tabulated range
+            xsec = 0.;
+          }
+        }
+        else // All is OK, let's evaluate the cross-section
+        {
+          xsec = xsec_interp.eval(m, theta);
+        }
+
+        
+        // 
+        // Get signal efficiency for signal region sr_i at the point (m,theta)
+        // 
+
+        double eff = 0.;
+        // Check if (m,theta) point is inside interpolation region
+        if (not eff_interp.is_inside_range(m,theta))
+        {
+          if (theta < eff_interp.y_min || theta > eff_interp.y_max)
+          {
+            ColliderBit_error().raise(LOCAL_INFO, "ERROR! Theta parameter out of range.");
+          }
+
+          if (m < eff_interp.x_min)
+          {
+            ColliderBit_error().raise(LOCAL_INFO, "Mass parameter below lowest mass point in the signal efficiency table.");
+          }
+
+          if (m > eff_interp.x_min)
+          {
+            // Set efficiency to 0 for masses above the tabulated range
+            eff = 0.;
+          }
+        }
+        else // All is OK, let's evaluate the efficiency
+        {
+          eff = eff_interp.eval(m, theta);
+        }
+
+        // 
+        // Compute signal prediction and save it in the signal_yields vector
+        // 
+
+        signal_yields[sr_i] = analysis_info.lumi_invfb * (xsec * 1000.) * eff * norm; // converting cross-section from pb to fb
+
+      }  // End loop over signal regions
+
+    }
+
+
+    /// Fill the input vector with the DMEFT signal prediction for a given dim-7 operator
+    void get_DMEFT_signal_yields_dim7(vector<double>& signal_yields, const string operator_key, const DMEFT_analysis_info& analysis_info, double m, double O, double lambda);
+    {
+
+      // Calculate normalisation
+      double norm = O*O;
+      if (norm < 0.0)
+      {
+        ColliderBit_error().raise(LOCAL_INFO, "ERROR! norm < 0 in function get_DMEFT_signal_yields_dim7.");
+      }
+
+      // Get the interpolator collections for the given operator_key
+      const interp1d_collection& xsec_interp = analysis_info.interp2d["xsec_" + operator_key];
+      const interp1d_collection& eff_interp = analysis_info.interp2d["eff_" + operator_key];
+
+      // Compute the signal yield for each signal region
+      for (size_t sr_i = 0; sr_i < analysis.info.n_signal_regions; ++sr_i)
+      {
+
+        // 
+        // Get the cross-section for mass m
+        // 
+
+        double xsec = 0.;
+        // Check if m is inside interpolation region
+        if (not xsec_interp.is_inside_range(m))
+        {
+          if (m < xsec_interp.x_min)
+          {
+            ColliderBit_error().raise(LOCAL_INFO, "Mass parameter below lowest mass point in the cross-section table.");
+          }
+
+          if (m > xsec_interp.x_min)
+          {
+            // Set cross-section to 0 for masses above the tabulated range
+            xsec = 0.;
+          }
+        }
+        else // All is OK, let's evaluate the cross-section
+        {
+          xsec = xsec_interp.eval(m);
+        }
+
+        
+        // 
+        // Get signal efficiency for signal region sr_i and mass m
+        // 
+
+        double eff = 0.;
+        // Check if m point is inside interpolation region
+        if (not eff_interp.is_inside_range(m))
+        {
+          if (m < eff_interp.x_min)
+          {
+            ColliderBit_error().raise(LOCAL_INFO, "Mass parameter below lowest mass point in the signal efficiency table.");
+          }
+
+          if (m > eff_interp.x_min)
+          {
+            // Set efficiency to 0 for masses above the tabulated range
+            eff = 0.;
+          }
+        }
+        else // All is OK, let's evaluate the efficiency
+        {
+          eff = eff_interp.eval(m);
+        }
+
+        // 
+        // Compute signal prediction and save it in the signal_yields vector
+        // 
+
+        signal_yields[sr_i] = analysis_info.lumi_invfb * (xsec * 1000.) * eff * norm; // converting cross-section from pb to fb
+
+      }  // End loop over signal regions
+
+    }
 
 
   } // namespace ColliderBit
