@@ -80,7 +80,7 @@ namespace Gambit
     /// A struct to contain parameters for the GSL optimiser target function
     struct _gsl_target_func_params
     {
-      float lambda;
+      double lambda;
       AnalysisDataPointers adata_ptrs_original;
       std::vector<str> skip_analyses;
       bool use_covar;
@@ -724,11 +724,11 @@ namespace Gambit
 
       // Get the best-fit nuisance parameter(s)
       map_str_dbl bestfit_nuisance_pars = *Dep::DMEFT_profiled_LHC_nuisance_params;
-      float a_bestfit = bestfit_nuisance_pars.at("a");
+      double a_bestfit = bestfit_nuisance_pars.at("a");
 
       // Get Lambda
       const Spectrum& spec = *Dep::DMEFT_spectrum;
-      float lambda = spec.get(Par::mass1, "Lambda");
+      double lambda = spec.get(Par::mass1, "Lambda");
 
       // Recalculate AnalysisData instances in "result", using the best-fit a-value
       for (AnalysisData* adata_ptr : result)
@@ -751,7 +751,7 @@ namespace Gambit
 
       // Get Lambda
       const Spectrum& spec = *Dep::DMEFT_spectrum;
-      float lambda = spec.get(Par::mass1, "Lambda");
+      double lambda = spec.get(Par::mass1, "Lambda");
 
       // Apply the function signal_cutoff_function to each of the 
       // AnalysisData instances in "result"
@@ -765,7 +765,7 @@ namespace Gambit
     /// Function to modify the DMEFT LHC signal prediction for ETmiss bins where ETmiss > Lambda.
     /// Alt 1: Gradually turn off the ETmiss spectrum above Lambda by multiplying 
     /// the spectrum with (ETmiss/Lambda)^-a
-    void signal_modifier_function(AnalysisData& adata, float lambda, float a)
+    void signal_modifier_function(AnalysisData& adata, double lambda, double a)
     {
       // Check that we have analysis info for the given analysis
       if (analysis_info_map.count(adata.analysis_name) == 0)
@@ -799,7 +799,7 @@ namespace Gambit
 
     /// Function to modify the DMEFT LHC signal prediction for ETmiss bins where ETmiss > Lambda.
     /// Alt 2: Simply put a hard cut-off in the ETmiss spectrum for ETmiss > Lambda
-    void signal_cutoff_function(AnalysisData& adata, float lambda)
+    void signal_cutoff_function(AnalysisData& adata, double lambda)
     {
       // Check that we have analysis info for the given analysis
       if (analysis_info_map.count(adata.analysis_name) == 0)
