@@ -63,18 +63,43 @@ namespace Gambit
 
     // =========== Useful stuff ===========
 
-    /// A struct with analysis info, currently specific to the DMEFT
-    struct DMEFT_analysis_info
+    /// A minimal class with analysis info, maps for containing collections of 1D/2D interpolators
+    /// and some helper functions for adding and accessing the interpolators. Current this class is
+    /// tailored specifically for the DMEFT model. Will be generalized in the future.
+    class DMEFT_analysis_info
     {
-      str name;
-      double lumi_invfb;
-      size_t n_signal_regions;
-      std::vector<int> OBSNUM;
-      std::vector<double> BKGNUM;
-      std::vector<double> BKGERR;
-      std::vector<double> METMINS;
-      std::map<str,interp1d_collection> interp1d;
-      std::map<str,interp2d_collection> interp2d;
+      public:
+        str name;
+        double lumi_invfb;
+        size_t n_signal_regions;
+        std::vector<int> OBSNUM;
+        std::vector<double> BKGNUM;
+        std::vector<double> BKGERR;
+        std::vector<double> METMINS;
+        std::map<str,std::unique_ptr<interp1d_collection>> interp1d;
+        std::map<str,std::unique_ptr<interp2d_collection>> interp2d;
+
+        void add_interp1d(str name, str filename, std::vector<str> colnames)
+        {
+          assert (interp1d.count(name) == 0); // Make sure we're not overwriting an existing entry
+          interp1d[name] = std::unique_ptr<interp1d_collection>(new interp1d_collection(name, filename, colnames));
+        }
+
+        void add_interp2d(str name, str filename, std::vector<str> colnames)
+        {
+          assert (interp2d.count(name) == 0); // Make sure we're not overwriting an existing entry
+          interp2d[name] = std::unique_ptr<interp2d_collection>(new interp2d_collection(name, filename, colnames));
+        }
+
+        const interp1d_collection& get_interp1d(str name) const
+        {
+          return *interp1d.at(name);
+        }
+
+        const interp2d_collection& get_interp2d(str name) const
+        {
+          return *interp2d.at(name);
+        }
     };
   
     /// A struct to contain parameters for the GSL optimiser target function
@@ -136,7 +161,7 @@ namespace Gambit
       str current_analysis_name;
       std::vector<str> colnames;
       DMEFT_analysis_info empty_analysis_info;
-      DMEFT_analysis_info& current_ainfo = empty_analysis_info;
+      DMEFT_analysis_info* current_ainfo;
 
       // 
       // Analysis: CMS_13TeV_MONOJET_36invfb_interpolated
@@ -145,77 +170,56 @@ namespace Gambit
       // Analysis name
       current_analysis_name = "CMS_13TeV_MONOJET_36invfb_interpolated";
 
-      // Create an entry in the global analysis_info_map and point the reference current_ainfo to it
+      // Create an entry in the global analysis_info_map and point the pointer current_ainfo to it
       analysis_info_map[current_analysis_name] = DMEFT_analysis_info();
-      current_ainfo = analysis_info_map[current_analysis_name];
+      current_ainfo = &(analysis_info_map[current_analysis_name]);
 
-      current_ainfo.name = current_analysis_name;
-      current_ainfo.lumi_invfb = 36.1;
+      current_ainfo->name = current_analysis_name;
+      current_ainfo->lumi_invfb = 36.1;
 
-      current_ainfo.METMINS = {250., 280., 310., 340., 370., 400., 430., 470., 510., 550., 590.,
-                               640., 690., 740., 790., 840., 900., 960., 1020., 1090., 1160., 1250.};
-      current_ainfo.OBSNUM = {136865, 74340, 42540, 25316, 15653, 10092, 8298, 4906, 2987, 2032, 1514,
-                              926, 557, 316, 233, 172, 101, 65, 46, 26, 31, 29};
-      current_ainfo.BKGNUM = {134500., 73400., 42320., 25490., 15430., 10160., 8480., 4865., 2970., 1915., 1506.,
-                              844., 526., 325., 223., 169., 107., 88.1, 52.8, 25.0, 25.5, 26.9};
-      current_ainfo.BKGERR = {3700., 2000., 810., 490., 310., 170., 140., 95., 49., 33., 32.,
-                              18., 14., 12., 9., 8., 6., 5.3, 3.9, 2.5, 2.6, 2.8};
-      assert(current_ainfo.OBSNUM.size() == current_ainfo.METMINS.size());
-      assert(current_ainfo.OBSNUM.size() == current_ainfo.BKGERR.size());
-      assert(current_ainfo.OBSNUM.size() == current_ainfo.BKGERR.size());
-      // current_ainfo.bin_size = current_ainfo.OBSNUM.size(); // = 22
-      current_ainfo.n_signal_regions = current_ainfo.OBSNUM.size(); // = 22
+      current_ainfo->METMINS = {250., 280., 310., 340., 370., 400., 430., 470., 510., 550., 590.,
+                                640., 690., 740., 790., 840., 900., 960., 1020., 1090., 1160., 1250.};
+      current_ainfo->OBSNUM = {136865, 74340, 42540, 25316, 15653, 10092, 8298, 4906, 2987, 2032, 1514,
+                               926, 557, 316, 233, 172, 101, 65, 46, 26, 31, 29};
+      current_ainfo->BKGNUM = {134500., 73400., 42320., 25490., 15430., 10160., 8480., 4865., 2970., 1915., 1506.,
+                               844., 526., 325., 223., 169., 107., 88.1, 52.8, 25.0, 25.5, 26.9};
+      current_ainfo->BKGERR = {3700., 2000., 810., 490., 310., 170., 140., 95., 49., 33., 32.,
+                               18., 14., 12., 9., 8., 6., 5.3, 3.9, 2.5, 2.6, 2.8};
+      assert(current_ainfo->OBSNUM.size() == current_ainfo->METMINS.size());
+      assert(current_ainfo->OBSNUM.size() == current_ainfo->BKGERR.size());
+      assert(current_ainfo->OBSNUM.size() == current_ainfo->BKGERR.size());
+      current_ainfo->n_signal_regions = current_ainfo->OBSNUM.size(); // = 22
 
-      // Create interpolated functions for the CMS analysis
+      // Create interpolated functions for the CMS analysis:
+
       // - 2d cross-sections
       colnames = {"mass", "theta", "xsec"};
-      current_ainfo.interp2d["xsec_C61_C64"] = interp2d_collection("mass_theta_xsec_CMS_C61_C64", 
-                                                                   GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_xsec_CMS_C61_C64.txt", 
-                                                                   colnames);
-      current_ainfo.interp2d["xsec_C62_C63"] = interp2d_collection("mass_theta_xsec_CMS_C62_C63", 
-                                                                   GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_xsec_CMS_C62_C63.txt", 
-                                                                   colnames);
+      current_ainfo->add_interp2d("mass_theta_xsec_C61_C64", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_xsec_CMS_C61_C64.txt", colnames);
+      current_ainfo->add_interp2d("mass_theta_xsec_C62_C63", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_xsec_CMS_C62_C63.txt", colnames);
+
       // - 1d cross-sections
       colnames = {"mass", "xsec"};
-      current_ainfo.interp1d["xsec_C71"] = interp1d_collection("mass_xsec_CMS_C71", 
-                                                               GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_CMS_C71.txt", 
-                                                               colnames);
-      current_ainfo.interp1d["xsec_C72"] = interp1d_collection("mass_xsec_CMS_C72", 
-                                                               GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_CMS_C72.txt", 
-                                                               colnames);
-      current_ainfo.interp1d["xsec_C73"] = interp1d_collection("mass_xsec_CMS_C73", 
-                                                               GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_CMS_C73.txt", 
-                                                               colnames);
-      current_ainfo.interp1d["xsec_C74"] = interp1d_collection("mass_xsec_CMS_C74", 
-                                                               GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_CMS_C74.txt", 
-                                                               colnames);
+      current_ainfo->add_interp1d("mass_xsec_C71", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_CMS_C71.txt", colnames);
+      current_ainfo->add_interp1d("mass_xsec_C72", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_CMS_C72.txt", colnames);
+      current_ainfo->add_interp1d("mass_xsec_C73", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_CMS_C73.txt", colnames);
+      current_ainfo->add_interp1d("mass_xsec_C74", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_CMS_C74.txt", colnames);
+
       // - 2d signal efficiencies
       colnames = {"mass", "theta", "SR1", "SR2", "SR3", "SR4", "SR5", "SR6", "SR7", "SR8", "SR9", "SR10",
                   "SR11", "SR12", "SR13", "SR14", "SR15", "SR16", "SR17", "SR18", "SR19", "SR20", "SR21", "SR22"};
-      current_ainfo.interp2d["eff_C61_C64"] = interp2d_collection("mass_theta_eff_CMS_C61_C64", 
-                                                                  GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_eff_CMS_C61_C64.txt", 
-                                                                  colnames);
-      current_ainfo.interp2d["eff_C62_C63"] = interp2d_collection("mass_theta_eff_CMS_C62_C63", 
-                                                                  GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_eff_CMS_C62_C63.txt", 
-                                                                  colnames);
+      current_ainfo->add_interp2d("mass_theta_eff_C61_C64", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_eff_CMS_C61_C64.txt", colnames);
+      current_ainfo->add_interp2d("mass_theta_eff_C62_C63", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_eff_CMS_C62_C63.txt", colnames);
+
       // - 1d signal efficiencies
       colnames = {"mass", "SR1", "SR2", "SR3", "SR4", "SR5", "SR6", "SR7", "SR8", "SR9", "SR10",
                   "SR11", "SR12", "SR13", "SR14", "SR15", "SR16", "SR17", "SR18", "SR19", "SR20", "SR21", "SR22"};
-      current_ainfo.interp1d["eff_C71"] = interp1d_collection("mass_eff_CMS_C71", 
-                                                              GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_eff_CMS_C71.txt", 
-                                                              colnames);
-      current_ainfo.interp1d["eff_C72"] = interp1d_collection("mass_eff_CMS_C72", 
-                                                              GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_eff_CMS_C72.txt", 
-                                                              colnames);
-      current_ainfo.interp1d["eff_C73"] = interp1d_collection("mass_eff_CMS_C73", 
-                                                              GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_eff_CMS_C73.txt", 
-                                                              colnames);
-      current_ainfo.interp1d["eff_C74"] = interp1d_collection("mass_eff_CMS_C74", 
-                                                              GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_eff_CMS_C74.txt", 
-                                                              colnames);
+      current_ainfo->add_interp1d("mass_eff_C71", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_eff_CMS_C71.txt", colnames);
+      current_ainfo->add_interp1d("mass_eff_C72", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_eff_CMS_C72.txt", colnames);
+      current_ainfo->add_interp1d("mass_eff_C73", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_eff_CMS_C73.txt", colnames);
+      current_ainfo->add_interp1d("mass_eff_C74", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_eff_CMS_C74.txt", colnames);
 
-      // 'Clear' the reference current_ainfo before moving on to the next analysis by pointing it to empty_analysis_info
-      current_ainfo = empty_analysis_info;
+      // 'Clear' the pointer current_ainfo before moving on to the next analysis by pointing it to empty_analysis_info
+      current_ainfo = &empty_analysis_info;
 
 
       // 
@@ -227,74 +231,48 @@ namespace Gambit
 
       // Create an entry in the global analysis_info_map and point the reference current_ainfo to it
       analysis_info_map[current_analysis_name] = DMEFT_analysis_info();
-      current_ainfo = analysis_info_map[current_analysis_name];
+      current_ainfo = &(analysis_info_map[current_analysis_name]);
 
-      current_ainfo.name = current_analysis_name;
-      current_ainfo.lumi_invfb = 139.0;
+      current_ainfo->name = current_analysis_name;
+      current_ainfo->lumi_invfb = 139.0;
 
-      // current_ainfo.data_INC = 15;     // 15 points in both dimensions (mass, theta)
-      // current_ainfo.data_SIZE = 225;   // 15 * 15
-      // current_ainfo.data_INC_d7 = 19;  // only one dimension (mass)
-      // current_ainfo.data_SIZE_d7 = 19; 
+      current_ainfo->METMINS = {200., 250., 300., 350., 400., 500., 600., 700., 800., 900., 1000.};
+      current_ainfo->OBSNUM = {1791624, 752328, 313912, 141036, 102888, 29458, 10203, 3986, 1663, 738, 413+187+207};
+      current_ainfo->BKGNUM = {1783000., 753000., 314000., 140100., 101600., 29200., 10000., 3870., 1640., 754., 359.+182.+218.};
+      current_ainfo->BKGERR = {26000., 9000., 3500., 1600., 1200., 400., 180., 80., 40., 20., sqrt(10*10+6*6+9*9)};
+      assert(current_ainfo->OBSNUM.size() == current_ainfo->METMINS.size());
+      assert(current_ainfo->OBSNUM.size() == current_ainfo->BKGNUM.size());
+      assert(current_ainfo->OBSNUM.size() == current_ainfo->BKGERR.size());
+      current_ainfo->n_signal_regions = current_ainfo->OBSNUM.size();
 
-      current_ainfo.METMINS = {200., 250., 300., 350., 400., 500., 600., 700., 800., 900., 1000.};
-      current_ainfo.OBSNUM = {1791624, 752328, 313912, 141036, 102888, 29458, 10203, 3986, 1663, 738, 413+187+207};
-      current_ainfo.BKGNUM = {1783000., 753000., 314000., 140100., 101600., 29200., 10000., 3870., 1640., 754., 359.+182.+218.};
-      current_ainfo.BKGERR = {26000., 9000., 3500., 1600., 1200., 400., 180., 80., 40., 20., sqrt(10*10+6*6+9*9)};
-      assert(current_ainfo.OBSNUM.size() == current_ainfo.METMINS.size());
-      assert(current_ainfo.OBSNUM.size() == current_ainfo.BKGNUM.size());
-      assert(current_ainfo.OBSNUM.size() == current_ainfo.BKGERR.size());
-      // current_ainfo.bin_size = current_ainfo.OBSNUM.size(); 
-      current_ainfo.n_signal_regions = current_ainfo.OBSNUM.size();
+      // Create interpolated functions for the ATLAS analysis:
 
-      // Create interpolated functions for the ATLAS analysis
       // - 2d cross-sections
       colnames = {"mass", "theta", "xsec"};
-      current_ainfo.interp2d["xsec_C61_C64"] = interp2d_collection("mass_theta_xsec_ATLAS_C61_C64", 
-                                                                   GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_xsec_ATLAS_C61_C64.txt", 
-                                                                   colnames);
-      current_ainfo.interp2d["xsec_C62_C63"] = interp2d_collection("mass_theta_xsec_ATLAS_C62_C63", 
-                                                                   GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_xsec_ATLAS_C62_C63.txt", 
-                                                                   colnames);
+      current_ainfo->add_interp2d("mass_theta_xsec_C61_C64", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_xsec_ATLAS_C61_C64.txt", colnames);
+      current_ainfo->add_interp2d("mass_theta_xsec_C62_C63", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_xsec_ATLAS_C62_C63.txt", colnames);
+
       // - 1d cross-sections
       colnames = {"mass", "xsec"};
-      current_ainfo.interp1d["xsec_C71"] = interp1d_collection("mass_xsec_ATLAS_C71", 
-                                                               GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_ATLAS_C71.txt", 
-                                                               colnames);
-      current_ainfo.interp1d["xsec_C72"] = interp1d_collection("mass_xsec_ATLAS_C72", 
-                                                               GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_ATLAS_C72.txt", 
-                                                               colnames);
-      current_ainfo.interp1d["xsec_C73"] = interp1d_collection("mass_xsec_ATLAS_C73", 
-                                                               GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_ATLAS_C73.txt", 
-                                                               colnames);
-      current_ainfo.interp1d["xsec_C74"] = interp1d_collection("mass_xsec_ATLAS_C74", 
-                                                               GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_ATLAS_C74.txt", 
-                                                               colnames);
+      current_ainfo->add_interp1d("mass_xsec_C71", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_ATLAS_C71.txt", colnames);
+      current_ainfo->add_interp1d("mass_xsec_C72", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_ATLAS_C72.txt", colnames);
+      current_ainfo->add_interp1d("mass_xsec_C73", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_ATLAS_C73.txt", colnames);
+      current_ainfo->add_interp1d("mass_xsec_C74", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_ATLAS_C74.txt", colnames);
+
       // - 2d signal efficiencies
       colnames = {"mass", "theta", "SR1", "SR2", "SR3", "SR4", "SR5", "SR6", "SR7", "SR8", "SR9", "SR10", "SR11"};
-      current_ainfo.interp2d["eff_C61_C64"] = interp2d_collection("mass_theta_eff_ATLAS_C61_C64", 
-                                                                  GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_eff_ATLAS_C61_C64.txt", 
-                                                                  colnames);
-      current_ainfo.interp2d["eff_C62_C63"] = interp2d_collection("mass_theta_eff_ATLAS_C62_C63", 
-                                                                  GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_eff_ATLAS_C62_C63.txt", 
-                                                                  colnames);
+      current_ainfo->add_interp2d("mass_theta_eff_C61_C64", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_eff_ATLAS_C61_C64.txt", colnames);
+      current_ainfo->add_interp2d("mass_theta_eff_C62_C63", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_eff_ATLAS_C62_C63.txt", colnames);
+
       // - 1d signal efficiencies
       colnames = {"mass", "SR1", "SR2", "SR3", "SR4", "SR5", "SR6", "SR7", "SR8", "SR9", "SR10", "SR11"};
-      current_ainfo.interp1d["eff_C71"] = interp1d_collection("mass_eff_ATLAS_C71", 
-                                                              GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_eff_ATLAS_C71.txt", 
-                                                              colnames);
-      current_ainfo.interp1d["eff_C72"] = interp1d_collection("mass_eff_ATLAS_C72", 
-                                                              GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_eff_ATLAS_C72.txt", 
-                                                              colnames);
-      current_ainfo.interp1d["eff_C73"] = interp1d_collection("mass_eff_ATLAS_C73", 
-                                                              GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_eff_ATLAS_C73.txt", 
-                                                              colnames);
-      current_ainfo.interp1d["eff_C74"] = interp1d_collection("mass_eff_ATLAS_C74", 
-                                                              GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_eff_ATLAS_C74.txt", 
-                                                              colnames);
+      current_ainfo->add_interp1d("mass_eff_C71", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_eff_ATLAS_C71.txt", colnames);
+      current_ainfo->add_interp1d("mass_eff_C72", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_eff_ATLAS_C72.txt", colnames);
+      current_ainfo->add_interp1d("mass_eff_C73", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_eff_ATLAS_C73.txt", colnames);
+      current_ainfo->add_interp1d("mass_eff_C74", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_eff_ATLAS_C74.txt", colnames);
 
-      // 'Clear' the reference current_ainfo before moving on to the next analysis by pointing it to empty_analysis_info
-      current_ainfo = empty_analysis_info;
+      // 'Clear' the pointer current_ainfo before moving on to the next analysis by pointing it to empty_analysis_info
+      current_ainfo = &empty_analysis_info;
 
     }
 
@@ -339,6 +317,7 @@ namespace Gambit
 
       // Grab the analysis info instance from the analysis_info_map
       const DMEFT_analysis_info& analysis_info_CMS = analysis_info_map.at(current_analysis_name);
+
 
       // Vector to contain signal yield predictions
       std::vector<double> sr_nums_CMS(analysis_info_CMS.n_signal_regions, 0.);
@@ -551,8 +530,8 @@ namespace Gambit
 
 
       // Get the interpolator collections for the given operator_key
-      const interp2d_collection& xsec_interp = analysis_info.interp2d.at("xsec_" + operator_key);
-      const interp2d_collection& eff_interp = analysis_info.interp2d.at("eff_" + operator_key);
+      const interp2d_collection& xsec_interp = analysis_info.get_interp2d("mass_theta_xsec_" + operator_key);
+      const interp2d_collection& eff_interp = analysis_info.get_interp2d("mass_theta_eff_" + operator_key);
 
       // Compute the signal yield for each signal region
       for (size_t sr_i = 0; sr_i < analysis_info.n_signal_regions; ++sr_i)
@@ -614,7 +593,7 @@ namespace Gambit
         }
         else // All is OK, let's evaluate the efficiency
         {
-          eff = eff_interp.eval(m, theta);
+          eff = eff_interp.eval(m, theta, sr_i);
         }
 
         // 
@@ -622,6 +601,14 @@ namespace Gambit
         // 
 
         signal_yields[sr_i] = analysis_info.lumi_invfb * (xsec * 1000.) * norm * lambda_scaling * eff; // converting cross-section from pb to fb
+
+        #ifdef COLLIDERBIT_DEBUG
+        {
+          cerr << std::scientific << "DEBUG:" << " operator:" << operator_key << ", analysis:" << analysis_info.name 
+               << ", sr_i:" << sr_i << ", m:" << m << ", theta:" << theta << ", xsec:" << xsec << ", eff:" << eff 
+               << ", lambda_scaling:" << lambda_scaling << ", norm:" << norm << ", signal:" << signal_yields[sr_i] << endl;
+        }
+        #endif
 
       }  // End loop over signal regions
 
@@ -644,8 +631,8 @@ namespace Gambit
 
 
       // Get the interpolator collections for the given operator_key
-      const interp1d_collection& xsec_interp = analysis_info.interp1d.at("xsec_" + operator_key);
-      const interp1d_collection& eff_interp = analysis_info.interp1d.at("eff_" + operator_key);
+      const interp1d_collection& xsec_interp = analysis_info.get_interp1d("mass_xsec_" + operator_key);
+      const interp1d_collection& eff_interp = analysis_info.get_interp1d("mass_eff_" + operator_key);
 
       // Compute the signal yield for each signal region
       for (size_t sr_i = 0; sr_i < analysis_info.n_signal_regions; ++sr_i)
@@ -697,7 +684,7 @@ namespace Gambit
         }
         else // All is OK, let's evaluate the efficiency
         {
-          eff = eff_interp.eval(m);
+          eff = eff_interp.eval(m, sr_i);
         }
 
         // 
@@ -1039,7 +1026,7 @@ namespace Gambit
 
           while (log10_a <= log10_a_max)
           {
-            cout << "DEBUG: lambda, log10_a : " << lambda << ", " << log10_a << endl;
+            cerr << "DEBUG: lambda, log10_a : " << lambda << ", " << log10_a << endl;
             a[0] = pow(10., log10_a);
 
             fpars.lambda = lambda;

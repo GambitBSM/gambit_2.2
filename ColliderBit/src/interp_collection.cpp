@@ -40,9 +40,6 @@ namespace Gambit
     // 
 
     // Constructor
-    interp1d_collection::interp1d_collection() {}    
-
-    // Constructor
     interp1d_collection::interp1d_collection(const std::string collection_name_in, const std::string file_name_in, const std::vector<std::string> colnames_in)
     {
       // Check if file exists.
@@ -146,9 +143,6 @@ namespace Gambit
     // 
     // interp2d_collection class methods
     // 
-
-    // Constructor
-    interp2d_collection::interp2d_collection() {}    
 
     // Constructor
     interp2d_collection::interp2d_collection(const std::string collection_name_in, const std::string file_name_in, const std::vector<std::string> colnames_in)

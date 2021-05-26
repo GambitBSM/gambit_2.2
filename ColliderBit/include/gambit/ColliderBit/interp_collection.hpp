@@ -3,7 +3,9 @@
 ///  \file
 ///
 ///  ColliderBit classes for holding a 
-///  collection of 1D/2D interpolators
+///  collection of 1D/2D interpolators.
+///
+///  (Based on AxionInterpolator in DarkBit)
 ///
 ///  *********************************************
 ///
@@ -58,8 +60,6 @@ namespace Gambit
         // Class methods
 
         // Constructor
-        interp1d_collection();
-        // Constructor
         interp1d_collection(const std::string, const std::string, const std::vector<std::string>);
 
         // Destructor
@@ -80,7 +80,7 @@ namespace Gambit
     /// - The first two columns are taken to be the x and y grid points. 
     /// - For each remaining column a 2D interpolation function f(x,y) is created
     /// - Note that GLS assumes the points are ordered according to increasing x (first) and y (second) values, 
-    ///   i.e. an ordering like (x0,y0), (x0,y1), (x0,y2), ... (x1,y0), (x1,y1), (x1,y2), ...
+    ///   i.e. an ordering like (x0,y0), (x1,y0), (x2,y0), ... (x0,y1), (x1,y1), (x2,y1), ...
     ///
     class interp2d_collection
     {
@@ -108,8 +108,6 @@ namespace Gambit
 
         // Class methods
 
-        // Constructor
-        interp2d_collection();
         // Constructor
         interp2d_collection(const std::string, const std::string, const std::vector<std::string>);
 
