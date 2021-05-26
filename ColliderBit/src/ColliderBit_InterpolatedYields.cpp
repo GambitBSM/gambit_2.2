@@ -64,20 +64,45 @@ namespace Gambit
     // =========== Useful stuff ===========
 
     /// A minimal class with analysis info, maps for containing collections of 1D/2D interpolators
-    /// and some helper functions for adding and accessing the interpolators. Current this class is
-    /// tailored specifically for the DMEFT model. Will be generalized in the future.
+    /// and some helper functions for adding and accessing the interpolators, and for 
+    /// adding a background covariance matrix. Currently this class is tailored specifically 
+    /// for the DMEFT model -- it will be generalized in the future.
     class DMEFT_analysis_info
     {
       public:
+
+        // Standard analysis info:
+
         str name;
         double lumi_invfb;
         size_t n_signal_regions;
-        std::vector<int> OBSNUM;
-        std::vector<double> BKGNUM;
-        std::vector<double> BKGERR;
-        std::vector<double> METMINS;
+        std::vector<int> obsnum;
+        std::vector<double> bkgnum;
+        std::vector<double> bkgerr;
+        Eigen::MatrixXd bkgcov;
+
+        // A map to hold any extra non-standard numbers we might need for a given analysis.
+        // For the DMEFT-specific case we'll use this to store the MET spectrum bin limits
+        std::map<str, std::vector<double>> extra_info; // Any additional analysis-specific numbers
+
+        // Maps containing 1D and 2D interpolators
         std::map<str,std::unique_ptr<interp1d_collection>> interp1d;
         std::map<str,std::unique_ptr<interp2d_collection>> interp2d;
+
+        // Helper functions
+
+        void add_bkgcov(const std::vector< std::vector<double>>& bkgcov_in)
+        {
+          assert( bkgcov_in.size() > 0 && bkgcov_in.size() == n_signal_regions );
+          assert( bkgcov_in[0].size() > 0 && bkgcov_in[0].size() == n_signal_regions );
+
+          // Fill our Eigen matrix
+          bkgcov = Eigen::MatrixXd(n_signal_regions, n_signal_regions);
+          for (size_t i = 0; i < n_signal_regions; i++)
+          {
+            bkgcov.row(i) = Eigen::VectorXd::Map(&bkgcov_in[i][0], bkgcov_in[i].size()); 
+          }
+        }
 
         void add_interp1d(str name, str filename, std::vector<str> colnames)
         {
@@ -102,6 +127,7 @@ namespace Gambit
         }
     };
   
+
     /// A struct to contain parameters for the GSL optimiser target function
     struct _gsl_target_func_params
     {
@@ -112,6 +138,7 @@ namespace Gambit
       bool use_marg;
       bool combine_nocovar_SRs;
     };
+
 
     /// A global map from analysis name to DMEFT_analysis_info instance.
     /// This map is initialized by the function fill_analysis_info_map,
@@ -131,9 +158,9 @@ namespace Gambit
 
     void get_all_DMEFT_signal_yields(std::vector<double>&, const DMEFT_analysis_info&, const Spectrum&);
 
-    void get_DMEFT_signal_yields_dim6(std::vector<double>&, const str, const DMEFT_analysis_info&, double, double, double, double);
+    void get_DMEFT_signal_yields_dim6_operator(std::vector<double>&, const str, const DMEFT_analysis_info&, double, double, double, double);
 
-    void get_DMEFT_signal_yields_dim7(std::vector<double>&, const str, const DMEFT_analysis_info&, double, double, double);
+    void get_DMEFT_signal_yields_dim7_operator(std::vector<double>&, const str, const DMEFT_analysis_info&, double, double, double);
 
     void DMEFT_results_profiled(AnalysisDataPointers&);
 
@@ -164,7 +191,7 @@ namespace Gambit
       DMEFT_analysis_info* current_ainfo;
 
       // 
-      // Analysis: CMS_13TeV_MONOJET_36invfb_interpolated
+      // New analysis: CMS_13TeV_MONOJET_36invfb_interpolated
       // 
 
       // Analysis name
@@ -177,32 +204,61 @@ namespace Gambit
       current_ainfo->name = current_analysis_name;
       current_ainfo->lumi_invfb = 36.1;
 
-      current_ainfo->METMINS = {250., 280., 310., 340., 370., 400., 430., 470., 510., 550., 590.,
-                                640., 690., 740., 790., 840., 900., 960., 1020., 1090., 1160., 1250.};
-      current_ainfo->OBSNUM = {136865, 74340, 42540, 25316, 15653, 10092, 8298, 4906, 2987, 2032, 1514,
+      current_ainfo->obsnum = {136865, 74340, 42540, 25316, 15653, 10092, 8298, 4906, 2987, 2032, 1514,
                                926, 557, 316, 233, 172, 101, 65, 46, 26, 31, 29};
-      current_ainfo->BKGNUM = {134500., 73400., 42320., 25490., 15430., 10160., 8480., 4865., 2970., 1915., 1506.,
+      current_ainfo->bkgnum = {134500., 73400., 42320., 25490., 15430., 10160., 8480., 4865., 2970., 1915., 1506.,
                                844., 526., 325., 223., 169., 107., 88.1, 52.8, 25.0, 25.5, 26.9};
-      current_ainfo->BKGERR = {3700., 2000., 810., 490., 310., 170., 140., 95., 49., 33., 32.,
+      current_ainfo->bkgerr = {3700., 2000., 810., 490., 310., 170., 140., 95., 49., 33., 32.,
                                18., 14., 12., 9., 8., 6., 5.3, 3.9, 2.5, 2.6, 2.8};
-      assert(current_ainfo->OBSNUM.size() == current_ainfo->METMINS.size());
-      assert(current_ainfo->OBSNUM.size() == current_ainfo->BKGERR.size());
-      assert(current_ainfo->OBSNUM.size() == current_ainfo->BKGERR.size());
-      current_ainfo->n_signal_regions = current_ainfo->OBSNUM.size(); // = 22
+      assert(current_ainfo->obsnum.size() == current_ainfo->bkgerr.size());
+      assert(current_ainfo->obsnum.size() == current_ainfo->bkgerr.size());
+      current_ainfo->n_signal_regions = current_ainfo->obsnum.size(); // = 22
+
+      current_ainfo->extra_info["metmins"] = {250., 280., 310., 340., 370., 400., 430., 470., 510., 550., 590.,
+                                              640., 690., 740., 790., 840., 900., 960., 1020., 1090., 1160., 1250.};
+      assert(current_ainfo->obsnum.size() == current_ainfo->extra_info["metmins"].size());
+
+      // Construct the background covariance matrix
+      std::vector< std::vector<double>> bkgcov = {
+        {  1.37e+07,  7.18e+06,  2.58e+06,  1.54e+06,  9.29e+05,  4.28e+05,  3.26e+05,  2.04e+05,  8.34e+04,  5.37e+04,  4.62e+04,  2.33e+04,  1.45e+04,  1.20e+04,  6.66e+03,  7.99e+03,  4.00e+03,  1.57e+03,  0.00e+00,  1.30e+03,  3.85e+02, -4.14e+02 },
+        {  7.18e+06,  4.00e+06,  1.38e+06,  8.43e+05,  5.02e+05,  2.28e+05,  1.74e+05,  1.05e+05,  4.51e+04,  2.84e+04,  2.30e+04,  1.22e+04,  7.56e+03,  6.48e+03,  3.24e+03,  4.00e+03,  2.28e+03,  1.06e+03,  1.56e+02,  8.00e+02,  3.64e+02, -1.68e+02 },
+        {  2.58e+06,  1.38e+06,  6.56e+05,  3.57e+05,  2.18e+05,  1.07e+05,  8.73e+04,  5.31e+04,  2.34e+04,  1.50e+04,  1.35e+04,  7.00e+03,  4.20e+03,  3.30e+03,  2.26e+03,  1.81e+03,  1.12e+03,  6.44e+02,  2.21e+02,  3.04e+02,  1.47e+02,  2.27e+01 },
+        {  1.54e+06,  8.43e+05,  3.57e+05,  2.40e+05,  1.32e+05,  6.58e+04,  5.14e+04,  3.17e+04,  1.44e+04,  9.22e+03,  8.15e+03,  4.06e+03,  2.88e+03,  2.00e+03,  1.32e+03,  1.25e+03,  7.06e+02,  3.64e+02,  5.73e+01,  1.59e+02,  7.64e+01, -2.74e+01 },
+        {  9.29e+05,  5.02e+05,  2.18e+05,  1.32e+05,  9.61e+04,  4.11e+04,  3.21e+04,  1.88e+04,  8.81e+03,  5.73e+03,  5.46e+03,  2.57e+03,  1.78e+03,  1.34e+03,  6.98e+02,  9.18e+02,  4.28e+02,  1.64e+02,  3.63e+01,  1.32e+02,  1.05e+02, -8.68e+00 },
+        {  4.28e+05,  2.28e+05,  1.07e+05,  6.58e+04,  4.11e+04,  2.89e+04,  1.76e+04,  1.07e+04,  5.16e+03,  2.92e+03,  2.83e+03,  1.62e+03,  9.76e+02,  8.77e+02,  3.82e+02,  4.49e+02,  2.04e+02,  1.08e+02,  9.94e+01,  1.02e+02,  3.98e+01,  4.76e+00 },
+        {  3.26e+05,  1.74e+05,  8.73e+04,  5.14e+04,  3.21e+04,  1.76e+04,  1.96e+04,  9.18e+03,  4.39e+03,  2.82e+03,  2.46e+03,  1.39e+03,  9.21e+02,  7.39e+02,  5.17e+02,  3.70e+02,  2.35e+02,  9.65e+01,  8.19e+01,  4.20e+01,  1.82e+01,  3.14e+01 },
+        {  2.04e+05,  1.04e+05,  5.31e+04,  3.17e+04,  1.88e+04,  1.07e+04,  9.18e+03,  9.02e+03,  2.61e+03,  1.72e+03,  1.70e+03,  8.55e+02,  4.52e+02,  4.67e+02,  2.48e+02,  2.66e+02,  1.54e+02,  5.04e+01,  3.33e+01,  1.19e+01,  3.21e+01,  7.98e+00 },
+        {  8.34e+04,  4.51e+04,  2.34e+04,  1.44e+04,  8.81e+03,  5.16e+03,  4.39e+03,  2.61e+03,  2.40e+03,  9.22e+02,  8.94e+02,  4.67e+02,  2.13e+02,  2.41e+02,  1.41e+02,  1.29e+02,  4.70e+01,  4.41e+01,  7.64e+00,  2.08e+01,  2.55e+01,  5.49e+00 },
+        {  5.37e+04,  2.84e+04,  1.50e+04,  9.22e+03,  5.73e+03,  2.92e+03,  2.82e+03,  1.72e+03,  9.22e+02,  1.09e+03,  5.17e+02,  3.03e+02,  1.62e+02,  1.47e+02,  8.91e+01,  8.18e+01,  3.17e+01,  2.10e+01,  1.29e+00,  7.42e+00,  7.72e+00,  4.62e+00 },
+        {  4.62e+04,  2.30e+04,  1.35e+04,  8.15e+03,  5.46e+03,  2.83e+03,  2.46e+03,  1.70e+03,  8.94e+02,  5.17e+02,  1.02e+03,  2.65e+02,  1.57e+02,  1.61e+02,  9.22e+01,  7.94e+01,  3.84e+01,  3.39e+00, -1.25e+00,  1.44e+01,  3.33e+00, -8.96e-01 },
+        {  2.33e+04,  1.22e+04,  7.00e+03,  4.06e+03,  2.57e+03,  1.62e+03,  1.39e+03,  8.55e+02,  4.67e+02,  3.03e+02,  2.65e+02,  3.24e+02,  8.57e+01,  9.07e+01,  5.83e+01,  3.02e+01,  2.70e+01,  2.00e+01,  7.02e+00,  2.25e+00,  5.15e+00,  7.06e+00 },
+        {  1.45e+04,  7.56e+03,  4.20e+03,  2.88e+03,  1.78e+03,  9.76e+02,  9.21e+02,  4.52e+02,  2.13e+02,  1.62e+02,  1.57e+02,  8.57e+01,  1.96e+02,  5.21e+01,  3.91e+01,  3.92e+01,  2.69e+01,  8.90e+00,  6.55e+00,  0.00e+00,  1.46e+00,  1.57e+00 },
+        {  1.20e+04,  6.48e+03,  3.30e+03,  2.00e+03,  1.34e+03,  8.77e+02,  7.39e+02,  4.67e+02,  2.41e+02,  1.47e+02,  1.61e+02,  9.07e+01,  5.21e+01,  1.44e+02,  3.02e+01,  2.02e+01,  1.44e+01,  3.18e+00,  4.68e-01,  4.50e+00,  2.18e+00,  3.02e+00 },
+        {  6.66e+03,  3.24e+03,  2.26e+03,  1.32e+03,  6.98e+02,  3.82e+02,  5.17e+02,  2.48e+02,  1.41e+02,  8.91e+01,  9.22e+01,  5.83e+01,  3.91e+01,  3.02e+01,  8.10e+01,  1.15e+01,  1.19e+01,  7.63e+00,  3.16e+00, -2.25e-01,  1.40e+00,  2.52e+00 },
+        {  7.99e+03,  4.00e+03,  1.81e+03,  1.25e+03,  9.18e+02,  4.49e+02,  3.70e+02,  2.66e+02,  1.29e+02,  8.18e+01,  7.94e+01,  3.02e+01,  3.92e+01,  2.02e+01,  1.15e+01,  6.40e+01,  1.92e+00, -1.27e+00, -3.12e-01,  1.40e+00,  2.70e+00, -6.72e-01 },
+        {  4.00e+03,  2.28e+03,  1.12e+03,  7.06e+02,  4.28e+02,  2.04e+02,  2.35e+02,  1.54e+02,  4.70e+01,  3.17e+01,  3.84e+01,  2.70e+01,  2.69e+01,  1.44e+01,  1.19e+01,  1.92e+00,  3.60e+01,  5.09e+00,  3.74e+00, -1.65e+00,  1.40e+00,  1.51e+00 },
+        {  1.57e+03,  1.06e+03,  6.44e+02,  3.64e+02,  1.64e+02,  1.08e+02,  9.65e+01,  5.04e+01,  4.41e+01,  2.10e+01,  3.39e+00,  2.00e+01,  8.90e+00,  3.18e+00,  7.63e+00, -1.27e+00,  5.09e+00,  2.81e+01,  6.20e-01, -1.19e+00,  5.51e-01, -4.45e-01 },
+        {  0.00e+00,  1.56e+02,  2.21e+02,  5.73e+01,  3.63e+01,  9.95e+01,  8.19e+01,  3.33e+01,  7.64e+00,  1.29e+00, -1.25e+00,  7.02e+00,  6.55e+00,  4.68e-01,  3.16e+00, -3.12e-01,  3.74e+00,  6.20e-01,  1.52e+01,  7.80e-01,  3.04e-01,  1.64e+00 },
+        {  1.30e+03,  8.00e+02,  3.04e+02,  1.59e+02,  1.32e+02,  1.02e+02,  4.20e+01,  1.19e+01,  2.08e+01,  7.42e+00,  1.44e+01,  2.25e+00,  0.00e+00,  4.50e+00, -2.25e-01,  1.40e+00, -1.65e+00, -1.19e+00,  7.80e-01,  6.25e+00,  1.30e-01,  6.30e-01 },
+        {  3.85e+02,  3.64e+02,  1.47e+02,  7.64e+01,  1.05e+02,  3.98e+01,  1.82e+01,  3.21e+01,  2.55e+01,  7.72e+00,  3.33e+00,  5.15e+00,  1.46e+00,  2.18e+00,  1.40e+00,  2.70e+00,  1.40e+00,  5.51e-01,  3.04e-01,  1.30e-01,  6.76e+00,  5.82e-01 },
+        { -4.14e+02, -1.68e+02,  2.27e+01, -2.74e+01, -8.68e+00,  4.76e+00,  3.14e+01,  7.98e+00,  5.49e+00,  4.62e+00, -8.96e-01,  7.06e+00,  1.57e+00,  3.02e+00,  2.52e+00, -6.72e-01,  1.51e+00, -4.45e-01,  1.64e+00,  6.30e-01,  5.82e-01,  7.84e+00 }
+      };
+      // Save it
+      current_ainfo->add_bkgcov(bkgcov);
 
       // Create interpolated functions for the CMS analysis:
 
       // - 2d cross-sections
       colnames = {"mass", "theta", "xsec"};
-      current_ainfo->add_interp2d("mass_theta_xsec_C61_C64", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_xsec_CMS_C61_C64.txt", colnames);
-      current_ainfo->add_interp2d("mass_theta_xsec_C62_C63", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_xsec_CMS_C62_C63.txt", colnames);
+      current_ainfo->add_interp2d("mass_theta_xsecpb_C61_C64", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_xsecpb_CMS_C61_C64.txt", colnames);
+      current_ainfo->add_interp2d("mass_theta_xsecpb_C62_C63", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_xsecpb_CMS_C62_C63.txt", colnames);
 
       // - 1d cross-sections
       colnames = {"mass", "xsec"};
-      current_ainfo->add_interp1d("mass_xsec_C71", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_CMS_C71.txt", colnames);
-      current_ainfo->add_interp1d("mass_xsec_C72", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_CMS_C72.txt", colnames);
-      current_ainfo->add_interp1d("mass_xsec_C73", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_CMS_C73.txt", colnames);
-      current_ainfo->add_interp1d("mass_xsec_C74", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_CMS_C74.txt", colnames);
+      current_ainfo->add_interp1d("mass_xsecpb_C71", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsecpb_CMS_C71.txt", colnames);
+      current_ainfo->add_interp1d("mass_xsecpb_C72", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsecpb_CMS_C72.txt", colnames);
+      current_ainfo->add_interp1d("mass_xsecpb_C73", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsecpb_CMS_C73.txt", colnames);
+      current_ainfo->add_interp1d("mass_xsecpb_C74", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsecpb_CMS_C74.txt", colnames);
 
       // - 2d signal efficiencies
       colnames = {"mass", "theta", "SR1", "SR2", "SR3", "SR4", "SR5", "SR6", "SR7", "SR8", "SR9", "SR10",
@@ -223,7 +279,7 @@ namespace Gambit
 
 
       // 
-      // Analysis: ATLAS_13TeV_MONOJET_139invfb_interpolated
+      // New analysis: ATLAS_13TeV_MONOJET_139invfb_interpolated
       // 
 
       // Analysis name
@@ -236,28 +292,30 @@ namespace Gambit
       current_ainfo->name = current_analysis_name;
       current_ainfo->lumi_invfb = 139.0;
 
-      current_ainfo->METMINS = {200., 250., 300., 350., 400., 500., 600., 700., 800., 900., 1000.};
-      current_ainfo->OBSNUM = {1791624, 752328, 313912, 141036, 102888, 29458, 10203, 3986, 1663, 738, 413+187+207};
-      current_ainfo->BKGNUM = {1783000., 753000., 314000., 140100., 101600., 29200., 10000., 3870., 1640., 754., 359.+182.+218.};
-      current_ainfo->BKGERR = {26000., 9000., 3500., 1600., 1200., 400., 180., 80., 40., 20., sqrt(10*10+6*6+9*9)};
-      assert(current_ainfo->OBSNUM.size() == current_ainfo->METMINS.size());
-      assert(current_ainfo->OBSNUM.size() == current_ainfo->BKGNUM.size());
-      assert(current_ainfo->OBSNUM.size() == current_ainfo->BKGERR.size());
-      current_ainfo->n_signal_regions = current_ainfo->OBSNUM.size();
+      current_ainfo->obsnum = {1791624, 752328, 313912, 141036, 102888, 29458, 10203, 3986, 1663, 738, 413+187+207};
+      current_ainfo->bkgnum = {1783000., 753000., 314000., 140100., 101600., 29200., 10000., 3870., 1640., 754., 359.+182.+218.};
+      current_ainfo->bkgerr = {26000., 9000., 3500., 1600., 1200., 400., 180., 80., 40., 20., sqrt(10*10+6*6+9*9)};
+      assert(current_ainfo->obsnum.size() == current_ainfo->bkgnum.size());
+      assert(current_ainfo->obsnum.size() == current_ainfo->bkgerr.size());
+      current_ainfo->n_signal_regions = current_ainfo->obsnum.size();
+
+      current_ainfo->extra_info["metmins"] = {200., 250., 300., 350., 400., 500., 600., 700., 800., 900., 1000.};
+      assert(current_ainfo->obsnum.size() == current_ainfo->extra_info["metmins"].size());
+
 
       // Create interpolated functions for the ATLAS analysis:
 
       // - 2d cross-sections
       colnames = {"mass", "theta", "xsec"};
-      current_ainfo->add_interp2d("mass_theta_xsec_C61_C64", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_xsec_ATLAS_C61_C64.txt", colnames);
-      current_ainfo->add_interp2d("mass_theta_xsec_C62_C63", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_xsec_ATLAS_C62_C63.txt", colnames);
+      current_ainfo->add_interp2d("mass_theta_xsecpb_C61_C64", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_xsecpb_ATLAS_C61_C64.txt", colnames);
+      current_ainfo->add_interp2d("mass_theta_xsecpb_C62_C63", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_theta_xsecpb_ATLAS_C62_C63.txt", colnames);
 
       // - 1d cross-sections
       colnames = {"mass", "xsec"};
-      current_ainfo->add_interp1d("mass_xsec_C71", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_ATLAS_C71.txt", colnames);
-      current_ainfo->add_interp1d("mass_xsec_C72", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_ATLAS_C72.txt", colnames);
-      current_ainfo->add_interp1d("mass_xsec_C73", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_ATLAS_C73.txt", colnames);
-      current_ainfo->add_interp1d("mass_xsec_C74", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsec_ATLAS_C74.txt", colnames);
+      current_ainfo->add_interp1d("mass_xsecpb_C71", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsecpb_ATLAS_C71.txt", colnames);
+      current_ainfo->add_interp1d("mass_xsecpb_C72", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsecpb_ATLAS_C72.txt", colnames);
+      current_ainfo->add_interp1d("mass_xsecpb_C73", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsecpb_ATLAS_C73.txt", colnames);
+      current_ainfo->add_interp1d("mass_xsecpb_C74", GAMBIT_DIR "/ColliderBit/data/DMEFT/mass_xsecpb_ATLAS_C74.txt", colnames);
 
       // - 2d signal efficiencies
       colnames = {"mass", "theta", "SR1", "SR2", "SR3", "SR4", "SR5", "SR6", "SR7", "SR8", "SR9", "SR10", "SR11"};
@@ -284,10 +342,25 @@ namespace Gambit
 
       static bool first = true;
 
+      // In this function we need to transfer info from the DMEFT-specific DMEFT_analysis_info objects
+      // to a set of ColliderBit-native AnalysisData objects, and also fill these with the DMEFT signal prediction.
+
+      // We need thread_local AnalysisData instances. Let's collect them in a map.
+      thread_local std::map<str,AnalysisData> analysis_data_map;
+
       // The first time this function is run we must initialize the global analysis_info_map
+      // and the thread_local analysis_data_map
       if (first)
       {
         fill_analysis_info_map();
+
+        for (const std::pair<str,const DMEFT_analysis_info&>& aname_ainfo_pair : analysis_info_map)
+        {
+          // Extract analysis name and use it to create an AnalysisData element in the analysis_data_map
+          str aname = aname_ainfo_pair.first;
+          analysis_data_map[aname] = AnalysisData(aname);
+        }
+
         first = false;
       }
 
@@ -297,149 +370,61 @@ namespace Gambit
       // Get the theory spectrum to pass on masses and parameters
       const Spectrum& spec = *Dep::DMEFT_spectrum;
 
-
-      // Now go through each analysis, fill a corresponding AnalysisData instance 
-      // and store the AnalysisData pointer in the result variable
-
-      // Helper variable
-      str current_analysis_name;
-
       // 
-      // ====== Analysis: CMS_13TeV_MONOJET_36invfb_interpolated ======
+      // Loop over the analyses registered in the analysis_info_map
       // 
 
-      current_analysis_name = "CMS_13TeV_MONOJET_36invfb_interpolated";
-
-      // Create the thread_local AnalysisData instances we need, 
-      // and make sure they are properly cleared for each new point
-      thread_local AnalysisData analysis_data_CMS(current_analysis_name);
-      analysis_data_CMS.clear();
-
-      // Grab the analysis info instance from the analysis_info_map
-      const DMEFT_analysis_info& analysis_info_CMS = analysis_info_map.at(current_analysis_name);
-
-
-      // Vector to contain signal yield predictions
-      std::vector<double> sr_nums_CMS(analysis_info_CMS.n_signal_regions, 0.);
-
-      // Fill the signal yield vector
-      get_all_DMEFT_signal_yields(sr_nums_CMS, analysis_info_CMS, spec);
-
-      // Create vector of SignalRegionData instances
-      std::vector<SignalRegionData> CMS_binned_results;
-
-      for (size_t ibin = 0; ibin < analysis_info_CMS.n_signal_regions; ++ibin) 
+      for (const std::pair<str,const DMEFT_analysis_info&>& aname_ainfo_pair : analysis_info_map)
       {
-        // Generate an 'sr-N' label 
-        std::stringstream ss; ss << "sr-" << ibin;
+        // Extract analysis name and reference to the analysis_info instance
+        str aname = aname_ainfo_pair.first;
+        const DMEFT_analysis_info& ainfo = aname_ainfo_pair.second;
 
-        // Construct a SignalRegionData instance and add it to CMS_binned_results
-        SignalRegionData sr;
-        sr.sr_label = ss.str();
-        sr.n_obs = analysis_info_CMS.OBSNUM.at(ibin);
-        sr.n_sig_MC = sr_nums_CMS.at(ibin);
-        sr.n_sig_scaled = sr_nums_CMS.at(ibin);  // We have already scaled the signals in sr_nums_CMS to xsec * lumi
-        sr.n_sig_MC_sys = 0.;
-        sr.n_bkg = analysis_info_CMS.BKGNUM.at(ibin);
-        sr.n_bkg_err = analysis_info_CMS.BKGERR.at(ibin);
+        // Grab a reference to corresponding AnalysisData instance 
+        // and clear it before we start filling it for the current parameter point
+        AnalysisData& adata = analysis_data_map.at(aname);
+        adata.clear();
+        
+        // Vector to contain signal yield predictions
+        std::vector<double> sr_nums(ainfo.n_signal_regions, 0.);
 
-        CMS_binned_results.push_back(sr);
-      }
+        // Fill the signal yield vector with DMEFT signal predictions
+        get_all_DMEFT_signal_yields(sr_nums, ainfo, spec);
 
-      // The covariance matrix
-      static const std::vector< std::vector<double> > BKGCOV = {
-        {  1.37e+07,  7.18e+06,  2.58e+06,  1.54e+06,  9.29e+05,  4.28e+05,  3.26e+05,  2.04e+05,  8.34e+04,  5.37e+04,  4.62e+04,  2.33e+04,  1.45e+04,  1.20e+04,  6.66e+03,  7.99e+03,  4.00e+03,  1.57e+03,  0.00e+00,  1.30e+03,  3.85e+02, -4.14e+02 },
-        {  7.18e+06,  4.00e+06,  1.38e+06,  8.43e+05,  5.02e+05,  2.28e+05,  1.74e+05,  1.05e+05,  4.51e+04,  2.84e+04,  2.30e+04,  1.22e+04,  7.56e+03,  6.48e+03,  3.24e+03,  4.00e+03,  2.28e+03,  1.06e+03,  1.56e+02,  8.00e+02,  3.64e+02, -1.68e+02 },
-        {  2.58e+06,  1.38e+06,  6.56e+05,  3.57e+05,  2.18e+05,  1.07e+05,  8.73e+04,  5.31e+04,  2.34e+04,  1.50e+04,  1.35e+04,  7.00e+03,  4.20e+03,  3.30e+03,  2.26e+03,  1.81e+03,  1.12e+03,  6.44e+02,  2.21e+02,  3.04e+02,  1.47e+02,  2.27e+01 },
-        {  1.54e+06,  8.43e+05,  3.57e+05,  2.40e+05,  1.32e+05,  6.58e+04,  5.14e+04,  3.17e+04,  1.44e+04,  9.22e+03,  8.15e+03,  4.06e+03,  2.88e+03,  2.00e+03,  1.32e+03,  1.25e+03,  7.06e+02,  3.64e+02,  5.73e+01,  1.59e+02,  7.64e+01, -2.74e+01 },
-        {  9.29e+05,  5.02e+05,  2.18e+05,  1.32e+05,  9.61e+04,  4.11e+04,  3.21e+04,  1.88e+04,  8.81e+03,  5.73e+03,  5.46e+03,  2.57e+03,  1.78e+03,  1.34e+03,  6.98e+02,  9.18e+02,  4.28e+02,  1.64e+02,  3.63e+01,  1.32e+02,  1.05e+02, -8.68e+00 },
-        {  4.28e+05,  2.28e+05,  1.07e+05,  6.58e+04,  4.11e+04,  2.89e+04,  1.76e+04,  1.07e+04,  5.16e+03,  2.92e+03,  2.83e+03,  1.62e+03,  9.76e+02,  8.77e+02,  3.82e+02,  4.49e+02,  2.04e+02,  1.08e+02,  9.94e+01,  1.02e+02,  3.98e+01,  4.76e+00 },
-        {  3.26e+05,  1.74e+05,  8.73e+04,  5.14e+04,  3.21e+04,  1.76e+04,  1.96e+04,  9.18e+03,  4.39e+03,  2.82e+03,  2.46e+03,  1.39e+03,  9.21e+02,  7.39e+02,  5.17e+02,  3.70e+02,  2.35e+02,  9.65e+01,  8.19e+01,  4.20e+01,  1.82e+01,  3.14e+01 },
-        {  2.04e+05,  1.04e+05,  5.31e+04,  3.17e+04,  1.88e+04,  1.07e+04,  9.18e+03,  9.02e+03,  2.61e+03,  1.72e+03,  1.70e+03,  8.55e+02,  4.52e+02,  4.67e+02,  2.48e+02,  2.66e+02,  1.54e+02,  5.04e+01,  3.33e+01,  1.19e+01,  3.21e+01,  7.98e+00 },
-        {  8.34e+04,  4.51e+04,  2.34e+04,  1.44e+04,  8.81e+03,  5.16e+03,  4.39e+03,  2.61e+03,  2.40e+03,  9.22e+02,  8.94e+02,  4.67e+02,  2.13e+02,  2.41e+02,  1.41e+02,  1.29e+02,  4.70e+01,  4.41e+01,  7.64e+00,  2.08e+01,  2.55e+01,  5.49e+00 },
-        {  5.37e+04,  2.84e+04,  1.50e+04,  9.22e+03,  5.73e+03,  2.92e+03,  2.82e+03,  1.72e+03,  9.22e+02,  1.09e+03,  5.17e+02,  3.03e+02,  1.62e+02,  1.47e+02,  8.91e+01,  8.18e+01,  3.17e+01,  2.10e+01,  1.29e+00,  7.42e+00,  7.72e+00,  4.62e+00 },
-        {  4.62e+04,  2.30e+04,  1.35e+04,  8.15e+03,  5.46e+03,  2.83e+03,  2.46e+03,  1.70e+03,  8.94e+02,  5.17e+02,  1.02e+03,  2.65e+02,  1.57e+02,  1.61e+02,  9.22e+01,  7.94e+01,  3.84e+01,  3.39e+00, -1.25e+00,  1.44e+01,  3.33e+00, -8.96e-01 },
-        {  2.33e+04,  1.22e+04,  7.00e+03,  4.06e+03,  2.57e+03,  1.62e+03,  1.39e+03,  8.55e+02,  4.67e+02,  3.03e+02,  2.65e+02,  3.24e+02,  8.57e+01,  9.07e+01,  5.83e+01,  3.02e+01,  2.70e+01,  2.00e+01,  7.02e+00,  2.25e+00,  5.15e+00,  7.06e+00 },
-        {  1.45e+04,  7.56e+03,  4.20e+03,  2.88e+03,  1.78e+03,  9.76e+02,  9.21e+02,  4.52e+02,  2.13e+02,  1.62e+02,  1.57e+02,  8.57e+01,  1.96e+02,  5.21e+01,  3.91e+01,  3.92e+01,  2.69e+01,  8.90e+00,  6.55e+00,  0.00e+00,  1.46e+00,  1.57e+00 },
-        {  1.20e+04,  6.48e+03,  3.30e+03,  2.00e+03,  1.34e+03,  8.77e+02,  7.39e+02,  4.67e+02,  2.41e+02,  1.47e+02,  1.61e+02,  9.07e+01,  5.21e+01,  1.44e+02,  3.02e+01,  2.02e+01,  1.44e+01,  3.18e+00,  4.68e-01,  4.50e+00,  2.18e+00,  3.02e+00 },
-        {  6.66e+03,  3.24e+03,  2.26e+03,  1.32e+03,  6.98e+02,  3.82e+02,  5.17e+02,  2.48e+02,  1.41e+02,  8.91e+01,  9.22e+01,  5.83e+01,  3.91e+01,  3.02e+01,  8.10e+01,  1.15e+01,  1.19e+01,  7.63e+00,  3.16e+00, -2.25e-01,  1.40e+00,  2.52e+00 },
-        {  7.99e+03,  4.00e+03,  1.81e+03,  1.25e+03,  9.18e+02,  4.49e+02,  3.70e+02,  2.66e+02,  1.29e+02,  8.18e+01,  7.94e+01,  3.02e+01,  3.92e+01,  2.02e+01,  1.15e+01,  6.40e+01,  1.92e+00, -1.27e+00, -3.12e-01,  1.40e+00,  2.70e+00, -6.72e-01 },
-        {  4.00e+03,  2.28e+03,  1.12e+03,  7.06e+02,  4.28e+02,  2.04e+02,  2.35e+02,  1.54e+02,  4.70e+01,  3.17e+01,  3.84e+01,  2.70e+01,  2.69e+01,  1.44e+01,  1.19e+01,  1.92e+00,  3.60e+01,  5.09e+00,  3.74e+00, -1.65e+00,  1.40e+00,  1.51e+00 },
-        {  1.57e+03,  1.06e+03,  6.44e+02,  3.64e+02,  1.64e+02,  1.08e+02,  9.65e+01,  5.04e+01,  4.41e+01,  2.10e+01,  3.39e+00,  2.00e+01,  8.90e+00,  3.18e+00,  7.63e+00, -1.27e+00,  5.09e+00,  2.81e+01,  6.20e-01, -1.19e+00,  5.51e-01, -4.45e-01 },
-        {  0.00e+00,  1.56e+02,  2.21e+02,  5.73e+01,  3.63e+01,  9.95e+01,  8.19e+01,  3.33e+01,  7.64e+00,  1.29e+00, -1.25e+00,  7.02e+00,  6.55e+00,  4.68e-01,  3.16e+00, -3.12e-01,  3.74e+00,  6.20e-01,  1.52e+01,  7.80e-01,  3.04e-01,  1.64e+00 },
-        {  1.30e+03,  8.00e+02,  3.04e+02,  1.59e+02,  1.32e+02,  1.02e+02,  4.20e+01,  1.19e+01,  2.08e+01,  7.42e+00,  1.44e+01,  2.25e+00,  0.00e+00,  4.50e+00, -2.25e-01,  1.40e+00, -1.65e+00, -1.19e+00,  7.80e-01,  6.25e+00,  1.30e-01,  6.30e-01 },
-        {  3.85e+02,  3.64e+02,  1.47e+02,  7.64e+01,  1.05e+02,  3.98e+01,  1.82e+01,  3.21e+01,  2.55e+01,  7.72e+00,  3.33e+00,  5.15e+00,  1.46e+00,  2.18e+00,  1.40e+00,  2.70e+00,  1.40e+00,  5.51e-01,  3.04e-01,  1.30e-01,  6.76e+00,  5.82e-01 },
-        { -4.14e+02, -1.68e+02,  2.27e+01, -2.74e+01, -8.68e+00,  4.76e+00,  3.14e+01,  7.98e+00,  5.49e+00,  4.62e+00, -8.96e-01,  7.06e+00,  1.57e+00,  3.02e+00,  2.52e+00, -6.72e-01,  1.51e+00, -4.45e-01,  1.64e+00,  6.30e-01,  5.82e-01,  7.84e+00 }
-      };
-      assert(BKGCOV.size() == analysis_info_CMS.n_signal_regions);
-      assert(BKGCOV[0].size() == analysis_info_CMS.n_signal_regions);
+        // Create vector of SignalRegionData instances
+        std::vector<SignalRegionData> srdata_vector;
 
-      // Convert to Eigen matrix
-      static Eigen::MatrixXd m_BKGCOV(analysis_info_CMS.n_signal_regions, analysis_info_CMS.n_signal_regions);
-      static bool first_c = true;
-      if (first_c)
-      {
-        for (size_t i = 0; i < analysis_info_CMS.n_signal_regions; i++)
+        for (size_t sr_index = 0; sr_index < ainfo.n_signal_regions; ++sr_index) 
         {
-          m_BKGCOV.row(i) = Eigen::VectorXd::Map(&BKGCOV[i][0],BKGCOV[i].size()); 
+          // Generate an 'sr-N' label 
+          std::stringstream ss; ss << "sr-" << sr_index;
+
+          // Construct a SignalRegionData instance and add it to srdata_vector
+          SignalRegionData sr;
+          sr.sr_label = ss.str();
+          sr.n_obs = ainfo.obsnum.at(sr_index);
+          sr.n_sig_MC = sr_nums.at(sr_index);
+          sr.n_sig_scaled = sr_nums.at(sr_index);  // We have already scaled the signals in sr_nums to xsec * lumi
+          sr.n_sig_MC_sys = 0.;
+          sr.n_bkg = ainfo.bkgnum.at(sr_index);
+          sr.n_bkg_err = ainfo.bkgerr.at(sr_index);
+
+          srdata_vector.push_back(sr);
         }
-        first_c = false;
-      }
 
-      // Save the analysis results + covariance matrix in analysis_data_CMS
-      analysis_data_CMS.srdata = CMS_binned_results;
-      analysis_data_CMS.srcov = m_BKGCOV;
+        // Save our vector of SignalRegionData in the AnalysisData instance
+        adata.srdata = srdata_vector;
 
-      // Save a pointer to analysis_data_CMS in the 'result' variable
-      result.push_back(&analysis_data_CMS);
+        // If this analysis has a background covariance matrix, copy it to the AnalysisData instance
+        if (ainfo.bkgcov.size() > 0)
+        {
+          adata.srcov = ainfo.bkgcov;
+        }
 
+        // Save a pointer to our AnalysisData instance in the 'result' variable
+        result.push_back(&adata);
 
-      // 
-      // ====== Analysis: ATLAS_13TeV_MONOJET_139invfb_interpolated ======
-      // 
-
-      current_analysis_name = "ATLAS_13TeV_MONOJET_139invfb_interpolated";
-
-      // Create the thread_local AnalysisData instances we need, 
-      // and make sure they are properly cleared for each new point
-      thread_local AnalysisData analysis_data_ATLAS(current_analysis_name);
-      analysis_data_ATLAS.clear();
-
-      // Grab the analysis info instance from the analysis_info_map
-      const DMEFT_analysis_info& analysis_info_ATLAS = analysis_info_map.at(current_analysis_name);
-
-      // Vector to contain signal yield predictions
-      std::vector<double> sr_nums_ATLAS(analysis_info_ATLAS.n_signal_regions, 0.);
-
-      // Fill the signal yield vector
-      get_all_DMEFT_signal_yields(sr_nums_ATLAS, analysis_info_ATLAS, spec);
-      
-      // Create vector of SignalRegionData instances
-      std::vector<SignalRegionData> ATLAS_binned_results;
-
-      for (size_t ibin = 0; ibin < analysis_info_ATLAS.n_signal_regions; ++ibin) 
-      {
-        // Generate an 'sr-N' label 
-        std::stringstream ss; ss << "sr-" << ibin;
-
-        // Construct a SignalRegionData instance and add it to ATLAS_binned_results
-        SignalRegionData sr;
-        sr.sr_label = ss.str();
-        sr.n_obs = analysis_info_ATLAS.OBSNUM.at(ibin);
-        sr.n_sig_MC = sr_nums_ATLAS.at(ibin);
-        sr.n_sig_scaled = sr_nums_ATLAS.at(ibin);  // We have already scaled the signals in sr_nums_ATLAS to xsec * lumi
-        sr.n_sig_MC_sys = 0.;
-        sr.n_bkg = analysis_info_ATLAS.BKGNUM.at(ibin);
-        sr.n_bkg_err = analysis_info_ATLAS.BKGERR.at(ibin);
-
-        ATLAS_binned_results.push_back(sr);
-      }
-
-      // Save the analysis results in analysis_data_ATLAS
-      analysis_data_ATLAS.srdata = ATLAS_binned_results;
-
-      // Save a pointer to analysis_data_ATLAS in the 'result' variable
-      result.push_back(&analysis_data_ATLAS);
+      } // End loop over analyses
 
     };
 
@@ -465,30 +450,30 @@ namespace Gambit
 
       // C61+C64
       std::vector<double> sig_C61_C64(analysis_info.n_signal_regions, 0.);
-      get_DMEFT_signal_yields_dim6(sig_C61_C64, "C61_C64", analysis_info, m, C61, C64, lambda);
+      get_DMEFT_signal_yields_dim6_operator(sig_C61_C64, "C61_C64", analysis_info, m, C61, C64, lambda);
 
       // C62+C63
       std::vector<double> sig_C62_C63(analysis_info.n_signal_regions, 0.);
-      get_DMEFT_signal_yields_dim6(sig_C62_C63, "C62_C63", analysis_info, m, C62, C63, lambda);
+      get_DMEFT_signal_yields_dim6_operator(sig_C62_C63, "C62_C63", analysis_info, m, C62, C63, lambda);
 
 
       // Get the dim-7 yields
 
       // C71
       std::vector<double> sig_C71(analysis_info.n_signal_regions, 0.);
-      get_DMEFT_signal_yields_dim7(sig_C71, "C71", analysis_info, m, C71, lambda);
+      get_DMEFT_signal_yields_dim7_operator(sig_C71, "C71", analysis_info, m, C71, lambda);
       
       // C72
       std::vector<double> sig_C72(analysis_info.n_signal_regions, 0.);
-      get_DMEFT_signal_yields_dim7(sig_C72, "C72", analysis_info, m, C72, lambda);
+      get_DMEFT_signal_yields_dim7_operator(sig_C72, "C72", analysis_info, m, C72, lambda);
 
       // C73
       std::vector<double> sig_C73(analysis_info.n_signal_regions, 0.);
-      get_DMEFT_signal_yields_dim7(sig_C73, "C73", analysis_info, m, C73, lambda);
+      get_DMEFT_signal_yields_dim7_operator(sig_C73, "C73", analysis_info, m, C73, lambda);
 
       // C74
       std::vector<double> sig_C74(analysis_info.n_signal_regions, 0.);
-      get_DMEFT_signal_yields_dim7(sig_C74, "C74", analysis_info, m, C74, lambda);
+      get_DMEFT_signal_yields_dim7_operator(sig_C74, "C74", analysis_info, m, C74, lambda);
 
 
       // Add yields and save in sr_num
@@ -500,7 +485,7 @@ namespace Gambit
 
 
     /// Fill the input vector with the DMEFT signal prediction for a given set of dim-6 operators
-    void get_DMEFT_signal_yields_dim6(std::vector<double>& signal_yields, const str operator_key, const DMEFT_analysis_info& analysis_info, double m, double O1, double O2, double lambda)
+    void get_DMEFT_signal_yields_dim6_operator(std::vector<double>& signal_yields, const str operator_key, const DMEFT_analysis_info& analysis_info, double m, double O1, double O2, double lambda)
     {
 
       // Calculate theta
@@ -522,15 +507,14 @@ namespace Gambit
       double norm = O1*O1 + O2*O2;
       if (norm < 0.0)
       {
-        ColliderBit_error().raise(LOCAL_INFO, "ERROR! norm < 0 in function get_DMEFT_signal_yields_dim6.");
+        ColliderBit_error().raise(LOCAL_INFO, "ERROR! norm < 0 in function get_DMEFT_signal_yields_dim6_operator.");
       }
 
-      // Scaling with lambda
+      // Scaling with lambda, relative to lambda = 1000 GeV which was used to generate the data tables
       double lambda_scaling = pow(1000.0 / lambda, 4);
 
-
       // Get the interpolator collections for the given operator_key
-      const interp2d_collection& xsec_interp = analysis_info.get_interp2d("mass_theta_xsec_" + operator_key);
+      const interp2d_collection& xsec_interp = analysis_info.get_interp2d("mass_theta_xsecpb_" + operator_key);
       const interp2d_collection& eff_interp = analysis_info.get_interp2d("mass_theta_eff_" + operator_key);
 
       // Compute the signal yield for each signal region
@@ -541,7 +525,7 @@ namespace Gambit
         // Get the cross-section at the point (m,theta)
         // 
 
-        double xsec = 0.;
+        double xsec_pb = 0.;
         // Check if (m,theta) point is inside interpolation region
         if (not xsec_interp.is_inside_range(m,theta))
         {
@@ -558,12 +542,12 @@ namespace Gambit
           if (m > xsec_interp.x_min)
           {
             // Set cross-section to 0 for masses above the tabulated range
-            xsec = 0.;
+            xsec_pb = 0.;
           }
         }
         else // All is OK, let's evaluate the cross-section
         {
-          xsec = xsec_interp.eval(m, theta);
+          xsec_pb = xsec_interp.eval(m, theta);
         }
 
         
@@ -600,12 +584,12 @@ namespace Gambit
         // Compute signal prediction and save it in the signal_yields vector
         // 
 
-        signal_yields[sr_i] = analysis_info.lumi_invfb * (xsec * 1000.) * norm * lambda_scaling * eff; // converting cross-section from pb to fb
+        signal_yields[sr_i] = analysis_info.lumi_invfb * (xsec_pb * 1000.) * norm * lambda_scaling * eff; // converting cross-section from pb to fb
 
         #ifdef COLLIDERBIT_DEBUG
         {
           cerr << std::scientific << "DEBUG:" << " operator:" << operator_key << ", analysis:" << analysis_info.name 
-               << ", sr_i:" << sr_i << ", m:" << m << ", theta:" << theta << ", xsec:" << xsec << ", eff:" << eff 
+               << ", sr_i:" << sr_i << ", m:" << m << ", theta:" << theta << ", xsec_pb:" << xsec_pb << ", eff:" << eff 
                << ", lambda_scaling:" << lambda_scaling << ", norm:" << norm << ", signal:" << signal_yields[sr_i] << endl;
         }
         #endif
@@ -616,22 +600,21 @@ namespace Gambit
 
 
     /// Fill the input vector with the DMEFT signal prediction for a given dim-7 operator
-    void get_DMEFT_signal_yields_dim7(std::vector<double>& signal_yields, const str operator_key, const DMEFT_analysis_info& analysis_info, double m, double O, double lambda)
+    void get_DMEFT_signal_yields_dim7_operator(std::vector<double>& signal_yields, const str operator_key, const DMEFT_analysis_info& analysis_info, double m, double O, double lambda)
     {
 
       // Calculate normalisation
       double norm = O*O;
       if (norm < 0.0)
       {
-        ColliderBit_error().raise(LOCAL_INFO, "ERROR! norm < 0 in function get_DMEFT_signal_yields_dim7.");
+        ColliderBit_error().raise(LOCAL_INFO, "ERROR! norm < 0 in function get_DMEFT_signal_yields_dim7_operator.");
       }
 
-      // Scaling with lambda
+      // Scaling with lambda, relative to lambda = 1000 GeV which was used to generate the data tables
       double lambda_scaling = pow(1000.0 / lambda, 6);
 
-
       // Get the interpolator collections for the given operator_key
-      const interp1d_collection& xsec_interp = analysis_info.get_interp1d("mass_xsec_" + operator_key);
+      const interp1d_collection& xsec_interp = analysis_info.get_interp1d("mass_xsecpb_" + operator_key);
       const interp1d_collection& eff_interp = analysis_info.get_interp1d("mass_eff_" + operator_key);
 
       // Compute the signal yield for each signal region
@@ -642,7 +625,7 @@ namespace Gambit
         // Get the cross-section for mass m
         // 
 
-        double xsec = 0.;
+        double xsec_pb = 0.;
         // Check if m is inside interpolation region
         if (not xsec_interp.is_inside_range(m))
         {
@@ -654,12 +637,12 @@ namespace Gambit
           if (m > xsec_interp.x_min)
           {
             // Set cross-section to 0 for masses above the tabulated range
-            xsec = 0.;
+            xsec_pb = 0.;
           }
         }
         else // All is OK, let's evaluate the cross-section
         {
-          xsec = xsec_interp.eval(m);
+          xsec_pb = xsec_interp.eval(m);
         }
 
         
@@ -691,7 +674,7 @@ namespace Gambit
         // Compute signal prediction and save it in the signal_yields vector
         // 
 
-        signal_yields[sr_i] = analysis_info.lumi_invfb * (xsec * 1000.) * norm * lambda_scaling * eff; // converting cross-section from pb to fb
+        signal_yields[sr_i] = analysis_info.lumi_invfb * (xsec_pb * 1000.) * norm * lambda_scaling * eff; // converting cross-section from pb to fb
 
       }  // End loop over signal regions
 
@@ -766,7 +749,7 @@ namespace Gambit
       // Modify signals
       for (size_t bin_index = 0; bin_index < ainfo.n_signal_regions; ++bin_index) 
       {
-        double MET_min = ainfo.METMINS[bin_index];
+        double MET_min = ainfo.extra_info.at("metmins")[bin_index];
         double weight = 1.0;
 
         if (lambda < MET_min)
@@ -800,7 +783,7 @@ namespace Gambit
       // Modify signals with a hard cutoff
       for (size_t bin_index = 0; bin_index < ainfo.n_signal_regions; ++bin_index) 
       {
-        double MET_min = ainfo.METMINS[bin_index];
+        double MET_min = ainfo.extra_info.at("metmins")[bin_index];
 
         if (lambda < MET_min)
         {
