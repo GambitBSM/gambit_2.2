@@ -324,14 +324,20 @@ namespace Gambit
         result["C73"] += C77/pow(Lambda, 3.);
         result["C74"] += C78/pow(Lambda, 3.);
 
+        // 3. Mixing of O_3^6 into O_3^1, see:
+        // https://arxiv.org/pdf/1402.1173.pdf
         double sw2 = 0.23122;
         double vev = 246.;
         double PI = 3.14159265;
-        double prefactoru = (8.*sw2-3.) * pow(mtatmt/(2.*vev*PI), 2.) * log(mtatmt/Lambda);
-        double prefactord = (3.-4.*sw2) * pow(mtatmt/(2.*vev*PI), 2.) * log(mtatmt/Lambda);
+        double prefactoru = (8.*sw2-3.) * pow(mtatmt/(2.*vev*PI), 2.) * log(1/lamovermt2);
+        double prefactord = (3.-4.*sw2) * pow(mtatmt/(2.*vev*PI), 2.) * log(1/lamovermt2);
 
         double C61u = C61/pow(Lambda, 2.) + prefactoru * C63/pow(Lambda, 2.);
         double C61d = C61/pow(Lambda, 2.) + prefactord * C63/pow(Lambda, 2.);
+
+        // The following bit is intended to make it easier for the scanner to find points for which direct detection constraints are satisfied
+        // by adding a flavour-independent term to C61u and C61d such that the resulting couplings are Xe-phobic (f_n / f_p = -0.7).
+        // This step should be commented out if C61 is not varied in the scans.
 
         double IVratio = -1.125;
 
