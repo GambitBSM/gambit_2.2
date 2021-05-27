@@ -329,8 +329,8 @@ namespace Gambit
         double sw2 = 0.23122;
         double vev = 246.;
         double PI = 3.14159265;
-        double prefactoru = (8.*sw2-3.) * pow(mtatmt/(2.*vev*PI), 2.) * log(1/lamovermt2);
-        double prefactord = (3.-4.*sw2) * pow(mtatmt/(2.*vev*PI), 2.) * log(1/lamovermt2);
+        double prefactoru = (8.*sw2-3.)/2. * pow(mtatmt/(2.*vev*PI), 2.) * log(1/lamovermt2);
+        double prefactord = (3.-4.*sw2)/2. * pow(mtatmt/(2.*vev*PI), 2.) * log(1/lamovermt2);
 
         double C61u = C61/pow(Lambda, 2.) + prefactoru * C63/pow(Lambda, 2.);
         double C61d = C61/pow(Lambda, 2.) + prefactord * C63/pow(Lambda, 2.);
