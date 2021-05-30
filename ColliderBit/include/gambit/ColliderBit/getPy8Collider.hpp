@@ -125,6 +125,16 @@ namespace Gambit
         // We need "SLHA:file = slhaea" for the SLHAea interface.
         pythiaOptions.push_back("SLHA:file = slhaea");
 
+        // If the collider energy is not given in the list of Pythia options, we set it to 13 TeV by default.
+        // We search for the substring "Beams:e", meaning that if any of the Pythia options "Beams:eCM", "Beams:eA" 
+        // or "Beams:eB" are present we don't apply the default.
+        bool has_beam_energy_option = std::any_of(pythiaOptions.begin(), pythiaOptions.end(), [](const str& s){ return s.find("Beams:e") != str::npos; });
+        if (!has_beam_energy_option)
+        {
+          pythiaOptions.push_back("Beams:eCM = 13000");
+          logger() << LogTags::debug << "Could not find a beam energy in the list of Pythia settings. Will add the setting 'Beams:eCM = 13000'." << EOM;
+        }
+
         // Variables needed for the xsec veto
         std::stringstream processLevelOutput;
         str _junk, readline;
