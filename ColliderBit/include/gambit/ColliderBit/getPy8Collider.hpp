@@ -38,7 +38,7 @@
 
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 
-//#define COLLIDERBIT_DEBUG
+// #define COLLIDERBIT_DEBUG
 #define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 
 namespace Gambit
@@ -223,16 +223,24 @@ namespace Gambit
           }
           catch (typename Py8Collider<PythiaT,EventT,hepmc_writerT>::EventGenerationError& e)
           {
-            piped_invalid_point.request("Failed to generate dummy test event. Will invalidate point.");
-
-            #ifdef COLLIDERBIT_DEBUG
-              cout << DEBUG_PREFIX << "Failed to generate dummy test event during COLLIDER_INIT_OMP in getPy8Collider. Check the logs for event details." << endl;
-            #endif
-            #pragma omp critical (pythia_event_failure)
+            // Try again...
+            try
             {
-              std::stringstream ss;
-              dummy_pythia_event.list(ss, 1);
-              logger() << LogTags::debug << "Failed to generate dummy test event during COLLIDER_INIT_OMP iteration in getPy8Collider. Pythia record for the event that failed:\n" << ss.str() << EOM;
+              result.nextEvent(dummy_pythia_event);
+            }
+            catch (typename Py8Collider<PythiaT,EventT,hepmc_writerT>::EventGenerationError& e)
+            {
+              piped_invalid_point.request("Failed to generate dummy test event. Will invalidate point.");
+
+              #ifdef COLLIDERBIT_DEBUG
+                cout << DEBUG_PREFIX << "Failed to generate dummy test event during COLLIDER_INIT_OMP in getPy8Collider. Check the logs for event details." << endl;
+              #endif
+              #pragma omp critical (pythia_event_failure)
+              {
+                std::stringstream ss;
+                dummy_pythia_event.list(ss, 1);
+                logger() << LogTags::debug << "Failed to generate dummy test event during COLLIDER_INIT_OMP iteration in getPy8Collider. Pythia record for the event that failed:\n" << ss.str() << EOM;
+              }
             }
           }
 
