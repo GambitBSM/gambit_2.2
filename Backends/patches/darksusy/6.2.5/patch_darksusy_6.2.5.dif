@@ -403,7 +403,7 @@ diff -rupN darksusy-6.2.5_original/makefile.in darksusy-6.2.5_patched/makefile.i
 +		$(DS_INSTALL)/lib/libFH.a $(DS_INSTALL)/lib/libhealpix.a $(DS_INSTALL)/lib/libcfitsio.a \
 +		$(DS_INSTALL)/lib/libsharp_healpix_f.a;\
 +	else \
-+		$(ADD_SCR) $(DS_INSTALL)/lib/libds_core_generic_wimp.so $(DS_INSTALL)/lib/libds_mssm.a \
++		$(ADD_SCR) $(DS_INSTALL)/lib/libds_core_mssm.so $(DS_INSTALL)/lib/libds_mssm.a \
 +		$(DS_INSTALL)/lib/libds_empty.a $(DS_INSTALL)/lib/libds_core.a $(DS_INSTALL)/lib/libisajet.a \
 +		$(DS_INSTALL)/lib/libHS.a $(DS_INSTALL)/lib/libHB.a $(DS_INSTALL)/lib/libsuperiso.a \
 +		$(DS_INSTALL)/lib/libFH.a ;\
@@ -441,7 +441,7 @@ diff -rupN darksusy-6.2.5_original/makefile.in darksusy-6.2.5_patched/makefile.i
 +		$(DS_INSTALL)/lib/libds_core.a $(DS_INSTALL)/lib/libhealpix.a $(DS_INSTALL)/lib/libcfitsio.a \
 +		$(DS_INSTALL)/lib/libsharp_healpix_f.a;\
 +	else \
-+		$(ADD_SCR) $(DS_INSTALL)/lib/libds_core_generic_wimp.so $(DS_INSTALL)/lib/libds_generic_wimp.a \
++		$(ADD_SCR) $(DS_INSTALL)/lib/libds_core_silveira_zee.so $(DS_INSTALL)/lib/libds_silveira_zee.a \
 +		$(DS_INSTALL)/lib/libds_empty.a $(DS_INSTALL)/lib/libds_core.a;\
 +	fi
  
@@ -452,7 +452,7 @@ diff -rupN darksusy-6.2.5_original/makefile.in darksusy-6.2.5_patched/makefile.i
 +		$(DS_INSTALL)/lib/libds_empty.a $(DS_INSTALL)/lib/libds_core.a $(DS_INSTALL)/lib/libhealpix.a \
 +		$(DS_INSTALL)/lib/libcfitsio.a $(DS_INSTALL)/lib/libsharp_healpix_f.a;\
 +	else \
-+		$(ADD_SCR) $(DS_INSTALL)/lib/libds_core_generic_wimp.so $(DS_INSTALL)/lib/libds_generic_wimp.a \
++		$(ADD_SCR) $(DS_INSTALL)/lib/libds_core_vdSIDM.so $(DS_INSTALL)/lib/libds_vdSIDM.a \
 +		$(DS_INSTALL)/lib/libds_empty.a $(DS_INSTALL)/lib/libds_core.a;\
 +	fi
  
