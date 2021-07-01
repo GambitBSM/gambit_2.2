@@ -5495,3 +5495,23 @@ tf3: |
 tf4: |
   Analytic function 4 from https://arxiv.org/abs/2101.04525
 
+trivial_1d_parameters: |
+  Model parameters for the trivial 1D model
+
+trivial_2d_parameters: |
+  Model parameters for the trivial 2D model
+
+trivial_3d_parameters: |
+  Model parameters for the trivial 3D model
+
+trivial_4d_parameters: |
+  Model parameters for the trivial 4D model
+
+trivial_5d_parameters: |
+  Model parameters for the trivial 5D model
+
+trivial_7d_parameters: |
+  Model parameters for the trivial 7D model
+
+trivial_10d_parameters: |
+  Model parameters for the trivial 10D model
