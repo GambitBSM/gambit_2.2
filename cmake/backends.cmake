@@ -809,6 +809,7 @@ endif()
 set(pythia_CXXFLAGS "${pythia_CXXFLAGS} -I${Boost_INCLUDE_DIR} -I${PROJECT_SOURCE_DIR}/contrib/slhaea/include")
 
 # - Setup HepMC-specific additions
+option(PYTHIA_WITH_HEPMC "Pythia is compiled with HepMC" ON)
 if(EXCLUDE_HEPMC)
   set(pythia_depends_on "")
   set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}_nohepmc.dif")
@@ -832,7 +833,8 @@ if(NOT ditched_${name}_${ver})
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
     PATCH_COMMAND patch -p1 < ${patch}
-    CONFIGURE_COMMAND ./configure ${EXTRA_CONFIG} --enable-shared --cxx="${CMAKE_CXX_COMPILER}" --cxx-common="${pythia_CXXFLAGS}" --cxx-shared="${pythia_CXX_SHARED_FLAGS}" --cxx-soname="${pythia_CXX_SONAME_FLAGS}" --lib-suffix=".so"
+    CONFIGURE_COMMAND sed ${dashi} -e "s#PYTHIA_WITH_HEPMC:BOOL=.*#PYTHIA_WITH_HEPMC:BOOL=${WITH_HEPMC}#g" ${CMAKE_BINARY_DIR}/CMakeCache.txt
+              COMMAND ./configure ${EXTRA_CONFIG} --enable-shared --cxx="${CMAKE_CXX_COMPILER}" --cxx-common="${pythia_CXXFLAGS}" --cxx-shared="${pythia_CXX_SHARED_FLAGS}" --cxx-soname="${pythia_CXX_SONAME_FLAGS}" --lib-suffix=".so"
     BUILD_COMMAND ${MAKE_PARALLEL} CXX="${CMAKE_CXX_COMPILER}" lib/${lib}.so
     INSTALL_COMMAND ""
   )
