@@ -7,7 +7,7 @@ index 71be534..41d5648 100644
  	"""
  
 -	print('#INFO: {0}'.format(message))
-+	# Supressed in In GAMBIT (>=2.0.0)
++	# Suppressed in GAMBIT (>=2.0.0)
 +	# print('#INFO: {0}'.format(message))
 +	return
  
