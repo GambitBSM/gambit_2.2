@@ -1912,6 +1912,7 @@ set(sfver "1_2_0")
 set(dl "https://github.com/pstoecker/DarkAges/archive/v${ver}.tar.gz")
 set(md5 "d39d331ab750d1f9796d2b81d55e7703")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}")
 set(ditch_if_absent "Python")
 set(required_modules "scipy,dill,future,numpy")
 check_ditch_status(${name} ${ver} ${dir} ${ditch_if_absent})
@@ -1924,6 +1925,7 @@ if(NOT ditched_${name}_${ver})
       DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
       SOURCE_DIR ${dir}
       BUILD_IN_SOURCE 1
+      PATCH_COMMAND patch -p1 < ${patch}/${name}_${ver}.diff
       CONFIGURE_COMMAND ln ${DarkAges_SYMLINK_FLAGS} DarkAges DarkAges_${sfver}
       BUILD_COMMAND ""
       INSTALL_COMMAND ""
