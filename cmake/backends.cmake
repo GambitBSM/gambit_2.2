@@ -1412,6 +1412,8 @@ endif()
 # Vevacious
 set(name "vevacious")
 set(ver "1.0")
+set(dl "http://github.com/JoseEliel/VevaciousPlusPlus_Development/archive/refs/heads/master.zip")
+set(md5 "none") # Keep none for now because there is no tagged release of vevacious yet
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 set(patchdir "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}")
 set(Minuit_name "minuit2")
@@ -1419,7 +1421,6 @@ set(Minuit_lib_name "Minuit2")
 set(Minuit_ver "5.34.14")
 set(phc_ver "2.4.58")
 set(hom4ps_ver "2.0")
-set(dl "null")
 set(Minuit_include "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/include/")
 set(Minuit_lib "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/lib/")
 set(VPP_CMAKE_FLAGS -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DEIGEN3_INCLUDE_DIR=${EIGEN3_INCLUDE_DIR} -DBoost_INCLUDE_DIR=${Boost_INCLUDE_DIR} -DWITHIN_GAMBIT=True -DSILENT_MODE=TRUE -DMinuit_include=${Minuit_include} -DMinuit_lib=${Minuit_lib})
@@ -1431,11 +1432,11 @@ if(NOT ditched_${name}_${ver})
           DEPENDS ${Minuit_name}_${Minuit_ver}
           DEPENDS phc_${phc_ver}
           DEPENDS hom4ps_${hom4ps_ver}
+          DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
           SOURCE_DIR ${dir}
-          GIT_REPOSITORY https://github.com/JoseEliel/VevaciousPlusPlus_Development.git
+          BUILD_IN_SOURCE 1
           UPDATE_COMMAND  sed ${dashi} -e "${BOSSregex}" ${dir}/CMakeLists.txt
           CONFIGURE_COMMAND ${CMAKE_COMMAND} ${VPP_CMAKE_FLAGS} ${dir}
-          BINARY_DIR "${dir}"
           BUILD_COMMAND ${MAKE_PARALLEL} CC=${CMAKE_CXX_COMPILER} CCFLAGS=${VPP_FLAGS} MINUITLIBDIR=${Minuit_lib} MINUITLIBNAME=${Minuit_lib_name} VevaciousPlusPlus-lib
                 COMMAND ${CMAKE_COMMAND} -E make_directory ${patchdir}/VevaciousPlusPlus/ModelFiles/
                 COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/VevaciousPlusPlus/ModelFiles/ ${dir}/ModelFiles/

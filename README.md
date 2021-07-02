@@ -16,7 +16,7 @@ Please cite the following GAMBIT papers, depending on your use of different modu
  - GAMBIT Dark Matter Workgroup: T. Bringmann, et al., **DarkBit**: A GAMBIT module for computing dark matter observables and likelihoods, Eur. Phys. J. C 77 (2017) 831, arXiv:1705.07920
  - **NeutrinoBit**: M. Chrzaszcz, M. Drewes, T. Gonzalo, J. Harz, S. Krishnamurthy, C. Weniger, A frequentist analysis of three right-handed neutrinos with GAMBIT, Eur. Phys. J. C 80 (2020) 569, arXiv:1908.02302
  - GAMBIT Cosmology Workgroup: J. J. Renk, et al., **CosmoBit**: A GAMBIT module for computing cosmological observables and likelihoods, JCAP 02 (2021) 022, arXiv:2009.03286
- - **GUM**: S. Bloor, T. Gonzalo, P. Scott, C. Chang, A. Raklev, J-E. Camargo-Molina, A. Kvellestad, J. Renk, P. Athron, C. Balázs, The GAMBIT Universal Model Machine: from Lagrangians to Likelihoods, arXiv:2107.xxxxx.
+ - **GUM**: S. Bloor, T. Gonzalo, P. Scott, C. Chang, A. Raklev, J-E. Camargo-Molina, A. Kvellestad, J. Renk, P. Athron, C. Balázs, The GAMBIT Universal Model Machine: from Lagrangians to Likelihoods, arXiv:2107.00030.
 
 GAMBIT contains interfaces to various external codes, along with scripts for downloading and configuring them. Please cite as appropriate if you use those codes:
 
