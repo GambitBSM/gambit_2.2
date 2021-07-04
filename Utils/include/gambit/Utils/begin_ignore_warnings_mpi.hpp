@@ -16,11 +16,7 @@
 ///  *********************************************
 
 
-// Temp fix: this variable will become a cmake variable
-#define SUPPRESS_LIBRARY_WARNINGS 1
-
-// Will be replaced by this include
-// #include "gambit/cmake/cmake_variables.hpp"
+#include "gambit/cmake/cmake_variables.hpp"
 
 #ifdef SUPPRESS_LIBRARY_WARNINGS
 
