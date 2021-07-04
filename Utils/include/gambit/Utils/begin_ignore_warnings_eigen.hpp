@@ -3,7 +3,7 @@
 ///  \file
 ///
 ///  Pragma directives to suppress compiler warnings
-///  coming from the Eigen library.
+///  coming from including Eigen library headers.
 ///
 ///  *********************************************
 ///

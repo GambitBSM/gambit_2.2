@@ -3,7 +3,7 @@
 ///  \file
 ///
 ///  Pragma directives to suppress compiler warnings
-///  coming from including pybind11 library headers.
+///  coming from including HepMC library headers.
 ///
 ///  *********************************************
 ///
@@ -25,8 +25,7 @@
     // Save diagnostic state
     #pragma GCC diagnostic push 
     // Turn off some warnings
-    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    #pragma GCC diagnostic ignored "-Wcast-function-type"
+    #pragma GCC diagnostic ignored "-Wunused-parameter"
   #endif
 
   // Clang:
@@ -35,8 +34,7 @@
       // Save diagnostic state
       #pragma clang diagnostic push 
       // Turn off some warnings
-      #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-      #pragma clang diagnostic ignored "-Wcast-function-type"
+      #pragma clang diagnostic ignored "-Wunused-parameter"
     #endif
   #endif
 

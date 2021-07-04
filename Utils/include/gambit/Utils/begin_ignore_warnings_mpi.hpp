@@ -3,7 +3,7 @@
 ///  \file
 ///
 ///  Pragma directives to suppress compiler warnings
-///  coming from the MPI library.
+///  coming from including MPI library headers.
 ///
 ///  *********************************************
 ///
