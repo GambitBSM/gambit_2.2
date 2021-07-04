@@ -24,6 +24,8 @@
   #ifdef __GNUC__
     // Save diagnostic state
     #pragma GCC diagnostic push 
+    // Don't care if an old compiler version doesn't recognize all the pragmas
+    #pragma GCC diagnostic ignored "-Wpragmas"
     // Turn off some warnings
     #pragma GCC diagnostic ignored "-Wunused-parameter"
   #endif
@@ -33,6 +35,8 @@
     #ifndef __ICC  // icpc apparently also defines __clang__ so need this check too
       // Save diagnostic state
       #pragma clang diagnostic push 
+      // Don't care if an old compiler version doesn't recognize all the pragmas
+      #pragma clang diagnostic ignored "-Wpragmas"
       // Turn off some warnings
       #pragma clang diagnostic ignored "-Wunused-parameter"
     #endif
