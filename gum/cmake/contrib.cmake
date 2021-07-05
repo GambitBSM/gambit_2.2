@@ -136,7 +136,7 @@ set(name "Pythia")
 set(dir "${CMAKE_SOURCE_DIR}/contrib/${name}")
 set(dl "https://pythia.org/download/pythia82/pythia8212.tgz")
 set(ver "212")
-set(md5 "0886d1b2827d8f0cd2ae69b925045f40")
+set(md5 "7bebd73edcabcaec591ce6a38d059fa3")
 set(BASE_PYTHIA_VERSION ${ver})
 set(PYTHIA_MD5 ${md5})
 EXTERNALPROJECT_ADD(
