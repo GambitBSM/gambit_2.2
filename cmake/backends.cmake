@@ -1486,6 +1486,11 @@ if(NOT ditched_${name}_${ver})
   set(calchep_CXX_FLAGS "${BACKEND_CXX_FLAGS} -fcommon")
   set(calchep_C_FLAGS "${BACKEND_C_FLAGS} -fcommon")
   set(calchep_Fortran_FLAGS "${BACKEND_Fortran_FLAGS} -fcommon")
+  if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    set(calchep_CXX_FLAGS "${calchep_CXX_FLAGS} -Wl,-undefined,dynamic_lookup")
+    set(calchep_C_FLAGS "${calchep_C_FLAGS} -Wl,-undefined,dynamic_lookup")
+    set(calchep_Fortran_FLAGS "${calchep_Fortran_FLAGS} -Wl,-undefined,dynamic_lookup")
+  endif()
   ExternalProject_Add(${name}_${ver}
     DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
     SOURCE_DIR ${dir}
