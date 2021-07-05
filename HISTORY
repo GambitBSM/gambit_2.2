@@ -16,7 +16,7 @@ Major feature release
 - Removed developer mode
 - Compressed standalone tarballs
 - Improved download script
-- Removed many compiler warnings with gcc8 and clang-10
+- Removed most compiler warnings with gcc8+ and clang-10
 - Improved ditch system
 - Improvements to BOSS
 - Support for DarkSUSY 6.2.5 backend
@@ -34,6 +34,7 @@ Major feature release
 - Fixed FlexibleSUSY clash in Mac OS Big Sur
 - Fixed multithreading issue in FlexibleSUSY interface
 - Fixed bugs in Pythia cross section calculation
+- Fixed Polychord build issue on OSX
 
 v1.5.3
 Bugfix release
