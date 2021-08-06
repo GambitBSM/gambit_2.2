@@ -52,6 +52,10 @@
 ///          (tomas.gonzalo@monash.edu)
 ///  \date 2020 Sep
 ///
+///  \author Anna Liang
+///          (a.liang1@uqconnect.edu.au)
+///  \date 2021 Aug
+///
 ///  *********************************************
 
 #ifndef __CosmoBit_rollcall_hpp__
@@ -110,7 +114,7 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  /// the fraction of the minimal freeze-in abundance of axion-like particles, 
+  /// the fraction of the minimal freeze-in abundance of axion-like particles,
   /// produced via Primakoff processes, to the total abundance of dark matter
   #define CAPABILITY minimum_fraction
   START_CAPABILITY
@@ -269,7 +273,7 @@ START_MODULE
     /// - neutrino mass, ultra-relativistic species and ncdm related parameters from classy_NuMasses_Nur_input
     /// - energy injection related parameters (if needed) from classy_parameters_EnergyInjection
     /// - CLASS settings from MontePython likelihoods from classy_MPLike_input
-    /// - CLASS settings passed as yaml file options to the capability classy_input_params 
+    /// - CLASS settings passed as yaml file options to the capability classy_input_params
     /// consistency checks when combining all these different inputs are performed.
     #define CAPABILITY classy_input_params
     START_CAPABILITY
@@ -321,7 +325,7 @@ START_MODULE
     #undef CAPABILITY
 
     /// set extra CLASS parameters for energy injection -- different functions for
-    /// decaying and annihilating DM models 
+    /// decaying and annihilating DM models
     #define CAPABILITY classy_parameters_EnergyInjection
     START_CAPABILITY
       #define FUNCTION set_classy_parameters_EnergyInjection_AnnihilatingDM
@@ -997,8 +1001,8 @@ START_MODULE
       DEPENDENCY(MP_LogLikes, map_str_dbl)
       #undef FUNCTION
     #undef CAPABILITY
-   
-    /// retrieves the correlation coefficients and the LogLike not taking 
+
+    /// retrieves the correlation coefficients and the LogLike not taking
     /// bao correlations into account from the MP likelihood "bao_correlations"
     #define CAPABILITY bao_like_correlation
       START_CAPABILITY
@@ -1010,6 +1014,77 @@ START_MODULE
     #undef CAPABILITY
 
   #endif
+
+  // --------------------
+  // Modified gravity models - symmetron
+
+  // Obtain a value for phi(0) given mass and mu
+  #define CAPABILITY phi0_interpolation
+  START_CAPABILITY
+    #define FUNCTION interpphi0
+    START_FUNCTION(double)
+    ALLOW_MODELS(symmetron)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  // Calculate BD param omega gievn phi(0), mass and v
+  #define CAPABILITY omega_bdparam
+  START_CAPABILITY
+    #define FUNCTION compute_omega
+    START_FUNCTION(double)
+    ALLOW_MODELS(symmetron)
+    DEPENDENCY(phi0_interpolation, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  // Calculate |gamma-1| given BD param omega
+  #define CAPABILITY gammaminus1_bdparam
+  START_CAPABILITY
+    #define FUNCTION compute_gammaminus1
+    START_FUNCTION(double)
+    DEPENDENCY(omega_bdparam, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+    // A likelihood function for |gamma-1| using cassini value
+  #define CAPABILITY gamma_loglike
+  START_CAPABILITY
+    #define FUNCTION lnL_gamma
+    START_FUNCTION(double)
+    DEPENDENCY(gammaminus1_bdparam, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  // calculate |beta-1| given BD param omega
+  #define CAPABILITY betaminus1_bdparam
+  START_CAPABILITY
+    #define FUNCTION compute_betaminus1
+    START_FUNCTION(double)
+    ALLOW_MODELS(symmetron)
+    DEPENDENCY(omega_bdparam, double)
+    DEPENDENCY(phi0_interpolation, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  // A likelihood function for eta using mars perihelion value
+  #define CAPABILITY eta_loglike
+  START_CAPABILITY
+    #define FUNCTION lnL_eta
+    START_FUNCTION(double)
+    DEPENDENCY(gammaminus1_bdparam, double)
+    DEPENDENCY(betaminus1_bdparam, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  // A likelihood function vmax
+  #define CAPABILITY vmin_loglike
+  START_CAPABILITY
+    #define FUNCTION lnL_vmin
+    START_FUNCTION(double)
+    ALLOW_MODELS(symmetron)
+    #undef FUNCTION
+  #undef CAPABILITY
+
 
 #undef MODULE
 #endif /* defined __CosmoBit_rollcall_hpp__ */
