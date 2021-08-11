@@ -37,12 +37,13 @@ namespace Gambit
     // from the data file CosmoBit/data/phiOvals.dat
     void interp_phi0 (double &result)
     {
-      using namespace Pipes::interpphi0;
+      using namespace Pipes::interp_phi0;
       using namespace std;
 
       const double M_pl = 2.453e18; // [Gev/c^2] reduced planck mass
 
       // Read in the data file on the first time the function calls
+      static bool firsttime = true;
       static double minmass, maxmass, minmu, maxmu; // bounds on mass and mu
       static int nmasses, nmu; // grid sizes of mass and mu
       static vector <double> phi0vec; // vector to store phi0 vals
@@ -250,7 +251,7 @@ namespace Gambit
     // A likelihood function for comparing the model eta to the mars perihelion value
     void lnL_eta (double &result)
     {
-      using namespace Pipes::lnL_beta;
+      using namespace Pipes::lnL_eta;
 
       double loglTotal = 0.;
       double betaminus1 = *Pipes::lnL_eta::Dep::betaminus1_bdparam;

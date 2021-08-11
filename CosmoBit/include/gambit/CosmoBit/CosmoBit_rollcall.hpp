@@ -1021,7 +1021,7 @@ START_MODULE
   // Obtain a value for phi(0) given mass and mu
   #define CAPABILITY phi0_interpolation
   START_CAPABILITY
-    #define FUNCTION interpphi0
+    #define FUNCTION interp_phi0
     START_FUNCTION(double)
     ALLOW_MODELS(symmetron)
     #undef FUNCTION
