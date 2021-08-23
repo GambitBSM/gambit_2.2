@@ -278,6 +278,60 @@ if(NOT ditched_.${name}_${ver}_base)
     INSTALL_COMMAND ""
   )
   add_extra_targets("backend base (not functional alone)" ${name} ${ver} ${dir} ${dl} clean)
+endif()
+
+# DarkSUSY MSSM module
+set(model "MSSM")
+check_ditch_status(${name}_${model} ${ver} ${dir})
+if(NOT ditched_${name}_${model}_${ver})
+  ExternalProject_Add(${name}_${model}_${ver}
+    DOWNLOAD_COMMAND ""
+    SOURCE_DIR ${dir}
+    BUILD_IN_SOURCE 1
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ${MAKE_PARALLEL} feynhiggs higgsbounds higgssignals superiso libisajet ds_mssm
+          COMMAND ${MAKE_PARALLEL} ds_mssm_shared
+    INSTALL_COMMAND ""
+  )
+  add_extra_targets("backend model" ${name} ${ver} ${dir}/dummy ${model} "none")
+endif()
+
+# DarkSUSY generic_wimp module
+set(model "generic_wimp")
+check_ditch_status(${name}_${model} ${ver} ${dir})
+if(NOT ditched_${name}_${model}_${ver})
+  ExternalProject_Add(${name}_${model}_${ver}
+    DOWNLOAD_COMMAND ""
+    SOURCE_DIR ${dir}
+    BUILD_IN_SOURCE 1
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ${MAKE_PARALLEL} ds_generic_wimp
+          COMMAND ${MAKE_PARALLEL} ds_generic_wimp_shared
+    INSTALL_COMMAND ""
+  )
+  add_extra_targets("backend model" ${name} ${ver} ${dir}/dummy ${model} "none")
+endif()
+
+# DarkSUSY base (for all models)
+set(name "darksusy")
+set(ver "6.2.5")
+set(dl "https://darksusy.hepforge.org/tars/${name}-${ver}.tgz")
+set(md5 "9d9d85b2220d14d82a535ef45dcb4537")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+set(patchdir "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/")
+set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}.dif")
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_.${name}_${ver}_base)
+  ExternalProject_Add(.${name}_${ver}_base
+    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+    SOURCE_DIR ${dir}
+    BUILD_IN_SOURCE 1
+    PATCH_COMMAND patch -p1 < ${patch}
+    CONFIGURE_COMMAND ./configure FC=${CMAKE_Fortran_COMPILER} FCFLAGS=${BACKEND_Fortran_FLAGS} FFLAGS=${BACKEND_Fortran_FLAGS} CC=${CMAKE_C_COMPILER} CFLAGS=${BACKEND_C_FLAGS} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${BACKEND_CXX_FLAGS}
+    BUILD_COMMAND ${MAKE_PARALLEL} makedirs healpix tspack ds_core ds_common ds_empty install_tables
+    INSTALL_COMMAND ""
+  )
+  add_extra_targets("backend base (not functional alone)" ${name} ${ver} ${dir} ${dl} clean)
   set_as_default_version("backend base (not functional alone)" ${name} ${ver})
 endif()
 
@@ -314,7 +368,6 @@ if(NOT ditched_${name}_${model}_${ver})
   add_extra_targets("backend model" ${name} ${ver} ${dir}/dummy ${model} "none")
   set_as_default_version("backend model" ${name} ${ver} ${model})
 endif()
-
 
 # SuperIso
 set(name "superiso")
@@ -735,8 +788,8 @@ endif()
 set(name "pythia")
 set(ver "8.212")
 set(lib "libpythia8")
-set(dl "http://home.thep.lu.se/~torbjorn/pythia8/pythia8212.tgz")
-set(md5 "0886d1b2827d8f0cd2ae69b925045f40")
+set(dl "https://pythia.org/download/pythia82/pythia8212.tgz")
+set(md5 "7bebd73edcabcaec591ce6a38d059fa3")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 
 # - Add additional compiler-specific optimisation flags and suppress some warnings from -Wextra.
@@ -777,6 +830,7 @@ endif()
 set(pythia_CXXFLAGS "${pythia_CXXFLAGS} -I${Boost_INCLUDE_DIR} -I${PROJECT_SOURCE_DIR}/contrib/slhaea/include")
 
 # - Setup HepMC-specific additions
+option(PYTHIA_WITH_HEPMC "Pythia is compiled with HepMC" ON)
 if(EXCLUDE_HEPMC)
   set(pythia_depends_on "")
   set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}_nohepmc.dif")
@@ -1380,6 +1434,8 @@ endif()
 # Vevacious
 set(name "vevacious")
 set(ver "1.0")
+set(dl "http://github.com/JoseEliel/VevaciousPlusPlus_Development/archive/refs/heads/master.zip")
+set(md5 "none") # Keep none for now because there is no tagged release of vevacious yet
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 set(patchdir "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}")
 set(Minuit_name "minuit2")
@@ -1387,7 +1443,6 @@ set(Minuit_lib_name "Minuit2")
 set(Minuit_ver "5.34.14")
 set(phc_ver "2.4.58")
 set(hom4ps_ver "2.0")
-set(dl "null")
 set(Minuit_include "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/include/")
 set(Minuit_lib "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/lib/")
 set(VPP_CMAKE_FLAGS -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DEIGEN3_INCLUDE_DIR=${EIGEN3_INCLUDE_DIR} -DBoost_INCLUDE_DIR=${Boost_INCLUDE_DIR} -DWITHIN_GAMBIT=True -DSILENT_MODE=TRUE -DMinuit_include=${Minuit_include} -DMinuit_lib=${Minuit_lib})
@@ -1399,11 +1454,11 @@ if(NOT ditched_${name}_${ver})
           DEPENDS ${Minuit_name}_${Minuit_ver}
           DEPENDS phc_${phc_ver}
           DEPENDS hom4ps_${hom4ps_ver}
+          DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
           SOURCE_DIR ${dir}
-          GIT_REPOSITORY https://github.com/JoseEliel/VevaciousPlusPlus_Development.git
+          BUILD_IN_SOURCE 1
           UPDATE_COMMAND  sed ${dashi} -e "${BOSSregex}" ${dir}/CMakeLists.txt
           CONFIGURE_COMMAND ${CMAKE_COMMAND} ${VPP_CMAKE_FLAGS} ${dir}
-          BINARY_DIR "${dir}"
           BUILD_COMMAND ${MAKE_PARALLEL} CC=${CMAKE_CXX_COMPILER} CCFLAGS=${VPP_FLAGS} MINUITLIBDIR=${Minuit_lib} MINUITLIBNAME=${Minuit_lib_name} VevaciousPlusPlus-lib
                 COMMAND ${CMAKE_COMMAND} -E make_directory ${patchdir}/VevaciousPlusPlus/ModelFiles/
                 COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/VevaciousPlusPlus/ModelFiles/ ${dir}/ModelFiles/
@@ -1471,6 +1526,15 @@ set(patchdir "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/")
 set(ditch_if_absent "X11")
 check_ditch_status(${name} ${ver} ${dir} ${ditch_if_absent})
 if(NOT ditched_${name}_${ver})
+  # Add -fcommon compiler flag to tell the compiler to accept and merge a multiple variable definiton in calchep
+  set(calchep_CXX_FLAGS "${BACKEND_CXX_FLAGS} -fcommon")
+  set(calchep_C_FLAGS "${BACKEND_C_FLAGS} -fcommon")
+  set(calchep_Fortran_FLAGS "${BACKEND_Fortran_FLAGS} -fcommon")
+  if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    set(calchep_CXX_FLAGS "${calchep_CXX_FLAGS} -Wl,-undefined,dynamic_lookup")
+    set(calchep_C_FLAGS "${calchep_C_FLAGS} -Wl,-undefined,dynamic_lookup")
+    set(calchep_Fortran_FLAGS "${calchep_Fortran_FLAGS} -Wl,-undefined,dynamic_lookup")
+  endif()
   ExternalProject_Add(${name}_${ver}
     DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
     SOURCE_DIR ${dir}
@@ -1479,6 +1543,20 @@ if(NOT ditched_${name}_${ver})
               COMMAND ${CMAKE_COMMAND} -E copy ${dir}/c_source/strfun/pdf_dummy.c ${dir}/c_source/num/pdf_dummy.c
     PATCH_COMMAND patch -p0 < ${patchdir}/patch_${name}_${ver}.dif
           COMMAND sed ${dashi} -e "s#GAMBITDIR#${PROJECT_SOURCE_DIR}#g" ${dir}/c_source/dynamicME/vp_dynam.c
+          COMMAND ${dir}/getFlags
+          COMMAND sed ${dashi} -e "s|FC =.*|FC = ${CMAKE_Fortran_COMPILER}|" ${dir}/FlagsForMake
+          COMMAND sed ${dashi} -e "s|CC =.*|CC = ${CMAKE_C_COMPILER}|" ${dir}/FlagsForMake
+          COMMAND sed ${dashi} -e "s|CXX =.*|CXX = ${CMAKE_CXX_COMPILER}|" ${dir}/FlagsForMake
+          COMMAND sed ${dashi} -e "s|FFLAGS =.*|FFLAGS = ${calchep_Fortran_FLAGS}|" ${dir}/FlagsForMake
+          COMMAND sed ${dashi} -e "s|CFLAGS =.*|CFLAGS = ${calchep_C_FLAGS}|" ${dir}/FlagsForMake
+          COMMAND sed ${dashi} -e "s|CXXFLAGS =.*|CXXFLAGS = ${calchep_CXX_FLAGS}|" ${dir}/FlagsForMake
+          COMMAND sed ${dashi} -e "s|FC=.*|FC=\"${CMAKE_Fortran_COMPILER}\"|" ${dir}/FlagsForSh
+          COMMAND sed ${dashi} -e "s|CC=.*|CC=\"${CMAKE_C_COMPILER}\"|" ${dir}/FlagsForSh
+          COMMAND sed ${dashi} -e "s|CXX=.*|CXX=\"${CMAKE_CXX_COMPILER}\"|" ${dir}/FlagsForSh
+          COMMAND sed ${dashi} -e "s|FFLAGS=.*|FFLAGS=\"${calchep_Fortran_FLAGS}\"|" ${dir}/FlagsForSh
+          COMMAND sed ${dashi} -e "s|CFLAGS=.*|CFLAGS=\"${calchep_C_FLAGS}\"|" ${dir}/FlagsForSh
+          COMMAND sed ${dashi} -e "s|CXXFLAGS=.*|CXXFLAGS=\"${calchep_CXX_FLAGS}\"|" ${dir}/FlagsForSh
+          COMMAND sed ${dashi} -e "s|lFort=.*|lFort=|" ${dir}/FlagsForSh
     BUILD_COMMAND ${MAKE_SERIAL}
     INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/Models/ ${dir}/models/
   )
@@ -1727,7 +1805,7 @@ set(dl "https://github.com/lesgourg/class_public/archive/v${ver}.tar.gz")
 set(md5 "e6eb0fd721bb1098e642f5d1970501ce")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 set(ditch_if_absent "Python")
-set(required_modules "cython,numpy,scipy")
+set(required_modules "cython,numpy,scipy,six")
 check_ditch_status(${name} ${ver} ${dir} ${ditch_if_absent})
 if(NOT ditched_${name}_${ver})
   check_python_modules(${name} ${ver} ${required_modules})
@@ -1765,7 +1843,7 @@ set(dl "https://github.com/lesgourg/class_public/archive/v${ver}.tar.gz")
 set(md5 "91a28b6b6ad31e0cbc6a715c8589dab2")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 set(ditch_if_absent "Python")
-set(required_modules "cython,numpy,scipy")
+set(required_modules "cython,numpy,scipy,six")
 check_ditch_status(${name} ${ver} ${dir} ${ditch_if_absent})
 if(NOT ditched_${name}_${ver})
   check_python_modules(${name} ${ver} ${required_modules})
@@ -1803,7 +1881,7 @@ set(dl "https://github.com/lesgourg/class_public/archive/v${ver}.tar.gz")
 set(md5 "dac0e0920e333c553b76c9f4b063ec99")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 set(ditch_if_absent "Python")
-set(required_modules "cython,numpy,scipy")
+set(required_modules "cython,numpy,scipy,six")
 check_ditch_status(${name} ${ver} ${dir} ${ditch_if_absent})
 if(NOT ditched_${name}_${ver})
   check_python_modules(${name} ${ver} ${required_modules})
@@ -1842,7 +1920,7 @@ set(dl "https://github.com/lesgourg/class_public/archive/42e8f9418e3442d1ea3f26f
 set(md5 "8f3139eacae4d1cc5bb02bab3ec75073")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 set(ditch_if_absent "Python")
-set(required_modules "cython,numpy,scipy")
+set(required_modules "cython,numpy,scipy,six")
 check_ditch_status(${name} ${ver} ${dir} ${ditch_if_absent})
 if(NOT ditched_${name}_${ver})
   check_python_modules(${name} ${ver} ${required_modules})
@@ -1884,6 +1962,7 @@ set(sfver "1_2_0")
 set(dl "https://github.com/pstoecker/DarkAges/archive/v${ver}.tar.gz")
 set(md5 "d39d331ab750d1f9796d2b81d55e7703")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}")
 set(ditch_if_absent "Python")
 set(required_modules "scipy,dill,future,numpy")
 check_ditch_status(${name} ${ver} ${dir} ${ditch_if_absent})
@@ -1896,6 +1975,7 @@ if(NOT ditched_${name}_${ver})
       DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
       SOURCE_DIR ${dir}
       BUILD_IN_SOURCE 1
+      PATCH_COMMAND patch -p1 < ${patch}/${name}_${ver}.diff
       CONFIGURE_COMMAND ln ${DarkAges_SYMLINK_FLAGS} DarkAges DarkAges_${sfver}
       BUILD_COMMAND ""
       INSTALL_COMMAND ""

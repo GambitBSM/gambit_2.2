@@ -43,7 +43,11 @@
 #include "gambit/ColliderBit/Utils.hpp"
 
 #include "multimin/multimin.hpp"
+
+#include "gambit/Utils/begin_ignore_warnings_eigen.hpp"
 #include "Eigen/Eigenvalues"
+#include "gambit/Utils/end_ignore_warnings.hpp"
+
 #include <gsl/gsl_sf_gamma.h>
 
 //#define COLLIDERBIT_DEBUG
@@ -297,7 +301,8 @@ namespace Gambit
       auto marginaliser = (*BEgroup::lnlike_marg_poisson == "lnlike_marg_poisson_lognormal_error")
         ? BEreq::lnlike_marg_poisson_lognormal_error : BEreq::lnlike_marg_poisson_gaussian_error;
 
-      const double sr_margll = marginaliser((int) n_obss(0), 0.0, n_preds(0), sqrtevals(0)/n_preds(0));
+      // Setting bkg above zero to avoid nulike special cases
+      const double sr_margll = marginaliser((int) n_obss(0), 0.001, n_preds(0), sqrtevals(0)/n_preds(0));
       return sr_margll;
     }
 

@@ -30,6 +30,10 @@
 #          (b.farmer@imperial.ac.uk)
 #  \date 2018 Oct
 #
+#  \author Anders Kvellestad
+#          (anders.kvellestad@fys.uio.no)
+#  \date 2021 Jul, Aug
+#
 #************************************************
 
 # Define minimum cmake version
@@ -340,11 +344,11 @@ endif()
 
 # Check for Boost
 set(Boost_NO_BOOST_CMAKE ON)
-find_package(Boost 1.41)
+find_package(Boost 1.48)
 if(Boost_FOUND)
   include_directories("${Boost_INCLUDE_DIR}")
 else()
-  message(FATAL_ERROR "GAMBIT requires Boost v1.41 or greater.\nPlease install a suitable version of Boost and rerun cmake.")
+  message(FATAL_ERROR "GAMBIT requires Boost v1.48 or greater.\nPlease install a suitable version of Boost and rerun cmake.")
 endif()
 
 # Fix Boost < 1.55 for Clang
@@ -494,6 +498,9 @@ set(BACKEND_C18_FLAGS "${BACKEND_C_FLAGS} -std=c18")
 set(BACKEND_C11_FLAGS "${BACKEND_C_FLAGS} -std=c11")
 set(BACKEND_C99_FLAGS "${BACKEND_C_FLAGS} -std=c99")
 set(BACKEND_GNU99_FLAGS "${BACKEND_C_FLAGS} -std=gnu99")
+
+# Should we use pragmas to suppress common compiler warnings from external libraries?
+option(SUPPRESS_LIBRARY_WARNINGS "Suppress common compiler warnings due to external libraries" ON)
 
 # Make symbols hidden by default when compiling GAMBIT source files only
 if(${CMAKE_MAJOR_VERSION} MATCHES "2")

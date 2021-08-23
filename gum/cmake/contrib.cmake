@@ -57,6 +57,13 @@ set(name "FeynRules")
 set(ver "2.3.41")
 set(dl "https://gambit.hepforge.org/downloads/archived_backends/feynrules-${ver}.tar.gz")
 set(md5 "d0a075dc8fa12d4a7ebcc966350e4365")
+set(patch "${CMAKE_SOURCE_DIR}/cmake/patch_${name}.dif")
+# For Mathematica versions > 12.2 patch FR and SARAH to use the legacy version of ValueQ
+if(${Mathematica_VERSION} VERSION_LESS "12.2")
+  set(patch_command "")
+else()
+  set(patch_command patch -p1 < ${patch}) 
+endif()
 set(dir "${CMAKE_SOURCE_DIR}/contrib/${name}")
 set(FEYNRULES_PATH "${dir}")
 set(HAVE_FEYNRULES 1)
@@ -65,7 +72,7 @@ EXTERNALPROJECT_ADD(
     URL ${dl}
     URL_MD5 ${md5}
     UPDATE_COMMAND ""
-    PATCH_COMMAND ""
+    PATCH_COMMAND ${patch_command}
     SOURCE_DIR ${dir}
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
@@ -78,6 +85,13 @@ set(name "SARAH")
 set(ver "4.14.0")
 set(dl "https://sarah.hepforge.org/downloads/?f=SARAH-${ver}.tar.gz")
 set(md5 "850b74625e531b93fd43a32c181c825b")
+set(patch "${CMAKE_SOURCE_DIR}/cmake/patch_${name}.dif")
+# For Mathematica versions > 12.2 patch FR and SARAH to use the legacy version of ValueQ
+if(${Mathematica_VERSION} VERSION_LESS "12.2")
+  set(patch_command "")
+else()
+  set(patch_command patch -p1 < ${patch}) 
+endif()
 set(dir "${CMAKE_SOURCE_DIR}/contrib/${name}")
 set(SARAH_VERSION ${ver})
 set(SARAH_PATH "${dir}")
@@ -87,7 +101,7 @@ EXTERNALPROJECT_ADD(
     URL ${dl}
     URL_MD5 ${md5}
     UPDATE_COMMAND ""
-    PATCH_COMMAND ""
+    PATCH_COMMAND patch -p1 < ${patch}
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""
@@ -120,13 +134,14 @@ add_extra_targets(${name} ${dir})
 # Download Pythia
 set(name "Pythia")
 set(dir "${CMAKE_SOURCE_DIR}/contrib/${name}")
+set(dl "https://pythia.org/download/pythia82/pythia8212.tgz")
 set(ver "212")
-set(md5 "0886d1b2827d8f0cd2ae69b925045f40")
+set(md5 "7bebd73edcabcaec591ce6a38d059fa3")
 set(BASE_PYTHIA_VERSION ${ver})
 set(PYTHIA_MD5 ${md5})
 EXTERNALPROJECT_ADD(
     Pythia
-    URL http://home.thep.lu.se/~torbjorn/pythia8/pythia8${ver}.tgz
+    URL ${dl}
     URL_MD5 ${md5}
     UPDATE_COMMAND ""
     PATCH_COMMAND  ""

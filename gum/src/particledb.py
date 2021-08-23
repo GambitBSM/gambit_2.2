@@ -204,7 +204,7 @@ def add_new_particleDB_entry(particles, dm_pdg, gambit_pdg_codes,
     """
     Adds a list of particles to the particle database.
     """
-    stream = (
+    particleDB = (
            "# YAML file containing all particles for the particle database.\n\n"
            "# particle_database.cpp is constructed from this YAML file at compile time, via particle_harvester.py.\n\n"
            "# New entries should look like:\n"
@@ -332,12 +332,18 @@ def add_new_particleDB_entry(particles, dm_pdg, gambit_pdg_codes,
             data['OtherModels']['Particles'].append(entry)
 
     # Overwrite the particle database file
-    stream += yaml.dump(data).replace('\n  - ', '\n\n  - ')
+    particleDB += yaml.dump(data).replace('\n  - ', '\n\n  - ')
+
+    return gambit_pdg_codes, decaybit_dict, particleDB
+
+def write_particleDB(particleDB):
+    """
+    Write the new particle DB to file, overwriting the existing one
+    """
 
     with open("./../config/particle_database.yaml", "w") as f:
-        f.write(stream)
+        f.write(particleDB)
 
-    return gambit_pdg_codes, decaybit_dict
 
 def get_antiparticles(partlist):
     """
@@ -385,3 +391,31 @@ def get_higgses(partlist):
     higgses = neutral_higgses + charged_higgses
 
     return higgses, neutral_higgses, charged_higgses
+    
+def get_invisibles(invisible_pdgs):
+    """
+    Get the PDG codes of invisibles particles to write to 'contrib/heputils/include/HEPUtils/Event.h'
+    Will not write for photons, leptons or existing invisibles in Event.h
+    """
+    
+    # Create list of existing particle
+    existing_invisibles = [22,11,-11,13,-13,15,-15]
+    existing_invisibles.extend([12,-12,14,-14,16,-16,1000022,1000039,50,-50,51,-51,52,-52,53,-53,54,-54,55,-55,56,-56,57,-57,58,-58,59,-59])
+    
+    new_invisibles = [pdg for pdg in invisible_pdgs if pdg not in
+                      existing_invisibles]
+    to_write = ""
+
+    if (len(new_invisibles) != 0):
+        pdg_string = "p->pid() == {0}".format(new_invisibles[0])
+        for i,pdg in enumerate(new_invisibles):
+            if i != 0:
+                pdg_string = pdg_string + "|| p->pid() == {0} ".format(pdg)
+    
+        to_write = ("      else if (" + pdg_string + ") \n"
+        "      { \n"
+        "        _invisibles.push_back(p); \n"
+        "        _cinvisibles.push_back(p); \n"
+        "      } \n")
+    
+    return to_write

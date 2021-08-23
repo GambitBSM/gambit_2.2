@@ -33,7 +33,7 @@ def banner() :
          " Sanjay Bloor\n"\
          "   (sanjay.bloor12@imperial.ac.uk)\n"\
          " Tomas Gonzalo\n"\
-         "   (tomas.gonzalo@monash.edu)\n"\
+         "   (gonzalo@physik.rwth-aachen.de)\n"\
          " Pat Scott\n"\
          "   (pat.scott@uq.edu.au)\n"\
          "\n"\
@@ -45,7 +45,7 @@ def banner() :
          "\n"\
          " Documentation and details for GUM\n"\
          " can be found at\n"\
-         "   S. Bloor et al, arXiv:20xx.xxxx\n"\
+         "   S. Bloor et al, arXiv:2107.00030\n"\
          "\n"\
          " *********************************\n"\
          "\n"
