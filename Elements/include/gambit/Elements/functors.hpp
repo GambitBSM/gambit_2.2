@@ -159,6 +159,8 @@ namespace Gambit
       sspair quantity() const;
       /// Getter for purpose (relevant for output nodes, aka helper structures for the dep. resolution)
       str purpose() const;
+      /// Getter for the citation key
+      str citationKey() const;
       /// Getter for vertex ID
       int vertexID() const;
       /// Getter for timing vertex ID
@@ -328,6 +330,8 @@ namespace Gambit
       str myVersion;
       /// Purpose of the function (relevant for output and next-to-output functors)
       str myPurpose;
+      /// Citation key: BibTex key of the reference.
+      str myCitationKey;
       /// Bound model functor claw, for checking relationships between models
       const Models::ModelFunctorClaw* myClaw;
 
@@ -855,8 +859,9 @@ namespace Gambit
 
     public:
 
-      /// Constructor
+      /// Constructors
       backend_functor_common (funcPtrType, str, str, str, str, str, str, Models::ModelFunctorClaw&);
+      backend_functor_common (funcPtrType, str, str, str, str, str, str, str, Models::ModelFunctorClaw&);
 
       /// Destructor
       virtual ~backend_functor_common() {}
@@ -886,8 +891,9 @@ namespace Gambit
 
     public:
 
-      /// Constructor
+      /// Constructors
       backend_functor (TYPE(*)(ARGS...), str, str, str, str, str, str, Models::ModelFunctorClaw&);
+      backend_functor (TYPE(*)(ARGS...), str, str, str, str, str, str, str, Models::ModelFunctorClaw&);
 
       /// Destructor
       virtual ~backend_functor() {}
@@ -905,8 +911,9 @@ namespace Gambit
 
     public:
 
-      /// Constructor
+      /// Constructors
       backend_functor (void (*)(ARGS...), str, str, str, str, str, str, Models::ModelFunctorClaw&);
+      backend_functor (void (*)(ARGS...), str, str, str, str, str, str, str, Models::ModelFunctorClaw&);
 
       /// Destructor
       virtual ~backend_functor() {}
@@ -924,8 +931,9 @@ namespace Gambit
 
     public:
 
-      /// Constructor
+      /// Constructors
       backend_functor(typename variadic_ptr<TYPE,ARGS...>::type, str, str, str, str, str, str, Models::ModelFunctorClaw&);
+      backend_functor(typename variadic_ptr<TYPE,ARGS...>::type, str, str, str, str, str, str, str, Models::ModelFunctorClaw&);
 
       /// Destructor
       virtual ~backend_functor() {}
@@ -950,8 +958,9 @@ namespace Gambit
 
     public:
 
-      /// Constructor
+      /// Constructors
       backend_functor(typename variadic_ptr<void,ARGS...>::type, str, str, str, str, str, str, Models::ModelFunctorClaw&);
+      backend_functor(typename variadic_ptr<void,ARGS...>::type, str, str, str, str, str, str, str, Models::ModelFunctorClaw&);
 
       /// Destructor
       virtual ~backend_functor() {}
@@ -976,7 +985,7 @@ namespace Gambit
 
     public:
 
-      /// Constructor
+      /// Constructors
       model_functor(void (*)(ModelParameters &), str, str, str, str, Models::ModelFunctorClaw&);
 
       /// Destructor

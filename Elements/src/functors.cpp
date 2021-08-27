@@ -136,6 +136,8 @@ namespace Gambit
     sspair functor::quantity() const { return std::make_pair(myCapability, myType); }
     /// Getter for purpose (relevant for output nodes, aka helper structures for the dep. resolution)
     str functor::purpose()     const { return myPurpose; }
+    /// Getter for citation key
+    str functor::citationKey() const { return myCitationKey; }
     /// Getter for vertex ID
     int functor::vertexID()    const { return myVertexID; }
     /// Getter for timing vertex ID

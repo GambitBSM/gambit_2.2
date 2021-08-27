@@ -408,6 +408,35 @@ namespace Gambit
         SortedParentVertices[*it] = getSortedParentVertices(*it, masterGraph, function_order);
       }
 
+      // Get BibTex key entries for each vertex
+      std::vector<std::string> keyList;
+      std::vector<functor *>::const_iterator fi, fi_end = boundCore->getBackendFunctors().end();
+      //std::string lastkey;
+      for (fi = boundCore->getBackendFunctors().begin(); fi != fi_end; ++fi)
+      {
+        // Activate if the backend vertex permits the model and has not been (severely) disabled by the backend system
+        if ( (*fi)->status() > 0 )
+        {
+          std::string bibkey = (*fi)->citationKey();
+          std::string name = (*fi)->name();
+          std::string capability = (*fi)->capability();
+          if (bibkey == "REFERENCE"){
+            std::cout << "Found REFREENCE bibkey with name  " << name << "  and capability  " << capability << endl;
+          }
+          if (bibkey != ""){
+            keyList.push_back(bibkey);
+          }
+        }
+      }
+      //std::sort(keyList.begin(), keyList.end());
+      //keyList.erase( std::unique( keyList.begin(), keyList.end() ), keyList.end() );
+
+      // Print contents of vector keyList
+      cout << "BibTeX keys: " << endl;
+      for (std::vector<std::string>::const_iterator it = keyList.begin(); it != keyList.end(); ++it)
+      {
+        std::cout << *it << "\n";
+      }
       // Done
     }
 

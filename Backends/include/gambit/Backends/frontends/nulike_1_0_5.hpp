@@ -23,6 +23,7 @@
 #define BACKENDLANG Fortran
 #define VERSION 1.0.5
 #define SAFE_VERSION 1_0_5
+#define REFERENCE Aartsen:2016exj
 
 // Load it
 LOAD_LIBRARY

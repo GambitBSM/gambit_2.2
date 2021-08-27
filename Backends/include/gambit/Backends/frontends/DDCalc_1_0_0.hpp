@@ -39,6 +39,7 @@
 #define BACKENDLANG Fortran
 #define VERSION 1.0.0
 #define SAFE_VERSION 1_0_0
+#define REFERENCE Workgroup:2017lvb
 
 // Load it
 LOAD_LIBRARY

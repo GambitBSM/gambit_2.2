@@ -25,6 +25,7 @@
 #define BACKENDLANG CXX
 #define VERSION 1.0
 #define SAFE_VERSION 1_0
+#define REFERENCE Athron:2017ard
 
 /* The following macro loads the library using dlopen
  * when this header file is included somewhere. */

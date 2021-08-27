@@ -1,0 +1,149 @@
+#!/bin/bash
+
+# This script takes the hpp files in the directory ~/gambit/Backends/include/gambit/Backends/frontends/
+# ... and finds where they are referenced in the GAMBIT paper 1705.07908
+# ... then displays these references and finds the BibTex key for each reference.
+# ... then edits the relevant hpp file to include its key(s).
+#
+# I manually added some references where the references weren't found.
+# I want to add a menu system for when there are no matches: it asks the user
+# whether they want to input unfound references and then takes their inputs
+# and finds keys and adds them to the corresponding files.
+# The txt files should be replaced by the GAMBIT paper's .tex and .bbl files,
+# as this would be much faster and more reliable.
+# If searching the txt, it is more reliable to do a search until some pattern
+# instead of a fixed number of lines, although this method seems to be slower.
+# May want to write references to the README.md file if it's missing any.
+
+
+shopt -s extglob;  #enables extended glob syntax
+
+files=~/gambit/Backends/include/gambit/Backends/frontendstest/*.hpp;
+gambit_paper="1705.07908";				 # should re-do this using 1705.07908.tex and/or gambit_1_0.bbl
+gambit_key="Athron:2017ard";
+
+lookup_key(){                                      # function lookup_key takes inputs: reference number, arXiv code.      # function lookup_keys takes inputs: first ref number, last ref number, array of arxXiv codes. Changes variable b_keys to include a list of keys from the arXiv BibTex file.
+    echo ref $1:               $2;                          # displays each reference
+    BibTex=$(lynx -dump -listonly https://inspirehep.net/search?p=find+eprint+$2 | awk '/http/{print $2}' | grep export/hx);		     # goes to arXiv and finds link to page with BibTex citation. awk is used here to only use the second value (web link). ($1 is the line number)
+    b_key=$(curl -s $BibTex | grep @article);      # finds where @article is written in the BibTex file
+    b_key=${b_key//+(*{|\,*)};                     # extracts the key between the { and ,
+    echo BibTex key =       $b_key;
+}
+
+find_reference(){                                  #function find_reference takes inputs: search string, reference number
+    b_ref=$(grep -A 5 -i -m 1 -w $1 $gambit_paper"_refs.txt");	# finds the reference in the arXiv paper. Using this line is fast, but may give errors
+# The following is much slower but less error-prone than the previous line:
+#    s=$b_refs;					# start of where to look
+#    let e=s+1;					# end of where to look
+#    b_ref=$(sed -n "/$s./,/$e./p" $gambit_paper"_refs.txt");  # finds lines between s and e
+
+    if [[ $b_ref == *\[* ]];		# checks if b_ref actually contains a [.   Should change this to check for '[', 'arXiv', or ']'. Should also add this to other cases (it's currently assumed there will be urls for all the other b_refs cases).
+    then
+        b_ref=${b_ref%%\]*};                        # removes everything after the first instance of ] in b_refs
+        b_ref=${b_ref//+(*\[|arXiv\:|\]*)};		    # extracts the arXiv code - removes any of *[ , *arXiv , or ]*
+        lookup_key $2 $b_ref;
+    else							# check .bbl source file for the reference
+        echo ref $2:              No url.;
+        b_ref=$(grep -B2 -i -m$2 $b_name gambit_1_0.bbl | tail -n3);	# finds the backend name in the .bbl file. The B2 and -n3 here may need to be changed... also this assumes the name lies in the .bbl file as well as in its reference!
+        b_key=${b_ref//+(*bibitem\{|\}*)};				# extracts the key from b_ref
+        echo BibTex key =      $b_key;
+    fi
+}
+
+for file in $files;
+do
+    b_name_ver=${file//+(*\/|.*)};
+    echo file: $b_name_ver;
+    b_name=${file//+(*\/|_*|.*)};                  # parameter expansion substitutes (with nothing) every instance of one or more of the pattern list of: */ or _* or .*
+
+    if [[ $b_name == $prev_name ]];		 # if this file is the same as the last file
+    then
+        echo -e Backend is same as previous file.;
+        # don't need to add keys to key list; this key list will be the same as the previous b_keys
+
+    elif [[ ${b_name:0:3} == Lib ]];     # if the backend name starts with Lib
+    then
+        b_ref=$gambit_paper;
+        b_key=$gambit_key;
+        echo $b_name references GAMBIT:  $b_ref;
+        echo BibTex key =      $b_key;
+        b_keys=$b_key;					# adds new key to the list of keys to be added
+
+    elif [[ $b_name == CaptnGeneral ]];				# if the backend name is CaptnGeneral
+    then
+        b_ref="1808.10465";
+        b_key="Athron:2018hpc";
+        echo $b_name references:  $b_ref;
+        echo BibTex key =      $b_key;
+        b_keys=$b_key;				 	 # adds new key to the list of keys to be added
+
+    elif [[ $b_name == SUSYPOPE ]];				 # if the backend name is SUSYPOPE
+    then
+        echo $b_name references:  $b_ref1;
+        b_keys=;                                  # clears b_keys (list of BibTex keys to be added to each file)
+        b_ref1='hep-ph/0604147';
+        b_ref2='0710.2972';
+        lookup_key 1 $b_ref1;
+        b_keys=$b_keys$b_key,;				# appends new key to the list of keys to be added
+        lookup_key 2 $b_ref2;
+        b_keys=$b_keys$b_key;				# appends new key to the list of keys to be added
+
+    else
+        b_lines=$(grep -i -m1 "$b_name.*\[" $gambit_paper.txt);  # finds line (first occurence) with backend name b_name followed by '[' in GAMBIT paper
+        b_lines=${b_lines,,};				 # converts lines to lowercase since I don't know a way to ignore case in pattern comparison with parameter expansion
+        b_name_lower=${b_name,,};				 # converts backend name to lowercase
+        b_refs=${b_lines//+(*$b_name_lower|\]*)};             # extracts the references...
+        b_refs=${b_refs//*\[}; 			         # ...listed in the []
+
+        echo  $b_name references: #$b_refs;
+
+
+    # The next parts find the actual citations from the References section, using the reference numbers $b_refs found before.
+
+        if [[ $b_refs == *–* ]];				# if the ref string contains a – character, i.e., b_refs is a series of >2 references
+        then
+            first_ref=${b_refs%–*};				# assign first ref number to first_ref
+            last_ref=${b_refs##*–};				# assign last ref number to last_ref
+            echo $first_ref to $last_ref ...;
+              b_keys=;						# resets keys list
+
+            for ((i=$first_ref;i<=last_ref;i++));		# for all references listed between the []
+            do
+                find_reference "^$i\." $i;
+                b_keys=$b_keys$b_key,;				# appends new key to the list of keys to be added
+            done
+            b_keys=${b_keys:0:-1};				# removes the trailing comma from the final list of keys
+
+        elif [[ $b_refs == *,* ]];                           # if the ref string contains a , character, i.e. b_refs is a list of 2 reference numbers
+        then
+            first_ref=${b_refs%,*};                           # assign first ref number to first_ref
+            last_ref=${b_refs##*,};                           # assign last ref number to last_ref
+            echo $first_ref to $last_ref ...;
+            b_keys=;						# resets keys list
+
+            for ((i=$first_ref;i<=last_ref;i++));             # for all references listed between the []
+            do
+                find_reference "^$i\." $i;
+                b_keys=$b_keys$b_key,;				# appends new key to the list of keys to be added
+            done
+            b_keys=${b_keys:0:-1};				# removes last character of b_keys string, which should be a ,
+
+        elif [[ $b_refs < 1 ]];				# if b_refs is empty (no matches)
+        then
+            echo -e no matches! "\n";
+            b_keys=key;
+
+        elif [[ $b_refs -eq 2 ]];				# -had to add manually due to two reference lists in the paper and only ref 2 is from the second list... This should be managed better!
+        then
+            find_reference "^2\..*$b_name" $b_refs;
+            b_keys=$b_key;
+        else							# should probably change this to an elif
+            find_reference "^$b_refs\." $b_refs;
+            b_keys=$b_key;					# sets list of keys to be added
+        fi
+    fi
+    sed -i.bak "s/key/$b_keys/g" $file;	   			# add BibTex key to backend file
+    echo -e key\(s\) inserted into $b_name_ver".hpp": $b_keys  "\n";		# displays keys inserted into the hpp file
+    echo _____________________________________________________________
+    prev_name=$b_name;
+done
