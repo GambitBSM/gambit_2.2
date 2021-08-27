@@ -124,7 +124,7 @@ Rules:
 
   # Choose to use DarkSUSY's yield tables for indirect detection
   - capability: SimYieldTable
-    function: SimYieldTable_DarkSUSY
+    function: SimYieldTable_MicrOmegas
     options:
       allow_yield_extrapolation: true
 
