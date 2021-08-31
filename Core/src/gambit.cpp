@@ -191,8 +191,8 @@ int main(int argc, char* argv[])
       // Report the proposed (output) functor evaluation order
       dependencyResolver.printFunctorEvalOrder(Core().show_runorder);
 
-      // If true, bail out (just wanted the run order, not a scan); otherwise, keep going.
-      if (not Core().show_runorder)
+      // If true, bail out (just wanted the run order or backend list, not a scan); otherwise, keep going.
+      if (not Core().show_runorder and not Core().show_backends)
       {
         //Define the likelihood container object for the scanner
         Likelihood_Container_Factory factory(Core(), dependencyResolver, iniFile, *(printerManager.printerptr));

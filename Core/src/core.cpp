@@ -65,7 +65,7 @@ namespace Gambit
         outprec(8)
         /* command line flags */
         ,
-        processed_options(false), show_runorder(false), resume(true), verbose_flag(false), found_inifile(false)
+        processed_options(false), show_runorder(false), show_backends(false), resume(true), verbose_flag(false), found_inifile(false)
   {
   }
 
@@ -106,6 +106,8 @@ namespace Gambit
               "\n   -v/--verbose          Turn on verbose mode                              "
               "\n   -d/--dryrun           List the function evaluation order computed based "
               "\n                           on inifile                                      "
+              "\n   -b/--backends         List the backends required to fulfil dependencies "
+              "\n                           based on inifile                                "
               "\n   -r/--restart          Restart the scan defined by <inifile>. Existing   "
               "\n                         output files for the run will be overwritten.     "
               "\n                         Default behaviour in the absence of this option is"
@@ -134,7 +136,8 @@ namespace Gambit
     const struct option primary_options[] = {
         {"version", no_argument, 0, 1}, /*1 is just a unique integer key to identify this argument*/
         {"verbose", no_argument, 0, 'v'}, {"help", no_argument, 0, 'h'},
-        {"dryrun", no_argument, 0, 'd'},  {"restart", no_argument, 0, 'r'}, {0, 0, 0, 0},
+        {"dryrun", no_argument, 0, 'd'},  {"backends", no_argument, 0, 'b'},
+        {"restart", no_argument, 0, 'r'}, {0, 0, 0, 0},
     };
 
     // Must at least have one argument.
@@ -142,7 +145,7 @@ namespace Gambit
 
     while (iarg != -1)
     {
-      iarg = getopt_long(argc, argv, "vhdrf:", primary_options, &index);
+      iarg = getopt_long(argc, argv, "vhdbrf:", primary_options, &index);
       switch (iarg)
       {
       case 1:
@@ -171,6 +174,10 @@ namespace Gambit
           logger().disable();
           throw SilentShutdownException();
         }
+        break;
+      case 'b':
+        // Show the list of backends that need to be built and then quit
+        show_backends = true;
         break;
       case 'r':
         // Restart scan (turn off "resume" mode, activate output overwrite)

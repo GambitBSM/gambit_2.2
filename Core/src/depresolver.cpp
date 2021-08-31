@@ -408,6 +408,13 @@ namespace Gambit
         SortedParentVertices[*it] = getSortedParentVertices(*it, masterGraph, function_order);
       }
 
+      // Print list of backends required
+      if (boundCore->show_backends)
+      {
+        printRequiredBackends();
+      }
+
+      /* This is Alyshah's code that didn't work, should remove
       // Get BibTex key entries for each vertex
       std::vector<std::string> keyList;
       std::vector<functor *>::const_iterator fi, fi_end = boundCore->getBackendFunctors().end();
@@ -436,7 +443,7 @@ namespace Gambit
       for (std::vector<std::string>::const_iterator it = keyList.begin(); it != keyList.end(); ++it)
       {
         std::cout << *it << "\n";
-      }
+      }*/
       // Done
     }
 
@@ -600,6 +607,33 @@ namespace Gambit
       logger() << LogTags::dependency_resolver << ss.str() << EOM;
     }
 
+    // Print the list of required backends
+    void DependencyResolver::printRequiredBackends()
+    {
+      // Lists the required backends, indicating where several backends
+      // can fulfil the same requirement
+      std::stringstream ss;
+
+      ss << endl << "Required backends to run file " << boundIniFile->filename << std::endl;
+      ss << "At least one backend candidate per row is required" << std::endl;
+      ss << "--------------------------------------------------" << std::endl << std::endl;
+
+      for(auto reqs : backendsRequired)
+      {
+        for(auto backend : reqs)
+        {
+          ss << boost::format("%-25s")%("("+backend.first+", "+backend.second+")");
+        }
+        ss << std::endl;
+      }
+      ss << std::endl;
+
+      // Print to terminal
+      std::cout << ss.str();
+
+      // Print to logs
+      logger() << LogTags::dependency_resolver << ss.str() << EOM;
+    }
 
     //
     // Runtime
@@ -1125,6 +1159,10 @@ namespace Gambit
           // Add vertex to appropriate candidate list
           if (masterGraph[*vi]->status() > 0)
             vertexCandidates.push_back(*vi);
+          // If we only want the list of backends, also add vertex for ini function
+          else if (masterGraph[*vi]->status() == -4 and boundCore->show_backends)
+            vertexCandidates.push_back(*vi);
+          // Otherwise
           else
             disabledVertexCandidates.push_back(*vi);
         }
@@ -2006,6 +2044,13 @@ namespace Gambit
             // if it has an inifile entry, add it to the candidate list with inifile entries
             if (entryExists) vertexCandidatesWithIniEntry.push_back(*itf);
           }
+          else if (permitted and boundCore->show_backends) // If the backend is able and we only want to show the list of backends
+          {
+             // add it to the overall vertex candidate list
+            vertexCandidates.push_back(*itf);
+            // if it has an inifile entry, add it to the candidate list with inifile entries
+            if (entryExists) vertexCandidatesWithIniEntry.push_back(*itf);
+          }
           else
           {
             // otherwise, add it to disabled vertex candidate list
@@ -2109,7 +2154,7 @@ namespace Gambit
         if(disabledVertexCandidates[j]->status() == -6)
           printPythonStatus = true;
 
-      // No candidates? Death.
+      // No candidates? Death. Unless only list of backends is requested
       if (vertexCandidates.size() == 0)
       {
         std::ostringstream errmsg;
@@ -2207,7 +2252,8 @@ namespace Gambit
         }
 
         // Still more than one candidate, so the game is up.
-        if (vertexCandidates.size() > 1)
+        // Don't worry about too many candidates if we only want the list of required backends
+        if (vertexCandidates.size() > 1 and not boundCore->show_backends)
         {
           str errmsg = "Found too many candidates for backend requirement ";
           if (reqs.size() == 1) errmsg += reqs.begin()->first + " (" + reqs.begin()->second + ")";
@@ -2227,9 +2273,32 @@ namespace Gambit
         }
       }
 
+      // Store the resolved backend requirements
+      std::vector<sspair> resolvedBackends;
+      for(auto vertex : vertexCandidates)
+      {
+        sspair backend(vertex->origin(), vertex->version());
+        resolvedBackends.push_back(backend);
+      }
+
+      bool found = false;
+      for(auto br = backendsRequired.begin(); br != backendsRequired.end(); ++br)
+      {
+        found = true;
+        for(auto backend : resolvedBackends)
+        {
+          if(std::find(br->begin(), br->end(), backend) == br->end())
+            found = false;
+        }
+        if(found) break;
+      }
+      if(not found)
+      {
+        backendsRequired.push_back(resolvedBackends);
+      }
+
       // Just one candidate.  Jackpot.
       return vertexCandidates[0];
-
     }
 
     /// Resolve a backend requirement of a specific module function using a specific backend function.

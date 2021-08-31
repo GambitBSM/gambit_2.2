@@ -132,6 +132,9 @@ namespace Gambit
         /// Pretty print function evaluation order
         void printFunctorEvalOrder(bool toterminal=false);
 
+        /// Print the list of required backends
+        void printRequiredBackends();
+
         /// Retrieve the order in which target vertices are to be evaluated.
         std::vector<VertexID> getObsLikeOrder();
 
@@ -271,6 +274,9 @@ namespace Gambit
         /// Map from nested function -> list of fulfilled dependencies that need
         /// to be passed on to its loop manager when it is selected
         std::map<VertexID, std::set<VertexID>> edges_to_force_on_manager;
+
+        // Backends required to fullfil dependencies
+        std::vector<std::vector<sspair> > backendsRequired;
 
         /// Indices associated with graph vertices (used by printers to identify functors)
         IndexMap index;

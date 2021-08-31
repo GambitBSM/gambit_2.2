@@ -30,8 +30,11 @@ namespace Gambit
 
     // Implementations of main inifile class
 
-    void IniFile::readFile(std::string filename)
+    void IniFile::readFile(std::string name)
     {
+
+      // Store filename internally
+      filename = name;
 
       // Perform the basic read and parse operations defined by the parent.
       YAML::Node root = filename_to_node(filename);

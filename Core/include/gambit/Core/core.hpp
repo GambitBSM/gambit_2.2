@@ -128,6 +128,9 @@ namespace Gambit
     /// Flag to trigger dependency resolver to report functor run order
     int show_runorder;
 
+    /// Flag to show the list of required backends
+    int show_backends;
+
     /// Flag to trigger "resume" mode
     bool resume;
 

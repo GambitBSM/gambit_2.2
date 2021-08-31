@@ -91,8 +91,10 @@ namespace Gambit
 
       public:
 
+        str filename;
+
         /// Read in the YAML file
-        virtual void readFile(str filename);
+        virtual void readFile(str);
 
         /// Getters for private observable and rules entries
         /// @{
@@ -101,6 +103,7 @@ namespace Gambit
         /// @}
 
       private:
+
         ObservablesType observables;
         ObservablesType rules;
 
