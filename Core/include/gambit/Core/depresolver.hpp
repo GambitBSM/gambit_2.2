@@ -135,6 +135,9 @@ namespace Gambit
         /// Print the list of required backends
         void printRequiredBackends();
 
+        // Print references
+        void printReferences();
+
         /// Retrieve the order in which target vertices are to be evaluated.
         std::vector<VertexID> getObsLikeOrder();
 
@@ -277,6 +280,9 @@ namespace Gambit
 
         // Backends required to fullfil dependencies
         std::vector<std::vector<sspair> > backendsRequired;
+
+        // List of bibkeys for used backends
+        std::vector<str> backendBibKeys;
 
         /// Indices associated with graph vertices (used by printers to identify functors)
         IndexMap index;

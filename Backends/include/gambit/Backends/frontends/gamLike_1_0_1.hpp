@@ -27,7 +27,7 @@
 #define BACKENDLANG CXX
 #define VERSION 1.0.1
 #define SAFE_VERSION 1_0_1
-#define REFERENCE Workgroup:2017lvb
+#define REFERENCE GAMBIT:2017fax
 
 #include <string>
 

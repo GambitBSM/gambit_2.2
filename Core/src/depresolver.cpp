@@ -40,6 +40,7 @@
 #include "gambit/Models/models.hpp"
 #include "gambit/Utils/stream_overloads.hpp"
 #include "gambit/Utils/util_functions.hpp"
+#include "gambit/Utils/bibtex_functions.hpp"
 #include "gambit/Logs/logger.hpp"
 #include "gambit/Backends/backend_singleton.hpp"
 #include "gambit/cmake/cmake_variables.hpp"
@@ -414,36 +415,41 @@ namespace Gambit
         printRequiredBackends();
       }
 
-      /* This is Alyshah's code that didn't work, should remove
-      // Get BibTex key entries for each vertex
-      std::vector<std::string> keyList;
-      std::vector<functor *>::const_iterator fi, fi_end = boundCore->getBackendFunctors().end();
-      //std::string lastkey;
-      for (fi = boundCore->getBackendFunctors().begin(); fi != fi_end; ++fi)
+      // Get BibTex key entries for each required backend
+      for(auto backend : backendsRequired)
       {
-        // Activate if the backend vertex permits the model and has not been (severely) disabled by the backend system
-        if ( (*fi)->status() > 0 )
+        for(auto befunctor : boundCore->getBackendFunctors())
         {
-          std::string bibkey = (*fi)->citationKey();
-          std::string name = (*fi)->name();
-          std::string capability = (*fi)->capability();
-          if (bibkey == "REFERENCE"){
-            std::cout << "Found REFREENCE bibkey with name  " << name << "  and capability  " << capability << endl;
-          }
-          if (bibkey != ""){
-            keyList.push_back(bibkey);
+          if (backend[0].first == befunctor->origin() and backend[0].second == befunctor->version())
+          {
+            std::string bibkey = befunctor->citationKey();
+            std::string name = befunctor->name();
+            std::string origin = befunctor->origin();
+            std::string version = befunctor->version();
+            if (bibkey != "REFERENCE")
+            {
+              logger() << LogTags::dependency_resolver << "Found bibkey for backend " << origin << " version " << version << ": " << bibkey << EOM;
+              // Split list of keys to individual ones
+              std::stringstream kss(bibkey);
+              str k;
+              while (getline(kss, k, ','))
+              {
+                if(std::find(backendBibKeys.begin(), backendBibKeys.end(), k) == backendBibKeys.end())
+                  backendBibKeys.push_back(k);
+              }
+            }
+            else
+            {
+              std::ostringstream errmsg;
+              errmsg << "Missing reference for backend " << origin << "(" << version << ")." << endl;
+              errmsg << "Please add the bibkey to the frontend header, and full bibtex entry to ";
+              errmsg << boundIniFile->getValueOrDef<str>("config/backend_bibtex_entries.bib", "dependecy_resolution", "bibtex_file_location") << "." << endl;
+              dependency_resolver_error().raise(LOCAL_INFO,errmsg.str());
+            }
           }
         }
       }
-      //std::sort(keyList.begin(), keyList.end());
-      //keyList.erase( std::unique( keyList.begin(), keyList.end() ), keyList.end() );
 
-      // Print contents of vector keyList
-      cout << "BibTeX keys: " << endl;
-      for (std::vector<std::string>::const_iterator it = keyList.begin(); it != keyList.end(); ++it)
-      {
-        std::cout << *it << "\n";
-      }*/
       // Done
     }
 
@@ -633,6 +639,58 @@ namespace Gambit
 
       // Print to logs
       logger() << LogTags::dependency_resolver << ss.str() << EOM;
+    }
+
+    // Print list of references to cite
+    void DependencyResolver::printReferences()
+    {
+
+      // If the list is empty do not print anything
+      if(backendBibKeys.empty()) return;
+
+      std::stringstream ss;
+
+      // Location of the bibtex file
+      str bibtex_file_location = boundIniFile->getValueOrDef<str>(GAMBIT_DIR "/config/backend_bibtex_entries.bib", "dependency_resolution", "bibtex_file_location");
+
+      ss << "The scan you are about to run uses backends. Please make sure to cite the following references in your work." << std::endl;
+      ss << "You can find the full bibtex entries for these references in " << bibtex_file_location << "." << std::endl;
+
+      // Make sure that each key has an entry on the bibtex file
+      // Create a list of entries in the bibtex file
+      std::vector<str> entries = Utils::getBibTeXEntries(bibtex_file_location);
+      for(size_t i=0; i<backendBibKeys.size(); ++i)
+      {
+        str key = backendBibKeys[i];
+
+        // Now find each key in the list of entries
+        if(std::find(entries.begin(), entries.end(), key) == entries.end())
+        {
+          std::ostringstream errmsg;
+          errmsg << "The reference with key " << key << "cannot be found in the bibtex file " << bibtex_file_location << endl;
+          errmsg << "Please make sure that the bibtex file contains the relevant bibtex entries." << endl;
+          dependency_resolver_error().raise(LOCAL_INFO,errmsg.str());
+        }
+        else
+        {
+          ss << key;
+          if(i < backendBibKeys.size()-1) ss << ", ";
+        }
+      }
+      ss << endl;
+
+      bool drop_bibtex = boundIniFile->getValueOrDef<bool>(false, "drop_bibtex");
+      if(drop_bibtex)
+      {
+        // TODO: Add option to dump out a specfic bibtex file with the used entries
+      }
+
+      // Print to terminal
+      std::cout << ss.str();
+
+      // Print to logs
+      logger() << LogTags::dependency_resolver << ss.str() << EOM;
+
     }
 
     //

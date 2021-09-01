@@ -184,6 +184,9 @@ int main(int argc, char* argv[])
       if (rank == 0) cout << "Resolving dependencies and backend requirements.  Hang tight..." << endl;
       dependencyResolver.doResolution();
       if (rank == 0) cout << "...done!" << endl;
+ 
+      // Print the references required for the used backends
+      if (rank == 0) dependencyResolver.printReferences();
 
       // Check that all requested models are used for at least one computation
       Models::ModelDB().checkPrimaryModelFunctorUsage(Core().getActiveModelFunctors());
