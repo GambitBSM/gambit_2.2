@@ -694,6 +694,10 @@ if args.file:
             set_userhook = write_set_userhook(gum.name,base_pythia_version)
             apply_userhook = write_apply_userhook(gum.name)
 
+        # Generate a file containing all of the bib tags for the backends used.
+        bibtags, bibcontents = generate_bib_tags(output_opts,gum.math)
+        write_bib_file(bibtags,bibcontents,output_dir,gum.name)
+
         # Stop now if we're just doing a dry run
         if args.dryrun:
             print("")
