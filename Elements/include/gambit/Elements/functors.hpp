@@ -859,8 +859,7 @@ namespace Gambit
 
     public:
 
-      /// Constructors
-      backend_functor_common (funcPtrType, str, str, str, str, str, str, Models::ModelFunctorClaw&);
+      /// Constructor
       backend_functor_common (funcPtrType, str, str, str, str, str, str, str, Models::ModelFunctorClaw&);
 
       /// Destructor
@@ -891,8 +890,7 @@ namespace Gambit
 
     public:
 
-      /// Constructors
-      backend_functor (TYPE(*)(ARGS...), str, str, str, str, str, str, Models::ModelFunctorClaw&);
+      /// Constructor
       backend_functor (TYPE(*)(ARGS...), str, str, str, str, str, str, str, Models::ModelFunctorClaw&);
 
       /// Destructor
@@ -911,8 +909,7 @@ namespace Gambit
 
     public:
 
-      /// Constructors
-      backend_functor (void (*)(ARGS...), str, str, str, str, str, str, Models::ModelFunctorClaw&);
+      /// Constructor
       backend_functor (void (*)(ARGS...), str, str, str, str, str, str, str, Models::ModelFunctorClaw&);
 
       /// Destructor
@@ -931,8 +928,7 @@ namespace Gambit
 
     public:
 
-      /// Constructors
-      backend_functor(typename variadic_ptr<TYPE,ARGS...>::type, str, str, str, str, str, str, Models::ModelFunctorClaw&);
+      /// Constructor
       backend_functor(typename variadic_ptr<TYPE,ARGS...>::type, str, str, str, str, str, str, str, Models::ModelFunctorClaw&);
 
       /// Destructor
@@ -958,8 +954,7 @@ namespace Gambit
 
     public:
 
-      /// Constructors
-      backend_functor(typename variadic_ptr<void,ARGS...>::type, str, str, str, str, str, str, Models::ModelFunctorClaw&);
+      /// Constructor
       backend_functor(typename variadic_ptr<void,ARGS...>::type, str, str, str, str, str, str, str, Models::ModelFunctorClaw&);
 
       /// Destructor
@@ -985,7 +980,7 @@ namespace Gambit
 
     public:
 
-      /// Constructors
+      /// Constructor
       model_functor(void (*)(ModelParameters &), str, str, str, str, Models::ModelFunctorClaw&);
 
       /// Destructor
