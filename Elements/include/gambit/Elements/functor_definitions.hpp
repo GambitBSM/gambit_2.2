@@ -236,7 +236,7 @@ namespace Gambit
                                                                              str origin_name,
                                                                              str origin_version,
                                                                              str origin_safe_version,
-									                                         str citation_key,
+                                                                             str citation_key,
                                                                              Models::ModelFunctorClaw &claw)
     : functor (func_name, func_capability, result_type, origin_name, claw), //can't put citation_key here
       myFunction (inputFunction),
