@@ -203,39 +203,6 @@ namespace Gambit
                                                                              str origin_name,
                                                                              str origin_version,
                                                                              str origin_safe_version,
-                                                                             Models::ModelFunctorClaw &claw)
-    : functor (func_name, func_capability, result_type, origin_name, claw),
-      myFunction (inputFunction),
-      myLogTag(-1),
-      inUse(false)
-    {
-      myVersion = origin_version;
-      mySafeVersion = origin_safe_version;
-      // Determine LogTag number
-      myLogTag = Logging::str2tag(myOrigin);
-      // Or in the case where we prefer to include the version number in the LogTag too
-      //myLogTag = Logging::str2tag(myOrigin+"v"+myVersion);
-      // Check for failure
-      if(myLogTag==-1)
-      {
-        std::ostringstream ss;
-        ss << "Error retrieving LogTag number (in functors.hpp, constructor for "
-              "backend_functor_common)! No match for backend name in tag2str map! "
-              "This is supposed to be a backend functor, so this is a fatal error. "
-              "(myOrigin=" << myOrigin << ", myName=" << myName << ")";
-        utils_error().raise(LOCAL_INFO,ss.str());
-      }
-    }
-
-    /// Overloaded constructor
-    template <typename PTR_TYPE, typename TYPE, typename... ARGS>
-    backend_functor_common<PTR_TYPE, TYPE, ARGS...>::backend_functor_common (funcPtrType inputFunction,
-                                                                             str func_name,
-                                                                             str func_capability,
-                                                                             str result_type,
-                                                                             str origin_name,
-                                                                             str origin_version,
-                                                                             str origin_safe_version,
                                                                              str citation_key,
                                                                              Models::ModelFunctorClaw &claw)
     : functor (func_name, func_capability, result_type, origin_name, claw), //can't put citation_key here
@@ -305,19 +272,6 @@ namespace Gambit
                                                                        str origin_name,
                                                                        str origin_version,
                                                                        str safe_version,
-                                                                       Models::ModelFunctorClaw &claw)
-    : backend_functor_common<TYPE(*)(ARGS...), TYPE, ARGS...>(inputFunction, func_name,
-      func_capability, result_type, origin_name, origin_version, safe_version, claw) {}
-
-    /// Overloaded constructor
-    template <typename TYPE, typename... ARGS>
-    backend_functor<TYPE(*)(ARGS...), TYPE, ARGS...>::backend_functor (TYPE (*inputFunction)(ARGS...),
-                                                                       str func_name,
-                                                                       str func_capability,
-                                                                       str result_type,
-                                                                       str origin_name,
-                                                                       str origin_version,
-                                                                       str safe_version,
                                                                        str citation_key,
                                                                        Models::ModelFunctorClaw &claw)
     : backend_functor_common<TYPE(*)(ARGS...), TYPE, ARGS...>(inputFunction, func_name,
@@ -337,19 +291,6 @@ namespace Gambit
     // Actual non-variadic backend functor class method definitions for TYPE=void
 
     /// Constructor
-    template <typename... ARGS>
-    backend_functor<void(*)(ARGS...), void, ARGS...>::backend_functor (void (*inputFunction)(ARGS...),
-                                                                       str func_name,
-                                                                       str func_capability,
-                                                                       str result_type,
-                                                                       str origin_name,
-                                                                       str origin_version,
-                                                                       str safe_version,
-                                                                       Models::ModelFunctorClaw &claw)
-    : backend_functor_common<void(*)(ARGS...), void, ARGS...>(inputFunction, func_name,
-      func_capability, result_type, origin_name, origin_version, safe_version, claw) {}
-
-    /// Overloaded constructor
     template <typename... ARGS>
     backend_functor<void(*)(ARGS...), void, ARGS...>::backend_functor (void (*inputFunction)(ARGS...),
                                                                        str func_name,
@@ -378,14 +319,6 @@ namespace Gambit
     template <typename TYPE, typename... ARGS>
     backend_functor<typename variadic_ptr<TYPE,ARGS...>::type, TYPE, ARGS...>::backend_functor
      (typename variadic_ptr<TYPE,ARGS...>::type inputFunction, str func_name, str func_capability, str result_type,
-     str origin_name, str origin_version, str safe_version, Models::ModelFunctorClaw &claw)
-    : backend_functor_common<typename variadic_ptr<TYPE,ARGS...>::type, TYPE, ARGS...>(inputFunction, func_name,
-      func_capability, result_type, origin_name, origin_version, safe_version, claw) {}
-
-    /// Overloaded constructor
-    template <typename TYPE, typename... ARGS>
-    backend_functor<typename variadic_ptr<TYPE,ARGS...>::type, TYPE, ARGS...>::backend_functor
-     (typename variadic_ptr<TYPE,ARGS...>::type inputFunction, str func_name, str func_capability, str result_type,
      str origin_name, str origin_version, str safe_version, str citation_key, Models::ModelFunctorClaw &claw)
     : backend_functor_common<typename variadic_ptr<TYPE,ARGS...>::type, TYPE, ARGS...>(inputFunction, func_name,
       func_capability, result_type, origin_name, origin_version, safe_version, citation_key, claw) {}
@@ -393,14 +326,6 @@ namespace Gambit
     // Actual variadic backend functor class method definitions for TYPE=void
 
     /// Constructor
-    template <typename... ARGS>
-    backend_functor<typename variadic_ptr<void,ARGS...>::type, void, ARGS...>::backend_functor
-     (typename variadic_ptr<void,ARGS...>::type inputFunction, str func_name, str func_capability, str result_type,
-     str origin_name, str origin_version, str safe_version, Models::ModelFunctorClaw &claw)
-    : backend_functor_common<typename variadic_ptr<void,ARGS...>::type, void, ARGS...>(inputFunction, func_name,
-      func_capability, result_type, origin_name, origin_version, safe_version, claw) {}
-
-    /// Overloaded constructor
     template <typename... ARGS>
     backend_functor<typename variadic_ptr<void,ARGS...>::type, void, ARGS...>::backend_functor
      (typename variadic_ptr<void,ARGS...>::type inputFunction, str func_name, str func_capability, str result_type,

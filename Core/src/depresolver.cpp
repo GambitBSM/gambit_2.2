@@ -2212,7 +2212,7 @@ namespace Gambit
         if(disabledVertexCandidates[j]->status() == -6)
           printPythonStatus = true;
 
-      // No candidates? Death. Unless only list of backends is requested
+      // No candidates? Death.
       if (vertexCandidates.size() == 0)
       {
         std::ostringstream errmsg;
