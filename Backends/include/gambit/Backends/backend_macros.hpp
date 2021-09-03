@@ -33,6 +33,7 @@
 ///  \author Tomas Gonzalo
 ///          (t.e.gonzalo@fys.uio.no)
 ///  \date 2016 Sep
+///  \date 2021 Sep
 ///
 ///  *********************************************
 
@@ -144,7 +145,7 @@ namespace Gambit                                                            \
                  DO_CLASSLOADING, STRINGIFY(BACKENDLANG));                  \
                                                                             \
       /* Register this backend with the Core if not running in standalone */\
-      REGISTER_BACKEND(BACKENDNAME, VERSION, SAFE_VERSION)                  \
+      REGISTER_BACKEND(BACKENDNAME, VERSION, SAFE_VERSION, REFERENCE)       \
                                                                             \
       /* Register a LogTag for this backend with the logging system */      \
       int reg_log = register_backend_with_log(STRINGIFY(BACKENDNAME));      \
@@ -189,11 +190,11 @@ namespace Gambit                                                            \
 
 /// Register this backend with the Core if not running in standalone mode.
 #ifndef STANDALONE
-  #define REGISTER_BACKEND(BE, VER, SAFEVER)                                \
+  #define REGISTER_BACKEND(BE, VER, SAFEVER, REF)                           \
    int CAT_4(BE,_,SAFEVER,_rego) =                                          \
-    register_backend(STRINGIFY(BE), STRINGIFY(VER));
+    register_backend(STRINGIFY(BE), STRINGIFY(VER), SAFE_STRINGIFY(REF));
 #else
-  #define REGISTER_BACKEND(BE, VER, SAFEVER) DUMMYARG(BE, VER, SAFEVER)
+  #define REGISTER_BACKEND(BE, VER, SAFEVER, REF) DUMMYARG(BE, VER, SAFEVER, REF)
 #endif
 
 /// Load factory functions for classes provided by this backend

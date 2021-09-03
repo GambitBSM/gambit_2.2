@@ -185,8 +185,8 @@ int main(int argc, char* argv[])
       dependencyResolver.doResolution();
       if (rank == 0) cout << "...done!" << endl;
  
-      // Print the references required for the used backends
-      if (rank == 0) dependencyResolver.printReferences();
+      // Print the citation keys required for the used backends
+      if (rank == 0) dependencyResolver.printCitationKeys();
 
       // Check that all requested models are used for at least one computation
       Models::ModelDB().checkPrimaryModelFunctorUsage(Core().getActiveModelFunctors());

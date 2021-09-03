@@ -32,6 +32,10 @@
 ///          (l.a.dal@fys.uio.no)
 ///  \date 2015 Jan
 ///
+///  \author Tomas Gonzalo
+///          (gonzalo@physik.rwth-aachen.de)
+///  \date 2021 Sep
+///
 ///  *********************************************
 
 #include <chrono>
@@ -220,6 +224,13 @@ namespace Gambit
     std::set<sspair> functor::dependencies()
     {
       utils_error().raise(LOCAL_INFO,"The dependencies method has not been defined in this class.");
+      std::set<sspair> empty;
+      return empty;
+    }
+    /// Getter for listing backends that require class loading
+    std::set<sspair> functor::backendclassloading()
+    {
+      utils_error().raise(LOCAL_INFO,"The backendclassloading method has not been defined in this class.");
       std::set<sspair> empty;
       return empty;
     }
@@ -930,6 +941,20 @@ namespace Gambit
 
     /// Getter for listing currently activated dependencies
     std::set<sspair> module_functor_common::dependencies() { return myDependencies; }
+    /// Getter for listing backends that require class loading
+    std::set<sspair> module_functor_common::backendclassloading()
+    {
+      std::set<sspair> backends;
+       
+      for(auto backend : required_classloading_backends)
+      {
+        for(auto version : backend.second)
+        {
+          backends.insert(sspair(backend.first, version));
+        }
+      }
+      return backends;
+    }
     /// Getter for listing backend requirement groups
     std::set<str> module_functor_common::backendgroups() { return myGroups; }
     /// Getter for listing all backend requirements

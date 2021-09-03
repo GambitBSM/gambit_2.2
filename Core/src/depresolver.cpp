@@ -26,9 +26,10 @@
 ///  \date 2013 Sep
 ///
 ///  \author Tomas Gonzalo
-///          (t.e.gonzalo@fys.uio.no)
+///          (gonzalo@physik.rwth-aachen.de)
 ///  \date 2017 June
 ///        2019 May
+///        2021 Sep
 ///
 ///  \author Patrick Stoecker
 ///          (stoecker@physik.rwth-aachen.de)
@@ -41,6 +42,7 @@
 #include "gambit/Utils/stream_overloads.hpp"
 #include "gambit/Utils/util_functions.hpp"
 #include "gambit/Utils/bibtex_functions.hpp"
+#include "gambit/Utils/citation_keys.hpp"
 #include "gambit/Logs/logger.hpp"
 #include "gambit/Backends/backend_singleton.hpp"
 #include "gambit/cmake/cmake_variables.hpp"
@@ -415,40 +417,10 @@ namespace Gambit
         printRequiredBackends();
       }
 
-      // Get BibTex key entries for each required backend
-      for(auto backend : backendsRequired)
-      {
-        for(auto befunctor : boundCore->getBackendFunctors())
-        {
-          if (backend[0].first == befunctor->origin() and backend[0].second == befunctor->version())
-          {
-            std::string bibkey = befunctor->citationKey();
-            std::string name = befunctor->name();
-            std::string origin = befunctor->origin();
-            std::string version = befunctor->version();
-            if (bibkey != "REFERENCE")
-            {
-              logger() << LogTags::dependency_resolver << "Found bibkey for backend " << origin << " version " << version << ": " << bibkey << EOM;
-              // Split list of keys to individual ones
-              std::stringstream kss(bibkey);
-              str k;
-              while (getline(kss, k, ','))
-              {
-                if(std::find(backendBibKeys.begin(), backendBibKeys.end(), k) == backendBibKeys.end())
-                  backendBibKeys.push_back(k);
-              }
-            }
-            else
-            {
-              std::ostringstream errmsg;
-              errmsg << "Missing reference for backend " << origin << "(" << version << ")." << endl;
-              errmsg << "Please add the bibkey to the frontend header, and full bibtex entry to ";
-              errmsg << boundIniFile->getValueOrDef<str>("config/backend_bibtex_entries.bib", "dependecy_resolution", "bibtex_file_location") << "." << endl;
-              dependency_resolver_error().raise(LOCAL_INFO,errmsg.str());
-            }
-          }
-        }
-      }
+
+
+      // Get BibTex key entries for backends, modules, etc
+      getCitationKeys();
 
       // Done
     }
@@ -641,17 +613,17 @@ namespace Gambit
       logger() << LogTags::dependency_resolver << ss.str() << EOM;
     }
 
-    // Print list of references to cite
-    void DependencyResolver::printReferences()
+    // Print the BibTeX citation keys
+    void DependencyResolver::printCitationKeys()
     {
 
       // If the list is empty do not print anything
-      if(backendBibKeys.empty()) return;
+      if(citationKeys.empty()) return;
 
       std::stringstream ss;
 
       // Location of the bibtex file
-      str bibtex_file_location = boundIniFile->getValueOrDef<str>(GAMBIT_DIR "/config/backend_bibtex_entries.bib", "dependency_resolution", "bibtex_file_location");
+      str bibtex_file_location = boundIniFile->getValueOrDef<str>(GAMBIT_DIR "/config/bibtex_entries.bib", "dependency_resolution", "bibtex_file_location");
 
       ss << "The scan you are about to run uses backends. Please make sure to cite the following references in your work." << std::endl;
       ss << "You can find the full bibtex entries for these references in " << bibtex_file_location << "." << std::endl;
@@ -659,22 +631,22 @@ namespace Gambit
       // Make sure that each key has an entry on the bibtex file
       // Create a list of entries in the bibtex file
       std::vector<str> entries = Utils::getBibTeXEntries(bibtex_file_location);
-      for(size_t i=0; i<backendBibKeys.size(); ++i)
+      for(size_t i=0; i<citationKeys.size(); ++i)
       {
-        str key = backendBibKeys[i];
+        str key = citationKeys[i];
 
         // Now find each key in the list of entries
         if(std::find(entries.begin(), entries.end(), key) == entries.end())
         {
           std::ostringstream errmsg;
-          errmsg << "The reference with key " << key << "cannot be found in the bibtex file " << bibtex_file_location << endl;
+          errmsg << "The reference with key " << key << " cannot be found in the bibtex file " << bibtex_file_location << endl;
           errmsg << "Please make sure that the bibtex file contains the relevant bibtex entries." << endl;
           dependency_resolver_error().raise(LOCAL_INFO,errmsg.str());
         }
         else
         {
           ss << key;
-          if(i < backendBibKeys.size()-1) ss << ", ";
+          if(i < citationKeys.size()-1) ss << ", ";
         }
       }
       ss << endl;
@@ -1219,6 +1191,9 @@ namespace Gambit
             vertexCandidates.push_back(*vi);
           // If we only want the list of backends, also add vertex for ini function
           else if (masterGraph[*vi]->status() == -4 and boundCore->show_backends)
+            vertexCandidates.push_back(*vi);
+          // If we only want the list of backends, also add disabled backends whose classes are needed
+          else if (masterGraph[*vi]->status() == -3 and boundCore->show_backends)
             vertexCandidates.push_back(*vi);
           // Otherwise
           else
@@ -1796,6 +1771,7 @@ namespace Gambit
           logger() << LogTags::dependency_resolver << "Activate new module function" << endl;
           masterGraph[fromVertex]->setStatus(2); // activate node
           resolveVertexBackend(fromVertex);
+          resolveVertexClassLoading(fromVertex);
 
           // Don't need options during dry-run, so skip this (just to simplify terminal output)
           if(not boundCore->show_runorder)
@@ -2369,6 +2345,92 @@ namespace Gambit
       logger() << EOM;
     }
 
+    // Resolve a dependency on backend classes
+    void DependencyResolver::resolveVertexClassLoading(VertexID vertex)
+    {
+      // If there are no backend class loading requirements, and thus nothing to do, return.
+      if ((*masterGraph[vertex]).backendclassloading().size() == 0) return;
+
+      // If the backend is not present, this vertex has already been disabled, so from now just assume it hasn't
+      // Unless the list of required backends is requested, in which case it is enabled, but it won't run a scan, so no worries
+
+      // Add to the logger
+      logger() << LogTags::dependency_resolver << "Doing backend class loading resolution..." << EOM;
+
+      // Add the backends to list of required backends
+      std::vector<sspair> resolvedBackends; 
+      for(auto backend : (*masterGraph[vertex]).backendclassloading())
+        resolvedBackends.push_back(backend);
+
+      bool found = false;
+      for(auto br = backendsRequired.begin(); br != backendsRequired.end(); ++br)
+      {
+        found = true;
+        for(auto backend : resolvedBackends)
+        {
+          if(std::find(br->begin(), br->end(), backend) == br->end())
+            found = false;
+        }
+        if(found) break;
+      }
+      if(not found)
+      {
+        backendsRequired.push_back(resolvedBackends);
+      }
+
+    }
+
+    // Get BibTeX citation keys for backends, modules, etc
+    void DependencyResolver::getCitationKeys()
+    {
+      // First add the necessary citation keys to use GAMBIT
+      citationKeys.insert(citationKeys.end(), gambit_citation_keys.begin(), gambit_citation_keys.end());
+
+      // Get the keys for the required backends
+      for(auto backend : backendsRequired)
+      {
+        str bibkey = "";
+
+        // Run over backend references
+        for(auto beref : boundCore->getBackendCitationKeys())
+        {
+          str origin = beref.first.first;
+          str version = beref.first.second;
+          if (backend[0].first == origin and backend[0].second == version)
+          {
+            bibkey = beref.second;
+            if (bibkey != "" and bibkey != "REFERENCE")
+            {
+              logger() << LogTags::dependency_resolver << "Found bibkey for backend " << origin << " version " << version << ": " << bibkey << EOM;
+              // Split list of keys to individual ones
+              std::stringstream kss(bibkey);
+              str k;
+              while (getline(kss, k, ','))
+              {
+                if(std::find(citationKeys.begin(), citationKeys.end(), k) == citationKeys.end())
+                  citationKeys.push_back(k);
+              }
+            }
+          }
+        }
+        if (bibkey == "" or bibkey == "REFERENCE")
+        {
+          std::ostringstream errmsg;
+          errmsg << "Missing reference for backend " << backend[0].first << "(" << backend[0].second << ")." << endl;
+          errmsg << "Please add the bibkey to the frontend header, and full bibtex entry to ";
+          errmsg << boundIniFile->getValueOrDef<str>("config/bibtex_entries.bib", "dependecy_resolution", "bibtex_file_location") << "." << endl;
+          dependency_resolver_error().raise(LOCAL_INFO,errmsg.str());
+        }
+      }
+    }
+
+    // Get the keys for modules and module functions
+    /*for (std::vector<VertexID>::const_iterator
+           vi  = order.begin();
+           vi != order.end(); ++vi)
+    {
+      std::cout << (*masterGraph[*vi]).name() << "\t" << (*masterGraph[*vi]).capability() << "\t" << (*masterGraph[*vi]).origin() << std::endl;
+    }*/
 
   }
 

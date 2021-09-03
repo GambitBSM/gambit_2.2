@@ -39,6 +39,14 @@ namespace Gambit
       std::ifstream file(bibtex_file);
       str line;
 
+      if(file.fail())
+      {
+        std::ostringstream errmsg;
+        errmsg << "Error opening bitex file " << bibtex_file
+             << ". Please make sure that bibtex fiel exists." << std::endl;
+        utils_error().raise(LOCAL_INFO,errmsg.str());
+      }
+
       // Loop over lines
       while(getline(file, line))
       {

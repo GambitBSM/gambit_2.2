@@ -15,6 +15,7 @@
 ///  \author Tomas Gonzalo
 ///          (t.e.gonzalo@fys.uio.no)
 ///  \date 2017 Jun
+///  \date 2021 Sep
 ///
 ///  \author Markus Prim
 ///          (markus.prim@kit.edu)
@@ -200,7 +201,11 @@ namespace Gambit
   }
 
   /// Add a new module to modules list
-  void gambit_core::registerModule(str module) { modules.insert(module); }
+  void gambit_core::registerModule(str module, str ref)
+  {
+    modules.insert(module);
+    module_citation_keys[module] = ref;
+  }
 
   /// Add a new module functor to functorList
   void gambit_core::registerModuleFunctor(functor &f)
@@ -220,7 +225,11 @@ namespace Gambit
   }
 
   /// Register a new backend
-  void gambit_core::registerBackend(str be, str version) { backend_versions[be].insert(version); }
+  void gambit_core::registerBackend(str be, str version, str ref)
+  {
+     backend_versions[be].insert(version);
+     backend_citation_keys[sspair(be,version)] = ref;
+  }
 
   /// Add a new primary model functor to primaryModelFunctorList
   void gambit_core::registerPrimaryModelFunctor(primary_model_functor &f)
@@ -249,6 +258,12 @@ namespace Gambit
 
   /// Get a reference to the map of all user-activated primary model functors
   const gambit_core::pmfMap &gambit_core::getActiveModelFunctors() const { return activeModelFunctorList; }
+
+  /// Get a reference to the map of module citaton keys
+  const std::map<str,str> &gambit_core::getModuleCitationKeys() const {  return module_citation_keys; }
+
+  /// Get a reference to the map of backend citation keys
+  const std::map<sspair, str> &gambit_core::getBackendCitationKeys() const { return backend_citation_keys; }
 
   /// Tell the module functors which backends are actually present,
   /// so that they can deactivate themselves if they require a class

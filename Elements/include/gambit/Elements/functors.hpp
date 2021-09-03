@@ -31,6 +31,10 @@
 ///          (l.a.dal@fys.uio.no)
 ///  \date 2015 Jan
 ///
+///  \author Tomas Gonzalo
+///          (gonzalo@physik.rwth-aachen.de)
+///  \date 2021 Sep
+///
 ///  *********************************************
 
 
@@ -204,6 +208,8 @@ namespace Gambit
 
       /// Getter for listing currently activated dependencies
       virtual std::set<sspair> dependencies();
+      /// Getter for listing backends that require class loading
+      virtual std::set<sspair> backendclassloading();
       /// Getter for listing backend requirement groups
       virtual std::set<str> backendgroups();
       /// Getter for listing all backend requirements
@@ -475,6 +481,8 @@ namespace Gambit
 
       /// Getter for listing currently activated dependencies
       virtual std::set<sspair> dependencies();
+      /// Getter for listing backends that require class loading
+      virtual std::set<sspair> backendclassloading();
       /// Getter for listing backend requirement groups
       virtual std::set<str> backendgroups();
       /// Getter for listing all backend requirements
