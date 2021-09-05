@@ -107,7 +107,7 @@ namespace Gambit
     // gsl error handler
     void handler_Ls (const char * reason, const char * file, int line, int gsl_errno)
     {
-      if (gsl_errno == 15) 
+      if (gsl_errno == 15)
       {
         throw gsl_errno;
       }
@@ -121,7 +121,7 @@ namespace Gambit
       else { std::cerr << "gsl: " << file << ":" << line << ": ERROR: " << reason << " and  gsl_errno = " << gsl_errno << std::endl; abort(); }
     }
 
-    const double da = 1.66053906660e-24; // dalton to g 
+    const double da = 1.66053906660e-24; // dalton to g
 
 
     class StellarModel
@@ -172,7 +172,7 @@ namespace Gambit
       double sumz, temp, sumz2;
 
       for (int i=0; i<m_nbins; ++i)
-      { 
+      {
 
         sumz = 0;
         sumz2 = 0;
@@ -247,7 +247,7 @@ namespace Gambit
       return result;
     }
 
-    StellarModel::~StellarModel() 
+    StellarModel::~StellarModel()
     {
       for (auto it=m_quantities.begin(); it!=m_quantities.end(); ++it)
       {
@@ -677,7 +677,7 @@ namespace Gambit
       result = Stats::gaussian_loglikelihood(Phi_predicted, Phi_obs, sigma_theo, sigma_obs, profile);
     }
 
-    //------------- Functions to compute short range forces likelihoods -------------// 
+    //------------- Functions to compute short range forces likelihoods -------------//
 
     // capability to provide the Higgs-Nucleon coupling constant fN, such as described in arXiv:1306.4710
     void func_Higgs_Nucleon_coupling_fN (Higgs_Nucleon_coupling_fN &result)
@@ -720,13 +720,31 @@ namespace Gambit
     {
       using namespace Pipes::New_Force_Sushkov2011_SuperRenormHP;
 
-      const double alpha = *Param["alpha"], lambda = *Param["lambda"]*1e2; // lambda in cm
+      if (ModelInUse("symmetron"))
+      {
+        const double powv = *Param["vval"], powmu = *Param["mu"];
+        double vval = pow(10, powv)*Gambit::m_planck_red, mu = pow(10, powmu);
 
-      daFunk::Funk d = daFunk::var("d");
+        double Rad = 16.5; // sphere radius in cm
+        double muR = mu*Rad/Gambit::gev2cm; // dimensionless term
+        daFunk::Funk d = daFunk::var("d"); // separation between plates
+        daFunk::Funk mux = d*1e-6/(Gambit::gev2cm*1e-2)*mu+muR;
 
-      daFunk::Funk force = 4*pow(pi, 2)*G_cgs*R*alpha*pow(lambda, 3)*exp(-d/lambda)*pow(rhoAu + (rhoTi-rhoAu)*exp(-dAu/lambda) + (rhog-rhoTi)*exp(-(dAu+dTi)/lambda), 2)*1e-5; // *1e-5 conversion from dyn(cgs) to N (SI)
+        double GeV2Newtons = 8.19e5; // Newton/GeV^2
 
-      result = force;
+        daFunk::Funk force = 4.*M_PI*vval*vval*muR/sqrt(2)*tanh(mux/sqrt(2))*pow(1./cosh(mux/sqrt(2)),2.0) * GeV2Newtons; // take neg of force??
+        result = force;
+      }
+      else
+      {
+        const double alpha = *Param["alpha"], lambda = *Param["lambda"]*1e2; // lambda in cm
+
+        daFunk::Funk d = daFunk::var("d");
+
+        daFunk::Funk force = 4*pow(pi, 2)*G_cgs*R*alpha*pow(lambda, 3)*exp(-d/lambda)*pow(rhoAu + (rhoTi-rhoAu)*exp(-dAu/lambda) + (rhog-rhoTi)*exp(-(dAu+dTi)/lambda), 2)*1e-5; // *1e-5 conversion from dyn(cgs) to N (SI)
+        result = force;
+      }
+
     }
 
     // capability function to compute the likelihood from Sushkov et al. 2011

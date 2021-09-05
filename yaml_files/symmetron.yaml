@@ -12,7 +12,7 @@ Parameters:
     mass:
       range: [-7, -3] #GeV
     mu:
-      range: [-37, -32] # GeV
+      range: [-37, -20] # GeV
     vval:
       range: [-18, 0] # GeV
     phi_init:
@@ -41,7 +41,7 @@ Printer:
 
   printer: hdf5
   options:
-    output_file: "solarsystemtest.hdf5"
+    output_file: "fifthforcetest.hdf5"
     group: "/symmetron"
     delete_file_on_restart: true
     buffer_length: 1000
@@ -101,8 +101,8 @@ Scanner:
 ObsLikes:
 
   - purpose:      LogLike
-    capability:   gamma_loglike
-    module:       CosmoBit
+    capability:   lnL_ShortRangeForces_Sushkov2011
+    module:       DarkBit
     type:         double
 
   - purpose:      LogLike

@@ -1900,7 +1900,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION New_Force_Sushkov2011_SuperRenormHP
     START_FUNCTION(daFunk::Funk)
-    ALLOW_MODEL(ModifiedGravityYukawa)
+    ALLOW_MODELS(ModifiedGravityYukawa, symmetron)
     #undef FUNCTION
   #undef CAPABILITY
 
