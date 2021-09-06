@@ -592,7 +592,7 @@ namespace Gambit
       // can fulfil the same requirement
       std::stringstream ss;
 
-      ss << endl << "Required backends to run file " << boundIniFile->filename << std::endl;
+      ss << endl << "Required backends to run file " << boundIniFile->filename() << std::endl;
       ss << "At least one backend candidate per row is required" << std::endl;
       ss << "--------------------------------------------------" << std::endl << std::endl;
 

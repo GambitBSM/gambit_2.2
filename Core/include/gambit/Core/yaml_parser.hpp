@@ -91,7 +91,8 @@ namespace Gambit
 
       public:
 
-        str filename;
+        // Return the filename
+        const str filename() const;
 
         /// Read in the YAML file
         virtual void readFile(str);
@@ -103,6 +104,8 @@ namespace Gambit
         /// @}
 
       private:
+
+        str _filename;
 
         ObservablesType observables;
         ObservablesType rules;
