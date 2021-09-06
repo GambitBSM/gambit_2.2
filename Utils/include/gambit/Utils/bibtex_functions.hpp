@@ -2,7 +2,7 @@
 //   *********************************************
 ///  \file
 ///
-///  Utility functions for bibtex files
+///  Utility functions and classes for bibtex files
 ///
 ///  *********************************************
 ///
@@ -26,14 +26,37 @@
 namespace Gambit
 {
 
-  namespace Utils
+  class BibTeX
   {
+     private:
 
-    // Get the list of bibtex entries on a bibtex file
-    std::vector<str> getBibTeXEntries(str);
+       str _filename;
+       std::vector<str> _bibtex_entries;
+       std::map<str,std::map<str,str> > _bibtex_data;
 
-  }
+     public:
 
+       // Constructor
+       BibTeX(str);
+
+       // Return filename
+       const str filename() const;
+
+       // Get the list of bibtex entries on a bibtex file
+       const std::vector<str> getBibTeXEntries() const;
+
+       // Get the bibtex data
+       const std::map<str,std::map<str,str>> getBibTeXData() const;
+
+       // Drop a bibtex file with all stored data
+       void dropBibTeXFile(str) const;
+
+       // Drop a bibtex file only with given set of keys
+       void dropBibTeXFile(std::vector<str>&, str) const;
+
+       // Drop a sample tex file citing a given set of keys
+       void dropTeXFile(std::vector<str>&, str, str) const;
+  };
 }
 
 #endif //defined __bibtex_functions_hpp__

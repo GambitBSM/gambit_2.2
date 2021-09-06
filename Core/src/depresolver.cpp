@@ -625,16 +625,15 @@ namespace Gambit
       // Location of the bibtex file
       str bibtex_file_location = boundIniFile->getValueOrDef<str>(GAMBIT_DIR "/config/bibtex_entries.bib", "dependency_resolution", "bibtex_file_location");
 
-      ss << "The scan you are about to run uses backends. Please make sure to cite the following references in your work." << std::endl;
-      ss << "You can find the full bibtex entries for these references in " << bibtex_file_location << "." << std::endl;
+      ss << "The scan you are about to run uses backends. Please make sure to cite all of them in your work." << std::endl;
+
+      // Create a list of entries in the bibtex file
+      BibTeX bibtex_file(bibtex_file_location);
+      std::vector<str> entries = bibtex_file.getBibTeXEntries();
 
       // Make sure that each key has an entry on the bibtex file
-      // Create a list of entries in the bibtex file
-      std::vector<str> entries = Utils::getBibTeXEntries(bibtex_file_location);
-      for(size_t i=0; i<citationKeys.size(); ++i)
+      for(const auto& key : citationKeys)
       {
-        str key = citationKeys[i];
-
         // Now find each key in the list of entries
         if(std::find(entries.begin(), entries.end(), key) == entries.end())
         {
@@ -643,19 +642,17 @@ namespace Gambit
           errmsg << "Please make sure that the bibtex file contains the relevant bibtex entries." << endl;
           dependency_resolver_error().raise(LOCAL_INFO,errmsg.str());
         }
-        else
-        {
-          ss << key;
-          if(i < citationKeys.size()-1) ss << ", ";
-        }
       }
-      ss << endl;
 
-      bool drop_bibtex = boundIniFile->getValueOrDef<bool>(false, "drop_bibtex");
-      if(drop_bibtex)
-      {
-        // TODO: Add option to dump out a specfic bibtex file with the used entries
-      }
+      // Drop a bibtex file with the citation entries
+      str bibtex_output_file = boundIniFile->getValueOrDef<str>("GAMBIT.bib", "dependency_resolution", "bibtex_output_file");
+      bibtex_file.dropBibTeXFile(citationKeys, bibtex_output_file);
+
+      // Drop a sample TeX file citing all backens
+      str tex_output_file = boundIniFile->getValueOrDef<str>("GAMBIT.tex", "dependency_resolution", "tex_output_file");
+      bibtex_file.dropTeXFile(citationKeys, tex_output_file, bibtex_output_file);
+
+      ss << "You can find the list of references to include in " << bibtex_output_file << ". And and example TeX file in " << tex_output_file << std::endl << std::endl;
 
       // Print to terminal
       std::cout << ss.str();
