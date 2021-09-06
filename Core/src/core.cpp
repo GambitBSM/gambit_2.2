@@ -203,8 +203,10 @@ namespace Gambit
   /// Add a new module to modules list
   void gambit_core::registerModule(str module, str ref)
   {
-    modules.insert(module);
-    module_citation_keys[module] = ref;
+    if(ref == "REFERENCE")
+      module_citation_keys[module] = "";
+    else
+      module_citation_keys[module] = ref;
   }
 
   /// Add a new module functor to functorList
@@ -228,7 +230,10 @@ namespace Gambit
   void gambit_core::registerBackend(str be, str version, str ref)
   {
      backend_versions[be].insert(version);
-     backend_citation_keys[sspair(be,version)] = ref;
+     if(ref == "REFERENCE")
+       backend_citation_keys[sspair(be,version)] = "";
+     else
+       backend_citation_keys[sspair(be,version)] = ref;
   }
 
   /// Add a new primary model functor to primaryModelFunctorList

@@ -56,6 +56,9 @@ namespace Gambit
 
        // Drop a sample tex file citing a given set of keys
        void dropTeXFile(std::vector<str>&, str, str) const;
+
+       // Static function to add a citation key to a list of keys
+       static void addCitationKey(std::vector<str>&, str);
   };
 }
 

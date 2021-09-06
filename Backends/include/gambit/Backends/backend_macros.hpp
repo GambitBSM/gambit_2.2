@@ -318,13 +318,15 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)                                     
 
 // Determine whether to make registration calls to the Core or not in BE_VARIABLE_I, depending on STANDALONE flag
 #ifdef STANDALONE
-  #define BE_VARIABLE_I(NAME, TYPE, SYMBOLNAMES, CAPABILITY, MODELS)                \
+  #define BE_VARIABLE_I(NAME, TYPE, SYMBOLNAMES, CAPABILITY, MODELS, REF)           \
           BE_VARIABLE_I_AUX(NAME, TYPE, SYMBOLNAMES, CAPABILITY, MODELS)            \
-          BE_VARIABLE_I_MAIN(NAME, MATH_TYPE(TYPE), SYMBOLNAMES, CAPABILITY, MODELS)
+          BE_VARIABLE_I_MAIN(NAME, MATH_TYPE(TYPE), SYMBOLNAMES, CAPABILITY,        \
+                             MODELS, REF)
 #else
-  #define BE_VARIABLE_I(NAME, TYPE, SYMBOLNAMES, CAPABILITY, MODELS)                \
+  #define BE_VARIABLE_I(NAME, TYPE, SYMBOLNAMES, CAPABILITY, MODELS, REF)           \
           BE_VARIABLE_I_AUX(NAME, TYPE, SYMBOLNAMES, CAPABILITY, MODELS)            \
-          BE_VARIABLE_I_MAIN(NAME, MATH_TYPE(TYPE), SYMBOLNAMES, CAPABILITY, MODELS)\
+          BE_VARIABLE_I_MAIN(NAME, MATH_TYPE(TYPE), SYMBOLNAMES, CAPABILITY,        \
+                             MODELS, REF)                                           \
           BE_VARIABLE_I_SUPP(NAME)
 #endif
 
@@ -353,7 +355,7 @@ namespace Gambit                                                              \
 }
 
 /// Main actual backend variable macro
-#define BE_VARIABLE_I_MAIN(NAME, TYPE, SYMBOLNAMES, CAPABILITY, MODELS)       \
+#define BE_VARIABLE_I_MAIN(NAME, TYPE, SYMBOLNAMES, CAPABILITY, MODELS, REF)  \
 namespace Gambit                                                              \
 {                                                                             \
   namespace Backends                                                          \
@@ -371,7 +373,7 @@ namespace Gambit                                                              \
         STRINGIFY(BACKENDNAME),                                               \
         STRINGIFY(VERSION),                                                   \
         STRINGIFY(SAFE_VERSION),                                              \
-        SAFE_STRINGIFY(REFERENCE),                                            \
+        SAFE_STRINGIFY(REF),                                                  \
         Models::ModelDB());                                                   \
       } /* end namespace Functown */                                          \
                                                                               \
@@ -406,32 +408,36 @@ namespace Gambit                                                              \
 
 /// \name Wrapping macros for backend-defined functions
 ///
-/// BE_FUNCTION(NAME, TYPE, ARGSLIST, SYMBOLNAMES, CAPABILITY, [(MODELS)]) is the
+/// BE_FUNCTION(NAME, TYPE, ARGSLIST, SYMBOLNAMES, CAPABILITY, [(MODELS)], [REF]) is the
 /// macro used for constructing pointers to library functions and
 /// wrapping function pointers in backend functors.
 ///
 /// The sixth argument (MODELS) is optional, and contains a list of models that you want this function to be able
 /// to be used with.
+/// The seventh argument REF is optional, and contains a string of citation keys as references for the backend function
 /// @{
 
 #define BE_FUNCTION_5(NAME, TYPE, ARGSLIST, SYMBOLNAMES, CAPABILITY)                            \
-  BE_FUNCTION_I(NAME, TYPE, ARGSLIST, SYMBOLNAMES, CAPABILITY, ())
+  BE_FUNCTION_I(NAME, TYPE, ARGSLIST, SYMBOLNAMES, CAPABILITY, (), "")
 
 #define BE_FUNCTION_6(NAME, TYPE, ARGSLIST, SYMBOLNAMES, CAPABILITY, MODELS)                    \
-  BE_FUNCTION_I(NAME, TYPE, ARGSLIST, SYMBOLNAMES, CAPABILITY, MODELS)
+  BE_FUNCTION_I(NAME, TYPE, ARGSLIST, SYMBOLNAMES, CAPABILITY, MODELS, "")
+
+#define BE_FUNCTION_7(NAME, TYPE, ARGSLIST, SYMBOLNAMES, CAPABILITY, MODELS, REF)               \
+  BE_FUNCTION_I(NAME, TYPE, ARGSLIST, SYMBOLNAMES, CAPABILITY, MODELS, REF)
 
 #define BE_FUNCTION(...) VARARG(BE_FUNCTION, __VA_ARGS__)
 
 
 // Determine whether to make registration calls to the Core or not in BE_FUNCTION_IMPL2, depending on STANDALONE flag
 #ifdef STANDALONE
-  #define BE_FUNCTION_I(NAME, TYPE, ARGLIST, SYMBOLNAMES, CAPABILITY, MODELS)                   \
+  #define BE_FUNCTION_I(NAME, TYPE, ARGLIST, SYMBOLNAMES, CAPABILITY, MODELS, REF)              \
           BE_FUNCTION_I_AUX(NAME, TYPE, ARGLIST, SYMBOLNAMES, CAPABILITY, MODELS)               \
-          BE_FUNCTION_I_MAIN(NAME, TYPE, ARGLIST, SYMBOLNAMES, CAPABILITY, MODELS)
+          BE_FUNCTION_I_MAIN(NAME, TYPE, ARGLIST, SYMBOLNAMES, CAPABILITY, MODELS, REF)
 #else
-  #define BE_FUNCTION_I(NAME, TYPE, ARGLIST, SYMBOLNAMES, CAPABILITY, MODELS)                   \
+  #define BE_FUNCTION_I(NAME, TYPE, ARGLIST, SYMBOLNAMES, CAPABILITY, MODELS, REF)              \
           BE_FUNCTION_I_AUX(NAME, TYPE, ARGLIST, SYMBOLNAMES, CAPABILITY, MODELS)               \
-          BE_FUNCTION_I_MAIN(NAME, TYPE, ARGLIST, SYMBOLNAMES, CAPABILITY, MODELS)              \
+          BE_FUNCTION_I_MAIN(NAME, TYPE, ARGLIST, SYMBOLNAMES, CAPABILITY, MODELS, REF)         \
           BE_FUNCTION_I_SUPP(NAME)
 #endif
 
@@ -459,7 +465,7 @@ namespace Gambit                                                                
 }
 
 /// Main actual backend function macro
-#define BE_FUNCTION_I_MAIN(NAME, TYPE, ARGLIST, SYMBOLNAMES, CAPABILITY, MODELS)                \
+#define BE_FUNCTION_I_MAIN(NAME, TYPE, ARGLIST, SYMBOLNAMES, CAPABILITY, MODELS, REF)           \
 namespace Gambit                                                                                \
 {                                                                                               \
   namespace Backends                                                                            \
@@ -479,7 +485,7 @@ namespace Gambit                                                                
          STRINGIFY(BACKENDNAME),                                                                \
          STRINGIFY(VERSION),                                                                    \
          STRINGIFY(SAFE_VERSION),                                                               \
-         SAFE_STRINGIFY(REFERENCE),                                                             \
+         SAFE_STRINGIFY(REF),                                                                   \
          Models::ModelDB());                                                                    \
       } /* end namespace Functown */                                                            \
                                                                                                 \
@@ -515,19 +521,19 @@ namespace Gambit                                                                
 
 // Determine whether to make registration calls to the Core or not in BE_CONV_FUNCTION, depending on STANDALONE flag
 #ifdef STANDALONE
-  #define BE_CONV_FUNCTION_FULL(NAME, TYPE, ARGSLIST, CAPABILITY, MODELS)                       \
-          BE_CONV_FUNCTION_MAIN(NAME, TYPE, ARGSLIST, CAPABILITY, MODELS)
+  #define BE_CONV_FUNCTION_FULL(NAME, TYPE, ARGSLIST, CAPABILITY, MODELS, REF)                  \
+          BE_CONV_FUNCTION_MAIN(NAME, TYPE, ARGSLIST, CAPABILITY, MODELS, REF)
 #else
-  #define BE_CONV_FUNCTION_FULL(NAME, TYPE, ARGSLIST, CAPABILITY, MODELS)                       \
-          BE_CONV_FUNCTION_MAIN(NAME, TYPE, ARGSLIST, CAPABILITY, MODELS)                       \
+  #define BE_CONV_FUNCTION_FULL(NAME, TYPE, ARGSLIST, CAPABILITY, MODELS, REF)                  \
+          BE_CONV_FUNCTION_MAIN(NAME, TYPE, ARGSLIST, CAPABILITY, MODELS, REF)                  \
           BE_CONV_FUNCTION_SUPP(NAME)
 #endif
 
 
 /// \name Main wrapping macro for convenience functions
-/// BE_CONV_FUNCTION(NAME, TYPE, ARGSLIST, CAPABILITY, [(MODELS)]) is the macro used
+/// BE_CONV_FUNCTION(NAME, TYPE, ARGSLIST, CAPABILITY, [(MODELS)], [REF]) is the macro used
 /// for wrapping convenience functions in backend functors.
-#define BE_CONV_FUNCTION_MAIN(NAME, TYPE, ARGSLIST, CAPABILITY, MODELS)                         \
+#define BE_CONV_FUNCTION_MAIN(NAME, TYPE, ARGSLIST, CAPABILITY, MODELS, REF)                    \
 namespace Gambit                                                                                \
 {                                                                                               \
   namespace Backends                                                                            \
@@ -548,7 +554,7 @@ namespace Gambit                                                                
          STRINGIFY(BACKENDNAME),                                                                \
          STRINGIFY(VERSION),                                                                    \
          STRINGIFY(SAFE_VERSION)  BOOST_PP_COMMA()                                              \
-         SAFE_STRINGIFY(REFERENCE),                                                             \
+         SAFE_STRINGIFY(REF),                                                                   \
          Models::ModelDB());                                                                    \
       } /* end namespace Functown */                                                            \
                                                                                                 \

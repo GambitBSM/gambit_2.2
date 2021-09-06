@@ -20,6 +20,7 @@
 #include <regex>
 
 #include "gambit/Utils/util_types.hpp"
+#include "gambit/Utils/util_functions.hpp"
 #include "gambit/Utils/bibtex_functions.hpp"
 #include "gambit/Utils/stream_overloads.hpp"
 
@@ -68,9 +69,11 @@ namespace Gambit
       // Otherwise, if entry has been initialized fill bibtex data
       if(entry != "")
       {
-        str key = line.substr(0, line.find('='));
-        str data = line.substr(line.find('=')+1, std::string::npos);
-        _bibtex_data[entry].insert(sspair(key,data));
+        std::vector<str> data = Utils::split(line,"=");
+        str field = data[0];
+        str val = data[1];
+        if(Utils::endsWith(val,",")) val.pop_back();
+        _bibtex_data[entry].insert(sspair(field,val));
       }
     }
   }
@@ -121,13 +124,14 @@ namespace Gambit
 
       for(const auto& data : entry)
       {
-        out << data.first << " = " << data.second << std::endl;
+        out << data.first << " = " << data.second << "," << std::endl;
       }
       out << "}" << std::endl << std::endl;
 
     }
 
   }
+
   // Drop a sample tex file citing a given set of keys
   void BibTeX::dropTeXFile(std::vector<str> &citation_keys, str tex_filename, str bibtex_filename) const
   {
@@ -144,22 +148,38 @@ namespace Gambit
     out << "This is a sample TeX File citing all relevant references" << std::endl;
     out << "In this scan you have used the following tools~\\cite{";
 
-    for(str key : citation_keys)
+    for(size_t i = 0; i < citation_keys.size(); i++)
     {
+      str key = citation_keys[i];
       if(std::find(_bibtex_entries.begin(), _bibtex_entries.end(), key) == _bibtex_entries.end())
       {
         std::ostringstream errmsg;
         errmsg << "Error writing bibtex file. Could not find key " << key << "in BibTeX database." << std::endl;
         utils_error().raise(LOCAL_INFO,errmsg.str());
       }
-      out << key << ",";
+      out << key;
+      if(i < citation_keys.size()-1) out << ",";
     }
     out << "}." << std::endl << std::endl;
 
+    out << "\\bibliographystyle{abbrv}" << std::endl;
     out << "\\bibliography{" << bibtex_filename.erase(bibtex_filename.find(".bib")) << "}" << std::endl << std::endl;
 
     out << "\\end{document}";
 
+  }
+
+  // Static function to add a citation key to a list of keys
+  void BibTeX::addCitationKey(std::vector<str> &citationKeys, str bibkey)
+  {
+    // Split list of keys to individual ones
+    std::stringstream kss(bibkey);
+    str k;
+    while (getline(kss, k, ','))
+    {
+      if(std::find(citationKeys.begin(), citationKeys.end(), k) == citationKeys.end())
+        citationKeys.push_back(k);
+    }
   }
 }
 

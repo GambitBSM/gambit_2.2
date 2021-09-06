@@ -59,6 +59,7 @@
 
 
 #define MODULE CosmoBit
+#define REFERENCE GAMBITCosmologyWorkgroup:2020htv
 START_MODULE
 
   /// get the energy injection efficiency tables
@@ -820,5 +821,6 @@ START_MODULE
 
   #endif
 
+#undef REFERENCE
 #undef MODULE
 #endif /* defined __CosmoBit_rollcall_hpp__ */

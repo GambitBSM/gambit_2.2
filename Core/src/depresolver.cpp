@@ -417,9 +417,7 @@ namespace Gambit
         printRequiredBackends();
       }
 
-
-
-      // Get BibTex key entries for backends, modules, etc
+      // Get BibTeX key entries for backends, modules, etc
       getCitationKeys();
 
       // Done
@@ -2388,7 +2386,7 @@ namespace Gambit
       {
         str bibkey = "";
 
-        // Run over backend references
+        // Run over references of loaded backends
         for(auto beref : boundCore->getBackendCitationKeys())
         {
           str origin = beref.first.first;
@@ -2399,14 +2397,7 @@ namespace Gambit
             if (bibkey != "" and bibkey != "REFERENCE")
             {
               logger() << LogTags::dependency_resolver << "Found bibkey for backend " << origin << " version " << version << ": " << bibkey << EOM;
-              // Split list of keys to individual ones
-              std::stringstream kss(bibkey);
-              str k;
-              while (getline(kss, k, ','))
-              {
-                if(std::find(citationKeys.begin(), citationKeys.end(), k) == citationKeys.end())
-                  citationKeys.push_back(k);
-              }
+              BibTeX::addCitationKey(citationKeys, bibkey);
             }
           }
         }
@@ -2419,15 +2410,42 @@ namespace Gambit
           dependency_resolver_error().raise(LOCAL_INFO,errmsg.str());
         }
       }
-    }
 
-    // Get the keys for modules and module functions
-    /*for (std::vector<VertexID>::const_iterator
-           vi  = order.begin();
-           vi != order.end(); ++vi)
-    {
-      std::cout << (*masterGraph[*vi]).name() << "\t" << (*masterGraph[*vi]).capability() << "\t" << (*masterGraph[*vi]).origin() << std::endl;
-    }*/
+      // Now look over activated vertices in the mastergraph and add any references to module, module functions, etc
+      std::vector<VertexID> order = getObsLikeOrder();
+      for (std::vector<VertexID>::const_iterator
+                  vi  = order.begin();
+                  vi != order.end(); ++vi)
+      {
+        std::set<VertexID> parents;
+        getParentVertices(*vi, masterGraph, parents);
+        parents.insert(*vi);
+        for (std::set<VertexID>::const_iterator
+                  vi2  = parents.begin();
+                  vi2 != parents.end(); ++vi2)
+
+        {
+ 
+          // Add citation key for used modules
+          for(const auto &key : boundCore->getModuleCitationKeys())
+          {
+            if(key.first == masterGraph[*vi2]->origin())
+            {
+              BibTeX::addCitationKey(citationKeys, key.second);
+            }
+          }
+
+          // Add citation key for specific module functions
+          if(masterGraph[*vi2]->citationKey() != "")
+          {
+            BibTeX::addCitationKey(citationKeys, masterGraph[*vi2]->citationKey());
+          }
+
+        }
+
+      }
+
+    }
 
   }
 
