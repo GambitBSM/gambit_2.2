@@ -61,9 +61,29 @@ namespace Gambit
     {
       using namespace Pipes::WIMP_properties;
       props.name = *Dep::DarkMatter_ID;
-      props.mass = Dep::TH_ProcessCatalog->getParticleProperty(*Dep::DarkMatter_ID).mass;
-      props.spinx2 = Dep::TH_ProcessCatalog->getParticleProperty(*Dep::DarkMatter_ID).spin2;
-      props.sc = Dep::TH_ProcessCatalog->getProcess(*Dep::DarkMatter_ID,*Dep::DarkMatter_ID).isSelfConj;
+      props.spinx2 = Models::ParticleDB().get_spinx2(props.name);
+      props.sc = not Models::ParticleDB().has_antiparticle(props.name);
+      // Get wimp mass from relevant spectrum
+      if(ModelInUse("MSSM63atQ") or ModelInUse("MSSM63atMGUT"))
+        props.mass = Dep::MSSM_spectrum->get(Par::Pole_Mass, props.name);
+      if(ModelInUse("ScalarSingletDM_Z2_running"))
+        props.mass = Dep::ScalarSingletDM_Z2_spectrum->get(Par::Pole_Mass, props.name);
+      if(ModelInUse("ScalarSingletDM_Z3_running"))
+        props.mass = Dep::ScalarSingletDM_Z3_spectrum->get(Par::Pole_Mass, props.name);
+      if(ModelInUse("VectorSingletDM_Z2"))
+        props.mass = Dep::VectorSingletDM_Z2_spectrum->get(Par::Pole_Mass, props.name);
+      if(ModelInUse("MajoranaSingletDM_Z2"))
+        props.mass = Dep::MajoranaSingletDM_Z2_spectrum->get(Par::Pole_Mass, props.name);
+      if(ModelInUse("DiracSingletDM_Z2"))
+        props.mass = Dep::DiracSingletDM_Z2_spectrum->get(Par::Pole_Mass, props.name);
+      if(ModelInUse("AnnihilatingDM_mixture") or ModelInUse("DecayingDM_mixture"))
+        props.mass = *Param["mass"];
+      if(ModelInUse("NREO_scalarDM") or ModelInUse("NREO_MajoranaDM") or ModelInUse("NREO_DiracDM"))
+        props.mass = *Param["m"];
+      if(ModelInUse("MDM"))
+        props.mass = Dep::MDM_spectrum->get(Par::Pole_Mass, props.name);
+      if(ModelInUse("DMEFT"))
+        props.mass = Dep::DMEFT_spectrum->get(Par::Pole_Mass, props.name);
     }
 
     /// Retrieve the DM mass in GeV for generic models (GeV)

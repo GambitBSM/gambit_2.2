@@ -210,15 +210,6 @@ namespace Gambit
     void DarkMatter_ID_MajoranaSingletDM(std::string & result) { result = "X"; }
     void DarkMatterConj_ID_MajoranaSingletDM(std::string & result) { result = "X"; }
 
-    void MajoranaSingletDM_Z2_WIMP_properties(WIMPprops& result)
-    {
-      using namespace Pipes::MajoranaSingletDM_Z2_WIMP_properties;
-      result.mass   = *Param["mX"];
-      result.spinx2 = 1;
-      result.sc     = true;
-      result.name   = "X";
-    }
-
     /// Direct detection couplings for the MajoranaSingletDM_Z2 model.
     /// Non-relativistic Wilson Coefficients for direct detection
     void DD_nonrel_WCs_MajoranaSingletDM_Z2(NREO_DM_nucleon_couplings &result)

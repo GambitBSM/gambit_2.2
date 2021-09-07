@@ -126,12 +126,31 @@ OtherModels:
     spinx2: 0
 
   - PDG_context:
+    - 61
+    - 0
+    chargex3: 0
+    color: 1
+    description: NREO Scalar Singlet
+    name: phi
+    spinx2: 0
+
+  - PDG_context:
     - 9900002
     - 0
     chargex3: 0
     color: 1
     description: Dirac Singlet
     name: F
+    spinx2: 1
+
+  - PDG_context:
+    - 62
+    - 0
+    chargex3: 0
+    color: 1
+    description: NREO Dirac Singlet
+    name: chi
+    conjugate: chi~
     spinx2: 1
 
   - PDG_context:
@@ -144,6 +163,15 @@ OtherModels:
     spinx2: 1
 
   - PDG_context:
+    - 63
+    - 0
+    chargex3: 0
+    color: 1
+    description: NREO Majorana Singlet
+    name: psi
+    spinx2: 1
+
+  - PDG_context:
     - 9900004
     - 0
     chargex3: 0
@@ -151,13 +179,6 @@ OtherModels:
     description: Vector Singlet
     name: V
     spinx2: 2
-
-  - PDG_context: [62, 0]
-    chargex3: 0
-    color: 1
-    conjugate: chi~
-    name: chi
-    spinx2: 1
 
   - DecayBit:
       Decays: true

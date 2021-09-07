@@ -206,15 +206,6 @@ namespace Gambit
     void DarkMatter_ID_DiracSingletDM(std::string & result) { result = "F"; }
     void DarkMatterConj_ID_DiracSingletDM(std::string & result) { result = "F"; }
 
-    void DiracSingletDM_Z2_WIMP_properties(WIMPprops& result)
-    {
-      using namespace Pipes::DiracSingletDM_Z2_WIMP_properties;
-      result.mass   = *Param["mF"];
-      result.spinx2 = 1;
-      result.sc     = false;
-      result.name   = "chi";
-    }
-
     /// Direct detection couplings for the DiracSingletDM_Z2 model.
     void DD_nonrel_WCs_DiracSingletDM_Z2(NREO_DM_nucleon_couplings &result)
     {

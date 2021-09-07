@@ -1010,38 +1010,21 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION WIMP_properties
     START_FUNCTION(WIMPprops)
-    DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
     DEPENDENCY(DarkMatter_ID, std::string)
-    #undef FUNCTION
-
-    #define FUNCTION NREO_scalarDM_WIMP_properties
-    START_FUNCTION(WIMPprops)
-    ALLOW_MODELS(NREO_scalarDM)
-    #undef FUNCTION
-
-    #define FUNCTION NREO_MajoranaDM_WIMP_properties
-    START_FUNCTION(WIMPprops)
-    ALLOW_MODELS(NREO_MajoranaDM)
-    #undef FUNCTION
-
-    #define FUNCTION NREO_DiracDM_WIMP_properties
-    START_FUNCTION(WIMPprops)
-    ALLOW_MODELS(NREO_DiracDM)
-    #undef FUNCTION
-
-    #define FUNCTION MajoranaSingletDM_Z2_WIMP_properties
-    START_FUNCTION(WIMPprops)
-    ALLOW_MODELS(MajoranaSingletDM_Z2)
-    #undef FUNCTION
-
-    #define FUNCTION DiracSingletDM_Z2_WIMP_properties
-    START_FUNCTION(WIMPprops)
-    ALLOW_MODELS(DiracSingletDM_Z2)
-    #undef FUNCTION
-
-    #define FUNCTION DMEFT_WIMP_properties
-    START_FUNCTION(WIMPprops)
-    ALLOW_MODELS(DMEFT)
+    MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum, Spectrum, MSSM63atQ, MSSM63atMGUT)
+    MODEL_CONDITIONAL_DEPENDENCY(ScalarSingletDM_Z2_spectrum, Spectrum, ScalarSingletDM_Z2_running)
+    MODEL_CONDITIONAL_DEPENDENCY(ScalarSingletDM_Z3_spectrum, Spectrum, ScalarSingletDM_Z3_running)
+    MODEL_CONDITIONAL_DEPENDENCY(MajoranaSingletDM_Z2_spectrum, Spectrum, MajoranaSingletDM_Z2)
+    MODEL_CONDITIONAL_DEPENDENCY(DiracSingletDM_Z2_spectrum, Spectrum, DiracSingletDM_Z2)
+    MODEL_CONDITIONAL_DEPENDENCY(VectorSingletDM_Z2_spectrum, Spectrum, VectorSingletDM_Z2)
+    MODEL_CONDITIONAL_DEPENDENCY(MDM_spectrum, Spectrum, MDM)
+    MODEL_CONDITIONAL_DEPENDENCY(DMEFT_spectrum, Spectrum, DMEFT)
+    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
+    ALLOW_MODELS(ScalarSingletDM_Z2_running, ScalarSingletDM_Z3_running)
+    ALLOW_MODELS(VectorSingletDM_Z2, MajoranaSingletDM_Z2, DiracSingletDM_Z2)
+    ALLOW_MODELS(AnnihilatingDM_mixture, DecayingDM_mixture)
+    ALLOW_MODELS(NREO_scalarDM, NREO_MajoranaDM, NREO_DiracDM)
+    ALLOW_MODELS(MDM, DMEFT)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1901,7 +1884,7 @@ START_MODULE
     #undef FUNCTION
     #define FUNCTION DarkMatter_ID_EFT
     START_FUNCTION(std::string)
-    DEPENDENCY(WIMP_properties, WIMPprops)
+    ALLOW_MODELS(NREO_scalarDM, NREO_MajoranaDM, NREO_DiracDM)
     #undef FUNCTION
     #define FUNCTION DarkMatter_ID_DMEFT
     START_FUNCTION(std::string)

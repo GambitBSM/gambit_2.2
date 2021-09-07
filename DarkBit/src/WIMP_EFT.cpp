@@ -128,42 +128,18 @@ namespace Gambit
     void DarkMatter_ID_EFT(std::string& result)
     {
        using namespace Pipes::DarkMatter_ID_EFT;
-       result = Dep::WIMP_properties->name;
+       if(ModelInUse("NREO_scalarDM")) result = "phi";
+       if(ModelInUse("NREO_MajoranaDM")) result = "psi";
+       if(ModelInUse("NREO_DiracDM")) result = "~chi";
     }
 
     /// DarkMatterConj_ID string for generic EFT dark matter 
     void DarkMatterConj_ID_EFT(std::string& result)
     {
        using namespace Pipes::DarkMatterConj_ID_EFT;
-       result = Dep::WIMP_properties->name;
-    }
-
-    /// WIMP properties
-    void NREO_scalarDM_WIMP_properties(WIMPprops& result)
-    {
-      using namespace Pipes::NREO_scalarDM_WIMP_properties;
-      result.mass   = *Param["m"];
-      result.spinx2 = 0;
-      result.sc     = true;
-      result.name   = "phi";
-    }
-
-    void NREO_MajoranaDM_WIMP_properties(WIMPprops& result)
-    {
-      using namespace Pipes::NREO_MajoranaDM_WIMP_properties;
-      result.mass   = *Param["m"];
-      result.spinx2 = 1;
-      result.sc     = true;
-      result.name   = "chi";
-    }
-
-    void NREO_DiracDM_WIMP_properties(WIMPprops& result)
-    {
-      using namespace Pipes::NREO_DiracDM_WIMP_properties;
-      result.mass   = *Param["m"];
-      result.spinx2 = 1;
-      result.sc     = false;
-      result.name   = "Dchi";
+       if(ModelInUse("NREO_scalarDM")) result = "phi";
+       if(ModelInUse("NREO_MajoranaDM")) result = "psi";
+       if(ModelInUse("NREO_DiracDM")) result = "chi";
     }
 
 
