@@ -36,7 +36,6 @@
 #include <cstring>
 
 #include "gambit/CosmoBit/CosmoBit_types.hpp"
-#include "gambit/CosmoBit/CosmoBit_utils.hpp"
 
 #define GSL_SPLINE_TYPE gsl_interp_linear
 //#define GSL_SPLINE_TYPE gsl_interp_cspline

@@ -28,13 +28,6 @@
 #ifndef __CosmoBit_utils_hpp__
 #define __CosmoBit_utils_hpp__
 
-#include <valarray>
-#include <vector>
-#include <map>
-#include <string>
-#include <sstream>
-#include <pybind11/stl.h>
-
 namespace Gambit
 {
 
@@ -43,38 +36,6 @@ namespace Gambit
 
     namespace CosmoBit_utils
     {
-
-      // fast interpolation for grids defined on equally-spaced log space
-      class fast_interpolation {
-        private:
-          int grid_size;
-          double Delta_logx;
-          std::valarray<double> x_grid;
-          std::valarray<double> y_grid;
-
-        public:
-          fast_interpolation(std::valarray<double>& x_grid0, std::valarray<double>& y_grid0)
-          {
-            x_grid = x_grid0;
-            y_grid = y_grid0;
-            grid_size = x_grid.size();
-            Delta_logx = (log(x_grid[grid_size-1]) - log(x_grid[0]))/(grid_size-1);
-          }
-
-          double interp(double x)
-          {
-            if (x <= x_grid[0])
-              return y_grid[0];
-            if (x >= x_grid[grid_size-1])
-              return y_grid[grid_size-1];
-
-            double intpart_d;
-            double fracpart = std::modf((log(x) - log(x_grid[0]))/Delta_logx, &intpart_d);
-            int intpart = lround(intpart_d);
-
-            return y_grid[intpart] * (1 - fracpart) + y_grid[intpart+1]*fracpart;
-          }
-      };
 
       double entropy_density_SM(double T, bool T_in_eV=false);
 
