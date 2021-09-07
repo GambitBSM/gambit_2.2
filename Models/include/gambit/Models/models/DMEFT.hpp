@@ -12,8 +12,16 @@
 ///
 ///  \author Sanjay Bloor
 ///         (sanjay.bloor12@imperial.ac.uk)
-///  \date Oct 2019
-///                                                
+///  \date 2019 Oct
+///
+///  \author Patrick Stöcker
+///          (stoecker@physik.rwth-aachen.de)
+///  \date 2021 Mar
+///
+///  \author Tomas Gonzalo
+///          (gonzalo@physik.rwth-aachen.de)
+///  \date 2021 Sep
+///
 ///  ********************************************* 
 
 #ifndef __DMEFT_hpp__
@@ -35,45 +43,6 @@
   INTERPRET_AS_X_DEPENDENCY(AnnihilatingDM_general,WIMP_properties,WIMPprops)
   INTERPRET_AS_X_DEPENDENCY(AnnihilatingDM_general,sigmav,double)
   INTERPRET_AS_X_DEPENDENCY(AnnihilatingDM_general,RD_fraction,double)
-
-  #define CAPABILITY WIMP_properties
-  START_CAPABILITY
-     #define FUNCTION DMEFT_WIMP_properties
-     START_FUNCTION(WIMPprops)
-     ALLOW_MODELS(DMEFT)
-     #undef FUNCTION
-  #undef CAPABILITY
-  
-  // Define the module functions
-  namespace Gambit {
-    namespace Models {
-      namespace MODEL {
-        void DMEFT_WIMP_properties(WIMPprops& result)
-        {
-            using namespace Pipes::DMEFT_WIMP_properties;
-            result.mass   = *Param["mchi"];
-            result.spinx2 = 1;
-            result.sc     = false;
-            result.name   = "chi";
-        } 
-
-        void DMEFT_to_AnnihilatingDM_general (const ModelParameters& /*myparams*/, ModelParameters &friendparams)
-        {
-          USE_MODEL_PIPE(AnnihilatingDM_general) // get pipe for "interpret as friend" function
-          logger()<<"Running interpret_as_friend calculations for DMEFT -> AnnihilatingDM_general ..."<<EOM;
-
-          const auto wimp_props = *Dep::WIMP_properties;
-          const double k = (wimp_props.sc) ? 1. : 0.5;
-          const double f = *Dep::RD_fraction;
-
-          friendparams.setValue("mass", wimp_props.mass);
-          // In AnnihilatingDM_general the parameter "sigmav" is assumed to already include
-          // (RD_fraction)^2 and the factor k
-          friendparams.setValue("sigmav", k*f*f*(*Dep::sigmav));
-        }
-      }
-    }
-  }
 
 #undef MODEL
 

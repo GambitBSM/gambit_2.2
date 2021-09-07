@@ -28,15 +28,6 @@
 #define MODEL DiracSingletDM_Z2
   START_MODEL
   DEFINEPARS(mF, lF, xi)
-
-  #define CAPABILITY WIMP_properties
-  START_CAPABILITY
-     #define FUNCTION DiracSingletDM_Z2_WIMP_properties
-     START_FUNCTION(WIMPprops)
-     ALLOW_MODELS(DiracSingletDM_Z2)
-     #undef FUNCTION
-  #undef CAPABILITY
-  
 #undef MODEL
 
 #define MODEL DiracSingletDM_Z2_sps

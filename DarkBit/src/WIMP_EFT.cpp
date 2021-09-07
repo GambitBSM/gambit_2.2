@@ -138,28 +138,33 @@ namespace Gambit
        result = Dep::WIMP_properties->name;
     }
 
-
-    /// WIMP spin property extractor
-    void jwimpx2_from_WIMPprops(unsigned int& result)
+    /// WIMP properties
+    void NREO_scalarDM_WIMP_properties(WIMPprops& result)
     {
-       using namespace Pipes::jwimpx2_from_WIMPprops;
-       result = Dep::WIMP_properties->spinx2;
+      using namespace Pipes::NREO_scalarDM_WIMP_properties;
+      result.mass   = *Param["m"];
+      result.spinx2 = 0;
+      result.sc     = true;
+      result.name   = "phi";
     }
 
-    /// WIMP mass property extractor
-    void mwimp_from_WIMPprops(double& result)
+    void NREO_MajoranaDM_WIMP_properties(WIMPprops& result)
     {
-       using namespace Pipes::mwimp_from_WIMPprops;
-       result = Dep::WIMP_properties->mass;
+      using namespace Pipes::NREO_MajoranaDM_WIMP_properties;
+      result.mass   = *Param["m"];
+      result.spinx2 = 1;
+      result.sc     = true;
+      result.name   = "chi";
     }
 
-    /// WIMP self conjugacy extractor
-    void wimp_sc_from_WIMPprops(bool& result)
+    void NREO_DiracDM_WIMP_properties(WIMPprops& result)
     {
-       using namespace Pipes::wimp_sc_from_WIMPprops;
-       result = Dep::WIMP_properties->sc;
+      using namespace Pipes::NREO_DiracDM_WIMP_properties;
+      result.mass   = *Param["m"];
+      result.spinx2 = 1;
+      result.sc     = false;
+      result.name   = "Dchi";
     }
-
 
 
     //////////////////////////////////////////////////////////////////////////

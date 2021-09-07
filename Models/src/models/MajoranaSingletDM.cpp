@@ -33,30 +33,9 @@
 #include "gambit/Logs/logger.hpp"
 #include "gambit/Utils/util_functions.hpp"
 
-#include "gambit/Elements/spectrum.hpp"
-#include "gambit/Elements/wimp_props.hpp"
-
 #include "gambit/Models/models/MajoranaSingletDM_Z2.hpp"
 
 using namespace Gambit::Utils;
-
-// WIMP properties
-#define MODEL MajoranaSingletDM_Z2
-  namespace Gambit {
-    namespace Models {
-      namespace MODEL {
-        void MajoranaSingletDM_Z2_WIMP_properties(WIMPprops& result)
-        {
-            using namespace Pipes::MajoranaSingletDM_Z2_WIMP_properties;
-            result.mass   = *Param["mX"];
-            result.spinx2 = 1;
-            result.sc     = true;
-            result.name   = "X";
-        } 
-      }
-    }
-  }
-#undef MODEL
 
 // Translation functions
 #define MODEL MajoranaSingletDM_Z2_sps

@@ -391,6 +391,7 @@ START_MODULE
       BACKEND_REQ(IBintvars, (ds5), DS_IBINTVARS)
       BACKEND_OPTION((DarkSUSY, 5.1.3), (ds5))  // Only for DarkSUSY5
       FORCE_SAME_BACKEND(ds5)
+      ALLOW_MODELS(MSSM63atQ)
     #undef FUNCTION
 
     /// Process Catalogue from DarkSUSY6 (MSSM)
@@ -409,6 +410,7 @@ START_MODULE
       BACKEND_REQ(IBintvars, (ds6), DS_IBINTVARS)
       BACKEND_OPTION((DarkSUSY_MSSM, 6.1.1, 6.2.2), (ds6))  // Only for DarkSUSY6 MSSM
       FORCE_SAME_BACKEND(ds6)
+      ALLOW_MODELS(MSSM63atQ)
     #undef FUNCTION
 
     #define FUNCTION TH_ProcessCatalog_ScalarSingletDM_Z2
@@ -1004,17 +1006,53 @@ START_MODULE
 
   // Simple WIMP property extractors ===================================
 
+  #define CAPABILITY WIMP_properties
+  START_CAPABILITY
+    #define FUNCTION WIMP_properties
+    START_FUNCTION(WIMPprops)
+    DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+    DEPENDENCY(DarkMatter_ID, std::string)
+    #undef FUNCTION
+
+    #define FUNCTION NREO_scalarDM_WIMP_properties
+    START_FUNCTION(WIMPprops)
+    ALLOW_MODELS(NREO_scalarDM)
+    #undef FUNCTION
+
+    #define FUNCTION NREO_MajoranaDM_WIMP_properties
+    START_FUNCTION(WIMPprops)
+    ALLOW_MODELS(NREO_MajoranaDM)
+    #undef FUNCTION
+
+    #define FUNCTION NREO_DiracDM_WIMP_properties
+    START_FUNCTION(WIMPprops)
+    ALLOW_MODELS(NREO_DiracDM)
+    #undef FUNCTION
+
+    #define FUNCTION MajoranaSingletDM_Z2_WIMP_properties
+    START_FUNCTION(WIMPprops)
+    ALLOW_MODELS(MajoranaSingletDM_Z2)
+    #undef FUNCTION
+
+    #define FUNCTION DiracSingletDM_Z2_WIMP_properties
+    START_FUNCTION(WIMPprops)
+    ALLOW_MODELS(DiracSingletDM_Z2)
+    #undef FUNCTION
+
+    #define FUNCTION DMEFT_WIMP_properties
+    START_FUNCTION(WIMPprops)
+    ALLOW_MODELS(DMEFT)
+    #undef FUNCTION
+  #undef CAPABILITY
+
   // Retrieve the DM mass in GeV for generic models
-  QUICK_FUNCTION(DarkBit, mwimp, NEW_CAPABILITY, mwimp_generic, double, (),
-      (TH_ProcessCatalog, TH_ProcessCatalog), (DarkMatter_ID, std::string))
+  QUICK_FUNCTION(DarkBit, mwimp, NEW_CAPABILITY, mwimp_generic, double, (), (WIMP_properties, WIMPprops))
 
   // Retrieve the DM spin (times two) for generic models
-  QUICK_FUNCTION(DarkBit, spinwimpx2, NEW_CAPABILITY, spinwimpx2_generic, unsigned int, (),
-      (TH_ProcessCatalog, TH_ProcessCatalog), (DarkMatter_ID, std::string))
+  QUICK_FUNCTION(DarkBit, spinwimpx2, NEW_CAPABILITY, spinwimpx2_generic, unsigned int, (), (WIMP_properties, WIMPprops))
 
   // Retrieve a bool determining if a WIMP is self-conjugate.
-  QUICK_FUNCTION(DarkBit, wimp_sc, NEW_CAPABILITY, wimp_sc_generic, bool, (),
-      (TH_ProcessCatalog, TH_ProcessCatalog), (DarkMatter_ID, std::string))
+  QUICK_FUNCTION(DarkBit, wimp_sc, NEW_CAPABILITY, wimp_sc_generic, bool, (), (WIMP_properties, WIMPprops))
 
   // Retrieve the total thermally-averaged annihilation cross-section for indirect detection (cm^3 / s)
   #define CAPABILITY sigmav
@@ -1396,33 +1434,6 @@ START_MODULE
 
 
   // Neutrinos =========================================================
-
-  // WIMP spin (x2)
-  #define CAPABILITY spinwimpx2
-  //START_CAPABILITY // Don't need this; capability already created in a QUICK_FUNCTION above
-     #define FUNCTION jwimpx2_from_WIMPprops
-     START_FUNCTION(unsigned int)
-     DEPENDENCY(WIMP_properties,WIMPprops)
-     #undef FUNCTION
-  #undef CAPABILITY
-
-  // WIMP mass
-  #define CAPABILITY mwimp
-  //START_CAPABILITY // Don't need this; capability already created in a QUICK_FUNCTION above
-     #define FUNCTION mwimp_from_WIMPprops
-     START_FUNCTION(double)
-     DEPENDENCY(WIMP_properties,WIMPprops)
-     #undef FUNCTION
-  #undef CAPABILITY
-
-  // WIMP self conjugacy
-  #define CAPABILITY wimp_sc
-  //START_CAPABILITY // Don't need this; capability already created in a QUICK_FUNCTION above
-     #define FUNCTION wimp_sc_from_WIMPprops
-     START_FUNCTION(bool)
-     DEPENDENCY(WIMP_properties,WIMPprops)
-     #undef FUNCTION
-  #undef CAPABILITY
 
 
   // Solar capture ------------------------
@@ -1886,6 +1897,7 @@ START_MODULE
     #define FUNCTION DarkMatter_ID_MSSM
     START_FUNCTION(std::string)
     DEPENDENCY(MSSM_spectrum, Spectrum)
+    ALLOW_MODELS(MSSM63atQ)
     #undef FUNCTION
     #define FUNCTION DarkMatter_ID_EFT
     START_FUNCTION(std::string)

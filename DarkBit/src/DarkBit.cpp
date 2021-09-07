@@ -56,11 +56,21 @@ namespace Gambit
     //
     //////////////////////////////////////////////////////////////////////////
 
+    /// Retrieve the struct of WIMP properties
+    void WIMP_properties(WIMPprops &props)
+    {
+      using namespace Pipes::WIMP_properties;
+      props.name = *Dep::DarkMatter_ID;
+      props.mass = Dep::TH_ProcessCatalog->getParticleProperty(*Dep::DarkMatter_ID).mass;
+      props.spinx2 = Dep::TH_ProcessCatalog->getParticleProperty(*Dep::DarkMatter_ID).spin2;
+      props.sc = Dep::TH_ProcessCatalog->getProcess(*Dep::DarkMatter_ID,*Dep::DarkMatter_ID).isSelfConj;
+    }
+
     /// Retrieve the DM mass in GeV for generic models (GeV)
     void mwimp_generic(double &result)
     {
       using namespace Pipes::mwimp_generic;
-      result = Dep::TH_ProcessCatalog->getParticleProperty(*Dep::DarkMatter_ID).mass;
+      result = Dep::WIMP_properties->mass;
       if (result < 0.0) DarkBit_error().raise(LOCAL_INFO, "Negative WIMP mass detected.");
     }
 
@@ -68,14 +78,14 @@ namespace Gambit
     void spinwimpx2_generic(unsigned int &result)
     {
       using namespace Pipes::spinwimpx2_generic;
-      result = Dep::TH_ProcessCatalog->getParticleProperty(*Dep::DarkMatter_ID).spin2;
+      result = Dep::WIMP_properties->spinx2;
     }
 
     /// Retrieve whether or not the DM is self conjugate or not.
     void wimp_sc_generic(bool &result)
     {
       using namespace Pipes::wimp_sc_generic;
-      result = Dep::TH_ProcessCatalog->getProcess(*Dep::DarkMatter_ID,*Dep::DarkMatter_ID).isSelfConj;
+      result = Dep::WIMP_properties->sc;
     }
 
     /*! \brief Retrieve the total thermally-averaged annihilation cross-section

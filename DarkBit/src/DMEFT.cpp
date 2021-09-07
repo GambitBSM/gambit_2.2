@@ -60,6 +60,15 @@ namespace Gambit
       
     };
     
+    void DMEFT_WIMP_properties(WIMPprops& result)
+    {
+      using namespace Pipes::DMEFT_WIMP_properties;
+      result.mass   = *Param["mchi"];
+      result.spinx2 = 1;
+      result.sc     = false;
+      result.name   = "chi";
+    }
+
     void TH_ProcessCatalog_DMEFT(DarkBit::TH_ProcessCatalog &result)
     {
       using namespace Pipes::TH_ProcessCatalog_DMEFT;
