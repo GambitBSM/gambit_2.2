@@ -18,9 +18,10 @@
 ///  Authors (add name and date if you modify):
 ///
 ///  \author Patrick Stoecker
-///          (stoecker@physik.rwth-aachen.de)
+///          (patrick.stoecker@kit.edu)
 ///  \date 2017 Nov
 ///  \date 2018 May
+///  \date 2021 Sep
 ///
 ///  \author Janina Renk
 ///          (janina.renk@fysik.su.se)
@@ -41,10 +42,17 @@
 #ifndef __CosmoBit_types_hpp__
 #define __CosmoBit_types_hpp__
 
-#include "gambit/Utils/util_types.hpp"
-#include "gambit/Backends/backend_types/MontePythonLike.hpp"
-#include <valarray>
 #include <tuple>
+#include <cmath>
+#include <vector>
+#include <sstream>
+#include <limits>
+
+#include "gambit/Utils/util_types.hpp"
+#include "gambit/Utils/numerical_constants.hpp"
+#include "gambit/Backends/backend_types/MontePythonLike.hpp"
+
+#include <gsl/gsl_spline.h>
 
 #ifdef HAVE_PYBIND11
   #include <pybind11/stl.h>
@@ -60,66 +68,165 @@ namespace Gambit
     error& CosmoBit_error();
     warning& CosmoBit_warning();
 
-    typedef std::map< str,std::valarray < double > > map_str_valarray_dbl;
     #ifdef HAVE_PYBIND11
       typedef std::tuple<pybind11::object, map_str_str, map_str_pyobj> MPLike_objects_container;
     #endif
 
+    namespace
+    {
+      enum interpolation_bound { underflow, in_range, overflow };
+    }
+
     class SM_time_evo
     {
-     /* Time evolution of photon & neutrino temperature as well as Hubble rate in SM for time t > 1e3 s.
-        Heads-up: explicit SM-specific assumptions enter. I.e.
-            - Neff = 3.045 -> T_nu/T_gamma = (Neff/Nnu)^(1/4) (4/11)^(1/3) = 0.716428
-            - Only contribution to Omega_rad in early Universe are photons & neutrinos
-            - g_star (relativistic degrees of freedom) is constant in time
-        => Use these routines only for times t >~ 10^3 s, where electrons and positrons are
-        already completely annihilated
-        For times after CMB release you can get these values from the class background structure.
-     */
-      public:
-        SM_time_evo(double t0, double tf, double grid_size, double Neff_SM);
+      /* Time evolution of photon & neutrino temperature as well as Hubble rate in SM for time t > 1e3 s.
+       *     => Use these routines only for times t >~ 10^3 s, where electrons and positrons are already
+       *        completely annihilated.
+       *        For times after CMB release you can get these values from the class background structure.
+       */
+    public:
+      SM_time_evo(size_t grid_size, double t0, double tf, double Neff_SM, double rnu, double dNeff);
+      ~SM_time_evo();
 
-        // SM photon temperature (keV) as a function of time (seconds)
-        // T_g [keV] = T_cmb [keV] / sqrt(2*H0*(Omega_r0)^0.5
-        //           = { [2 sqrt(8pi^3 G[_SI_] (kB [J/K])^4] *g_star_SM / [90 c^2 (c hbar [SI])^3] }^-0.5
-        // with G: Newton's constant in m^3/kg/s^2, kB: Boltzmann const in J/K, c: speed of light in m/s,
-        // hbar x c: reduced Planck const in Jm
-        // H0 and T_cmb cancel out in SM where Omega_r0 = [1 + Neff] Omega_g0, the factor that stays besides natural constants is
-        // g_star = g_gamma + 7/8 * g_nu * Neff * (4/11)^(4/3) = 3.38354
-        void set_T_evo() {T_evo = factor_T_evo/sqrt(t_grid);}
+      const std::vector<double>& get_t_grid() const {return t_grid;}
+      const std::vector<double>& get_T_grid() const {return T_grid;}
+      const std::vector<double>& get_Tnu_grid() const {return Tnu_grid;}
+      const std::vector<double>& get_H_grid() const {return H_grid;}
+      const std::vector<double>& get_lnR_grid() const {return lnR_grid;}
 
-        // SM neutrino temperature (keV) as a function of time (seconds)
-        // Defined in this way, one gets Neff = 3.046, using Nnu = 3 SM neutrinos (Tnu = 0.716428 T(t0))
-        void set_Tnu_evo() {Tnu_evo = factor_Tnu_evo/sqrt(t_grid);}
+      // Returns the photon temperature T in units of keV as a function of t.
+      double T_at_t(double t) const
+      {
+        return safe_interpolation(t, T_spline);
+      }
 
-        // SM Hubble rate (1/s) as a function of time (seconds)
-        // Solve Friedmann eq. for rad. dominated Universe -> H(t) = (da/dt)/a = H0 sqrt(Omega_g0 a^-4)
-        void set_Ht_evo() {H_evo= 1./(2.0*t_grid);}
+      // Returns the neutrino temperature T in units of keV as a function of t.
+      double Tnu_at_t(double t) const
+      {
+        return safe_interpolation(t, Tnu_spline);
+      }
 
-        // SM Hubble rate (1/s) as a function of temperature (keV)
-        // H^2 = 8 pi G/3 rho = 8 pi G/3  g_star pi^2/30 (k_b T)^4/(hbar c)^3
-        void set_HT_evo(std::valarray<double> T) {H_evo = factor_HT_evo*T*T;}
+      // Returns the Hubble parameter T in units of 1/s as a function of t.
+      double H_at_t(double t) const
+      {
+        return safe_interpolation(t, H_spline);
+      }
 
-        // fast integration of Hubble rate using trapezoidal integration
-        void calc_H_int();
+      // Returns (the logarithm of) the scale factor lnR (dimensionless) as a function of t.
+      double lnR_at_t(double t) const
+      {
+        return safe_interpolation(t, lnR_spline);
+      }
 
-        std::valarray<double> get_t_grid() const {return t_grid;}
-        std::valarray<double> get_T_evo() const {return T_evo;}
-        std::valarray<double> get_Tnu_evo() const {return Tnu_evo;}
-        std::valarray<double> get_H_evo() const {return H_evo;}
-        std::valarray<double> get_H_int() const {return H_int;}
+      // Start point of the time grid
+      double t0() const {return t_grid[0];}
+
+      // End point of the time grid
+      double tf() const {return t_grid[grid_size-1];}
+
+      // Size of the tables
+      size_t size() const {return grid_size;}
+
+      // Initiates to update the tables given the new values of 'T' and 'Tnu'
+      void update_grid(const std::vector<double>& T_grid_new, const std::vector<double>& Tnu_grid_new, const bool& unchecked = true);
 
     private:
-        int grid_size;
-        std::valarray<double> t_grid;
-        std::valarray<double> T_evo;
-        std::valarray<double> Tnu_evo;
-        std::valarray<double> H_evo;
-        std::valarray<double> H_int;
+      size_t grid_size;
+      double Neff;
 
-        double factor_T_evo;
-        double factor_Tnu_evo;
-        double factor_HT_evo;
+      std::vector<double> t_grid;
+      std::vector<double> T_grid;
+      std::vector<double> Tnu_grid;
+      std::vector<double> H_grid;
+      std::vector<double> lnR_grid;
+
+      gsl_spline* T_spline;
+      gsl_spline* Tnu_spline;
+      gsl_spline* H_spline;
+      gsl_spline* lnR_spline;
+
+      // Returns H [in 1/s] based on the value of T and Tnu [both in keV]
+      double H_at_T_and_Tnu(double T, double Tnu) const
+      {
+        const double Tratio = Tnu/T;
+        const double T_in_GeV = 1e-6 * T;
+        const double gstar = 2. + 2.*7./8. * Neff * Tratio*Tratio*Tratio*Tratio;
+        const double H2_in_GeV2 = 8.*pi*pi*pi/90./m_planck/m_planck * gstar * T_in_GeV*T_in_GeV*T_in_GeV*T_in_GeV;
+        return sqrt(H2_in_GeV2)/hbar;
+      }
+
+      interpolation_bound interpolation_range_check(double t) const
+      {
+        bool above_lower_bound = t >= t_grid[0];
+        bool below_upper_bound = t <= t_grid[grid_size-1];
+
+        if (above_lower_bound)
+        {
+          if (below_upper_bound) return interpolation_bound::in_range;
+          else return interpolation_bound::overflow;
+        }
+        else return interpolation_bound::underflow;
+      }
+
+      // Method to avoid interpolation issues at the end points of the t_grid.
+      // If the underflow / overflow is within some margin of the bounds,
+      // return the value at the respective end point (constant continuation).
+      // When the underflow / overflow is bigger, throw an error
+      double safe_interpolation(double t, const gsl_spline* spline_ptr) const
+      {
+        double epsilon = 1e3 * std::numeric_limits<double>::epsilon();
+
+        interpolation_bound bound_check = interpolation_range_check(t);
+        if (bound_check == interpolation_bound::in_range)
+        {
+          return gsl_spline_eval(spline_ptr, t, nullptr );
+        }
+        else if (bound_check == interpolation_bound::underflow)
+        {
+          if (std::fabs(t_grid[0] - t)/t_grid[0] >= epsilon)
+          {
+            std::ostringstream err;
+            err << "The given value of t underflows t_grid! ";
+            err << "t_grid starts at " << t_grid[0] << " but got " << t << std::endl;
+            CosmoBit_error().raise(LOCAL_INFO, err.str());
+          }
+          else
+          {
+            return gsl_spline_eval(spline_ptr, t_grid[0], nullptr );
+          }
+        }
+        else
+        {
+          if (std::fabs(t - t_grid[grid_size-1])/t_grid[grid_size-1] >= epsilon)
+          {
+            std::ostringstream err;
+            err << "The given value of t overflows t_grid! ";
+            err << "t_grid ends at " << t_grid[grid_size-1] << " but got " << t << std::endl;
+            CosmoBit_error().raise(LOCAL_INFO, err.str());
+          }
+          else
+          {
+            return gsl_spline_eval(spline_ptr, t_grid[grid_size-1], nullptr );
+          }
+        }
+
+        // This return statement is unreachable, but must be here to keep the compiler happy.
+        return std::numeric_limits<double>::quiet_NaN();
+      }
+
+      // When we update 'T_grid' and 'T_nu_grid' we need to make sure that their
+      // size is 'grid_size'.
+      // If not, this is treated a runtime error and halts the execution
+      void check_size(const std::vector<double>& new_grid, const std::string& name)
+      {
+        if (new_grid.size() != grid_size) {
+          std::ostringstream err;
+          err << "The size of the new vector (\'" << name << "\') does not ";
+          err << "match the size of the old vector.\n";
+          err << "(Expected " << grid_size  << " but got " << new_grid.size() << " ).";
+          CosmoBit_error().raise(LOCAL_INFO,err.str());
+        }
+      }
     };
 
     /// Class containing the primordial power spectrum.

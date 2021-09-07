@@ -11,8 +11,9 @@
 ///  Authors (add name and date if you modify):
 ///
 ///  \author Patrick Stoecker
-///          (stoecker@physik.rwth-aachen.de)
+///          (patrick.stoecker@kit.edu)
 ///  \date 2017 Nov
+///  \date 2021 Sep
 ///
 ///  \author Selim Hotinli
 ///  \date 2018 Jan
@@ -32,71 +33,177 @@
 ///  *********************************************
 
 #include <string>
-#include <iostream>
+#include <cstring>
 
 #include "gambit/CosmoBit/CosmoBit_types.hpp"
 #include "gambit/CosmoBit/CosmoBit_utils.hpp"
-#include "gambit/Utils/numerical_constants.hpp"
+
+#define GSL_SPLINE_TYPE gsl_interp_linear
+//#define GSL_SPLINE_TYPE gsl_interp_cspline
 
 namespace Gambit
 {
   namespace CosmoBit
   {
 
-    SM_time_evo::SM_time_evo(double t0, double tf, double N_t, double Neff_SM) : grid_size(N_t), t_grid(N_t), T_evo(N_t), Tnu_evo(N_t), H_evo(N_t), H_int(N_t)
+    SM_time_evo::SM_time_evo(size_t grid_size, double t0, double tf, double Neff_SM, double rnu, double dNeff)
+    : grid_size(grid_size)
+    , Neff(Neff_SM) // In case the c'tor crashes Neff has a somehow valid state
     {
 
-      // check if implemented routines are valid for given initial time
+      // Check if implemented routines are valid for given initial time
       if(t0 < 1e3)
       {
         std::ostringstream err;
-        err << "Requested initial time for evolution of Temperature & Hubble rate for SM for Temperatures t_initial was "<< t0<<". Implemented routines are only valid after e+/- annihilation (t > 10^3). Aborting now.";
+        err << "Requested initial time for evolution of Temperature & Hubble rate for SM for Temperatures t_initial was "<< t0<<".";
+        err << " Implemented routines are only valid after e+/- annihilation (t > 10^3). Aborting now.";
         CosmoBit_error().raise(LOCAL_INFO, err.str());
       }
 
-      // initialize time grid in log space
+      // Resize all vectors of the structure to hold 'grid_size' elements.
+      t_grid.resize(grid_size);
+      T_grid.resize(grid_size);
+      Tnu_grid.resize(grid_size);
+      H_grid.resize(grid_size);
+      lnR_grid.resize(grid_size);
+
+      // Allocate the GSL spline object pointers.
+      T_spline = gsl_spline_alloc(GSL_SPLINE_TYPE, grid_size);
+      Tnu_spline = gsl_spline_alloc(GSL_SPLINE_TYPE, grid_size);
+      H_spline = gsl_spline_alloc(GSL_SPLINE_TYPE, grid_size);
+      lnR_spline = gsl_spline_alloc(GSL_SPLINE_TYPE, grid_size);
+
+      // Initialize time grid. (Evenly spaced in log space from t0 to tf)
       double Delta_logt = (log(tf) - log(t0))/(grid_size-1);
-      for (int jj = 0; jj<grid_size; ++jj)
+      for (size_t i = 0; i < grid_size; ++i)
       {
-        t_grid[jj] = exp(log(t0) + jj*Delta_logt);
+        t_grid[i] = exp(log(t0) + i*Delta_logt);
       }
-      double g_star_SM = 2.+2.*7./8.*Neff_SM*pow(4./11.,4./3.); // contribution from photons & neutrinos with Neff = 3.046
 
-      // factor needed to calculate temperature evolution. For details see definition of functions set_T_evo(),.. in CosmoBit_types.hpp header
-      factor_T_evo = 1./sqrt(2.*sqrt(8.*pi*pi*pi*GN_SI *pow(kB_SI,4.)*g_star_SM/90./c_SI/c_SI/pow(hP_SI/2./pi*c_SI,3.)))*kB_eV_over_K/1e3;
-      factor_Tnu_evo = pow(Neff_SM/3.,1./4.)* pow(4./11.,1./3.)*factor_T_evo; // = T_nu/T_gamma * factor_T_evo
-      factor_HT_evo = sqrt(8.*pi*GN_SI/3.*pi*pi/30.*g_star_SM/pow(hP_SI/2./pi*c_SI,3.))*(1e6*eV_to_J*eV_to_J)/c_SI;
+      // Set Neff out of Neff_SM, rnu, and dNeff
+      Neff = pow(rnu,4.)*Neff_SM + dNeff;
 
-      // set time evolution of photon T, neutrino T, and Hubble
-      // rate based on above calculated evolution factors 
-      // for time grid 't_grid'
-      set_T_evo();
-      set_Tnu_evo();
-      set_Ht_evo();
+      // Throughout the code, we assume radiation domination such that
+      //
+      //   H^2 = 8*pi*G/3 * gstar(T, Tnu) * pi^2/30 * T^4 .     (i)
+      //
+      // In general, gstar(T,Tnu) is dependent on T and Tnu, as both quantities
+      // evolve independently from each other.
+      //
+      //   gstar = g + gnu * 7./8. * Neff * (Tnu/T)^4           (ii)
+      //
+      // For the first iteration (i = 0), we assume that the ratio Tnu / T is given
+      // by its standard value (assuming instant decoupling)
+      //
+      //   Tnu / T = (4/11)^(1/3)                               (iii)
+      //
+      // such that gstar(T, Tnu) is a constant
+      //
+      //   gstar_0 = g + gnu * 7./8. * Neff * (4./11.)^(4./3.)  (iv)
+      //
+      // In this case we can easily solve for H(t) = 1/(2.*t) [in 1/s]
+      // or H(t) = 1e6*hbar/(2t) [in keV].
+      const double gstar_0 = 2.+2.*7./8.*Neff*pow(4./11.,4./3.);
+
+      for (size_t i = 0; i<grid_size; ++i)
+      {
+        H_grid[i] = 1./2./t_grid[i];
+      }
+      // Initialise interpolation for H(t)
+      gsl_spline_init(H_spline, t_grid.data(), H_grid.data(), grid_size);
+
+      // Solve equation (i) for T and use m_planck = 1/sqrt(G) such that
+      //   T^4 [keV] = 90 * (1e6*m_planck)^2 * (1e6*hbar)^2 / (32 * pi^3 * gstar_0 * t^2 )
+      const double T_prefactor = 1.e6 * pow(90.*m_planck*m_planck*hbar*hbar/32./pi/pi/pi/gstar_0, 1./4.);
+      for (size_t i = 0; i < grid_size; ++i)
+      {
+        T_grid[i] = T_prefactor / sqrt(t_grid[i]);
+      }
+      // Initialise interpolation for T(t)
+      gsl_spline_init(T_spline, t_grid.data(), T_grid.data(), grid_size);
+
+      // For the 0-th iteration assume Tnu = (4./11.)^(1./3.) * T (cf. eq (iii))
+      for (size_t i = 0; i < grid_size; ++i)
+      {
+        Tnu_grid[i] = pow((4./11.),(1./3.)) * T_grid[i];
+      }
+      // Initialise interpolation for Tnu(t)
+      gsl_spline_init(Tnu_spline, t_grid.data(), Tnu_grid.data(), grid_size);
+
+      // Calculate lnR by integrating H over t.
+      // After the lnR array is set here, it will never change throughout the code.
+      for (size_t i = 0; i < grid_size; ++i)
+      {
+        lnR_grid[i] = gsl_spline_eval_integ(H_spline, t_grid[0], t_grid[i], nullptr);
+      }
+
+      // Initialise interpolation for lnR(t)
+      gsl_spline_init(lnR_spline, t_grid.data(), lnR_grid.data(), grid_size);
     }
 
-    void SM_time_evo::calc_H_int()
+    SM_time_evo::~SM_time_evo()
     {
-      /*
-      This calculates int(y(x') dx', {x', x0, x}) for each x in x_grid (with x0 = x_grid[0]), using a simple trapezoidal integration.
-      This function explicitly assumes that the logarithms of the values in x_grid are equally spaced.
-      This is very simplified and designed to work fast in case of the Hubble rate. Can go wrong with other functions, so it should
-      really only be used in this context (or if you exactly know what you are doing..).
-      */
-      std::valarray<double> g_grid(grid_size);
-      double Delta_z = (log(t_grid[grid_size-1]) - log(t_grid[0]))/(grid_size - 1);
+      gsl_spline_free(T_spline);
+      gsl_spline_free(Tnu_spline);
+      gsl_spline_free(H_spline);
+      gsl_spline_free(lnR_spline);
+    }
 
-      g_grid = t_grid*H_evo;
-
-      H_int[0] = 0.0;
-      H_int[1] = 0.5*Delta_z*(g_grid[0] + g_grid[1]);
-
-      double cumsum = g_grid[1];
-      for (int i = 2; i<grid_size; ++i)
-      {
-          H_int[i] = 0.5*Delta_z*(g_grid[0] + g_grid[i] + 2.0*cumsum);
-          cumsum = cumsum + g_grid[i];
+    void SM_time_evo::update_grid(const std::vector<double>& T_grid_new, const std::vector<double>& Tnu_grid_new, const bool& unchecked)
+    {
+      // Before we start, let's assert that the inputs T_grid_new and Tnu_grid_new have the right size.
+      // (unless the user promisses that their sizes are fine and 'unchecked' is set false)
+      if (unchecked) {
+        check_size(T_grid_new, "T_grid_new");
+        check_size(Tnu_grid_new, "Tnu_grid_new");
       }
+
+      // Update the internal arrays 'T_grid' and 'Tnu_grid'.
+      // Do not update the respective splines yet as t_grid will be modified (see below).
+      std::memcpy( T_grid.data(), T_grid_new.data(), grid_size*sizeof(double) );
+      std::memcpy( Tnu_grid.data(), Tnu_grid_new.data(), grid_size*sizeof(double) );
+
+      // In general we assume that the T and Tnu arrays are modified through some differential equation.
+      // Based on the updated values of T and Tnu we calculate gstar which enters the calculation of H [in 1/s].
+      // This is done in the private function SM_time_evo::H_at_T_and_Tnu (defined in SM_evo.hpp)
+      for (size_t i = 0; i < grid_size; ++i)
+      {
+        H_grid[i] = H_at_T_and_Tnu( T_grid_new[i], Tnu_grid_new[i] );
+      }
+
+      // As 'H' is now modified and we assume 'lnR' to be fixed, we need to update 't'.
+      // To this end we use the definition of H
+      //
+      //   H = dlnR / dt ,
+      //
+      // solve for dt and integrate over dlnR from lnR_grid[0] (which is 0 by construction) to lnR_grid[i].
+      // Furthermore we add the constant t0 = t_grid[0] such that the starting point of the new t_grid is
+      // aligned with the old one.
+      //
+      // (1) Define the integrand (1/H) and respective spline as function of lnR.
+      std::vector<double> one_over_H_grid(grid_size);
+      for (size_t i = 0; i < grid_size; ++i) {
+        one_over_H_grid[i] = 1/H_grid[i];
+      }
+
+      gsl_spline* one_over_H_spline = gsl_spline_alloc(GSL_SPLINE_TYPE, grid_size);
+      gsl_spline_init(one_over_H_spline, lnR_grid.data(), one_over_H_grid.data(), grid_size);
+
+      // (2) Determine t[i] by integrating the spline.
+      const double t0 = t_grid[0];
+      for (size_t i = 0; i < grid_size; ++i) {
+        t_grid[i] = gsl_spline_eval_integ(one_over_H_spline, lnR_grid[0], lnR_grid[i], nullptr) + t0;
+      }
+
+      // (3) Get rid of the spline.
+      gsl_spline_free(one_over_H_spline);
+
+      // As 't' is now updated, all tables are self consistent.
+      // Before we return, update all splines (in terms of 't')
+      gsl_spline_init(T_spline, t_grid.data(), T_grid.data(), grid_size);
+      gsl_spline_init(Tnu_spline, t_grid.data(), Tnu_grid.data(), grid_size);
+      gsl_spline_init(H_spline, t_grid.data(), H_grid.data(), grid_size);
+      gsl_spline_init(lnR_spline, t_grid.data(), lnR_grid.data(), grid_size);
     }
 
     // return Parametrised_ps members A_s, n_s, r, and N_pivot as str to double map for printing

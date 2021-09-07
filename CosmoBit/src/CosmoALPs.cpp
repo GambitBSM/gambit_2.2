@@ -16,10 +16,11 @@
 ///  \date 2018 Aug - Sep
 ///
 ///  \author Patrick Stoecker
-///          (stoecker@physik.rwth-aachen.de)
+///          (patrick.stoecker@kit.edu)
 ///  \date 2017 Nov
 ///  \date 2018 Jan - May
 ///  \date 2019 Jan, Feb, June, Nov
+///  \date 2021 Sep
 ///
 ///  \author Janina Renk
 ///          (janina.renk@fysik.su.se)
@@ -179,108 +180,165 @@ namespace Gambit
       result = rho0_ALP / (ma0 * ssm0);
     }
 
-    /// Helper function to solve the RHS of the differential equation:
-    ///  dT/dt = 15/pi^2 (m_a n_a(t)/ tau_a) T^(-3) - H(T) T , where H(T) = 3.7978719e-7*T*T  
-    // @TODO: refer to Eq. number in paper when ready
-    ///  params: stores (m_a n_a(t)/ tau_a)
-    ///  y[0]: stores SM T[t0]
-    int diff_eq_rhs (double t, const double y[], double f[], void *params)
+    // Anonymous namespace
+    // - It is only visible to this file
+    // - Variables in here won't show up in the compiled files and are not seen by the linker
+    namespace
     {
-      CosmoBit_utils::fast_interpolation injection_inter = *(static_cast<CosmoBit_utils::fast_interpolation*>(params));
-      f[0] = (15.0/(4.0*pi*pi)) * injection_inter.interp(t)/pow(y[0], 3) - 3.7978719e-7*y[0]*y[0]*y[0];
-      return GSL_SUCCESS;
+      // Auxiliary struct for passing the axion parameters and
+      // SM quantities to the gsl solver.
+      struct alp_solver_params
+      {
+        double       na0;           // Number density of a at t=t0 [keV^3].
+        double       mass;          // Mass of the ALP [keV]
+        double       tau;           // Lifetime of the ALP [s]
+        SM_time_evo* SM_quantities; // Table containing t, H(t), T(t), Tnu(t), and lnR(t)
+      };
+
+      // Right hand side of differential equation for dT/dt through ALP decay
+      int dTdt_alp_rhs(double t, const double T[], double dTdt[], void *params)
+      {
+        alp_solver_params* gsl_params_ptr  = static_cast<alp_solver_params*>(params);
+
+        const double na0 = gsl_params_ptr->na0;
+        const double ma = gsl_params_ptr->mass;
+        const double tau = gsl_params_ptr->tau;
+        const SM_time_evo* SM_ptr = gsl_params_ptr->SM_quantities;
+
+        // dT/dt is given by 15/4/pi/pi rho_a(t)/tau_a/(T^3) - H(t)*T,
+        // where rho_a(t) is given by ma * na(t), since we assume a to be non-relativistic,
+        // and na(t) = na0 * exp(-3*lnR(t)) * exp(-t/tau)
+        const double H = SM_ptr->H_at_t(t);
+        const double lnR = SM_ptr->lnR_at_t(t);
+
+        dTdt[0] = (15.0/(4.0*pi*pi)) * na0 * ma *  exp(-3*lnR) * exp(-t/tau) / pow(T[0], 3) / tau - H * T[0];
+
+        return GSL_SUCCESS;
+      }
     }
 
     /// @TODO function definition needed
-    void compute_dNeff_etaBBN_ALP(map_str_dbl &result)  // takes about 0.2 s with 3000 grid points and 1e-6 convergence criterion atm
+    void compute_dNeff_etaBBN_ALP(map_str_dbl &result)
     {
       using namespace Pipes::compute_dNeff_etaBBN_ALP;
 
-      double dNeff, Neff_SM, Neff_ALP, eta_ratio;
-      double temp_eta_ratio = 1; // temporary values to check convergence of iteration
-      double temp_dNeff = 1;
-      int ii=0;
+      // Initial values for r_nu = Tnu/Tnu_SM and eta_ratio
+      double r_nu = 1.0;
+      double eta_ratio = 1.0;
+
+      // temporary (cached) values to check convergence of iteration
+      double temp_eta_ratio = eta_ratio;
+      double temp_r_nu = r_nu;
 
       // --- precision parameters --
       double hstart = runOptions->getValueOrDef<double>(1e-6,"hstart"); // initial step size for GSL ODE solver
       double epsrel = runOptions->getValueOrDef<double>(1e-6,"epsrel"); // desired relative accuracy for GSL ODE solver and dNeff & etaBBN
       double max_iter = runOptions->getValueOrDef<int>(10,"max_iter"); // maximum number of iterations before error message is thrown if result not converged
-      double grid_size = runOptions->getValueOrDef<int>(3000,"grid_size"); // number of (logarithmic) grid points in t
+      size_t grid_size = runOptions->getValueOrDef<int>(3000,"grid_size"); // number of (logarithmic) grid points in t
 
       double t0 = runOptions->getValueOrDef<double>(1e4,"t_initial"); // initial time in seconds
-      double tf = runOptions->getValueOrDef<double>(1e12,"t_final"); // final time in seconds
+      double tf0 = runOptions->getValueOrDef<double>(1e12,"t_final"); // final time in seconds (for 0th iteration)
 
-      std::valarray<double> t_grid(grid_size), T_evo(grid_size), Tnu_grid(grid_size), na_grid(grid_size), injection_grid(grid_size); // arrays containing time dependence of variables
+      // Initialise the tables of SM quantities (Assuming Neff = Neff_SM; i.e. rnu = 1, and dNeff = 0)
+      SM_time_evo SM_quantities(grid_size, t0, tf0, Gambit::Neff_SM, 1.0, 0.0);
 
-      SM_time_evo SM(t0,tf,grid_size,Gambit::Neff_SM);  // set time evolution of SM
-      t_grid = SM.get_t_grid();         // has to be updated when solving the differential equation
-      T_evo = SM.get_T_evo();
+      std::vector<double> t_grid = SM_quantities.get_t_grid();
+      std::vector<double> T_grid = SM_quantities.get_T_grid();
+      std::vector<double> Tnu_grid = SM_quantities.get_Tnu_grid();
 
-      // --- model parameters ----
+      // --- ALP model parameters ----
       double Ya0 = *Dep::total_DM_abundance;
-      double T0 = T_evo[0];
+      double T0 = T_grid[0];
       double ssm_at_T0 = CosmoBit_utils::entropy_density_SM(T0, true);; // T0 in units of keV, set T_in_eV=True to interpret it correctly
 
       double na_t0 = Ya0 * ssm_at_T0;     // initial number density of a at t=t0, in units keV^3.
       double m_a = 1e-3*(*Param["ma0"]);  // mass of a in keV
       double tau_a = *Dep::lifetime;      // lifetime of a in seconds
 
-      // loop over iterations until convergence or max_iter is reached
-      while( ((fabs(temp_eta_ratio-eta_ratio) > epsrel) || fabs(temp_dNeff - dNeff) > epsrel) && (ii <= max_iter) )
+      bool converged = false;
+      size_t i = 0;
+      while( (!converged) && (i <= max_iter) )
       {
-        temp_eta_ratio = eta_ratio;  // to check for convergence
-        temp_dNeff = dNeff;
+        // Enhance the loop counter
+        ++i;
 
-        SM.calc_H_int();
-        na_grid = na_t0*exp(-3.0*SM.get_H_int())*exp(-t_grid/tau_a);    // na(t) in units keV^3
-        injection_grid = (m_a/tau_a)*na_grid;                           // m_a*na(t)/tau_a in units keV^4/s
-        Tnu_grid = SM.get_Tnu_evo()[0]*exp(-1.0*SM.get_H_int());        // T_nu(t) in units keV
-        CosmoBit_utils::fast_interpolation injection_inter(t_grid, injection_grid);     // interpolating function
+        // Wrap all parameters for the ODE for T(t) into a single struct
+        alp_solver_params gsl_params { na_t0, m_a, tau_a, &SM_quantities };
 
-        gsl_odeiv2_system sys = {diff_eq_rhs, NULL, 1, &injection_inter};
-        gsl_odeiv2_driver *d = gsl_odeiv2_driver_alloc_y_new (&sys, gsl_odeiv2_step_rkf45, hstart, 0.0, epsrel);
+        // Solve the ODE for T(t), and store it in T_grid
+        gsl_odeiv2_system sys = {dTdt_alp_rhs, NULL, 1, &gsl_params};
+        gsl_odeiv2_driver * d =
+        gsl_odeiv2_driver_alloc_y_new (&sys, gsl_odeiv2_step_rkf45, hstart, 0.0, epsrel);
 
-        double y[1] = {T_evo[0]}; // initial condition: T(t0) = T_SM(t0)
-        double t=t0;
+        // Set initial conditions
+        double T[1] = { SM_quantities.T_at_t(t0) };  // T(t0) = T_SM(t0)
+        double t = t0;
 
-        for (int jj = 0; jj < grid_size; jj++)
+        // Loop over all time steps in 't_grid' and update 'T_grid' accordingly
+        for (size_t j = 0; j < grid_size; ++j)
         {
-          double t_j = t_grid[jj];
-          int status = gsl_odeiv2_driver_apply (d, &t, t_j, y);
+          int status = gsl_odeiv2_driver_apply (d, &t, t_grid[j], T);
           if (status != GSL_SUCCESS)
           {
             std::ostringstream err;
-            err << "Failed to solve differential equation to compute dNeffCMB and etaBB for GeneralCosmoALP model at iteration step "<< ii <<". Invalidating point";
+            err << "Failed to solve differential equation to compute dNeffCMB and etaBBN for GeneralCosmoALP model.\n";
+            err << "Failed at iteration " << i+1;
+            err << " at table index " << j << " (t =" << t << ", T = " << T[0] <<").\n";
+            err << "Point will be invalidated.";
             invalid_point().raise(err.str());
           }
-          T_evo[jj] = y[0];
+          T_grid[j] = T[0];
         }
 
+        // Free the GSL ODE solver driver
         gsl_odeiv2_driver_free (d);
 
-        // update Hubble rate for next iteration
-        SM.set_HT_evo(T_evo);
+        // Update the 'SM_quantities' table
+        // The new grids have the correct size, such that we skip the check.
+        SM_quantities.update_grid(T_grid, Tnu_grid, true);
 
-        eta_ratio = pow(T_evo[grid_size-1]/T_evo[0], 3) * exp(3.0*SM.get_H_int()[grid_size-1]);
-        Neff_ALP = 3*pow(Tnu_grid[grid_size-1]/T_evo[grid_size-1], 4) * 3.85280407965; // (11/4)^(4/3) = 3.85280407965
-        Neff_SM = 3*pow(Tnu_grid[0]/T_evo[0], 4) * 3.85280407965; // (11/4)^(4/3) = 3.85280407965
-        dNeff = Neff_ALP - Neff_SM;
-        ii ++;
+        // Update the copy of 't_grid' that we use in this part of the code.
+        t_grid = SM_quantities.get_t_grid();
+
+        // End point of t_grid;
+        double tf = SM_quantities.tf();
+
+        // Calculate eta_0/eta_f
+        eta_ratio = pow(SM_quantities.T_at_t(tf)/SM_quantities.T_at_t(t0), 3) * exp(3.0*SM_quantities.lnR_at_t(tf));
+
+        // Calculate r_nu at recombination
+        // This is defined as Tnu / Tnu_SM, where Tnu_SM is the naive value for
+        // Tnu that can be derived from T by assuming Tnu = (4/11)^(1/3) * T;
+        double Tnu = SM_quantities.Tnu_at_t(tf);
+        double Tnu_SM = pow((4./11.), (1./3.)) * SM_quantities.T_at_t(tf);
+        r_nu = Tnu / Tnu_SM;
+
+        converged = (fabs(temp_eta_ratio-eta_ratio)/eta_ratio) <= epsrel && (fabs(temp_r_nu - r_nu)/r_nu <= epsrel);
+
+        // Update the temp values
+        temp_eta_ratio = eta_ratio;
+        temp_r_nu = r_nu;
       }
 
       // invalidate point if results not converged after 'max_iter' steps
-      if( ((fabs(temp_eta_ratio-eta_ratio) > epsrel) || fabs(temp_dNeff - dNeff) > epsrel) && (ii >= max_iter) )
+      if( !converged )
       {
         std::ostringstream err;
-        err << "Computation of dNeffCMB and etaBBN for GeneralCosmoALP model did not converge after n = "<< ii <<" iterations. You can increase the maximum number of iterations with the run Option 'max_iter'. Invalidating point.";
+        err << "Computation of dNeffCMB and etaBBN for GeneralCosmoALP model did not converge after n = "<< i <<" iterations. ";
+        err << "You can increase the maximum number of iterations with the run Option 'max_iter'. Invalidating point.";
         invalid_point().raise(err.str());
       }
+
+      // Calculate Neff at recombination
+      double Neff_ALP = Gambit::Neff_SM * pow(r_nu ,4);
+      double dNeff = Neff_ALP - Gambit::Neff_SM;
 
       result["dNeff"] = dNeff;
       result["Neff_ratio"] = Neff_ALP/Neff_SM;
       result["eta_ratio"] = eta_ratio;
-      logger() << "GeneralCosmoALP model: calculated Neff @BBN to be " << result["dNeff"] <<", and etaBB(ALP)/etaBBN(SM) = " << result["eta_ratio"] << ". Calculation converged after "<< ii <<" iterations." << EOM;
-
+      logger() << "GeneralCosmoALP model: Calculated \'dNeff\' = " << result["dNeff"];
+      logger() << ", \'Neff_ratio\' = " << result["Neff_ratio"];
+      logger() << ", and \'eta_ratio\' = " << result["eta_ratio"] << ". Calculation converged after "<< i <<" iterations." << EOM;
     }
 
     void eta_ratio_ALP(double& result)
