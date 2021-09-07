@@ -135,7 +135,7 @@ BE_INI_FUNCTION
 
     // Initialse WIMP object with NREFT_CPT coupling structure 
     if( wilsonCoeffs.CPTbasis )
-    { 
+    {
 
       // Set the WIMP object in DDCalc to expect non-relativistic EFT coeffs.
       DDCalc_SetWIMP_NREFT_CPT(WIMP, *Dep::mwimp, (double) *Dep::spinwimpx2/2.);
@@ -192,7 +192,6 @@ BE_INI_FUNCTION
   }
   // If DDCalc doesn't know what to do...
   else { backend_error().raise(LOCAL_INFO, "Unknown WIMP type given to DDCalc, with DD_coupling_container.coeff_structure = " + std::to_string(couplings.coeff_structure) + "."); }
-
 
   // Change halo parameters.
   bool halo_changed = false;

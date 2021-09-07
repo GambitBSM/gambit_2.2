@@ -136,7 +136,6 @@ BE_INI_FUNCTION
     NREO_DM_nucleon_couplings wilsonCoeffs = couplings.DD_nonrel_WCs;
     int OpCoeff;
 
-
     // Initialse WIMP object with NREFT_CPT coupling structure 
     if( wilsonCoeffs.CPTbasis )
     {
