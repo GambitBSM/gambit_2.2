@@ -376,7 +376,7 @@ BE_NAMESPACE
     // Generate process from in and out states
     char *process = new char[(in + " -> " + out[0] + "," + out[1]).length() + 1];
     strcpy(process, (in + " -> " + out[0] + "," + out[1]).c_str());
-    
+
     std::string incpy = in;
     std::string out0cpy = out[0];
     std::string out1cpy = out[1];
@@ -390,7 +390,6 @@ BE_NAMESPACE
     incpy.resize(std::remove_if(incpy.begin(), incpy.end(), [](char x) {return !isalnum(x) && !isspace(x);})-incpy.begin());
     out0cpy.resize(std::remove_if(out0cpy.begin(), out0cpy.end(), [](char x) {return !isalnum(x) && !isspace(x);})-out0cpy.begin());
     out1cpy.resize(std::remove_if(out1cpy.begin(), out1cpy.end(), [](char x) {return !isalnum(x) && !isspace(x);})-out1cpy.begin());
-    
 
 
     // Generate libname from model and process name
