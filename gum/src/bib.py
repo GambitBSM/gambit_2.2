@@ -18,10 +18,11 @@ def write_bib_file(bibtags,bibcontents,output_dir,name):
   Write a <model>.bib file and a <model>_bibtags.txt file
   containing necessary citations when using GUM.
   """
-
-  open(output_dir + "/" + name + "_bibtags.txt", 'w').write(bibtags)
-  open(output_dir + "/" + name + ".bib", 'w').write(bibcontents)
-  
+  with open(output_dir + "/" + name + "_bibtags.txt", 'w') as tagfile:
+    tagfile.write(bibtags)
+  with open(output_dir + "/" + name + ".bib", 'w') as bibfile:
+    bibfile.write(bibcontents)
+    
   print("Generated a bib file in the Outputs folder")
 
   return
