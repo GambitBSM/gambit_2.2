@@ -70,8 +70,12 @@ Parameters:
       range: [875,895]
 
   rBBN_dNurBBN:
-    r_BBN: 1.0
-    dNur_BBN: 0.0
+    r_BBN:
+      prior_type: flat
+      range: [0.2,1.2]
+    dNur_BBN:
+      prior_type: flat
+      range: [0.0,1.0]
 
 Priors:
 

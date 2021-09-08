@@ -222,13 +222,13 @@ namespace Gambit
     {
       using namespace Pipes::compute_dNeff_etaBBN_ALP;
 
-      // Initial values for r_nu = Tnu/Tnu_SM and eta_ratio
-      double r_nu = 1.0;
+      // Initial values for Tnu_ratio = Tnu/Tnu_SM and eta_ratio
+      double Tnu_ratio = 1.0;
       double eta_ratio = 1.0;
 
       // temporary (cached) values to check convergence of iteration
       double temp_eta_ratio = eta_ratio;
-      double temp_r_nu = r_nu;
+      double temp_Tnu_ratio = Tnu_ratio;
 
       // --- precision parameters --
       double hstart = runOptions->getValueOrDef<double>(1e-6,"hstart"); // initial step size for GSL ODE solver
@@ -239,8 +239,12 @@ namespace Gambit
       double t0 = runOptions->getValueOrDef<double>(1e4,"t_initial"); // initial time in seconds
       double tf0 = runOptions->getValueOrDef<double>(1e12,"t_final"); // final time in seconds (for 0th iteration)
 
+      // Get values for r and dNur at BBN
+      double rBBN = *Param["r_BBN"];
+      double dNurBBN = *Param["dNur_BBN"];
+
       // Initialise the tables of SM quantities (Assuming Neff = Neff_SM; i.e. rnu = 1, and dNeff = 0)
-      SM_time_evo SM_quantities(grid_size, t0, tf0, Gambit::Neff_SM, 1.0, 0.0);
+      SM_time_evo SM_quantities(grid_size, t0, tf0, Gambit::Neff_SM, rBBN, dNurBBN);
 
       std::vector<double> t_grid = SM_quantities.get_t_grid();
       std::vector<double> T_grid = SM_quantities.get_T_grid();
@@ -306,18 +310,18 @@ namespace Gambit
         // Calculate eta_0/eta_f
         eta_ratio = pow(SM_quantities.T_at_t(tf)/SM_quantities.T_at_t(t0), 3) * exp(3.0*SM_quantities.lnR_at_t(tf));
 
-        // Calculate r_nu at recombination
+        // Calculate Tnu_ratio at recombination
         // This is defined as Tnu / Tnu_SM, where Tnu_SM is the naive value for
         // Tnu that can be derived from T by assuming Tnu = (4/11)^(1/3) * T;
         double Tnu = SM_quantities.Tnu_at_t(tf);
         double Tnu_SM = pow((4./11.), (1./3.)) * SM_quantities.T_at_t(tf);
-        r_nu = Tnu / Tnu_SM;
+        Tnu_ratio = Tnu / Tnu_SM;
 
-        converged = (fabs(temp_eta_ratio-eta_ratio)/eta_ratio) <= epsrel && (fabs(temp_r_nu - r_nu)/r_nu <= epsrel);
+        converged = (fabs(temp_eta_ratio-eta_ratio)/eta_ratio) <= epsrel && (fabs(temp_Tnu_ratio - Tnu_ratio)/Tnu_ratio <= epsrel);
 
         // Update the temp values
         temp_eta_ratio = eta_ratio;
-        temp_r_nu = r_nu;
+        temp_Tnu_ratio = Tnu_ratio;
       }
 
       // invalidate point if results not converged after 'max_iter' steps
@@ -329,16 +333,18 @@ namespace Gambit
         invalid_point().raise(err.str());
       }
 
-      // Calculate Neff at recombination
-      double Neff_ALP = Gambit::Neff_SM * pow(r_nu ,4);
-      double dNeff = Neff_ALP - Gambit::Neff_SM;
-
-      result["dNeff"] = dNeff;
-      result["Neff_ratio"] = Neff_ALP/Neff_SM;
+      // Save "eta_ratio"
       result["eta_ratio"] = eta_ratio;
-      logger() << "GeneralCosmoALP model: Calculated \'dNeff\' = " << result["dNeff"];
-      logger() << ", \'Neff_ratio\' = " << result["Neff_ratio"];
-      logger() << ", and \'eta_ratio\' = " << result["eta_ratio"] << ". Calculation converged after "<< i <<" iterations." << EOM;
+
+      // Derive "dNur" and "r" at CMB from their respective value at BBN and "Tnu_ratio" and save them
+      result["dNur_CMB"] = pow(Tnu_ratio,4) * dNurBBN;
+      result["r_CMB"] = Tnu_ratio * rBBN;
+
+      logger() << "GeneralCosmoALP model: Calculated ";
+      logger() << "\'dNur_CMB\' = " << result["dNur_CMB"];
+      logger() << ", \'r_CMB\' = " << result["r_CMB"];
+      logger() << " and \'eta_ratio\' = " << result["eta_ratio"] << ". ";
+      logger() << "Calculation converged after "<< i <<" iterations." << EOM;
     }
 
     void eta_ratio_ALP(double& result)
@@ -348,13 +354,11 @@ namespace Gambit
 
     void Neff_evolution_ALP(map_str_dbl& result)
     {
-      using namespace Pipes::Neff_evolution_ALP;
-
       // Delete results of previous iteration
       result.clear();
 
-      result["dNur_CMB"] = 0.0;
-      result["r_CMB"] = pow((*Dep::external_dNeff_etaBBN).at("Neff_ratio"), 1./4.);
+      result["dNur_CMB"] = (*Pipes::eta_ratio_ALP::Dep::external_dNeff_etaBBN).at("dNur_CMB");
+      result["r_CMB"] = (*Pipes::eta_ratio_ALP::Dep::external_dNeff_etaBBN).at("r_CMB");
     }
 
   } // namespace CosmoBit
