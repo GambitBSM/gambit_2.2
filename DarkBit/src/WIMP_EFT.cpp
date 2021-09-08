@@ -30,6 +30,10 @@
 ///          (ankit.beniwal@uclouvain.be)
 ///  \date 2020 Dec
 ///
+///  \author Tomas Gonzalo
+///          (gonzalo@physik.rwth-aachen.de)
+///  \date 2021 Sep
+///
 ///  *********************************************
 
 #include <boost/make_shared.hpp>
@@ -142,6 +146,19 @@ namespace Gambit
        if(ModelInUse("NREO_DiracDM")) result = "chi";
     }
 
+    /// Generic parameterisation of WIMP self-annihilation cross-section to various SM two-body final states
+    void sigmav_from_parameters(WIMP_annihilation& result)
+    {
+      using namespace Pipes::sigmav_from_parameters;
+      std::vector<std::string> finalstates {"bb", "WW", "cc", "tautau", "ZZ", "tt", "hh"};
+      for(auto channel = finalstates.begin(); channel!=finalstates.end(); ++channel)
+      {
+         std::string A("A_");
+         std::string B("B_");
+         result.setA(*channel,*Param[A+*channel]);
+         result.setB(*channel,*Param[B+*channel]);
+      }
+    }
 
     //////////////////////////////////////////////////////////////////////////
     //
@@ -469,8 +486,8 @@ namespace Gambit
           // Include final states that are open for T~m/20
           if ( WIMP_mass*2 > mtot_final*0.5 )
           {
-            double A = Dep::generic_WIMP_sigmav->A(channel[i]);
-            double B = Dep::generic_WIMP_sigmav->B(channel[i]);
+            double A = Dep::sigmav->A(channel[i]);
+            double B = Dep::sigmav->B(channel[i]);
             daFunk::Funk kinematicFunction = daFunk::funcM(wimpDM,
                 &WIMP_EFT_DM::sv, channel[i], WIMP_mass, A, B, daFunk::var("v"));
             TH_Channel new_channel(

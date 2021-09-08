@@ -58,15 +58,15 @@
 ///  \date 2018 Jan, Aug
 ///  \date 2020 Dec
 ///
-/// \author Aaron Vincent
-///         (aaron.vincent@cparc.ca)
-/// \date 2017 Sept
+///  \author Aaron Vincent
+///          (aaron.vincent@cparc.ca)
+///  \date 2017 Sept
 ///
-/// \author Sanjay Bloor
-///         (sanjay.bloor12@imperial.ac.uk)
-/// \date 2017 Dec
-/// \date 2018 Aug, Sep, Oct
-/// \date 2020 Feb, May
+///  \author Sanjay Bloor
+///          (sanjay.bloor12@imperial.ac.uk)
+///  \date 2017 Dec
+///  \date 2018 Aug, Sep, Oct
+///  \date 2020 Feb, May
 ///
 ///  \author Sebastian Hoof
 ///          (s.hoof15@imperial.ac.uk)
@@ -75,17 +75,21 @@
 ///  \date 2018 Jan, Mar, Apr
 ///  \date 2019 Mar, Apr, Jun
 ///
-/// \author Anders Kvellestad
-///         (anders.kvellestad@fys.uio.no)
-/// \date 2020 Feb
+///  \author Anders Kvellestad
+///          (anders.kvellestad@fys.uio.no)
+///  \date 2020 Feb
 ///
-/// \author Jonathan Cornell
-///         (jonathancornell@weber.edu)
-/// \date 2013 - 2020
+///  \author Jonathan Cornell
+///          (jonathancornell@weber.edu)
+///  \date 2013 - 2020
 ///
 ///  \author Patrick Stoecker
 ///          (stoecker@physik.rwth-aachen.de)
 ///  \date 2021 Mar
+///
+///  \author Tomas Gonzalo
+///          (gonzalo@physik.rwth-aachen.de)
+///  \date 2021 Sep
 ///
 ///  *********************************************
 
@@ -466,7 +470,10 @@ START_MODULE
       DEPENDENCY(decay_rates, DecayTable)
       DEPENDENCY(SM_spectrum, Spectrum)
       DEPENDENCY(WIMP_properties, WIMPprops)
-      DEPENDENCY(generic_WIMP_sigmav, WIMP_annihilation)
+      DEPENDENCY(sigmav, WIMP_annihilation)
+      MODEL_GROUP(group1, (WIMP_sigmav))
+      MODEL_GROUP(group2, (NREO_ScalarDM, NREO_DiracDM, NREO_MajoranaDM))
+      ALLOW_MODEL_COMBINATION(group1, group2)
     #undef FUNCTION
 
     #define FUNCTION TH_ProcessCatalog_DMEFT
@@ -1058,8 +1065,13 @@ START_MODULE
       FORCE_SAME_BACKEND(gimmemicro)
     #undef FUNCTION
 
-  #undef CAPABILITY
+    /// Generic parameterisation of WIMP self-annihilation cross-section to various SM two-body final states
+    #define FUNCTION sigmav_from_parameters
+    START_FUNCTION(WIMP_annihilation)
+    ALLOW_MODEL(WIMP_sigmav)
+    #undef FUNCTION
 
+  #undef CAPABILITY
 
   // Direct detection ==================================================
 

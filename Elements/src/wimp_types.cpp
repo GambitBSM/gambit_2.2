@@ -2,7 +2,8 @@
 //   *********************************************
 ///  \file
 ///
-///  Container for EFT parameterisation of WIMP
+///  Definition of the container for EFT 
+///  parameterisation of WIMP
 ///  annihilations to SM particles
 ///
 ///  *********************************************
@@ -15,7 +16,7 @@
 ///
 ///  *********************************************
 
-#include "gambit/Elements/wimp_annihilation.hpp"
+#include "gambit/Elements/wimp_types.hpp"
 
 namespace Gambit
 {

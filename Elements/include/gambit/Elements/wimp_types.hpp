@@ -2,8 +2,8 @@
 //   *********************************************
 ///  \file
 ///
-///  Container for EFT parameterisation of WIMP
-///  annihilations to SM particles
+///  Various container for WIMP particle  and
+///  annihilation properties
 ///
 ///  *********************************************
 ///
@@ -13,16 +13,29 @@
 ///          (b.farmer@imperial.ac.uk)
 ///  \date 2019 Sep
 ///
+///  \author Tomas Gonzalo
+///          (gonzalo@physik.rwth-aachen.de)
+///  \date 2021 Sep
+///
 ///  *********************************************
 
-#ifndef __wimp_annihilation_hpp__
-#define __wimp_annihilation_hpp__
+#ifndef __wimp_types_hpp__
+#define __wimp_types_hpp__
 
 #include <string>
 #include <map>
 
 namespace Gambit
 {
+    // Basic properties of generic WIMP
+    struct WIMPprops
+    {
+      double mass;
+      unsigned int spinx2;
+      bool sc; // Self-conjugate?
+      std::string name; // Name in the particle database
+    };
+
     /// Contain for generic parameterisation of WIMP annihilation to various two-body final states,
     /// with <sigma v> expanded as a simple power series in v^2
     class WIMP_annihilation
@@ -38,6 +51,7 @@ namespace Gambit
             std::map<std::string,double> a;
             std::map<std::string,double> b;
     };
+
 }
 
-#endif //__wimp_annihilation_hpp__
+#endif //__wimp_types_hpp__
