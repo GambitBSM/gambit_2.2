@@ -471,6 +471,7 @@ START_MODULE
       DEPENDENCY(SM_spectrum, Spectrum)
       DEPENDENCY(WIMP_properties, WIMPprops)
       DEPENDENCY(sigmav, WIMP_annihilation)
+      ALLOW_MODEL_DEPENDENCE(WIMP_sigmav, NREO_ScalarDM, NREO_DiracDM, NREO_MajoranaDM)
       MODEL_GROUP(group1, (WIMP_sigmav))
       MODEL_GROUP(group2, (NREO_ScalarDM, NREO_DiracDM, NREO_MajoranaDM))
       ALLOW_MODEL_COMBINATION(group1, group2)
