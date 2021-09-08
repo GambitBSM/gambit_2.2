@@ -80,6 +80,7 @@ namespace Gambit
         double sv(std::string channel, double mass, double A, double B, double v)
         {
           // Note: Valid for mass > 45 GeV
+          // removing this check
 
           // Hardcoded minimum velocity avoids NaN results.
           // Pat didn't like the hardcoded velocity
@@ -87,12 +88,12 @@ namespace Gambit
 
           double s = 4*mass*mass/(1-v*v/4);
           double sqrt_s = sqrt(s);
-          if ( sqrt_s < 90 )
-          {
-            piped_invalid_point.request(
-                "WIMP_EFT_DM sigmav called with sqrt_s < 90 GeV.");
-            return 0;
-          }
+          // if ( sqrt_s < 90 )
+          // {
+          //   piped_invalid_point.request(
+          //       "WIMP_EFT_DM sigmav called with sqrt_s < 90 GeV.");
+          //   return 0;
+          // }
 
           if ( channel == "hh" )
           {
