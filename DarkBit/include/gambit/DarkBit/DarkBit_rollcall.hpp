@@ -1924,7 +1924,7 @@ START_MODULE
     #undef FUNCTION
     #define FUNCTION DarkMatterConj_ID_EFT
     START_FUNCTION(std::string)
-    DEPENDENCY(WIMP_properties, WIMPprops)
+    ALLOW_MODELS(NREO_scalarDM, NREO_MajoranaDM, NREO_DiracDM)
     #undef FUNCTION
     #define FUNCTION DarkMatterConj_ID_DMEFT
     START_FUNCTION(std::string)

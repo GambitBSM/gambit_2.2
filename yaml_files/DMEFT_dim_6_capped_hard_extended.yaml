@@ -310,16 +310,6 @@ Rules:
   - capability: AllAnalysisNumbers
     function: DMEFT_results_cutoff
 
-  # Use the WIMP properties structure to get WIMP mass etc.
-  - capability: mwimp
-    function: mwimp_from_WIMPprops
-
-  - capability: wimp_sc
-    function: wimp_sc_from_WIMPprops
-
-  - capability: spinwimpx2
-    function: jwimpx2_from_WIMPprops
-
   ## Halo nuisances settings
   # Set v0 to 240 +/- 8 km/s based on Reid et al [arXiv:1401.5377]
   - capability: lnL_v0
