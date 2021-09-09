@@ -15,8 +15,8 @@
 ///  \date 2019 Oct
 ///
 ///  \author Patrick Stöcker
-///          (stoecker@physik.rwth-aachen.de)
-///  \date 2021 Mar
+///          (patrick.stoecker@kit.edu)
+///  \date 2021 Mar, Sep
 ///
 ///  \author Tomas Gonzalo
 ///          (gonzalo@physik.rwth-aachen.de)
@@ -41,7 +41,7 @@
   // to the s-wave annihilation "marker" model AnnihilatingDM_general
   INTERPRET_AS_X_FUNCTION(AnnihilatingDM_general,DMEFT_to_AnnihilatingDM_general)
   INTERPRET_AS_X_DEPENDENCY(AnnihilatingDM_general,mwimp,double)
-  INTERPRET_AS_X_DEPENDENCY(AnnihilatingDM_general,wimp_sc,double)
+  INTERPRET_AS_X_DEPENDENCY(AnnihilatingDM_general,wimp_sc,bool)
   INTERPRET_AS_X_DEPENDENCY(AnnihilatingDM_general,sigmav,double)
   INTERPRET_AS_X_DEPENDENCY(AnnihilatingDM_general,RD_fraction,double)
 
