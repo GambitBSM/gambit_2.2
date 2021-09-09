@@ -1498,9 +1498,6 @@ set(dl "https://github.com/DirectDM/directdm-py/archive/v2.2.0.tar.gz")
 set(md5 "c22d26ae7bec44bbfe1eb5f4306a23e0")
 set(lib "libdirectdm")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
-# bjf> Cmake error from the below: not enough arguments?
-#check_ditch_status(${name} ${ver} )
-# bjf> probably should be this?
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}

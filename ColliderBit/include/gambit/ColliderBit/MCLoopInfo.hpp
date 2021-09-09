@@ -18,7 +18,7 @@
 #pragma once
 
 #include <vector>
-#include "gambit/Utils/util_types.hpp" 
+#include "gambit/Utils/util_types.hpp"
 #include "gambit/ColliderBit/MC_convergence.hpp"
 
 namespace Gambit
@@ -31,7 +31,6 @@ namespace Gambit
     struct MCLoopInfo
     {
      
-      // Andre Scaffidi HACKS ------------
       // Event genration has been bypassed: Default = false
       bool event_gen_BYPASS = false;
 

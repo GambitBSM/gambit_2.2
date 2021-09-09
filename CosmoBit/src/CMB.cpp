@@ -237,7 +237,8 @@ namespace Gambit
       // Read in the table with the weighting function
       static ASCIItableReader W_table;
       static bool first = true;
-      if (first) {
+      if (first)
+      {
         W_table = std::move( ASCIItableReader(GAMBIT_DIR "/CosmoBit/data/EnergyInjection/f_eff_weighting_function.txt") );
         W_table.setcolnames({"z+1","W(z)"});
         first = false;

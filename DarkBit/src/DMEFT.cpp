@@ -17,10 +17,11 @@
 ///                                                  
 ///  ********************************************* 
 
+#include "boost/make_shared.hpp"
+
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/DarkBit/DarkBit_rollcall.hpp"
 #include "gambit/Utils/ascii_table_reader.hpp"
-#include "boost/make_shared.hpp"
 #include "gambit/DarkBit/DarkBit_utils.hpp"
 
 namespace Gambit
@@ -171,19 +172,18 @@ namespace Gambit
       for (unsigned int i = 0; i < channels.size(); ++i)
       {
         double mtot_final = 
-        catalog.getParticleProperty(p1[i]).mass + 
-        catalog.getParticleProperty(p2[i]).mass;  
+          catalog.getParticleProperty(p1[i]).mass + 
+          catalog.getParticleProperty(p2[i]).mass;  
         if (mchi*2 > mtot_final*0.5)
         {
           daFunk::Funk kinematicFunction = daFunk::funcM(pc, &DMEFT::sv, channels[i], tbl, 
-          BEreq::CH_Sigma_V.pointer(), daFunk::var("v"));
+            BEreq::CH_Sigma_V.pointer(), daFunk::var("v"));
           TH_Channel new_channel(daFunk::vec<string>(p1[i], p2[i]), kinematicFunction);
           process_ann.channelList.push_back(new_channel);
         }
         if (mchi*2 > mtot_final)
         {
-          process_ann.resonances_thresholds.threshold_energy.
-          push_back(mtot_final);
+          process_ann.resonances_thresholds.threshold_energy.push_back(mtot_final);
         }
       }
       
@@ -312,7 +312,7 @@ namespace Gambit
         // 1. Loop induced coupling to dim-5 
         //    operators to dim-7, see:
         // https://arxiv.org/pdf/1302.4454.pdf
-	      double lamovermt2 = pow(Lambda, 2.)/pow(mtatmt, 2.);
+        double lamovermt2 = pow(Lambda, 2.)/pow(mtatmt, 2.);
         double prefactor = -4/lamovermt2*log(lamovermt2);
         result["C51"] += prefactor*C79/Lambda;
         result["C52"] += prefactor*C710/Lambda;

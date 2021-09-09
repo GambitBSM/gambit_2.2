@@ -228,18 +228,6 @@ Rules:
     options:
       impose_pert_unitarity: true
 
-  # WIMP mass from process catalog
-  - capability: mwimp
-    function: mwimp_generic
-
-  # Spinx2 from process catalog
-  - capability: spinwimpx2
-    function: spinwimpx2_generic
-
-  # Self conjugacy of DM from process catalog
-  - capability: wimp_sc
-    function: wimp_sc_generic
-
   # The model is annihilating DM, not decaying
   - capability: GA_Yield
     function: GA_AnnYield_General

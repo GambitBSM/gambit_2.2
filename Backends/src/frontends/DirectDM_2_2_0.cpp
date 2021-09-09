@@ -81,7 +81,7 @@ BE_NAMESPACE
   /* Convenience functions */
 
   /// Get Wilson Coefficients at 2 GeV from the SM unbroken phase.
-  /// Requires a dictionary of relatavistic WCs, , the DM mass, dchi is the dimension of the DM SU2 representation,
+  /// Requires a dictionary of relativistic WCs, , the DM mass, dchi is the dimension of the DM SU2 representation,
   /// Ychi is the DM hypercharge such that Q = I^3 + Y/2, scale is the scale the Lagrangian is defined at, and
   /// the DM type -- "D" for Dirac fermion; "M" for Majorana fermion; "C" for complex scalar; "R" for real scalar.
   NREO_DM_nucleon_couplings get_NR_WCs_EW(map_str_dbl& relativistic_WCs, double& mDM, 
@@ -111,7 +111,7 @@ BE_NAMESPACE
   }
 
   /// Get Wilson Coefficients at 2 GeV in a quark flavour matching scheme.
-  /// Requires a dictionary of relatavistic WCs, the DM mass, an integer specifying the number
+  /// Requires a dictionary of relativistic WCs, the DM mass, an integer specifying the number
   /// of quark flavours to match onto, i.e. the 3, 4 or 5 quark flavour scheme, and
   /// the DM type -- "D" for Dirac fermion; "M" for Majorana fermion; "C" for complex scalar; "R" for real scalar.
   NREO_DM_nucleon_couplings get_NR_WCs_flav(map_str_dbl& relativistic_WCs, double& mDM, 

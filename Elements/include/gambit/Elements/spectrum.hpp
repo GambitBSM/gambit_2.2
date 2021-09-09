@@ -120,9 +120,6 @@ namespace Gambit
          typedef std::vector<YAML::ssdd> mr_info;
          /// @}
 
-         /// Typedef to simplify reference to model parameters stored in functor pipes
-         typedef Models::safe_param_map<const safe_ptr<const double>> params;
-
       private:
 
          /// Variables
