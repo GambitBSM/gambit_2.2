@@ -64,6 +64,7 @@
 #include "gambit/DarkBit/ProcessCatalog.hpp"
 #include "gambit/Elements/daFunk.hpp"
 #include "gambit/Models/safe_param_map.hpp"
+#include "gambit/Utils/yaml_options.hpp"
 
 namespace Gambit
 {
@@ -146,7 +147,7 @@ namespace Gambit
     struct SimYieldChannel
     {
         SimYieldChannel(daFunk::Funk dNdE, const std::string& p1, const std::string& p2,
-            const std::string& finalState, double Ecm_min, double Ecm_max);
+            const std::string& finalState, double Ecm_min, double Ecm_max, safe_ptr<Options> runOptions);
         daFunk::Funk dNdE;
         daFunk::BoundFunk dNdE_bound;  // Pre-bound version for use in e.g. cascade decays
         std::string p1;
@@ -171,8 +172,8 @@ namespace Gambit
     {
         public:
             SimYieldTable();
-            void addChannel(daFunk::Funk dNdE, const std::string& p1, const std::string& p2, const std::string& finalState, double Ecm_min, double Ecm_max);
-            void addChannel(daFunk::Funk dNdE, const std::string& p1, const std::string& finalState, double Ecm_min, double Ecm_max);
+            void addChannel(daFunk::Funk dNdE, const std::string& p1, const std::string& p2, const std::string& finalState, double Ecm_min, double Ecm_max, safe_ptr<Options> runOptions);
+            void addChannel(daFunk::Funk dNdE, const std::string& p1, const std::string& finalState, double Ecm_min, double Ecm_max, safe_ptr<Options> runOptions);
             void addChannel(SimYieldChannel channel);
             void replaceFinalState(const std::string& oldFinalState, const std::string& newFinalState);
             void donateChannels(SimYieldTable& receiver) const;
