@@ -111,7 +111,8 @@ namespace Gambit
       // If dNdE is given w.r.t 'Ekin', write it as a function w.r.t. 'E' (total energy)
       // in order to conform with the rest of the code.
       // For E < m, we return zero.
-      if (dNdE->hasArg("Ekin")) {
+      if (dNdE->hasArg("Ekin"))
+      {
         auto E = daFunk::var("E");
         double m = this->finalStateMass;
         dNdE = daFunk::ifelse(E-m, dNdE->set("Ekin", E -m), daFunk::zero("E","Ecm"));

@@ -224,9 +224,12 @@ namespace Gambit
       //   const double c = delta * (rate - obs);
       //   const double d = b*b - 4*a*c;
       //   const double sqrtd = (d < 0) ? 0 : sqrt(d);
-      //   if (sqrtd == 0) {
+      //   if (sqrtd == 0)
+      //   {
       //     nuisances[j] = -b / (2*a);
-      //   } else {
+      //   }
+      //   else
+      //   {
       //     const double th0_a = (-b + sqrtd) / (2*a);
       //     const double th0_b = (-b - sqrtd) / (2*a);
       //     nuisances[j] = (fabs(th0_a) < fabs(th0_b)) ? th0_a : th0_b;
@@ -364,7 +367,8 @@ namespace Gambit
           // Sample correlated SR rates from a rotated Gaussian defined by the covariance matrix and offset by the mean rates
           double lsum_private  = 0;
           #pragma omp for nowait
-          for (size_t i = 0; i < nsample; ++i) {
+          for (size_t i = 0; i < nsample; ++i)
+          {
 
             Eigen::VectorXd norm_samples(nSR);
             for (size_t j = 0; j < nSR; ++j)
@@ -611,7 +615,9 @@ namespace Gambit
         #endif
 
 
-      } else { // NO SR-CORRELATION INFO, OR USER CHOSE NOT TO USE IT:
+      }
+      else
+      { // NO SR-CORRELATION INFO, OR USER CHOSE NOT TO USE IT:
 
 
         // We either take the result from the SR *expected* to be most

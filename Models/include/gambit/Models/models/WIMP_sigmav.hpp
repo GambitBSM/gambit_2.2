@@ -24,14 +24,14 @@
 #define __WIMP_sigmav_hpp__
 
 #define MODEL WIMP_sigmav
-	START_MODEL
-    DEFINEPARS(A_bb, B_bb) 
-    DEFINEPARS(A_WW, B_WW) 
-    DEFINEPARS(A_cc, B_cc)
-    DEFINEPARS(A_tautau, B_tautau)
-    DEFINEPARS(A_ZZ, B_ZZ) 
-    DEFINEPARS(A_tt, B_tt)
-    DEFINEPARS(A_hh, B_hh)
+  START_MODEL
+  DEFINEPARS(A_bb, B_bb) 
+  DEFINEPARS(A_WW, B_WW) 
+  DEFINEPARS(A_cc, B_cc)
+  DEFINEPARS(A_tautau, B_tautau)
+  DEFINEPARS(A_ZZ, B_ZZ) 
+  DEFINEPARS(A_tt, B_tt)
+  DEFINEPARS(A_hh, B_hh)
 #undef MODEL
 
 #endif

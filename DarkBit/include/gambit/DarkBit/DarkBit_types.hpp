@@ -67,16 +67,6 @@
 
 namespace Gambit
 {
-  class ModelParameters;
-
-  // TODO: Cannot use this forward declaration, because
-  // module_harvester.py does not know when namespaces
-  // end, and assumes that they never do! Including
-  // full header instead.
-  //namespace Models {
-  //  template<typename T> class safe_param_map;
-  //}
-
   namespace DarkBit
   {
 
