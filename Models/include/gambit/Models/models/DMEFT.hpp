@@ -40,7 +40,8 @@
   // In order to enable CMB constraints create a friendship relation
   // to the s-wave annihilation "marker" model AnnihilatingDM_general
   INTERPRET_AS_X_FUNCTION(AnnihilatingDM_general,DMEFT_to_AnnihilatingDM_general)
-  INTERPRET_AS_X_DEPENDENCY(AnnihilatingDM_general,WIMP_properties,WIMPprops)
+  INTERPRET_AS_X_DEPENDENCY(AnnihilatingDM_general,mwimp,double)
+  INTERPRET_AS_X_DEPENDENCY(AnnihilatingDM_general,wimp_sc,double)
   INTERPRET_AS_X_DEPENDENCY(AnnihilatingDM_general,sigmav,double)
   INTERPRET_AS_X_DEPENDENCY(AnnihilatingDM_general,RD_fraction,double)
 

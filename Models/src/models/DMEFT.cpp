@@ -33,11 +33,10 @@
     USE_MODEL_PIPE(AnnihilatingDM_general) // get pipe for "interpret as friend" function
     logger()<<"Running interpret_as_friend calculations for DMEFT -> AnnihilatingDM_general ..."<<EOM;
 
-    const auto wimp_props = *Dep::WIMP_properties;
-    const double k = (wimp_props.sc) ? 1. : 0.5;
+    const double k = (*Dep::wimp_sc) ? 1. : 0.5;
     const double f = *Dep::RD_fraction;
 
-    friendparams.setValue("mass", wimp_props.mass);
+    friendparams.setValue("mass", *Dep::mwimp);
     // In AnnihilatingDM_general the parameter "sigmav" is assumed to already include
     // (RD_fraction)^2 and the factor k
     friendparams.setValue("sigmav", k*f*f*(*Dep::sigmav));
