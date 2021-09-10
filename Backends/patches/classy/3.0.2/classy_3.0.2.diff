@@ -303,7 +303,7 @@ index e253d384..58be4d4c 100644
  
    double ** lnpk;  /**< depends on indices index_md, index_ic1, index_ic2, index_k as:
 diff --git a/python/classy.pyx b/python/classy.pyx
-index cb6f8065..a30efb6e 100644
+index b61a20e9..748ad4bb 100644
 --- a/python/classy.pyx
 +++ b/python/classy.pyx
 @@ -126,8 +126,21 @@ cdef class Class:
@@ -332,26 +332,26 @@ index cb6f8065..a30efb6e 100644
      def omega_b(self):
          return self.ba.Omega0_b * self.ba.h * self.ba.h
  
-+    def Omega_dcdm(self):                   # (JR) added 
++    def Omega_dcdm(self):                   # (JR) added
 +        return self.ba.Omega0_dcdm
 +
-+    def Omega_dr(self):                     # (JR) added 
++    def Omega_dr(self):                     # (JR) added
 +        return self.ba.Omega0_dr
 +
-+    def Omega_dcdmdr(self):                     # (JR) added 
++    def Omega_dcdmdr(self):                     # (JR) added
 +        return self.ba.Omega0_dcdmdr
 +
-+    def Omega_ncdm_tot(self):                     # (JR) added 
++    def Omega_ncdm_tot(self):                     # (JR) added
 +        return self.ba.Omega0_ncdm_tot
 +
-+    def Omega_ur(self):                     # (JR) added 
++    def Omega_ur(self):                     # (JR) added
 +        return self.ba.Omega0_ur
 +
      def Neff(self):
          return self.ba.Neff
  
 diff --git a/source/input.c b/source/input.c
-index cc739890..97c053ef 100644
+index 96512282..06bc0abf 100644
 --- a/source/input.c
 +++ b/source/input.c
 @@ -25,6 +25,8 @@
@@ -363,7 +363,7 @@ index cc739890..97c053ef 100644
  /**
   * Initialize input parameters from external file.
   *
-@@ -2972,7 +2974,8 @@ int input_read_parameters_injection(struct file_content * pfc,
+@@ -2996,7 +2998,8 @@ int input_read_parameters_injection(struct file_content * pfc,
  
    /** - Define local variables */
    struct injection* pin = &(pth->in);
@@ -373,7 +373,7 @@ index cc739890..97c053ef 100644
    char string1[_ARGUMENT_LENGTH_MAX_];
    string1[0]='\0';
  
-@@ -2990,7 +2993,7 @@ int input_read_parameters_injection(struct file_content * pfc,
+@@ -3014,7 +3017,7 @@ int input_read_parameters_injection(struct file_content * pfc,
               "annihilation efficiency cannot be negative");
    class_test(pin->DM_annihilation_efficiency>1.e-4,
               errmsg,
@@ -382,20 +382,16 @@ index cc739890..97c053ef 100644
    class_test(pin->DM_annihilation_mass<0. || pin->DM_annihilation_cross_section <0,
               errmsg,
               "Both mass and cross section for your dark matter particle must be positive.");
-@@ -3006,7 +3009,11 @@ int input_read_parameters_injection(struct file_content * pfc,
+@@ -3030,7 +3033,7 @@ int input_read_parameters_injection(struct file_content * pfc,
  
    /* Complete set of parameters */
    if(pin->DM_annihilation_mass > 0 && pin->DM_annihilation_cross_section > 0.){
--    pin->DM_annihilation_efficiency = pin->DM_annihilation_cross_section*1.e-6/(pin->DM_annihilation_mass*_eV_*1.e9);
-+    pin->DM_annihilation_efficiency = pin->DM_annihilation_cross_section*1.e-6/(pin->DM_annihilation_mass*_eV_*1.e9/_c_/_c_);
-+  }
-+
-+  if(pin->DM_annihilation_efficiency!=0){
-+    pth->has_exotic_injection = _TRUE_;
+-    pin->DM_annihilation_efficiency = pin->DM_annihilation_cross_section*1.e-6/(pin->DM_annihilation_mass*_eV_*1.e9)*pow(pin->DM_annihilation_fraction,2);
++    pin->DM_annihilation_efficiency = pin->DM_annihilation_cross_section*1.e-6/(pin->DM_annihilation_mass*_eV_*1.e9/_c_/_c_)*pow(pin->DM_annihilation_fraction,2);
    }
  
    if(pin->DM_annihilation_efficiency > 0){
-@@ -3055,10 +3062,27 @@ int input_read_parameters_injection(struct file_content * pfc,
+@@ -3079,10 +3082,27 @@ int input_read_parameters_injection(struct file_content * pfc,
               errmsg,
               "You need to enter a positive fraction of decaying DM. Please adjust your param file.");
  
@@ -407,7 +403,7 @@ index cc739890..97c053ef 100644
 +  class_call(parser_read_double(pfc,"DM_decay_Gamma",&param1,&flag1,errmsg),
 +             errmsg,
 +             errmsg);
-+
+ 
 +  /* Read the lifetime */
 +  class_call(parser_read_double(pfc,"DM_decay_tau",&param2,&flag2,errmsg),
 +            errmsg,
@@ -417,7 +413,7 @@ index cc739890..97c053ef 100644
 +  class_test((flag1 == _TRUE_) && (flag2 == _TRUE_),
 +             errmsg,
 +             "You can only enter one of 'DM_decay_Gamma' or 'DM_decay_tau'.");
- 
++
 +  /* Set DM_decay_Gamma accordingly */
 +  if (flag1 == _TRUE_)
 +    pin->DM_decay_Gamma = param1;
@@ -426,7 +422,7 @@ index cc739890..97c053ef 100644
  
    /** 3) PBH evaporation */
    /** 3.a) Fraction */
-@@ -3174,12 +3198,121 @@ int input_read_parameters_injection(struct file_content * pfc,
+@@ -3198,12 +3218,121 @@ int input_read_parameters_injection(struct file_content * pfc,
        /* Complete set of parameters */
        strcpy(pin->f_eff_file, string1);
      }
@@ -549,7 +545,7 @@ index cc739890..97c053ef 100644
    /** 6) deposition function */
    /* Read */
    class_call(parser_read_string(pfc,"chi_type",&string1,&flag1,errmsg),
-@@ -3658,9 +3791,12 @@ int input_read_parameters_primordial(struct file_content * pfc,
+@@ -3685,9 +3814,12 @@ int input_read_parameters_primordial(struct file_content * pfc,
      else if (strcmp(string1,"external_Pk") == 0){
        ppm->primordial_spec_type = external_Pk;
      }
@@ -563,7 +559,7 @@ index cc739890..97c053ef 100644
      }
    }
  
-@@ -4168,6 +4304,57 @@ int input_read_parameters_primordial(struct file_content * pfc,
+@@ -4195,6 +4327,57 @@ int input_read_parameters_primordial(struct file_content * pfc,
      class_read_double("custom10",ppm->custom10);
    }
  
@@ -621,7 +617,7 @@ index cc739890..97c053ef 100644
    /* Final tests */
    if ((ppm->primordial_spec_type == inflation_V) || (ppm->primordial_spec_type == inflation_H) || (ppm->primordial_spec_type == inflation_V_end)) {
      class_test(ppt->has_scalars == _FALSE_,
-@@ -5406,6 +5593,16 @@ int input_default_params(struct background *pba,
+@@ -5463,6 +5646,16 @@ int input_default_params(struct background *pba,
    pin->f_eff = 1.;
    sprintf(pin->f_eff_file,"/external/heating/example_f_eff_file.dat");
  
@@ -638,7 +634,7 @@ index cc739890..97c053ef 100644
    /** 6) Deposition function */
    pin->chi_type = chi_CK;
    /** 6.1) External file */
-@@ -5527,6 +5724,11 @@ int input_default_params(struct background *pba,
+@@ -5584,6 +5777,11 @@ int input_default_params(struct background *pba,
    ppm->custom9=0.;
    ppm->custom10=0.;
  
@@ -651,23 +647,23 @@ index cc739890..97c053ef 100644
     * Default to input_read_parameters_spectra
     */
 diff --git a/source/primordial.c b/source/primordial.c
-index 2196e2f6..b6ddb48a 100644
+index 2196e2f6..9f66f85a 100644
 --- a/source/primordial.c
 +++ b/source/primordial.c
 @@ -246,21 +246,60 @@ int primordial_init(
               ppr->k_per_decade_primordial);
  
    /** - allocate and fill values of \f$ \ln{k}\f$'s */
-+  /// (JR): The array with the values of lnk is already passed in input.c if the 'pointer_to_Pk' 
++  /// (JR): The array with the values of lnk is already passed in input.c if the 'pointer_to_Pk'
 +  /// input type is selected
 +  if ( ppm->primordial_spec_type != pointer_to_Pk) {
 +
-+    // This routine allocates the space for ppm->lnk, fills it and sets the size through 
-+    // ppm->lnk_size. In the first patch I will do this when reading in the pointer to the 
++    // This routine allocates the space for ppm->lnk, fills it and sets the size through
++    // ppm->lnk_size. In the first patch I will do this when reading in the pointer to the
 +    // array ppm->lnk. Not great but good enough for the first version of the implementation
 +    // -- can (& should) probably be improved
 +    // you could ad the if statement in this funciton and fill ppm->lnk with what the read in pointer
-+    // is pointing to. but that would make it neccesary to patch another part of the code.. 
++    // is pointing to. but that would make it neccesary to patch another part of the code..
 +    class_call(primordial_get_lnk_list(ppm,
 +                                       k_min,
 +                                       k_max,
@@ -675,7 +671,7 @@ index 2196e2f6..b6ddb48a 100644
 +               ppm->error_message,
 +               ppm->error_message);
 +  }
-+  /// test if the kmin and kmax passed through the pointer_to_Pk method 
++  /// test if the kmin and kmax passed through the pointer_to_Pk method
 +  /// make sense and are compatible with the CLASS internal ppt->kmin ppt->kmax
 +  else {
  
@@ -713,7 +709,7 @@ index 2196e2f6..b6ddb48a 100644
 +
 +
 +  /** - define indices and allocate tables in primordial structure */
-+  // JR: can use this for the pointer_to_Pk as long as ppm->lnk_size and ppt->md_size are set correctly! 
++  // JR: can use this for the pointer_to_Pk as long as ppm->lnk_size and ppt->md_size are set correctly!
 +  // ppm->lnk_size is done in input.c atm, ppt->md_size is taken care of my perturbations
    class_call(primordial_indices(ppt,
                                  ppm),
@@ -786,7 +782,7 @@ index 5aafb3b5..310ccb3d 100644
         models no reionization and no exotic energy
         injection. According to our definition of the reionization
 diff --git a/tools/evolver_ndf15.c b/tools/evolver_ndf15.c
-index 0d293723..9e7e3743 100644
+index 0d293723..a3e8d268 100644
 --- a/tools/evolver_ndf15.c
 +++ b/tools/evolver_ndf15.c
 @@ -1215,6 +1215,7 @@ int numjac(
@@ -805,7 +801,7 @@ index 0d293723..9e7e3743 100644
 +    for(i=1;i<=neq;i++){
 +      class_test(nj_ws->ffdel[i] != nj_ws->ffdel[i], error_message, "A derivative passed to numjac was NaN.");
 +      nj_ws->ydel_Fdel[i][j] = nj_ws->ffdel[i];
-+       
++
 +    }
    }
  

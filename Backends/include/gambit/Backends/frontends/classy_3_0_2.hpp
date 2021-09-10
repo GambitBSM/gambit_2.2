@@ -27,8 +27,8 @@
 
 #define BACKENDNAME classy
 #define BACKENDLANG Python
-#define VERSION 3.0.0
-#define SAFE_VERSION 3_0_0
+#define VERSION 3.0.2
+#define SAFE_VERSION 3_0_2
 
 LOAD_LIBRARY
 

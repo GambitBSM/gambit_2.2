@@ -26,7 +26,7 @@
 ///  *********************************************
 
 #include "gambit/Backends/frontend_macros.hpp"
-#include "gambit/Backends/frontends/classy_3_0_0.hpp"
+#include "gambit/Backends/frontends/classy_3_0_2.hpp"
 
 #ifdef HAVE_PYBIND11
 
