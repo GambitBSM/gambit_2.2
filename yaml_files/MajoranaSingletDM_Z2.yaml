@@ -129,9 +129,8 @@ ObsLikes:
     - capability: sigmav
       purpose:    Observable
 
-    # FIXME: does not work currently with dependency structure
-    # - capability: sigma_SI_p
-    #   purpose:    Observable
+    - capability: sigma_SI_p
+      purpose:    Observable
 
 ##############################################################################################
 Rules:
