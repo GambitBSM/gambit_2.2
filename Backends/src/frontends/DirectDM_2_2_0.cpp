@@ -133,13 +133,16 @@ BE_NAMESPACE
       if (scheme < 5)
       { 
         if (boost::ends_with(it->first, "b")) { relativistic_WCs.erase(it++); }
-        else ++it;
       }
       // And remove c for 3.
       if (scheme == 3)
       {
         if (boost::ends_with(it->first, "c")) { relativistic_WCs.erase(it++); }
         else ++it;
+      }
+      else
+      {
+       ++it;
       }
     }
 

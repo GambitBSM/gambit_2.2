@@ -3,7 +3,7 @@
 ##
 ## Not a top-level configuration file! Instead, import this file, e.g.
 ## Parameters:
-##   nuclear_params_ChPT_sigmapiN: !import include/nuclear_params_ChPT_sigmapiN_postprocessing_DMEFT.yaml
+##   nuclear_params_ChPT_sigmapiN: !import include/nuclear_params_ChPT_sigmapiN_postprocessing.yaml
 ##
 #####################################################################################################################
 

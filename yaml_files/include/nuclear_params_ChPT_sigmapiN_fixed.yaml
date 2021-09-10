@@ -3,9 +3,9 @@
 ##
 ## Not a top-level configuration file! Instead, import this file, e.g.
 ## Parameters:
-##   nuclear_params_ChPT_sigmapiN: !import include/nuclear_params_ChPT_sigmapiN_scan_DMEFT.yaml
+##   nuclear_params_ChPT_sigmapiN: !import include/nuclear_params_ChPT_sigmapiN_scan.yaml
 ##
-## Default values from Direct v2.2.0: https://github.com/DirectDM/directdm-py/blob/master/directdm/num/num_input.py
+## Default values from DirectDM v2.2.0: https://github.com/DirectDM/directdm-py/blob/master/directdm/num/num_input.py
 ##
 ## All values in GeV where units apply.
 #####################################################################################################################

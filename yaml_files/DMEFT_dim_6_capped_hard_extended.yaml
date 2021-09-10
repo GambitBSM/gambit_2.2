@@ -90,7 +90,7 @@ Parameters:
     gamma: 1
 
   # Chiral nuclear parameters for DirectDM
-  nuclear_params_ChPT_sigmapiN: !import include/nuclear_params_ChPT_sigmapiN_scan_DMEFT.yaml
+  nuclear_params_ChPT_sigmapiN: !import include/nuclear_params_ChPT_sigmapiN_scan.yaml
 
 Priors:
 
