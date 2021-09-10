@@ -131,7 +131,7 @@ namespace Gambit {
 
       /// Initialise object contents from a pre-defined model
       /// (i.e. from a pre-existing primary_parameters functor)
-      void initialize_as(const std::string modelname, const std::string outputname);
+      //void initialize_as(const std::string modelname, const std::string outputname);
 
       /// Getters/setters for model and output names
       std::string getModelName() const;

@@ -447,9 +447,6 @@ namespace Gambit
       // Import decay table from DecayBit
       const DecayTable* tbl = &(*Dep::decay_rates);
 
-      // Save Higgs width for later
-      double gammaH = tbl->at("h0_1").width_in_GeV;
-
       // Set of imported decays
       std::set<string> importedDecays;
 

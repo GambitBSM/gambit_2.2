@@ -127,17 +127,19 @@ BE_NAMESPACE
 
     // Remove entries that should not be passed to DirectDM, i.e. any WC referring to a 
     // quark not present in a given scheme.
-    for (auto &WC : relativistic_WCs)
+    for (auto it = relativistic_WCs.begin(); it != relativistic_WCs.end();)
     {
       // Remove b quarks for schemes that are 3 and 4..
       if (scheme < 5)
       { 
-        if (boost::ends_with(WC.first, "b")) { relativistic_WCs.erase(WC.first); }
+        if (boost::ends_with(it->first, "b")) { relativistic_WCs.erase(it++); }
+        else ++it;
       }
       // And remove c for 3.
       if (scheme == 3)
       {
-        if (boost::ends_with(WC.first, "c")) { relativistic_WCs.erase(WC.first); }
+        if (boost::ends_with(it->first, "c")) { relativistic_WCs.erase(it++); }
+        else ++it;
       }
     }
 
