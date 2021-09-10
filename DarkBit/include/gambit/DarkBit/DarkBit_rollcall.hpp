@@ -412,7 +412,7 @@ START_MODULE
       BACKEND_REQ(dsIBwhdxdy, (ds6), double, (int&, double&, double&))
       BACKEND_REQ(dsIBwwdxdy, (ds6), double, (int&, double&, double&))
       BACKEND_REQ(IBintvars, (ds6), DS_IBINTVARS)
-      BACKEND_OPTION((DarkSUSY_MSSM, 6.1.1, 6.2.2), (ds6))  // Only for DarkSUSY6 MSSM
+      BACKEND_OPTION((DarkSUSY_MSSM, 6.1.1, 6.2.2, 6.2.5), (ds6))  // Only for DarkSUSY6 MSSM
       FORCE_SAME_BACKEND(ds6)
       ALLOW_MODELS(MSSM63atQ)
     #undef FUNCTION
