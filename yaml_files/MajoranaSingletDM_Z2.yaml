@@ -23,7 +23,6 @@ Parameters:
       range: [0, 3.141592653589793238462643383279502884197]
       prior_type: flat
 
-
   nuclear_params_sigmas_sigmal:
     sigmas:
       range: [19, 67]
@@ -40,7 +39,7 @@ Parameters:
       range: [216, 264]
     vesc:
       range: [437, 629]
-    vrot: 
+    vrot:
       same_as: Halo_gNFW_rho0::v0
     rs: 20.0
     r_sun: 8.5

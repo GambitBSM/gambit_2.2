@@ -1,11 +1,11 @@
-####################################################################################################################################
+#######################################################################################################################################
 ## GAMBIT configuration file for a Diver scan of the DMEFT model
 ##
-## Constrains: (correct) relic density, gamma rays, solar neutrinos, CMB, direct detection, capped LHC likelihood (hard cut-off). 
+## Constrains: relic density, gamma rays, solar neutrinos, CMB, direct detection, LHC likelihood (full and profile cut-off by default). 
 ## 
 ## 16 model parameters (mchi, Lambda, C61-64 and C71-C710 (WCs for Dim-6 & Dim-7 operators))
 ## 8 nuisance parameters (mtrunIN, rho0, v0, vesc, sigmapiN, Deltas, gTs, rs2)
-####################################################################################################################################
+########################################################################################################################################
 
 
 Parameters:
@@ -19,11 +19,12 @@ Parameters:
   DMEFT:
     # DM mass
     mchi:
-      range: [5.,500.]
-    # Scale of new physics
-    Lambda: 
       prior_type: log
-      range: [20.,2000.]
+      range: [5.,1.5e5]
+    # Scale of new physics
+    Lambda:
+      prior_type: log
+      range: [20.,3.e5]
     # EM interactions (only turn on at loop-level -- not concerned with these)
     C51: 0.
     C52: 0.
@@ -190,6 +191,11 @@ ObsLikes:
     module:     ColliderBit
     type: double
 
+    # Get details about the nuisance parameter 'a'
+    # Remove if using the function DMEFT_results_cutoff to fulfil AllAnalysisNumbers
+  - purpose:    Observable
+    capability: DMEFT_profiled_LHC_nuisance_params
+
   ## Nuisance parameters
   # DM Local Halo likelihoods
   - capability: lnL_rho0
@@ -211,9 +217,17 @@ ObsLikes:
     
 Rules:
 
-  # Choose to implement the relic density likelihood as a detection
+  # Relic density likelihood
   - capability: lnL_oh2
-    function: lnL_oh2_Simple
+    # Choose to implement the relic density likelihood as an upper bound, not a detection
+    function: lnL_oh2_upperlimit
+    # Choose to implement the relic density likelihood as a detection
+    # function: lnL_oh2_Simple
+    options: # Planck 2018 values
+      oh2_obs: 0.120
+      oh2_obserr: 0.001
+      oh2_fractional_theory_err: 0.01
+
     options: # Planck 2018 values
       oh2_obs: 0.120
       oh2_obserr: 0.001
@@ -258,9 +272,13 @@ Rules:
   - capability: positron_SimYieldTable
     #function: positron_SimYieldTable_empty
     function: positron_SimYieldTable_DarkSUSY
+    options:
+      out_of_range_zero_yield: true
+
   - capability: antiproton_SimYieldTable
     #function: antiproton_SimYieldTable_empty
     function: antiproton_SimYieldTable_DarkSUSY
+
   - capability: antideuteron_SimYieldTable
     #function: antideuteron_SimYieldTable_empty
     function: antideuteron_SimYieldTable_DarkSUSY
@@ -311,7 +329,8 @@ Rules:
     
   - capability: LHC_Combined_LogLike
     options:
-      cap_loglike: true
+      # Do not use capped LHC loglike, change to true if desired
+      cap_loglike: false
       skip_analyses:
         - CMS_13TeV_MONOJET_36invfb_interpolated_nocovar
         - ATLAS_13TeV_MONOJET_36invfb_interpolated
@@ -334,9 +353,28 @@ Rules:
       nuisance_prof_method: 5
       nuisance_prof_verbosity: 0
 
-  # Hard cut-off of the pT/ETmiss spectrum for pT/ETmiss > Lambda
+    # Signal yields for LHC analyses 
   - capability: AllAnalysisNumbers
-    function: DMEFT_results_cutoff
+    # Profile over the cut-off parameter for pT/ETmiss > Lambda
+    function: DMEFT_results_profiled
+    # Hard cut-off of the pT/ETmiss spectrum for pT/ETmiss > Lambda
+    # function: DMEFT_results_cutoff
+
+  # Profile nuisance parameter a for LHC likelihoods
+  # Remove or set a fixed value if using the function DMEFT_results_cutoff to fulfil AllAnalysisNumbers
+  - capability: DMEFT_profiled_LHC_nuisance_params
+    function: calc_DMEFT_profiled_LHC_nuisance_params
+    options:
+      # use_fixed_value_a: 1000.0  # This will switch off the profiling
+      init_values_a: [1.0, 2.0, 3.0]
+      range_a: [0.0, 4.0]
+      nuisance_prof_initstep: 0.1
+      nuisance_prof_convtol: 0.1
+      nuisance_prof_maxsteps: 15
+      nuisance_prof_convacc: 0.1
+      nuisance_prof_simplexsize: 1e-5
+      nuisance_prof_method: 6
+      nuisance_prof_verbosity: 0
 
   ## Halo nuisances settings
   # Set v0 to 240 +/- 8 km/s based on Reid et al [arXiv:1401.5377]
@@ -368,7 +406,7 @@ Printer:
 
   printer: hdf5
   options:
-    output_file: "DMEFT_dim_6_7_capped_hard_RF_1.hdf5"
+    output_file: "DMEFT.hdf5"
     delete_file_on_restart: false
     buffer_length: 100
     group: "/DMEFT"
@@ -379,12 +417,17 @@ Scanner:
 
   scanners:
 
+    random:
+      plugin: random
+      like: LogLike
+      point_number: 1
+
     diver:
       plugin: diver
       like: LogLike
       NP: 50000
       verbosity: 1
-      convthresh: 3E-5
+      convthresh: 1E-5
       lambdajDE: false
 
 KeyValues:
@@ -396,10 +439,9 @@ KeyValues:
     model_invalid_for_lnlike_below: -5e5
     model_invalid_for_lnlike_below_alt: -1e5
     print_invalid_points: false
-    disable_print_for_lnlike_below: -113
     debug: false
 
-  default_output_path: "runs/DMEFT/dim_6_7_capped_hard_RF_1/"
+  default_output_path: "runs/DMEFT/"
 
   debug: false
   print_timing_data: false
