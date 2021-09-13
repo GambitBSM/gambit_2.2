@@ -236,27 +236,6 @@ namespace Gambit
       
     }
     
-    // S.B. removed this functions as the Higgs portal 
-    // models are all defined *after* EWSB. 
-
-    /// Relativistic Wilson Coefficients for direct detection, 
-    /// defined above the EW scale
-    // void DD_rel_WCs_EW_DiracSingletDM_Z2(map_str_dbl &result)
-    // {
-    //   using namespace Pipes::DD_rel_WCs_EW_DiracSingletDM_Z2;
-
-    //   // Get values of non-relativistic operators from Spectrum
-    //   Spectrum spec = *Dep::DiracSingletDM_Z2_spectrum;
-
-    //   double lambda = spec.get(Par::dimensionless, "lF");
-    //   double xi = spec.get(Par::dimensionless, "xi");
-
-    //   // lambda*cos(xi) XXHH
-    //   result["C53"] = lambda*std::cos(xi);
-    //   // lambda*sin(xi) iXg5XHH
-    //   result["C57"] = lambda*std::sin(xi);
-    // }    
-
     /// Relativistic Wilson Coefficients for direct detection, 
     /// defined in the flavour scheme
     void DD_rel_WCs_flavscheme_DiracSingletDM_Z2(map_str_dbl &result)

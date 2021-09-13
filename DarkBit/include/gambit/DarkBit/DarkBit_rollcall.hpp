@@ -1190,21 +1190,6 @@ START_MODULE
 
   #undef CAPABILITY
 
-  // Relativistic Wilson coefficients defined above the EW scale
-  #define CAPABILITY DD_rel_WCs_EW
-  START_CAPABILITY
-
-      // S.B. removed DiracSingletDM_Z2 function as the Higgs portal
-      // models are all defined *after* EWSB.
-
-      // #define FUNCTION DD_rel_WCs_EW_DiracSingletDM_Z2
-      // START_FUNCTION(map_str_dbl)
-      // DEPENDENCY(DiracSingletDM_Z2_spectrum, Spectrum)
-      // ALLOW_MODEL(DiracSingletDM_Z2)
-      // #undef FUNCTION
-
-  #undef CAPABILITY
-
   // Non-relativistic Wilson coefficients
   #define CAPABILITY DD_nonrel_WCs
   START_CAPABILITY
@@ -1229,16 +1214,6 @@ START_MODULE
       DEPENDENCY(WIMP_properties, WIMPprops)
       DEPENDENCY(DirectDMNuisanceParameters, map_str_dbl)
       BACKEND_REQ(get_NR_WCs_flav, (), NREO_DM_nucleon_couplings, (map_str_dbl&, double&, int&, std::string&, map_str_dbl&))
-      #undef FUNCTION
-
-      // Get non-relativistic WCs from the relativistic ones, using DirectDM.
-      // Using unbroken SM phase.
-      #define FUNCTION DD_nonrel_WCs_EW
-      START_FUNCTION(NREO_DM_nucleon_couplings)
-      DEPENDENCY(DD_rel_WCs_EW, map_str_dbl)
-      DEPENDENCY(WIMP_properties, WIMPprops)
-      DEPENDENCY(DirectDMNuisanceParameters, map_str_dbl)
-      BACKEND_REQ(get_NR_WCs_EW, (), NREO_DM_nucleon_couplings, (map_str_dbl&, double&, double&, double&, double&, std::string&, map_str_dbl&))
       #undef FUNCTION
 
       // Non-relativistic WCs computed directly for fermionic Higgs portal models.

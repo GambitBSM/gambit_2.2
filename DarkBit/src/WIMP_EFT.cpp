@@ -227,48 +227,6 @@ namespace Gambit
       result = BEreq::get_NR_WCs_flav(relativistic_WCs, mDM, scheme, DM_type, inputs);
     }
 
-    /// Obtain the non-relativistic Wilson Coefficients from a set of model
-    /// specific relativistic Wilson Coefficients from DirectDM in the
-    /// unbroken SM phase. NR WCs defined at 2 GeV.
-    void DD_nonrel_WCs_EW(NREO_DM_nucleon_couplings &result)
-    {
-      using namespace Pipes::DD_nonrel_WCs_EW;
-
-      // Specify the scale that the Lagrangian is defined at
-      // TODO: roll Ychi & dchi into WIMP_properties?
-      double scale = runOptions->getValue<double>("scale");
-      // Hypercharge of DM
-      double Ychi = runOptions->getValue<double>("Ychi");
-      // SU(2) dimension of DM
-      double dchi = runOptions->getValue<int>("dchi");
-
-      // Obtain spin of DM particle, plus identify whether DM is self-conjugate
-      double mDM = Dep::WIMP_properties->mass;
-      unsigned int sDM  = Dep::WIMP_properties->spinx2;
-      bool is_SC = Dep::WIMP_properties->sc;
-
-      // Set DM_type based on the spin and & conjugacy of DM
-      std::string DM_type;
-
-      // Fermion case: set DM_type to Majorana or Dirac
-      if (sDM == 1) { is_SC ? DM_type = "M" : DM_type = "D"; }
-      // Scalar case: set DM type to real or complex
-      else if (sDM == 0) { is_SC ? DM_type = "R" : DM_type = "C"; }
-      // Vector etc. DM not supported by DirectDM
-      else DarkBit_error().raise(LOCAL_INFO, "DD_nonrel_WCs_EW only usable for spin-0 and spin-1/2 DM.");
-
-      // Relativistic Wilson Coefficients
-      map_str_dbl relativistic_WCs = *Dep::DD_rel_WCs_EW;
-
-      // Nuisance params
-      map_str_dbl inputs = *Dep::DirectDMNuisanceParameters;
-
-      // Get non-relativistic coefficients
-      /// TODO - How to get hypercharge and SU(2) dimension for these fields!?
-      /// Currently just comes from the YAML file. GUM? Process Catalogue?
-      result = BEreq::get_NR_WCs_EW(relativistic_WCs, mDM, dchi, Ychi, scale, DM_type, inputs);
-    }
-
     /// Module function providing nuisance parameters for
     /// to be passed to DirectDM directly from the model parameters.
     void ExtractDirectDMNuisanceParameters(map_str_dbl &result)

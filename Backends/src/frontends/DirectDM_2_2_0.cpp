@@ -80,36 +80,6 @@ BE_NAMESPACE
 
   /* Convenience functions */
 
-  /// Get Wilson Coefficients at 2 GeV from the SM unbroken phase.
-  /// Requires a dictionary of relativistic WCs, , the DM mass, dchi is the dimension of the DM SU2 representation,
-  /// Ychi is the DM hypercharge such that Q = I^3 + Y/2, scale is the scale the Lagrangian is defined at, and
-  /// the DM type -- "D" for Dirac fermion; "M" for Majorana fermion; "C" for complex scalar; "R" for real scalar.
-  NREO_DM_nucleon_couplings get_NR_WCs_EW(map_str_dbl& relativistic_WCs, double& mDM, 
-                                          double& dchi, double& Ychi, double& scale, 
-                                          std::string& DM_type, map_str_dbl& input_dict)
-  {
-    // S.B. 19/09/18: currently only Dirac supported
-    if (DM_type != "D")
-    {
-      backend_error().raise(LOCAL_INFO, "DirectDM at unbroken scale currenly only supports Dirac DM.");
-    }
-
-    // Cast the input dict to a Python object
-    pybind11::dict inputs = pybind11::cast(input_dict);
-
-    // Import Python class WC_EW from module DirectDM
-    pybind11::object WC_EW = DirectDM.attr("WC_EW")(relativistic_WCs, Ychi, dchi, DM_type, inputs);
-    
-    // Obtain a dictionary of non-relativistic WCs, given the DM mass and the scale the Lagrangian is specified at.
-    pybind11::dict cNRs = WC_EW.attr("_my_cNR")(mDM, scale);
-    
-    // Cast python dictionary to C++ type known to GAMBIT    
-    map_str_dbl nonrel_WCs = cNRs.cast<map_str_dbl>(); 
-
-    // Copy coefficients into GAMBIT container object (converting to isoscalar/isovector basis in the process)
-    return copy_couplings_to_NREO_container(nonrel_WCs);
-  }
-
   /// Get Wilson Coefficients at 2 GeV in a quark flavour matching scheme.
   /// Requires a dictionary of relativistic WCs, the DM mass, an integer specifying the number
   /// of quark flavours to match onto, i.e. the 3, 4 or 5 quark flavour scheme, and
