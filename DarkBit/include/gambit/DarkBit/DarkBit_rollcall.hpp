@@ -1262,12 +1262,23 @@ START_MODULE
   QUICK_FUNCTION(DarkBit, sigma_SD_p, NEW_CAPABILITY, sigma_SD_p_simple, double, (), (DD_couplings, DM_nucleon_couplings), (mwimp, double))
   QUICK_FUNCTION(DarkBit, sigma_SD_n, NEW_CAPABILITY, sigma_SD_n_simple, double, (), (DD_couplings, DM_nucleon_couplings), (mwimp, double))
 
-  // Generalized v^2n, q^2n DM-nucleon cross sections
+  // Generalized v^2n, q^2n DM-nucleon SI cross sections
+  // for the fermionic Higgs portal models
   #define CAPABILITY sigma_SI_p
       #define FUNCTION sigma_SI_vnqn_FermionicHiggsPortal
       START_FUNCTION(map_intpair_dbl)
       DEPENDENCY(mwimp,double)
       DEPENDENCY(DD_nonrel_WCs, NREO_DM_nucleon_couplings)
+      ALLOW_MODELS(DiracSingletDM_Z2, MajoranaSingletDM_Z2)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  // Generalized v^2n, q^2n DM-nucleon SD cross sections
+  // for the fermionic Higgs portal models
+  #define CAPABILITY sigma_SD_p
+      #define FUNCTION sigma_SD_vnqn_FermionicHiggsPortal
+      START_FUNCTION(map_intpair_dbl)
+      DEPENDENCY(mwimp,double)
       ALLOW_MODELS(DiracSingletDM_Z2, MajoranaSingletDM_Z2)
     #undef FUNCTION
   #undef CAPABILITY
@@ -1478,11 +1489,12 @@ START_MODULE
     #define FUNCTION capture_rate_Sun_vnqn
     START_FUNCTION(double)
     DEPENDENCY(mwimp,double)
+    DEPENDENCY(spinwimpx2,unsigned int)
     DEPENDENCY(sigma_SD_p, map_intpair_dbl)
     DEPENDENCY(sigma_SI_p, map_intpair_dbl)
-    BACKEND_REQ(cap_Sun_vnqn_isoscalar,(cg),void,(const double&,const double&,const int&,const int&,const int&,double&))
+    BACKEND_REQ(cap_Sun_vnqn_isoscalar,(cg),void,(const double&,const double&,const int&,const int&,const int&,const double&,double&))
     BACKEND_REQ(cap_sun_saturation,(cg),double,(const double&))
-    BACKEND_OPTION((CaptnGeneral),(cg))
+    BACKEND_OPTION((CaptnGeneral, 2.1),(cg))
     FORCE_SAME_BACKEND(cg)
     #undef FUNCTION
 /*
@@ -1494,9 +1506,11 @@ START_MODULE
     ///Capture rate of dark matter with NREO method (s^-1), using backend Captn' General
     #define FUNCTION capture_rate_Sun_NREO
     START_FUNCTION(double)
-    BACKEND_REQ(captn_NREO,(CaptnGeneral),void,(const double&,const double&,const int&,double&))
-    BACKEND_REQ(cap_sun_saturation,(CaptnGeneral),double,(const double&))
-    BACKEND_REQ(populate_array,(CaptnGeneral),void,(const double&,const int&,const int&))
+    BACKEND_REQ(captn_NREO,(cg),void,(const double&,const double&,const int&,double&))
+    BACKEND_REQ(cap_sun_saturation,(cg),double,(const double&))
+    BACKEND_REQ(populate_array,(cg),void,(const double&,const int&,const int&))
+    BACKEND_OPTION((CaptnGeneral, 2.1), (cg))
+    FORCE_SAME_BACKEND(cg)
     DEPENDENCY(WIMP_properties, WIMPprops)
     DEPENDENCY(DD_nonrel_WCs,NREO_DM_nucleon_couplings)
     #undef FUNCTION

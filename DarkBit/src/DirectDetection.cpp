@@ -334,37 +334,9 @@ namespace Gambit
       result = 3.0*gev2cm2/pi*pow(reduced_mass*gna,2.0);
     }
 
-    /// Spin-independent generalized DM-nucleon cross section
-    /*
-    void sigma_SI_vnqn(map_intpair_dbl &result)
-    {
-      using namespace Pipes::sigma_SI_vnqn;
-      //This is where you would stick in your functions
-      result[std::make_pair(0,0)] =   0e-35;
-      result[std::make_pair(-2,0)] =  1e-35;
-      result[std::make_pair(2,0)] =   0e-35;
-      result[std::make_pair(4,0)] =   0e-35;
-      result[std::make_pair(0,-2)] =  1e-35;
-      result[std::make_pair(0,2)] =   0e-35;
-      result[std::make_pair(0,4)] =   0e-35;
-    }
-    /// Spin-dependent generalized DM-nucleon cross section
-    void sigma_SD_vnqn(map_intpair_dbl &result)
-    {
-      using namespace Pipes::sigma_SD_vnqn;
-      //This is where you would stick in your functions
-      result[std::make_pair(0,0)] =   1e-40;
-      result[std::make_pair(-2,0)] =  0e-35;
-      result[std::make_pair(2,0)] =   0e-35;
-      result[std::make_pair(4,0)] =   0e-35;
-      result[std::make_pair(0,-2)] =  0e-35;
-      result[std::make_pair(0,2)] =   0e-35;
-      result[std::make_pair(0,4)] =   0e-35;
-    }
-    */
-
-    /// Calculation of SI and SD cross sections at a reference momentum q0
+    /// Calculation of SI cross sections at a reference momentum q0
     /// for the fermionic Higgs portal models
+    /// If required add equivalent function for spin-dependent cross section
     void sigma_SI_vnqn_FermionicHiggsPortal(map_intpair_dbl &result)
     {
       using namespace Pipes::sigma_SI_vnqn_FermionicHiggsPortal;
@@ -379,6 +351,24 @@ namespace Gambit
       result[std::make_pair(0,0)] =   gev2cm2/pi*pow(reduced_mass*gps,2.0);
       result[std::make_pair(-2,0)] =  0.0;
       result[std::make_pair(2,0)] =   gev2cm2/pi*pow(reduced_mass*gpa,2.0)*pow(q0/(*Dep::mwimp)/2.0,2.0);
+      result[std::make_pair(4,0)] =   0.0;
+      result[std::make_pair(0,-2)] =  0.0;
+      result[std::make_pair(0,2)] =   0.0;
+      result[std::make_pair(0,4)] =   0.0;
+    }
+
+    /// Calculation of SD cross section at a reference momentum q0
+    /// for the fermionic Higgs portal models
+    void sigma_SD_vnqn_FermionicHiggsPortal(map_intpair_dbl &result)
+    {
+      using namespace Pipes::sigma_SD_vnqn_FermionicHiggsPortal;
+
+      /// There is no SD contribution to fermionic Higgs portal models
+      /// So this is just set to 0 (or close enough)
+      /// Modify if needed
+      result[std::make_pair(0,0)] =   0.0;
+      result[std::make_pair(-2,0)] =  0.0;
+      result[std::make_pair(2,0)] =   0.0;
       result[std::make_pair(4,0)] =   0.0;
       result[std::make_pair(0,-2)] =  0.0;
       result[std::make_pair(0,2)] =   0.0;

@@ -136,7 +136,7 @@ namespace Gambit
           vpow =  (iterator->first).second/2;
 
           //Capture
-          BEreq::cap_Sun_vnqn_isoscalar(*Dep::mwimp,iterator->second,1,qpow,vpow,capped);
+          BEreq::cap_Sun_vnqn_isoscalar(*Dep::mwimp,iterator->second,1,qpow,vpow,*Dep::spinwimpx2/2.,capped);
           resultSD = resultSD+capped;
         }
       }
@@ -152,7 +152,7 @@ namespace Gambit
           vpow =  (iterator->first).second/2;
 
           //Capture
-          BEreq::cap_Sun_vnqn_isoscalar(*Dep::mwimp,iterator->second,nelems,qpow,vpow,capped);
+          BEreq::cap_Sun_vnqn_isoscalar(*Dep::mwimp,iterator->second,nelems,qpow,vpow,*Dep::spinwimpx2/2.,capped);
           resultSI = resultSI+capped;
         }
       }
