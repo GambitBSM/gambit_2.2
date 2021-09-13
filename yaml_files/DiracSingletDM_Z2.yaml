@@ -32,9 +32,6 @@ Parameters:
     deltad:  -0.427
     deltas:  -0.085
 
-  # Needed when scanning with DirectDM
-  #nuclear_params_ChPT: !import include/nuclear_params_ChPT_defaults.yaml
-
   Halo_gNFW_rho0:
     rho0:
       range: [0.2, 0.8]
@@ -42,7 +39,7 @@ Parameters:
       range: [216, 264]
     vesc:
       range: [437, 629]
-    vrot: 
+    vrot:
       same_as: Halo_gNFW_rho0::v0
     rs: 20.0
     r_sun: 8.5
