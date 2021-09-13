@@ -46,6 +46,10 @@
 ///          (benjamin.farmer@imperial.ac.uk)
 ///  \date 2019 Jul
 ///
+///  \author Tomas Gonzalo
+///          (gonzalo@physik.rwth-aachen.de)
+///  \date 2021 Sep
+///
 ///  *********************************************
 
 
@@ -118,30 +122,43 @@ namespace Gambit
         dNdE = daFunk::ifelse(E-m, dNdE->set("Ekin", E -m), daFunk::zero("E","Ecm"));
       }
 
-      std::ostringstream msg;
+      std::ostringstream msg, msg2;
       msg << "SimYieldChannel for " << p1 << " " << p2 <<
        " final state(s): Requested center-of-mass energy out of range (";
       msg << Ecm_min << "-" << Ecm_max << " GeV).";
       daFunk::Funk error;
-      if(not runOptions.isNull() and runOptions->getValueOrDef<bool>(false, "out_of_range_invalidate"))
+      bool invalidate = runOptions.isNull() ? false : runOptions->getValueOrDef<bool>(false, "out_of_range_invalidate");
+      bool zero = runOptions.isNull() ? false : runOptions->getValueOrDef<bool>(false, "out_of_range_zero_yield");
+      if(invalidate and zero)
+      {
+        msg2 << std::endl << "The following selected options are incompatible: " << std::endl
+            << "  out_of_range_invalidate: true" << std::endl
+            << "  out_of_range_zero_yield: true" << std::endl
+            << "Please modify your YAML file to correct that." << std::endl;
+        DarkBit_error().raise(LOCAL_INFO,msg2.str());
+      }
+      else if(invalidate)
       {
         error = daFunk::raiseInvalidPoint(msg.str());
       }
-      else if(not runOptions.isNull() and runOptions->getValueOrDef<bool>(false, "out_of_range_zero_yield"))
+      else if(zero)
       {
         error = daFunk::zero("E", "Ecm");
       }
       else
       {
         msg << std::endl << "To circumvent this error you can add one"
-            << " of the following two options to the SimYieldTable module"
-            << " function you are using:" << std::endl
+            << " of the following two options to the Rules section of your YAML file:" << std::endl
             << " - out_of_range_invalidate:  invalidate points that have"
             << " c.o.m. energy out of range of yield tables." << std::endl
             << " - out_of_range_zero_yield:  set to zero the yields out"
             << " of range of the yield tables." << std::endl
+            << " You can add either (but not both) options as module-wide rules like this:" << std::endl << std::endl
+            << "  - module: DarkBit" << std::endl
+            << "    options:" << std::endl
+            << "      out_of_range_zero_yield: true" << std::endl << std::endl
             << "Note that this choice has important physical implications on"
-            << " your result, so choose wisely.";
+            << " your result, so choose wisely." << std::endl;
         error = daFunk::throwError(msg.str());
       }
       auto Ecm = daFunk::var("Ecm");

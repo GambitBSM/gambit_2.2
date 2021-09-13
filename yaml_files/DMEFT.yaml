@@ -260,6 +260,11 @@ Rules:
   - capability: sigmav
     function: sigmav_late_universe
 
+  # Choose to set to zero yields out of range of the tables
+  - module: DarkBit
+    options:
+      out_of_range_zero_yield: true
+
   # Choose to use DarkSUSY yield tables for indirect detection
   - capability: GA_SimYieldTable
     #function: GA_SimYieldTable_DS5
@@ -272,8 +277,6 @@ Rules:
   - capability: positron_SimYieldTable
     #function: positron_SimYieldTable_empty
     function: positron_SimYieldTable_DarkSUSY
-    options:
-      out_of_range_zero_yield: true
 
   - capability: antiproton_SimYieldTable
     #function: antiproton_SimYieldTable_empty
