@@ -112,21 +112,14 @@ namespace Gambit
 
       // We have decided to calculate mT pole from the input running mt
       // using only one-loop QCD correction
-      // See footnote 9 https://link.springer.com/article/10.1007/JHEP11(2019)150
-      
-      // Firts we run alpha_S from MZ to desired scale with one-loop SM RGE
+      // See footnote 9 https://link.springer.com/article/10.1007/JHEP11(2019)15
 
-      // PA: commented out for now, as I think the O(alpha_S^2) correction
-      // to pole mass from this makes numbers less consistent
-      // b_N = 11/ 3 N - nf / 4 - ns /6 = 11 - 10/3 for a topless SM
-      // const double b0 = 23/3.;
-      // const double alpha_S_MZ = sminputs.alphaS;
-      // const double MZ = sminputs.mZ;
-      // const double alpha_S_mtop = alpha_S_MZ / (1. + b0 / (2. * M_PI) * alpha_S_MZ * std::log(DMEFTmodel.mtrun/ MZ));
-
-      // Approximate alpha_S(mtop) as alpha_S(mZ) because the even a one-loop
-      // correction here will lead to O(alpha_S^2) correction
-      // this approximation fits the numbers in https://link.springer.com/article/10.1007/JHEP11(2019)150
+      // Approximate alpha_S(mtop) as alpha_S(mZ) because the even a
+      // one-loop correction here will lead to O(alpha_S^2) correction
+      // via correspondence wiuth the authors we checked this
+      // approximation matches what is done in
+      // https://link.springer.com/article/10.1007/JHEP11(2019)150 as
+      // well as validating numerically
       
       const double alpha_S_mtop = sminputs.alphaS;
       // Now extract pole mass from running mass
