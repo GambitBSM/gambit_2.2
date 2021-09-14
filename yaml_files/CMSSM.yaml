@@ -414,7 +414,7 @@ Rules:
       loop: true
     #function: DD_couplings_MicrOmegas
     
-  # Select WIMP-nucleon couplings for DDCalc 2.1.0 WIMP object
+  # Select WIMP-nucleon couplings to pass to DDCalc
   - capability: DDCalc_Couplings
     function: DDCalc_Couplings_WIMP_nucleon
     
