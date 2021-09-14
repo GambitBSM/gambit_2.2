@@ -111,15 +111,15 @@ namespace Gambit
       static const Spectrum::mr_info mass_ratio_cut = myPipe::runOptions->getValueOrDef<Spectrum::mr_info>(Spectrum::mr_info(), "mass_ratio_cut");
 
       // We have decided to calculate mT pole from the input running mt
-      // using only one-loop QCD correction
-      // See footnote 9 https://link.springer.com/article/10.1007/JHEP11(2019)15
+      // using only one-loop QCD corrections
+      // See footnote 9 https://link.springer.com/article/10.1007/JHEP11(2019)150
 
-      // Approximate alpha_S(mtop) as alpha_S(mZ) because the even a
-      // one-loop correction here will lead to O(alpha_S^2) correction
-      // via correspondence wiuth the authors we checked this
+      // Approximate alpha_S(mtop) as alpha_S(mZ) because even a
+      // one-loop correction here will lead to O(alpha_S^2) correction on mT
+      // Via correspondence with the authors we checked this
       // approximation matches what is done in
-      // https://link.springer.com/article/10.1007/JHEP11(2019)150 as
-      // well as validating numerically
+      // https://link.springer.com/article/10.1007/JHEP11(2019)150
+      // which we also validated numerically
       
       const double alpha_S_mtop = sminputs.alphaS;
       // Now extract pole mass from running mass

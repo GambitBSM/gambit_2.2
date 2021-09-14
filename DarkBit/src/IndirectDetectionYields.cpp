@@ -214,6 +214,7 @@ namespace Gambit
 
         /*
         // Implement tabulated three-body final states
+        // Keep this for future use
         if ( it->nFinalStates == 3
          and table->hasChannel(it->finalStateIDs[0], yield)
          and table->hasChannel(it->finalStateIDs[1], yield)

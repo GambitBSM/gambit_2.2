@@ -206,6 +206,7 @@ namespace Gambit
       using namespace Pipes::DD_rel_WCs_flavscheme_DMEFT;
 
       const Spectrum& spec = *Dep::DMEFT_spectrum;
+      const SMInputs& sminputs = *Dep::SMINPUTS;
 
       // In our model the Wilson coefficients are dimensionless
       double Lambda = spec.get(Par::mass1, "Lambda");
@@ -324,13 +325,13 @@ namespace Gambit
         result["C73"] += C77/pow(Lambda, 3.);
         result["C74"] += C78/pow(Lambda, 3.);
 
-        // 3. Mixing of O_3^6 into O_3^1, see:
+        // 3. Mixing of O_3^6 into O_1^6, see:
         // https://arxiv.org/pdf/1402.1173.pdf
-        double sw2 = 0.23122;
-        double vev = 246.;
-        double PI = 3.14159265;
-        double prefactoru = (8.*sw2-3.)/2. * pow(mtatmt/(2.*vev*PI), 2.) * log(1/lamovermt2);
-        double prefactord = (3.-4.*sw2)/2. * pow(mtatmt/(2.*vev*PI), 2.) * log(1/lamovermt2);
+        // Use tree level relations for sw2 and vev
+        double sw2 = 1 - pow(sminputs.mW,2) / pow(sminputs.mZ,2);
+        double vev = 1.0 / sqrt(sqrt(2)*sminputs.GF); 
+        double prefactoru = (8.*sw2-3.)/2. * pow(mtatmt/(2.*vev*pi), 2.) * log(1/lamovermt2);
+        double prefactord = (3.-4.*sw2)/2. * pow(mtatmt/(2.*vev*pi), 2.) * log(1/lamovermt2);
 
         double C61u = C61/pow(Lambda, 2.) + prefactoru * C63/pow(Lambda, 2.);
         double C61d = C61/pow(Lambda, 2.) + prefactord * C63/pow(Lambda, 2.);

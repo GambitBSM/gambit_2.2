@@ -1173,6 +1173,7 @@ START_MODULE
       #define FUNCTION DD_rel_WCs_flavscheme_DMEFT
       START_FUNCTION(map_str_dbl)
       DEPENDENCY(DMEFT_spectrum, Spectrum)
+      DEPENDENCY(SMINPUTS, SMInputs)
       ALLOW_MODEL(DMEFT)
       #undef FUNCTION
 
