@@ -1391,7 +1391,7 @@ set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
-          DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+          DOWNLOAD_COMMAND IGNORE_HTTP_CERTIFICATE=1 ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
           SOURCE_DIR ${dir}
           BUILD_IN_SOURCE 1
           CONFIGURE_COMMAND ""
