@@ -46,7 +46,6 @@
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/ColliderBit/ColliderBit_rollcall.hpp"
 #include "gambit/Utils/interp_collection.hpp"
-#include "gambit/Utils/ascii_table_reader.hpp" // DONT NEED?
 #include "gambit/Utils/file_lock.hpp"
 #include "gambit/ColliderBit/Utils.hpp"
 

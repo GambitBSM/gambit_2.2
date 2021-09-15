@@ -20,17 +20,11 @@
 #define __interp_collection_hpp__
 
 #include <vector>
-// #include <map>
 #include <string>
 
 #include <gsl/gsl_spline.h>
 #include <gsl/gsl_interp2d.h>
 #include <gsl/gsl_spline2d.h>
-
-#include "gambit/Utils/ascii_table_reader.hpp"  // DONT NEED?
-#include "gambit/Utils/util_functions.hpp"  // DONT NEED?
-#include "gambit/Utils/util_types.hpp"  // DONT NEED?
-
 
 namespace Gambit
 {
