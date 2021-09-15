@@ -325,7 +325,7 @@ Rules:
   - capability: DD_nonrel_WCs
     function: DD_nonrel_WCs_flavscheme
 
-  # Choose colliders to simulate and their convergence settings, and pick analyses to run with each collider.
+  # Use LHC analyses based on fast interpolation rather than on-the-fly MC simulation
   - capability: RunMC
     function: InterpolatedMCInfo 
     module: ColliderBit
@@ -334,9 +334,6 @@ Rules:
     options:
       # Do not use capped LHC loglike, change to true if desired
       cap_loglike: false
-      skip_analyses:
-        - CMS_13TeV_MONOJET_36invfb_interpolated_nocovar
-        - ATLAS_13TeV_MONOJET_36invfb_interpolated
 
   - capability: LHC_LogLikes
     backends:
