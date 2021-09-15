@@ -494,10 +494,10 @@ index 24a0370..a6b5a7f 100644
  
 +# (JR) removed some routines related to parsing command line arguments which
 +# are not python3 compatible. We don't need to parse any command line arguments
-+# in GAMBIT so I just deleted them to avoid errors in likelihoods that 
++# in GAMBIT so I just deleted them to avoid errors in likelihoods that
 +# import parser_mp. (kids and kv)
-+# If these python3 issues are fixed in a later version of MP, this patch can be 
-+# removed. 
++# If these python3 issues are fixed in a later version of MP, this patch can be
++# removed.
  
  # -- custom Argument Parser that throws an io_mp.ConfigurationError
  # -- for unified look within montepython
@@ -1305,10 +1305,10 @@ index 24a0370..a6b5a7f 100644
  
          """
 -        from pandas import read_table
-+        # (JR) fixed python 2/3 issues, read_table deprecated, 
++        # (JR) fixed python 2/3 issues, read_table deprecated,
 +        #  use read_csv instead
 +        from pandas import read_csv
-+        
++
          path = os.path.join(self.data_directory, path)
          # The first line should contain the length.
          with open(path, 'r') as text:
@@ -1328,7 +1328,7 @@ index 24a0370..a6b5a7f 100644
 -        from pandas import read_table
 +        # (JR) fixed python 2/3 issues when readin in matrix
 +        from pandas import read_csv
-+        
++
          path = os.path.join(self.data_directory, self.data_file)
  
          # Recover the names of the columns. The names '3rdvar' and 'd3rdvar'
@@ -1479,10 +1479,10 @@ index 1c85222..c694b53 100644
 +
 +        # Whiten the residuals, in two steps
 +        # 1) Compute the Cholesky decomposition of the covariance matrix, in
-+        # place. This is a time expensive (0.015 seconds) part -> (JR) do it 
-+        # in init step, then! needed to be done for each point in JLA likelihood, 
++        # place. This is a time expensive (0.015 seconds) part -> (JR) do it
++        # in init step, then! needed to be done for each point in JLA likelihood,
 +        # but here alpha and beta are no nuisance params anymore and the covmat does
-+        # not change  
++        # not change
 +        self.cov = la.cholesky(covm, lower=True, overwrite_a=True)
 +        # step 2) depends on point in parameter space -> done in loglkl calculation
 +
@@ -1581,7 +1581,7 @@ index c67c19e..ae18d83 100644
  import montepython.io_mp as io_mp
  # import the python package of the BICEP2 collaboration
 -import bicep_util as bu
-+import sys 
++import sys
 +sys.path.append('.')
 +from . import bicep_util as bu
  
@@ -1938,6 +1938,17 @@ index 50285f8..af3c2b6 100644
  
          # If the fiducial model does not exists, recover the power spectrum and
          # store it, then exit.
+@@ -169,7 +169,9 @@ class ska1_IM_band1(Likelihood):
+         # If the fiducial model does not exists, recover the power spectrum and
+         # store it, then exit.
+         if self.fid_values_exist is False:
+-            pk = np.zeros((self.k_size, 2*self.nbin+1), 'float64')
++            # (JR) throw error as creation of fiducial file does not work with GAMBIT
++            self.raise_fiducial_model_err()
++            '''pk = np.zeros((self.k_size, 2*self.nbin+1), 'float64')
+             if self.use_linear_rsd:
+                 pk_lin = np.zeros((self.k_size, 2*self.nbin+1), 'float64')
+             fid_file_path = os.path.join(
 @@ -197,8 +198,8 @@ def loglkl(self, cosmo, data):
                  for index_z in xrange(self.nbin):
                      fid_file.write('%.8g\n' % b_21[index_z])
@@ -1949,6 +1960,15 @@ index 50285f8..af3c2b6 100644
              print('\n')
              warnings.warn(
                  "Writing fiducial model in %s, for %s likelihood\n" % (
+@@ -203,7 +205,7 @@ class ska1_IM_band1(Likelihood):
+             warnings.warn(
+                 "Writing fiducial model in %s, for %s likelihood\n" % (
+                     self.data_directory+'/'+self.fiducial_file, self.name))
+-            return 1j
++            return 1j'''
+ 
+         # NOTE: Many following loops will be hidden in a very specific numpy
+         # expression, for (a more than significant) speed-up. All the following
 @@ -214,20 +215,20 @@ def loglkl(self, cosmo, data):
          # Compute the beta_fid function, for observed spectrum,
          # beta_fid(k_fid,z) = 1/2b(z) * d log(P_nl_fid(k_fid,z))/d log a
@@ -2148,30 +2168,6 @@ index 50285f8..af3c2b6 100644
          return - chi2/2.
  
      def integrand(self,index_k,index_z,index_mu):
-diff --git a/montepython/likelihoods/ska1_IM_band1/__init__.py b/montepython/likelihoods/ska1_IM_band1/__init__.py
-index 50285f8..5117eaa 100644
---- a/montepython/likelihoods/ska1_IM_band1/__init__.py
-+++ b/montepython/likelihoods/ska1_IM_band1/__init__.py
-@@ -169,7 +169,9 @@ class ska1_IM_band1(Likelihood):
-         # If the fiducial model does not exists, recover the power spectrum and
-         # store it, then exit.
-         if self.fid_values_exist is False:
--            pk = np.zeros((self.k_size, 2*self.nbin+1), 'float64')
-+            # (JR) throw error as creation of fiducial file does not work with GAMBIT 
-+            self.raise_fiducial_model_err()
-+            '''pk = np.zeros((self.k_size, 2*self.nbin+1), 'float64')
-             if self.use_linear_rsd:
-                 pk_lin = np.zeros((self.k_size, 2*self.nbin+1), 'float64')
-             fid_file_path = os.path.join(
-@@ -203,7 +205,7 @@ class ska1_IM_band1(Likelihood):
-             warnings.warn(
-                 "Writing fiducial model in %s, for %s likelihood\n" % (
-                     self.data_directory+'/'+self.fiducial_file, self.name))
--            return 1j
-+            return 1j'''
- 
-         # NOTE: Many following loops will be hidden in a very specific numpy
-         # expression, for (a more than significant) speed-up. All the following
 diff --git a/montepython/likelihoods/ska1_IM_band2/__init__.py b/montepython/likelihoods/ska1_IM_band2/__init__.py
 index 231efb3..747485e 100644
 --- a/montepython/likelihoods/ska1_IM_band2/__init__.py
@@ -2181,7 +2177,7 @@ index 231efb3..747485e 100644
          # store it, then exit.
          if self.fid_values_exist is False:
 -            pk = np.zeros((self.k_size, 2*self.nbin+1), 'float64')
-+            # (JR) throw error as creation of fiducial file does not work with GAMBIT 
++            # (JR) throw error as creation of fiducial file does not work with GAMBIT
 +            self.raise_fiducial_model_err()
 +            '''pk = np.zeros((self.k_size, 2*self.nbin+1), 'float64')
              if self.use_linear_rsd:
@@ -2205,7 +2201,7 @@ index ef1cf92..a5833af 100644
          # Write fiducial model spectra if needed (exit in that case)
          if self.fid_values_exist is False:
 -            # Store the values now, and exit.
-+            # (JR) throw error as creation of fiducial file does not work with GAMBIT 
++            # (JR) throw error as creation of fiducial file does not work with GAMBIT
 +            self.raise_fiducial_model_err()
 +            '''# Store the values now, and exit.
              fid_file_path = os.path.join(
@@ -2229,7 +2225,7 @@ index c7d5082..a6f925b 100644
          # store it, then exit.
          if self.fid_values_exist is False:
 -            pk = np.zeros((self.k_size, 2*self.nbin+1), 'float64')
-+            # (JR) throw error as creation of fiducial file does not work with GAMBIT 
++            # (JR) throw error as creation of fiducial file does not work with GAMBIT
 +            self.raise_fiducial_model_err()
 +            '''pk = np.zeros((self.k_size, 2*self.nbin+1), 'float64')
              if self.use_linear_rsd:
@@ -2244,7 +2240,7 @@ index 6e8be63..61a015d 100644
          # Write fiducial model spectra if needed (exit in that case)
          if self.fid_values_exist is False:
 -            # Store the values now, and exit.
-+            # (JR) throw error as creation of fiducial file does not work with GAMBIT 
++            # (JR) throw error as creation of fiducial file does not work with GAMBIT
 +            self.raise_fiducial_model_err()
 +            '''# Store the values now, and exit.
              fid_file_path = os.path.join(
@@ -2268,7 +2264,7 @@ index 9075438..6fa3952 100644
          # store it, then exit.
          if self.fid_values_exist is False:
 -            pk = np.zeros((self.k_size, 2*self.nbin+1), 'float64')
-+            # (JR) throw error as creation of fiducial file does not work with GAMBIT 
++            # (JR) throw error as creation of fiducial file does not work with GAMBIT
 +            self.raise_fiducial_model_err()
 +            '''pk = np.zeros((self.k_size, 2*self.nbin+1), 'float64')
              if self.use_linear_rsd:
@@ -2293,7 +2289,7 @@ index 4ddf557..e4ac173 100644
          if self.fid_values_exist is False:
 -
 -            # open file where fiducial model will be written and write header
-+            # (JR) throw error as creation of fiducial file does not work with GAMBIT 
++            # (JR) throw error as creation of fiducial file does not work with GAMBIT
 +            self.raise_fiducial_model_err()
 +            '''# open file where fiducial model will be written and write header
              fid_file = open(os.path.join(
@@ -2318,7 +2314,7 @@ index a357ca5..cdca06b 100644
          if self.fid_values_exist is False:
 -
 -            # open file where fiducial model will be written and write header
-+            # (JR) throw error as creation of fiducial file does not work with GAMBIT 
++            # (JR) throw error as creation of fiducial file does not work with GAMBIT
 +            self.raise_fiducial_model_err()
 +            '''# open file where fiducial model will be written and write header
              fid_file = open(os.path.join(
@@ -2343,7 +2339,7 @@ index 9df3412..c04bc37 100644
          if self.fid_values_exist is False:
 -
 -            # open file where fiducial model will be written and write header
-+            # (JR) throw error as creation of fiducial file does not work with GAMBIT 
++            # (JR) throw error as creation of fiducial file does not work with GAMBIT
 +            self.raise_fiducial_model_err()
 +            '''# open file where fiducial model will be written and write header
              fid_file = open(os.path.join(
