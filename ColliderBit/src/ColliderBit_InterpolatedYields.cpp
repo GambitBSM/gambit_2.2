@@ -42,11 +42,11 @@
 
 #include "multimin/multimin.hpp"
 
-#include "gambit/ColliderBit/interp_collection.hpp"
 #include "gambit/ColliderBit/analyses/Analysis.hpp"
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/ColliderBit/ColliderBit_rollcall.hpp"
-#include "gambit/Utils/ascii_table_reader.hpp"
+#include "gambit/Utils/interp_collection.hpp"
+#include "gambit/Utils/ascii_table_reader.hpp" // DONT NEED?
 #include "gambit/Utils/file_lock.hpp"
 #include "gambit/ColliderBit/Utils.hpp"
 
@@ -86,8 +86,8 @@ namespace Gambit
         std::map<str, std::vector<double>> extra_info; // Any additional analysis-specific numbers
 
         // Maps containing 1D and 2D interpolators
-        std::map<str,std::unique_ptr<interp1d_collection>> interp1d;
-        std::map<str,std::unique_ptr<interp2d_collection>> interp2d;
+        std::map<str,std::unique_ptr<Utils::interp1d_collection>> interp1d;
+        std::map<str,std::unique_ptr<Utils::interp2d_collection>> interp2d;
 
         // Helper functions
 
@@ -107,21 +107,21 @@ namespace Gambit
         void add_interp1d(str name, str filename, std::vector<str> colnames)
         {
           assert (interp1d.count(name) == 0); // Make sure we're not overwriting an existing entry
-          interp1d[name] = std::unique_ptr<interp1d_collection>(new interp1d_collection(name, filename, colnames));
+          interp1d[name] = std::unique_ptr<Utils::interp1d_collection>(new Utils::interp1d_collection(name, filename, colnames));
         }
 
         void add_interp2d(str name, str filename, std::vector<str> colnames)
         {
           assert (interp2d.count(name) == 0); // Make sure we're not overwriting an existing entry
-          interp2d[name] = std::unique_ptr<interp2d_collection>(new interp2d_collection(name, filename, colnames));
+          interp2d[name] = std::unique_ptr<Utils::interp2d_collection>(new Utils::interp2d_collection(name, filename, colnames));
         }
 
-        const interp1d_collection& get_interp1d(str name) const
+        const Utils::interp1d_collection& get_interp1d(str name) const
         {
           return *interp1d.at(name);
         }
 
-        const interp2d_collection& get_interp2d(str name) const
+        const Utils::interp2d_collection& get_interp2d(str name) const
         {
           return *interp2d.at(name);
         }
@@ -514,8 +514,8 @@ namespace Gambit
       double lambda_scaling = pow(1000.0 / lambda, 4);
 
       // Get the interpolator collections for the given operator_key
-      const interp2d_collection& xsec_interp = analysis_info.get_interp2d("mass_theta_xsecpb_" + operator_key);
-      const interp2d_collection& eff_interp = analysis_info.get_interp2d("mass_theta_eff_" + operator_key);
+      const Utils::interp2d_collection& xsec_interp = analysis_info.get_interp2d("mass_theta_xsecpb_" + operator_key);
+      const Utils::interp2d_collection& eff_interp = analysis_info.get_interp2d("mass_theta_eff_" + operator_key);
 
       // Compute the signal yield for each signal region
       for (size_t sr_i = 0; sr_i < analysis_info.n_signal_regions; ++sr_i)
@@ -614,8 +614,8 @@ namespace Gambit
       double lambda_scaling = pow(1000.0 / lambda, 6);
 
       // Get the interpolator collections for the given operator_key
-      const interp1d_collection& xsec_interp = analysis_info.get_interp1d("mass_xsecpb_" + operator_key);
-      const interp1d_collection& eff_interp = analysis_info.get_interp1d("mass_eff_" + operator_key);
+      const Utils::interp1d_collection& xsec_interp = analysis_info.get_interp1d("mass_xsecpb_" + operator_key);
+      const Utils::interp1d_collection& eff_interp = analysis_info.get_interp1d("mass_eff_" + operator_key);
 
       // Compute the signal yield for each signal region
       for (size_t sr_i = 0; sr_i < analysis_info.n_signal_regions; ++sr_i)

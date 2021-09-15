@@ -2,8 +2,8 @@
 //   *********************************************
 ///  \file
 ///
-///  ColliderBit classes for holding a 
-///  collection of 1D/2D interpolators
+///  Utils classes for holding a 
+///  collection of 1D/2D interpolators.
 ///
 ///  *********************************************
 ///
@@ -11,7 +11,7 @@
 ///
 ///  \author Anders Kvellestad
 ///          (anders.kvellestad@fys.uio.no)
-///  \date 2021 May
+///  \date 2021 Sep
 ///
 ///  *********************************************
 
@@ -25,14 +25,13 @@
 
 #include "gambit/Utils/ascii_table_reader.hpp"
 #include "gambit/Utils/util_functions.hpp"
-
-#include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
-#include "gambit/ColliderBit/interp_collection.hpp"
+#include "gambit/Utils/util_types.hpp"
+#include "gambit/Utils/interp_collection.hpp"
 
 namespace Gambit
 {
 
-  namespace ColliderBit
+  namespace Utils
   {
 
     // 
@@ -45,7 +44,7 @@ namespace Gambit
       // Check if file exists.
       if (not(Utils::file_exists(file_name_in)))
       {
-        ColliderBit_error().raise(LOCAL_INFO, "ERROR! File '" + file_name_in + "' not found!");
+        utils_error().raise(LOCAL_INFO, "ERROR! File '" + file_name_in + "' not found!");
       }
 
       // Read numerical values from data file.
@@ -54,13 +53,13 @@ namespace Gambit
       // Check that there's more than one column
       if (tab.getncol() < 2)
       {
-        ColliderBit_error().raise(LOCAL_INFO, "ERROR! Less than two columns found in the input file '" + file_name_in + "'."); 
+        utils_error().raise(LOCAL_INFO, "ERROR! Less than two columns found in the input file '" + file_name_in + "'."); 
       }
 
       // Check that the number of columns matches the number of column names
       if (colnames_in.size() != (size_t) tab.getncol())
       {
-        ColliderBit_error().raise(LOCAL_INFO, "ERROR! Mismatch between number of columns and number of column names."); 
+        utils_error().raise(LOCAL_INFO, "ERROR! Mismatch between number of columns and number of column names."); 
       }
 
       // Set the column names
@@ -93,7 +92,7 @@ namespace Gambit
         int n_points = interp_data.size();
         if (nx != n_points)
         {
-          ColliderBit_error().raise(LOCAL_INFO, "ERROR! The number of data points ("+std::to_string(n_points)+") does not agree with the number of 'x' points ("+std::to_string(nx)+") for the interpolator '"+interp_name+"'.\n Check formatting of the file: '"+file_name_in+"'.");
+          utils_error().raise(LOCAL_INFO, "ERROR! The number of data points ("+std::to_string(n_points)+") does not agree with the number of 'x' points ("+std::to_string(nx)+") for the interpolator '"+interp_name+"'.\n Check formatting of the file: '"+file_name_in+"'.");
         }
 
         // Initialize a gsl_spline pointer and a gsl_interp_accel pointer and store them
@@ -127,7 +126,7 @@ namespace Gambit
     {
       if (n_interpolators != 1)
       {
-          ColliderBit_error().raise(LOCAL_INFO, "ERROR! This interp1d_collection instance contains more than one interpolator, so the interpolator index must be specified.");
+          utils_error().raise(LOCAL_INFO, "ERROR! This interp1d_collection instance contains more than one interpolator, so the interpolator index must be specified.");
       }
       return eval(x, 0);
     }
@@ -150,7 +149,7 @@ namespace Gambit
       // Check if file exists.
       if (not(Utils::file_exists(file_name_in)))
       {
-        ColliderBit_error().raise(LOCAL_INFO, "ERROR! File '" + file_name_in + "' not found!");
+        utils_error().raise(LOCAL_INFO, "ERROR! File '" + file_name_in + "' not found!");
       }
 
       // Read numerical values from data file.
@@ -159,13 +158,13 @@ namespace Gambit
       // Check that there's more than two columns
       if (tab.getncol() < 3)
       {
-        ColliderBit_error().raise(LOCAL_INFO, "ERROR! Less than three columns found in the input file '" + file_name_in + "'."); 
+        utils_error().raise(LOCAL_INFO, "ERROR! Less than three columns found in the input file '" + file_name_in + "'."); 
       }
 
       // Check that the number of columns matches the number of column names
       if (colnames_in.size() != (size_t) tab.getncol())
       {
-        ColliderBit_error().raise(LOCAL_INFO, "ERROR! Mismatch between number of columns and number of column names."); 
+        utils_error().raise(LOCAL_INFO, "ERROR! Mismatch between number of columns and number of column names."); 
       }
 
       // Set the column names
@@ -209,7 +208,7 @@ namespace Gambit
 
         if (nx * ny != n_points)
         {
-          ColliderBit_error().raise(LOCAL_INFO, "ERROR! The number of grid points ("+std::to_string(n_points)+") does not agree with the number of unique 'x' and 'y' values ("+std::to_string(nx)+" and "+std::to_string(ny)+") for the interpolator '"+interp_name+"'.\n Check formatting of the file: '"+file_name_in+"'.");
+          utils_error().raise(LOCAL_INFO, "ERROR! The number of grid points ("+std::to_string(n_points)+") does not agree with the number of unique 'x' and 'y' values ("+std::to_string(nx)+" and "+std::to_string(ny)+") for the interpolator '"+interp_name+"'.\n Check formatting of the file: '"+file_name_in+"'.");
         }
 
         // Initialize a gsl_spline pointer and two gsl_interp_accel pointers and store them
@@ -246,7 +245,7 @@ namespace Gambit
     {
       if (n_interpolators != 1)
       {
-          ColliderBit_error().raise(LOCAL_INFO, "ERROR! This interp2d_collection instance contains more than one interpolator, so the interpolator index must be specified.");
+          utils_error().raise(LOCAL_INFO, "ERROR! This interp2d_collection instance contains more than one interpolator, so the interpolator index must be specified.");
       }
       return eval(x, y, 0);
     }

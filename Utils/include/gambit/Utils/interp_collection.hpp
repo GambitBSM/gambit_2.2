@@ -2,10 +2,8 @@
 //   *********************************************
 ///  \file
 ///
-///  ColliderBit classes for holding a 
+///  Utils classes for holding a 
 ///  collection of 1D/2D interpolators.
-///
-///  (Based on AxionInterpolator in DarkBit)
 ///
 ///  *********************************************
 ///
@@ -13,26 +11,31 @@
 ///
 ///  \author Anders Kvellestad
 ///          (anders.kvellestad@fys.uio.no)
-///  \date 2021 May
+///  \date 2021 Sep
 ///
 ///  *********************************************
 
+
+#ifndef __interp_collection_hpp__
+#define __interp_collection_hpp__
+
 #include <vector>
-#include <map>
+// #include <map>
 #include <string>
 
 #include <gsl/gsl_spline.h>
 #include <gsl/gsl_interp2d.h>
 #include <gsl/gsl_spline2d.h>
 
-#include "gambit/Utils/ascii_table_reader.hpp"
-#include "gambit/Utils/util_functions.hpp"
+#include "gambit/Utils/ascii_table_reader.hpp"  // DONT NEED?
+#include "gambit/Utils/util_functions.hpp"  // DONT NEED?
+#include "gambit/Utils/util_types.hpp"  // DONT NEED?
 
 
 namespace Gambit
 {
 
-  namespace ColliderBit
+  namespace Utils
   {
 
     /// A class for holding a collection of 1D interpolators, created from reading a tabulated ascii file. 
@@ -128,3 +131,5 @@ namespace Gambit
 
   }
 }
+
+#endif //defined __interp_collection_hpp__
