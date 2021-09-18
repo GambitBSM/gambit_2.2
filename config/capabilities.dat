@@ -280,6 +280,12 @@ large_print: |
 #  SpecBit
 #-------------------------------------
 
+#####  DMEFT  #####
+
+DMEFT_spectrum: |
+    The spectrum for the DMEFT model.
+
+
 #####  Scalar singlet Higgs-portal models  #####
 
 ScalarSingletDM_Z2_spectrum: |
@@ -532,6 +538,17 @@ IdentityAnalysisNumbers: |
 
 AllAnalysisNumbers: |
    Combined analysis numbers from all LHC analyses used in a scan.
+
+AllAnalysisNumbersUnmodified: |
+   A version of the AllAnalysisNumbers capability for use with ColliderBit analyses 
+   based on interpolated yields. AllAnalysisNumbersUnmodified is the collection
+   of all analysis numbers before any subsequent modificiation, e.g. due to 
+   EFT validity constraints.
+
+DMEFT_profiled_LHC_nuisance_params: |
+   Information on the result of profiling out the nuisance parameter 'a' in collider
+   signal predictions for the DMEFT model. This parameter is used to smoothly suppress 
+   signal predictions for MET bins with MET > Lambda.
 
 ALEPH_Selectron_LLike: |
    Compares the cross section times branching ratio
@@ -3905,6 +3922,9 @@ supbar_r_decay_rates: |
 #-------------------------------------
 #  Model capabilities
 #-------------------------------------
+
+ parameters: |
+   Parameters for the DMEFT model (see ./gambit DMEFT)
 
 Halo_Einasto_parameters: |
    Parameters of the Einasto halo profile (rho0, rhos, vrot, v0, vesc, rs, r_sun, alpha).
