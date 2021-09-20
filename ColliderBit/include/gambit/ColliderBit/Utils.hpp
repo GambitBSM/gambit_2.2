@@ -18,8 +18,6 @@
 
 #pragma once
 
-#include <unistd.h>
-
 #include <functional>
 #include <memory>
 #include <cfloat>
@@ -34,24 +32,6 @@ namespace Gambit
 
   namespace ColliderBit
   {
-
-    /// Macro to redirect stderr to /dev/null for a single function call
-    #define CALL_WITH_SILENCED_STDERR(FUNCTION_CALL)    \
-      int fd;                                           \
-      fpos_t pos;                                       \
-      fflush(stderr);                                   \
-      fgetpos(stderr, &pos);                            \
-      fd = dup(fileno(stderr));                         \
-      freopen("/dev/null", "w", stderr);                \
-                                                        \
-      (FUNCTION_CALL);                                  \
-                                                        \
-      fflush(stderr);                                   \
-      dup2(fd, fileno(stderr));                         \
-      close(fd);                                        \
-      clearerr(stderr);                                 \
-      fsetpos(stderr, &pos);
-
 
     /// Unit conversions (multiply to construct in standard units, divide to decode to that unit)
     static const double GeV = 1, MeV = 1e-3, TeV = 1e3;

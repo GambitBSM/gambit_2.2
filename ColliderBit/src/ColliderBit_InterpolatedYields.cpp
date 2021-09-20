@@ -47,6 +47,7 @@
 #include "gambit/ColliderBit/ColliderBit_rollcall.hpp"
 #include "gambit/Utils/interp_collection.hpp"
 #include "gambit/Utils/file_lock.hpp"
+#include "gambit/Utils/util_macros.hpp"
 #include "gambit/ColliderBit/Utils.hpp"
 
 

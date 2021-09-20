@@ -40,6 +40,7 @@
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/ColliderBit/ColliderBit_rollcall.hpp"
 #include "gambit/Utils/statistics.hpp" 
+#include "gambit/Utils/util_macros.hpp"
 #include "gambit/ColliderBit/Utils.hpp"
 
 #include "multimin/multimin.hpp"
