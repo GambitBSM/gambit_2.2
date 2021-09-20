@@ -51,7 +51,7 @@
     MODEL_CONDITIONAL_DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct, ColliderBit_SLHA_file_model, ColliderBit_SLHA_scan_model)
     #undef FUNCTION
 
-  // Make a dummy MCLoopInfo object for interpolated yield "colliders"
+    // Make a dummy MCLoopInfo object for interpolated yield "colliders"
     #define FUNCTION InterpolatedMCInfo
     START_FUNCTION(MCLoopInfo)
     #undef FUNCTION
