@@ -206,20 +206,10 @@ namespace Gambit
 
       /*
       Code to sum over all elements in solar model simultaneously.
-      The fourth parameter tells captn_NREO which of the 16 elements to sum over,
-       any other integer (than 1 to 16) tells it to sum over all elements together.
+      The third parameter tells captn_NREO how many isotopes to sum over,
+      of which captn is currently set up to sum the 16 from arxiv:1501.03729.
       */
       BEreq::captn_NREO(Dep::WIMP_properties->mass,Dep::WIMP_properties->spinx2/2.,niso,capped);
-
-      /// Loop to sum over each element in solar model individually.
-      /*
-      double isoCapped = 0e0;
-      for(int iso=1; iso<(niso+1); iso++)
-      {
-        BEreq::captn_NREO(*Dep::mwimp,jx,nsio,iso,isoCapped);
-        capped += isoCapped;
-      }
-      */
 
       result = capped;
 
