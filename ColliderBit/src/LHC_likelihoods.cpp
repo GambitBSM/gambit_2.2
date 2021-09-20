@@ -763,8 +763,8 @@ namespace Gambit
       // Check for problems with the result
       for(auto& s_d_pair : result.sr_loglikes)
       {
-        // if (Utils::isnan(s_d_pair.second))
-        // {
+        if (Utils::isnan(s_d_pair.second))
+        {
           std::stringstream msg;
           msg << "Computation of loglike for signal region " << s_d_pair.first << " in analysis " << ananame << " returned NaN" << endl;
           msg << "Will now print the signal region data for this analysis:" << endl;
@@ -779,8 +779,8 @@ namespace Gambit
                 << ",  n_sig_MC = " << srData.n_sig_MC
                 << ",  n_sig_MC_sys = " << srData.n_sig_MC_sys
                 << endl;
-          // }
-          // invalid_point().raise(msg.str());
+          }
+          invalid_point().raise(msg.str());
         }
       }
 
