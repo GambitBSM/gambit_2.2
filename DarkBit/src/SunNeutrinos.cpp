@@ -166,18 +166,7 @@ namespace Gambit
         result = maxcap;
       }
 
-      //cout << "capture rate via capture_rate_Sun_vnqn = " << result << "\n";
-
     }
-/*
-    // couplingNumber and isoSpin are the indicies of a FORTRAN array to fill
-    // note: in FORTRAN indices start at 1, not 0 like C++
-    void populate_captureArray(double val, int couplingNumber, int isospin)
-    {
-      using namespace Pipes::populate_captureArray;
-      BEreq::populate_array(val, couplingNumber, isospin);
-    }
-*/
 
     //Capture rate for Non-Relataivistic Effective Operator (NREO)
     void capture_rate_Sun_NREO(double &result)
@@ -209,8 +198,8 @@ namespace Gambit
         coupleNum = j + 1; // this is the coupling number, ranges 1 to 15 (but not 2)
         if (coupleNum != 2) // 2 is not an allowed coupling constant
         {
-          BEreq::populate_array(Dep::DD_nonrel_WCs->c0.at(coupleNum), coupleNum, 0);
-          BEreq::populate_array(Dep::DD_nonrel_WCs->c1.at(coupleNum), coupleNum, 1);
+          BEreq::captn_populate_array(Dep::DD_nonrel_WCs->c0.at(coupleNum), coupleNum, 0);
+          BEreq::captn_populate_array(Dep::DD_nonrel_WCs->c1.at(coupleNum), coupleNum, 1);
         }
       }
 

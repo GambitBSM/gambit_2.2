@@ -5469,9 +5469,6 @@ RHN_coupling_slide: |
 #  Capgen capabilities
 #-------------------------------------
 
-CaptnGeneral_1_0_init: |
-  Initialize Captn' general backend.
-
 CaptnGeneral_2_1_init: |
   Initialize Captn' general 2.1 backend.
 
@@ -5490,7 +5487,7 @@ captn_init_oper: |
 captn_NREO: |
   Computes capture rate using non-relativistic effective operator method
 
-populate_array: |
+captn_populate_array: |
   Inserts the desired value for the constant picked by its indices
 
 c0_1_cap: |
