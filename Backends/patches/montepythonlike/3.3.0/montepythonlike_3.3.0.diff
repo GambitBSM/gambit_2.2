@@ -1451,10 +1451,33 @@ index 1b6761b..3a3315c 100644
 -            return Bin1+self.nbin*Bin2-(Bin2*(Bin2+1))/2
 +            return Bin1+self.nbin*Bin2-(Bin2*(Bin2+1))//2
 diff --git a/montepython/likelihoods/Pantheon/__init__.py b/montepython/likelihoods/Pantheon/__init__.py
-index 1c85222..c694b53 100644
+index 1c85222..3e069f2 100644
 --- a/montepython/likelihoods/Pantheon/__init__.py
 +++ b/montepython/likelihoods/Pantheon/__init__.py
-@@ -56,6 +56,34 @@ def __init__(self, path, data, command_line):
+@@ -9,7 +9,7 @@ Based on the previous JLA likelihood writted by Benjamin Audren
+ .. code::
+ 
+     C00 = mag_covmat_file
+-    
++
+ .. note::
+ 
+     Since there are a lot of file manipulation involved, the "pandas" library
+@@ -19,6 +19,8 @@ Based on the previous JLA likelihood writted by Benjamin Audren
+     blas daxpy function in the original c++ code. Both can be installed with
+     pip (Python package manager) easily.
+ 
++.. note:: small modifications by JR to speed up calculation
++
+ """
+ import numpy as np
+ import scipy.linalg as la
+@@ -52,10 +54,38 @@ class Pantheon(Likelihood_sn):
+         # Load matrices from text files, whose names were read in the
+         # configuration file
+         self.C00 = self.read_matrix(self.mag_covmat_file)
+-        
++
          # Reading light-curve parameters from self.data_file (lcparam_full_long.txt)
          self.light_curve_params = self.read_light_curve_parameters()
  
@@ -1489,7 +1512,15 @@ index 1c85222..c694b53 100644
      def loglkl(self, cosmo, data):
          """
          Compute negative log-likelihood (eq.15 Betoule et al. 2014)
-@@ -78,16 +106,6 @@ def loglkl(self, cosmo, data):
+@@ -64,6 +94,7 @@ class Pantheon(Likelihood_sn):
+         # Recover the distance moduli from CLASS (a size N vector of double
+         # containing the predicted distance modulus for each SN in the JLA
+         # sample, given the redshift of the supernova.)
++
+         redshifts = self.light_curve_params.zcmb
+         size = redshifts.size
+ 
+@@ -78,36 +109,19 @@ class Pantheon(Likelihood_sn):
          M = (data.mcmc_parameters['M']['current'] *
               data.mcmc_parameters['M']['scale'])
  
@@ -1502,11 +1533,15 @@ index 1c85222..c694b53 100644
 -        # pointer assignment)
 -        C00 = self.C00
 -        cov = ne.evaluate("C00")
--
++        sn = self.light_curve_params
+ 
          # Compute the residuals (estimate of distance moduli - exact moduli)
          residuals = np.empty((size,))
-         sn = self.light_curve_params
-@@ -97,17 +115,8 @@ def loglkl(self, cosmo, data):
+-        sn = self.light_curve_params
++
+         # This operation loops over all supernovae!
+         # Compute the approximate moduli
+         residuals = sn.mb - M
          # Remove from the approximate moduli the one computed from CLASS
          residuals -= moduli
  

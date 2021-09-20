@@ -742,7 +742,6 @@ if(NOT ditched_${name}_${ver})
       BUILD_IN_SOURCE 1
       PATCH_COMMAND patch -p1 < ${patch}
       CONFIGURE_COMMAND ${CMAKE_COMMAND} -E copy ${patchdir}/MontePythonLike.py ${dir}/montepython/MontePythonLike_${sfver}.py
-      COMMAND ${CMAKE_COMMAND} -E copy ${patchdir}/fastPantheon__init__.py ${dir}/montepython/likelihoods/Pantheon/__init__.py
       COMMAND ${CMAKE_COMMAND} -E copy ${patchdir}/__init__eBOSS_DR14_Lya_combined.py ${dir}/montepython/likelihoods/eBOSS_DR14_Lya_combined/__init__.py
       COMMAND ${CMAKE_COMMAND} -E copy ${patchdir}/sdss_lrgDR7_fiducialmodel.dat ${dir}/data/sdss_lrgDR7/sdss_lrgDR7_fiducialmodel.dat
       COMMAND ${CMAKE_COMMAND} -E copy ${patchdir}/bao_eBOSS_2017.txt ${dir}/data/bao_eBOSS_2017.txt
