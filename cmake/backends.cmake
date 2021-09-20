@@ -740,19 +740,19 @@ if(NOT ditched_${name}_${ver})
       DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
       SOURCE_DIR ${dir}
       BUILD_IN_SOURCE 1
+      # Apply main patch (modifications to existing likelihoods etc.)
       PATCH_COMMAND patch -p1 < ${patch}
+      # Add additional likelihoods that are not shipped with montepython
+      COMMAND patch -p1 < ${patchdir}/bao_correlations_likelihood.diff
+      COMMAND patch -p1 < ${patchdir}/bao_smallz_combined_2018_likelihood.diff
+      COMMAND patch -p1 < ${patchdir}/des_bao_Y1_likelihood.diff
+      COMMAND patch -p1 < ${patchdir}/WiggleZ_bao_highz.diff
+      # Add GAMBIT specific files that will fix the likelihoods to work with GAMBIT in the 'install' step
       CONFIGURE_COMMAND ${CMAKE_COMMAND} -E copy ${patchdir}/MontePythonLike.py ${dir}/montepython/MontePythonLike_${sfver}.py
-      COMMAND ${CMAKE_COMMAND} -E copy ${patchdir}/bao_eBOSS_2017.txt ${dir}/data/bao_eBOSS_2017.txt
-      COMMAND ${CMAKE_COMMAND} -E copy ${patchdir}/bao_smallz_combined_2018.txt ${dir}/data/bao_smallz_combined_2018.txt
-      COMMAND ${CMAKE_COMMAND} -E copy ${patchdir}/des_bao_Y1.txt ${dir}/data/des_bao_Y1.txt
-      COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/WiggleZ_bao_highz ${dir}/montepython/likelihoods/WiggleZ_bao_highz/
-      COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/bao_correlations ${dir}/montepython/likelihoods/bao_correlations/
-      COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/bao_smallz_combined_2018 ${dir}/montepython/likelihoods/bao_smallz_combined_2018/
-      COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/des_bao_Y1 ${dir}/montepython/likelihoods/des_bao_Y1/
-      COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/bao_correlations_data ${dir}/data/bao_correlations/
       COMMAND ${CMAKE_COMMAND} -E copy ${patchdir}/MPLike_patch_script.py ${dir}/montepython/MPLike_patch_script.py
       COMMAND sed ${dashi} -e "s#from MontePythonLike import#from MontePythonLike_${sfver} import#g" ${dir}/montepython/MPLike_patch_script.py
       BUILD_COMMAND ""
+      # Execute the script that fixes the likelihoods
       INSTALL_COMMAND ${PYTHON_EXECUTABLE} ${dir}/montepython/MPLike_patch_script.py
     )
   endif()
