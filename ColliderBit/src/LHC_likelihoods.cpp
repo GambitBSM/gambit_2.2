@@ -103,8 +103,8 @@ namespace Gambit
     ///
     /// @note Doesn't return a full log-like: the factorial term is missing since it's expensive, fixed and cancels in DLLs
     void _gsl_calc_Analysis_MinusLogLike(const size_t n, const double* unit_nuisances_dbl,
-                                         void* fixedparamspack, double* fval) {
-
+                                         void* fixedparamspack, double* fval)
+    {
       // Convert the array of doubles into an "Eigen view" of the nuisance params
       Eigen::Map<const Eigen::ArrayXd> unit_nuisances(&unit_nuisances_dbl[0], n);
 
@@ -122,7 +122,6 @@ namespace Gambit
       double loglike_tot = n * log(1/sqrt(2*M_PI)); //< could also drop this, but it costs ~nothing
       for (size_t j = 0; j < n; ++j)
       {
-
         // First the multivariate Gaussian bit (j = nuisance)
         const double pnorm_j = -pow(unit_nuisances(j), 2)/2.;
         loglike_tot += pnorm_j;
@@ -143,8 +142,8 @@ namespace Gambit
 
     /// Loglike gradient-function wrapper to provide the signature for GSL multimin
     void _gsl_calc_Analysis_MinusLogLikeGrad(const size_t n, const double* unit_nuisances_dbl,
-                                             void* fixedparamspack, double* fgrad) {
-
+                                             void* fixedparamspack, double* fgrad)
+    {
       // Convert the array of doubles into an "Eigen view" of the nuisance params
       Eigen::Map<const Eigen::ArrayXd> unit_nuisances(&unit_nuisances_dbl[0], n);
 
@@ -159,9 +158,11 @@ namespace Gambit
       const Eigen::VectorXd n_preds = n_preds_nominal + evecs*(sqrtevals*unit_nuisances).matrix();
 
       // Compute gradient elements
-      for (int j = 0; j < unit_nuisances.size(); ++j) {
+      for (int j = 0; j < unit_nuisances.size(); ++j)
+      {
         double llgrad = 0;
-        for (int k = 0; k < unit_nuisances.size(); ++k) {
+        for (int k = 0; k < unit_nuisances.size(); ++k)
+        {
           llgrad += (n_obss(k)/n_preds(k) - 1) * evecs(k,j);
         }
         llgrad = llgrad * sqrtevals(j) - unit_nuisances(j);
@@ -173,7 +174,8 @@ namespace Gambit
 
     void _gsl_calc_Analysis_MinusLogLikeAndGrad(const size_t n, const double* unit_nuisances_dbl,
                                                 void* fixedparamspack,
-                                                double* fval, double* fgrad) {
+                                                double* fval, double* fgrad)
+    {
       _gsl_calc_Analysis_MinusLogLike(n, unit_nuisances_dbl, fixedparamspack, fval);
       _gsl_calc_Analysis_MinusLogLikeGrad(n, unit_nuisances_dbl, fixedparamspack, fgrad);
     }
@@ -182,14 +184,17 @@ namespace Gambit
     std::vector<double> _gsl_mkpackedarray(const Eigen::ArrayXd& n_preds,
                                            const Eigen::ArrayXd& n_obss,
                                            const Eigen::ArrayXd& sqrtevals,
-                                           const Eigen::MatrixXd& evecs) {
+                                           const Eigen::MatrixXd& evecs)
+    {
       const size_t nSR = n_obss.size();
       std::vector<double> fixeds(3*nSR + 2*nSR*nSR, 0.0);
-      for (size_t i = 0; i < nSR; ++i) {
+      for (size_t i = 0; i < nSR; ++i)
+      {
         fixeds[0+i] = n_preds(i);
         fixeds[nSR+i] = n_obss(i);
         fixeds[2*nSR+i] = sqrtevals(i);
-        for (size_t j = 0; j < nSR; ++j) {
+        for (size_t j = 0; j < nSR; ++j)
+        {
           fixeds[3*nSR+i*nSR+j] = evecs(j,i);
         }
       }
@@ -204,8 +209,8 @@ namespace Gambit
     double profile_loglike_cov(const Eigen::ArrayXd& n_preds,
                                const Eigen::ArrayXd& n_obss,
                                const Eigen::ArrayXd& sqrtevals,
-                               const Eigen::MatrixXd& evecs) {
-
+                               const Eigen::MatrixXd& evecs)
+    {
       // Number of signal regions
       const size_t nSR = n_obss.size();
 
@@ -215,7 +220,8 @@ namespace Gambit
       // // Set nuisances to an informed starting position
       // const Eigen::ArrayXd& err_n_preds = (evecs*sqrtevals.matrix()).array(); //< @todo CHECK
       // std::vector<double> nuisances(nSR, 0.0);
-      // for (size_t j = 0; j < nSR; ++j) {
+      // for (size_t j = 0; j < nSR; ++j) 
+      // {
       //   // Calculate the max-L starting position, ignoring correlations
       //   const double obs = n_obss(j);
       //   const double rate = n_preds(j);
@@ -296,7 +302,8 @@ namespace Gambit
 
     double marg_loglike_nulike1sr(const Eigen::ArrayXd& n_preds,
                                   const Eigen::ArrayXd& n_obss,
-                                  const Eigen::ArrayXd& sqrtevals) {
+                                  const Eigen::ArrayXd& sqrtevals)
+    {
       assert(n_preds.size() == 1);
       assert(n_obss.size() == 1);
       assert(sqrtevals.size() == 1);
@@ -314,8 +321,8 @@ namespace Gambit
     double marg_loglike_cov(const Eigen::ArrayXd& n_preds,
                             const Eigen::ArrayXd& n_obss,
                             const Eigen::ArrayXd& sqrtevals,
-                            const Eigen::MatrixXd& evecs) {
-
+                            const Eigen::MatrixXd& evecs)
+    {
       // Number of signal regions
       const size_t nSR = n_obss.size();
 
@@ -370,7 +377,6 @@ namespace Gambit
           #pragma omp for nowait
           for (size_t i = 0; i < nsample; ++i)
           {
-
             Eigen::VectorXd norm_samples(nSR);
             for (size_t j = 0; j < nSR; ++j)
               norm_samples(j) = sqrtevals(j) * unitnormdbn(Random::rng());
@@ -380,7 +386,8 @@ namespace Gambit
 
             // Calculate Poisson likelihood and add to composite likelihood calculation
             double combined_loglike = 0;
-            for (size_t j = 0; j < nSR; ++j) {
+            for (size_t j = 0; j < nSR; ++j)
+            {
               const double lambda_j = std::max(n_pred_samples(j), 1e-3); //< manually avoid <= 0 rates
               const double loglike_j  = n_obss(j)*log(lambda_j) - lambda_j - logfact_n_obss(j);
               combined_loglike += loglike_j;
@@ -441,7 +448,6 @@ namespace Gambit
     AnalysisLogLikes calc_loglikes_for_analysis(const AnalysisData& adata, bool USE_COVAR, bool USE_MARG,
                                                 bool combine_nocovar_SRs, bool set_zero_loglike=false)
     {
-
       AnalysisLogLikes result;
 
       // Fix the profiling/marginalising function according to the option
