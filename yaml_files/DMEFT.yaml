@@ -350,7 +350,7 @@ Rules:
       nuisance_prof_maxsteps: 10000
       nuisance_prof_convacc: 0.01
       nuisance_prof_simplexsize: 1e-5
-      nuisance_prof_method: 5
+      nuisance_prof_method: 6
       nuisance_prof_verbosity: 0
 
     # Signal yields for LHC analyses 
