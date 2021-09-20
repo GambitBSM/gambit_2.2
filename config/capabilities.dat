@@ -1193,8 +1193,17 @@ get_DD_couplings: |
 DD_couplings_fermionic_HP: |
    Provides WIMP mass and couplings to nucleons for Higgs-Portal models with fermionic DM.
 
+WIMP_properties: |
+   Container for WIMP properties: mass, spin and self-conjugate
+
 mwimp: |
    DM mass in GeV.
+
+spinwimpx2: |
+   Spin of DM x2
+
+wimp_sc: |
+   Is the DM candidate self conjugate
 
 sigmav: |
    Thermally averaged annihilation cross section <sigma v>, for v=0, in cm^3 s^-1.
@@ -3923,7 +3932,7 @@ supbar_r_decay_rates: |
 #  Model capabilities
 #-------------------------------------
 
- parameters: |
+DMEFT_parameters: |
    Parameters for the DMEFT model (see ./gambit DMEFT)
 
 Halo_Einasto_parameters: |
@@ -4163,6 +4172,9 @@ nuclear_params_sigmas_sigmal_parameters: |
 nuclear_params_ChPT_parameters: |
    Parameters for the model nuclear_params_ChPT (see ./gambit nuclear_params_ChPT)
 
+nuclear_params_ChPT_sigmapiN_parameters: |
+   Parameters for the model nuclear_params_ChPT_sigmapiN (see ./gambit nuclear_params_ChPT_sigmapiN)
+
 nuclear_params_neutron_lifetime_parameters: |
    Model for the neutron lifetime.
    See ./gambit nuclear_params_neutron_lifetime for details.
@@ -4181,8 +4193,14 @@ ColliderBit_SLHA_scan_model_parameters: |
    Parameters for the ColliderBit dummy model ColliderBit_SLHA_scan_model.
    See ./gambit ColliderBit_SLHA_scan_model_parameters for details.
 
-NREO_parameters: |
-   Parameters for the model Non-Relativistic Effective Operator model of dark matter
+NREO_scalarDM_parameters: |
+   Parameters for the model Non-Relativistic Effective Operator model of scalar dark matter
+
+NREO_DiracDM_parameters: |
+   Parameters for the model Non-Relativistic Effective Operator model of Dirac dark matter
+
+NREO_MajoranaDM_parameters: |
+   Parameters for the model Non-Relativistic Effective Operator model of Majorana dark matter
 
 #-------------------------------------
 #  FeynHiggs capabilities
