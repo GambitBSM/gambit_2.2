@@ -2097,6 +2097,9 @@ lnL_SI_nuclear_parameters: |
 lnL_SD_nuclear_parameters: |
    The log-likehood for the spin-dependent nuclear parameters.
 
+lnL_nuclear_parameters_ChPT: |
+   Log Likelihood for the nuisance parameters ChPT in DirectDM 2.2.0
+
 FullSimYieldTable: |
    Table of all simulated particle yields.
 
@@ -2336,6 +2339,10 @@ dump_antideuteronSpectrum: |
 UnitTest_DarkBit: |
    Prints various DarkBit results into YAML file.
 
+#-------------------------------
+# Direct Detection capabilities
+#-------------------------------
+
 DD_SetDetectorEmin: |
    Sets the minimum recoil energy relevant for a given direct detection experiment.
 
@@ -2356,6 +2363,15 @@ DDCalc_2_1_0_init: |
 
 DDCalc_2_2_0_init: |
    Initialises DDCalc 2.2.0.
+
+DDCalc_Couplings: |
+   Initialise DDCalc couplings from a given DM interaction basis.
+
+DD_nonrel_WCs: |
+   Non-relativistic Wilson coefficients
+
+DD_rel_WCs_flavscheme: |
+   Relativistic Wilson coefficients defined in the 5(or 4 or 3) flavscheme
 
 DD_Experiment: |
    The name of the DDcalc experiment corresponding to a specific experiment index.
@@ -2506,6 +2522,9 @@ SetWIMP_higgsportal: |
 
 SetWIMP_NREffectiveTheory: |
    Sets the WIMP parameters m, spin for a non-relativistic effective field theory.
+
+SetWIMP_NREFT_CPT: |
+   Sets the WIMP parameters m, spin for a non-relativistic effective field theory with corrections from CPT
 
 GetNRCoefficient: |
    Get the value of a given non-relativistic operator
@@ -3259,6 +3278,9 @@ lnL_mbmb : |
 
 lnL_t_mass : |
    Log-likelihood of the top quark pole mass.
+
+lnL_mtrun : |
+   Log-likelihood of the MSbar running top mass.
 
 lnL_Z_mass : |
    Log-likelihood of the Z boson pole mass.
@@ -4195,12 +4217,18 @@ ColliderBit_SLHA_scan_model_parameters: |
 
 NREO_scalarDM_parameters: |
    Parameters for the model Non-Relativistic Effective Operator model of scalar dark matter
+   See ./gambit NREO_scalarDM for details
 
 NREO_DiracDM_parameters: |
    Parameters for the model Non-Relativistic Effective Operator model of Dirac dark matter
+   See ./gambit NREO_DiracDM for details
 
 NREO_MajoranaDM_parameters: |
    Parameters for the model Non-Relativistic Effective Operator model of Majorana dark matter
+   See ./gambit NREO_MajoranaDM for details
+
+WIMP_sigmav_parameters: |
+   Parameters for the WIMP_sigmav (see ./gambit WIMP_sigmav)
 
 #-------------------------------------
 #  FeynHiggs capabilities
@@ -5444,9 +5472,8 @@ RHN_coupling_slide: |
 CaptnGeneral_1_0_init: |
   Initialize Captn' general backend.
 
-  CaptnGeneral_2_1_init: |
-    Initialize Captn' general 2.1 backend.
-
+CaptnGeneral_2_1_init: |
+  Initialize Captn' general 2.1 backend.
 
 captn_init: |
   Actually initialize Captn' general.
@@ -5618,6 +5645,19 @@ varNames: |
 Rivet_3_0_0_init: |
   Initialise Rivet backend
 
+
+#---------------------
+# DirecDM capabilities
+#---------------------
+
+DirectDM_2_2_0_init: |
+  Initialise the DirectDM backend
+
+get_NR_WCs_flav: |
+  Get Wilson Coefficients at 2 GeV in a quark flavour matching scheme.
+
+DirectDMNuisanceParameters: |
+  Extract the nuisance parameters for DirectDM as a map
 
 #--------------------------------
 #  Vacuum stability capabilities
