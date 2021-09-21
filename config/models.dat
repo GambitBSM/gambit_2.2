@@ -828,6 +828,26 @@ cosmo_nuisance_JLA: |
    alpha               - SALT2 shape parameter
    beta                - SALT2 colour parameter
 
+cosmo_nuisance_BK15: |
+   Cosmological nuisance parameters for BK15 likelihood, from http://arxiv.org/pdf/1810.05216.pdf, http://bicepkeck.org/bk15_2018_release.html. Descriptions taken from BK15_cosmomc/batch3/BK15.ini
+
+   BBTdust             - dust blackbody temperature [K] -- fixed to 19.6 / very insensitive to this
+   BBalphadust         - dust spatial power spectrum power law index
+   BBalphasync         - sync spatial power specturm power law index
+   BBbetadust          - dust SED power law index
+   BBbetasync          - sync SED power law index
+   BBdust              - dust power at ell=80, nu=353 GHz [uK^2]
+   BBdustsynccorr      - correlation between dust and sync
+   BBsync              - sync power at ell=80, nu=23 GHz [uK^2]
+   Delta_dust          - dust correlation ratio between 217 and 353 GHz, ell=80
+   Delta_sync          - sync correlation ratio between 217 and 353 GHz, ell=80
+   EEtoBB_dust         - EE/BB ratios -- recommended to fix to 2 / only used if E-modes are turned on
+   EEtoBB_sync         - EE/BB ratios -- recommended to fix to 2 / only used if E-modes are turned on
+   gamma_corr          - Band center errors, fixed to zero
+   gamma_95            - Band center errors, fixed to zero
+   gamma_150           - Band center errors, fixed to zero
+   gamma_220           - Band center errors, fixed to zero
+
 cosmo_nuisance_BK14: |
    Cosmological nuisance parameters for BK14 likelihood, from http://arxiv.org/pdf/1510.09217.pdf, http://bicepkeck.org/bk14_2015_release.html. Descriptions taken from BK14_cosmomc/batch2/BK14.ini
 
@@ -843,7 +863,7 @@ cosmo_nuisance_BK14: |
    EEtoBB_sync         - EE/BB ratios -- recommended to fix to 2 / only used if E-modes are turned on
 
 cosmo_nuisance_BK14priors: |
-   Cosmological nuisance parameters for BK14priors likelihood in MontePython, from http://arxiv.org/pdf/1510.09217.pdf
+   Cosmological nuisance parameters for BK14priors (and BK15priors) likelihood in MontePython, from http://arxiv.org/pdf/1510.09217.pdf (http://arxiv.org/pdf/1810.05216.pdf for BK15priors)
    @TODO
 
    BBbetadust          - dust SED power law index

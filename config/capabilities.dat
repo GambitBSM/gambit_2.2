@@ -4799,6 +4799,9 @@ cosmo_nuisance_Pantheon_parameters: |
 cosmo_nuisance_acbar_parameters: |
    Cosmological nuisance parameters for acbar. See ./gambit cosmo_nuisance_acbar for more details.
 
+cosmo_nuisance_BK15_parameters: |
+   Cosmological nuisance parameters for Keck Array/BICEP. See ./gambit cosmo_nuisance_BK15 for more details.
+
 cosmo_nuisance_BK14_parameters: |
    Cosmological nuisance parameters for Keck Array/BICEP. See ./gambit cosmo_nuisance_BK14 for more details.
 

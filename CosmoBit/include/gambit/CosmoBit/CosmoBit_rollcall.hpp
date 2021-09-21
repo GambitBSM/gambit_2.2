@@ -945,7 +945,7 @@ START_MODULE
       #define FUNCTION set_parameter_dict_for_MPLike
       START_FUNCTION(pybind11::dict)
       ALLOW_MODELS(cosmo_nuisance_acbar,cosmo_nuisance_spt,cosmo_nuisance_Lya_abg)
-      ALLOW_MODELS(cosmo_nuisance_JLA,cosmo_nuisance_Pantheon,cosmo_nuisance_BK14,cosmo_nuisance_BK14priors)
+      ALLOW_MODELS(cosmo_nuisance_JLA,cosmo_nuisance_Pantheon,cosmo_nuisance_BK15,cosmo_nuisance_BK14,cosmo_nuisance_BK14priors)
       ALLOW_MODELS(cosmo_nuisance_CFHTLens_correlation,cosmo_nuisance_euclid_lensing,cosmo_nuisance_euclid_pk,cosmo_nuisance_euclid_pk_noShot)
       ALLOW_MODELS(cosmo_nuisance_kids450_qe_likelihood_public,cosmo_nuisance_wmap,cosmo_nuisance_ISW)
       ALLOW_MODELS(cosmo_nuisance_ska1,cosmo_nuisance_ska1_IM_band,cosmo_nuisance_ska1_IM_band_noHI,cosmo_nuisance_ska_lensing)

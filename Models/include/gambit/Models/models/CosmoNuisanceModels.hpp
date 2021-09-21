@@ -17,8 +17,9 @@
 ///  \date 2019 June
 ///
 ///  \author Patrick Stoecker
-///          (stoecker@physik.rwth-aachen.de)
+///          (patrick.stoecker@kit.edu)
 ///  \date 2020 Nov
+///  \date 2021 Sep
 ///
 ///  *********************************************
 
@@ -66,13 +67,25 @@
   DEFINEPARS(A_SZ)
 #undef MODEL
 
-/// nuisance params for bicep/keck array BK14 likelihood implemented in MontePython
-#define MODEL cosmo_nuisance_BK14
+/// nuisance params for bicep/keck array BK15 likelihood implemented in MontePython
+#define MODEL cosmo_nuisance_BK15
   START_MODEL
-  DEFINEPARS(BBdust,BBsync,BBalphadust,BBbetadust,BBTdust,BBalphasync,BBbetasync,BBdustsynccorr,EEtoBB_dust,EEtoBB_sync)
+  DEFINEPARS(BBbetadust,BBbetasync)
+  DEFINEPARS(BBdust,BBsync,BBalphadust,BBTdust,BBalphasync,BBdustsynccorr,EEtoBB_dust,EEtoBB_sync)
+  DEFINEPARS(Delta_dust,Delta_sync,gamma_corr,gamma_95,gamma_150,gamma_220)
 #undef MODEL
 
-/// nuisance params for bicep/keck array BK14priors likelihood implemented in MontePython
+/// nuisance params for bicep/keck array BK14 likelihood implemented in MontePython
+#define MODEL cosmo_nuisance_BK14
+  #define PARENT cosmo_nuisance_BK15
+    START_MODEL
+    DEFINEPARS(BBbetadust,BBbetasync)
+    DEFINEPARS(BBdust,BBsync,BBalphadust,BBTdust,BBalphasync,BBdustsynccorr,EEtoBB_dust,EEtoBB_sync)
+    INTERPRET_AS_PARENT_FUNCTION(cosmo_nuisance_BK14_to_cosmo_nuisance_BK15)
+  #undef PARENT
+#undef MODEL
+
+/// nuisance params for bicep/keck array BK14priors (and BK15priors) likelihood implemented in MontePython
 #define MODEL cosmo_nuisance_BK14priors
   #define PARENT cosmo_nuisance_BK14
     START_MODEL
