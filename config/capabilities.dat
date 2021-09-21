@@ -4664,6 +4664,9 @@ MP_experiment_names: |
 MontePythonLike_3_3_0_init: |
   Initialise MontePython backend v3.3.0.
 
+MontePythonLike_3_5_0_init: |
+  Initialise MontePython backend v3.5.0.
+
 MP_objects: |
    Creates an object containing the montethon ~Data and Likelihood objects, deining which experiments are in use in the process.
 
