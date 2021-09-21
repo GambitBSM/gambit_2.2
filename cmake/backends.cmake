@@ -758,7 +758,6 @@ if(NOT ditched_${name}_${ver})
     )
   endif()
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
-  set_as_default_version("backend" ${name} ${ver})
 endif()
 
 # MontePythonLike
@@ -799,6 +798,7 @@ if(NOT ditched_${name}_${ver})
     )
   endif()
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+  set_as_default_version("backend" ${name} ${ver})
 endif()
 
 # Pythia
