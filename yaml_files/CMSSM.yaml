@@ -691,7 +691,7 @@ KeyValues:
     # Choose a lower cutoff for the likelihood
     model_invalid_for_lnlike_below: -5e5
     model_invalid_for_lnlike_below_alt: -1e5
-    print_invalid_points: false
+    print_invalid_points: true
 
   default_output_path: "runs/CMSSM/"
 
