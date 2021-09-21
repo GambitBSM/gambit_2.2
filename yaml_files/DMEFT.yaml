@@ -186,15 +186,15 @@ ObsLikes:
     purpose: Observable
 
   # LHC likelihoods
-  - purpose:    LogLike
-    capability: LHC_Combined_LogLike
+  - capability: LHC_Combined_LogLike
+    purpose:    LogLike
     module:     ColliderBit
     type: double
 
     # Get details about the nuisance parameter 'a'
     # Remove if using the function DMEFT_results_cutoff to fulfil AllAnalysisNumbers
-  - purpose:    Observable
-    capability: DMEFT_profiled_LHC_nuisance_params
+  - capability: DMEFT_profiled_LHC_nuisance_params
+    purpose:    Observable
 
   ## Nuisance parameters
   # DM Local Halo likelihoods
