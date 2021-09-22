@@ -127,7 +127,7 @@ namespace Gambit
        using namespace Pipes::DarkMatter_ID_EFT;
        if(ModelInUse("NREO_scalarDM")) result = "phi";
        if(ModelInUse("NREO_MajoranaDM")) result = "psi";
-       if(ModelInUse("NREO_DiracDM")) result = "~chi";
+       if(ModelInUse("NREO_DiracDM")) result = "chi";
     }
 
     /// DarkMatterConj_ID string for generic EFT dark matter 
@@ -136,7 +136,7 @@ namespace Gambit
        using namespace Pipes::DarkMatterConj_ID_EFT;
        if(ModelInUse("NREO_scalarDM")) result = "phi";
        if(ModelInUse("NREO_MajoranaDM")) result = "psi";
-       if(ModelInUse("NREO_DiracDM")) result = "chi";
+       if(ModelInUse("NREO_DiracDM")) result = "chi~";
     }
 
     /// Generic parameterisation of WIMP self-annihilation cross-section to various SM two-body final states
@@ -308,11 +308,12 @@ namespace Gambit
 
       // Select initial state particles from particle database
       std::string DMstr = Dep::WIMP_properties->name;
+      std::string DMbarstr = DMstr + "~"; // surely there's a smarter way of getting the conjugate particle ID?
       double WIMP_mass = Dep::WIMP_properties->mass;
       unsigned int WIMP_spinx2 = Dep::WIMP_properties->spinx2;
 
       // Create container for annihilation processes for dark matter initial state
-      TH_Process process_ann(DMstr, DMstr);
+      TH_Process process_ann(DMstr, DMbarstr);
 
       // Explicitly state that Dirac DM is not self-conjugate to add extra
       // factors of 1/2 where necessary
@@ -386,6 +387,7 @@ namespace Gambit
 
       // Dark matter
       addParticle(DMstr, WIMP_mass, WIMP_spinx2)
+      addParticle(DMbarstr, WIMP_mass, WIMP_spinx2) // do I need to check for self-conj?
 
       // Get rid of convenience macros
       #undef getSMmass
