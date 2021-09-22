@@ -470,7 +470,6 @@ START_MODULE
       DEPENDENCY(decay_rates, DecayTable)
       DEPENDENCY(SM_spectrum, Spectrum)
       DEPENDENCY(WIMP_properties, WIMPprops)
-      DEPENDENCY(sigmav, WIMP_annihilation)
       ALLOW_MODEL_DEPENDENCE(WIMP_sigmav, NREO_ScalarDM, NREO_DiracDM, NREO_MajoranaDM)
       MODEL_GROUP(group1, (WIMP_sigmav))
       MODEL_GROUP(group2, (NREO_ScalarDM, NREO_DiracDM, NREO_MajoranaDM))
@@ -1066,12 +1065,6 @@ START_MODULE
       BACKEND_OPTION((MicrOmegas_ScalarSingletDM_Z3),(gimmemicro))
       BACKEND_OPTION((MicrOmegas_VectorSingletDM_Z2),(gimmemicro))
       FORCE_SAME_BACKEND(gimmemicro)
-    #undef FUNCTION
-
-    /// Generic parameterisation of WIMP self-annihilation cross-section to various SM two-body final states
-    #define FUNCTION sigmav_from_parameters
-    START_FUNCTION(WIMP_annihilation)
-    ALLOW_MODEL(WIMP_sigmav)
     #undef FUNCTION
 
   #undef CAPABILITY

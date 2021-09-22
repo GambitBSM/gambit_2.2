@@ -139,20 +139,6 @@ namespace Gambit
        if(ModelInUse("NREO_DiracDM")) result = "chi~";
     }
 
-    /// Generic parameterisation of WIMP self-annihilation cross-section to various SM two-body final states
-    void sigmav_from_parameters(WIMP_annihilation& result)
-    {
-      using namespace Pipes::sigmav_from_parameters;
-      std::vector<std::string> finalstates {"bb", "WW", "cc", "tautau", "ZZ", "tt", "hh"};
-      for(auto channel = finalstates.begin(); channel!=finalstates.end(); ++channel)
-      {
-         std::string A("A_");
-         std::string B("B_");
-         result.setA(*channel,*Param[A+*channel]);
-         result.setB(*channel,*Param[B+*channel]);
-      }
-    }
-
     //////////////////////////////////////////////////////////////////////////
     //
     //   Translation of NREO ModelParameters into NREO_DM_nucleon_couplings
@@ -319,6 +305,17 @@ namespace Gambit
       // factors of 1/2 where necessary
       process_ann.isSelfConj = Dep::WIMP_properties->sc;
 
+      /// Generic parameterisation of WIMP self-annihilation cross-section to various SM two-body final states
+      WIMP_annihilation annihilationProps;
+      std::vector<std::string> finalstates {"bb", "WW", "cc", "tautau", "ZZ", "tt", "hh"};
+      for(auto channel = finalstates.begin(); channel!=finalstates.end(); ++channel)
+      {
+        std::string A("A_");
+        std::string B("B_");
+        annihilationProps.setA(*channel,*Param[A+*channel]);
+        annihilationProps.setB(*channel,*Param[B+*channel]);
+      }
+
       ///////////////////////////////////////
       // Import particle masses and couplings
       ///////////////////////////////////////
@@ -440,8 +437,8 @@ namespace Gambit
           // Include final states that are open for T~m/20
           if ( WIMP_mass*2 > mtot_final*0.5 )
           {
-            double A = Dep::sigmav->A(channel[i]);
-            double B = Dep::sigmav->B(channel[i]);
+            double A = annihilationProps->A(channel[i]);
+            double B = annihilationProps->B(channel[i]);
             daFunk::Funk kinematicFunction = daFunk::funcM(wimpDM,
                 &WIMP_EFT_DM::sv, channel[i], WIMP_mass, A, B, daFunk::var("v"));
             TH_Channel new_channel(
