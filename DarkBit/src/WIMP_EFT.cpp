@@ -308,7 +308,7 @@ namespace Gambit
 
       // Select initial state particles from particle database
       std::string DMstr = Dep::WIMP_properties->name;
-      std::string DMbarstr = DMstr + "~"; // surely there's a smarter way of getting the conjugate particle ID?
+      std::string DMbarstr = Dep::WIMP_properties->conjugate;
       double WIMP_mass = Dep::WIMP_properties->mass;
       unsigned int WIMP_spinx2 = Dep::WIMP_properties->spinx2;
 
@@ -387,7 +387,10 @@ namespace Gambit
 
       // Dark matter
       addParticle(DMstr, WIMP_mass, WIMP_spinx2)
-      addParticle(DMbarstr, WIMP_mass, WIMP_spinx2) // do I need to check for self-conj?
+      if (not process_ann.isSelfConj)
+      {
+        addParticle(DMbarstr, WIMP_mass, WIMP_spinx2)
+      }
 
       // Get rid of convenience macros
       #undef getSMmass
