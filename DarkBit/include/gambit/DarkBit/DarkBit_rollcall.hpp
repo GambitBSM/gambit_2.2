@@ -1019,6 +1019,7 @@ START_MODULE
     #define FUNCTION WIMP_properties
     START_FUNCTION(WIMPprops)
     DEPENDENCY(DarkMatter_ID, std::string)
+    DEPENDENCY(DarkMatterConj_ID, std::string)
     MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum, Spectrum, MSSM63atQ, MSSM63atMGUT)
     MODEL_CONDITIONAL_DEPENDENCY(ScalarSingletDM_Z2_spectrum, Spectrum, ScalarSingletDM_Z2_running)
     MODEL_CONDITIONAL_DEPENDENCY(ScalarSingletDM_Z3_spectrum, Spectrum, ScalarSingletDM_Z3_running)

@@ -34,6 +34,7 @@ namespace Gambit
       unsigned int spinx2;
       bool sc; // Self-conjugate?
       std::string name; // Name in the particle database
+      std::string conjugate; // Name of conjugate in the particle database
     };
 
     /// Contain for generic parameterisation of WIMP annihilation to various two-body final states,

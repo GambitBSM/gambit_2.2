@@ -67,6 +67,12 @@ namespace Gambit
       props.name = *Dep::DarkMatter_ID;
       props.spinx2 = Models::ParticleDB().get_spinx2(props.name);
       props.sc = not Models::ParticleDB().has_antiparticle(props.name);
+      props.conjugate = Models::ParticleDB().get_antiparticle(props.name);
+      if(props.conjugate != *Dep::DarkMatterConj_ID)
+      {
+        DarkBit_error().raise(LOCAL_INFO, "WIMP conjugate name does not match the particle database, please change it.");
+      }
+
       // Get wimp mass from relevant spectrum
       if(ModelInUse("MSSM63atQ") or ModelInUse("MSSM63atMGUT"))
         props.mass = Dep::MSSM_spectrum->get(Par::Pole_Mass, props.name);
