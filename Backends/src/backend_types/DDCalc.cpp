@@ -76,18 +76,21 @@ namespace Gambit
     {
        for(int i=1; i<=15; i++)
        {
-          std::stringstream ss0;
-          std::stringstream ss1;
-          ss0<<"c0_"<<i;
-          ss1<<"c1_"<<i;
-          if(not pars.has(ss0.str()) or not pars.has(ss1.str()))
+          if (i != 2)
           {
-             std::stringstream msg;
-             msg<<"Error constructing NREO_DM_nucleon_couplings from ModelParameters! The supplied ModelParameters object (model name: "<<pars.getModelName()<<") does not contain NREO coupling parameters! Please check that an NREO-related ModelParameters object has been supplied.";
-             backend_error().raise(LOCAL_INFO, msg.str());
+            std::stringstream ss0;
+            std::stringstream ss1;
+            ss0<<"c0_"<<i;
+            ss1<<"c1_"<<i;
+            if(not pars.has(ss0.str()) or not pars.has(ss1.str()))
+            {
+              std::stringstream msg;
+              msg<<"Error constructing NREO_DM_nucleon_couplings from ModelParameters! The supplied ModelParameters object (model name: "<<pars.getModelName()<<") does not contain NREO coupling parameters! Please check that an NREO-related ModelParameters object has been supplied.";
+              backend_error().raise(LOCAL_INFO, msg.str());
+            }
+            c0[i] = pars[ss0.str()];
+            c1[i] = pars[ss1.str()];
           }
-          c0[i] = pars[ss0.str()];
-          c1[i] = pars[ss1.str()];
        } 
     }
 
@@ -96,18 +99,21 @@ namespace Gambit
     {
        for(int i=1; i<=15; i++)
        {
-          std::stringstream ss0;
-          std::stringstream ss1;
-          ss0<<"c0_"<<i;
-          ss1<<"c1_"<<i;
-          if(pars.find(ss0.str())==pars.end() or pars.find(ss1.str())==pars.end())
+          if (i != 2)
           {
-             std::stringstream msg;
-             msg<<"Error constructing NREO_DM_nucleon_couplings from functor Params map! The supplied Params map does not contain NREO coupling parameters! Please check that an NREO-related model has been activated with ALLOW_MODELS in the rollcall declaration for this module function.";
-             backend_error().raise(LOCAL_INFO, msg.str());
+            std::stringstream ss0;
+            std::stringstream ss1;
+            ss0<<"c0_"<<i;
+            ss1<<"c1_"<<i;
+            if(pars.find(ss0.str())==pars.end() or pars.find(ss1.str())==pars.end())
+            {
+              std::stringstream msg;
+              msg<<"Error constructing NREO_DM_nucleon_couplings from functor Params map! The supplied Params map does not contain NREO coupling parameters! Please check that an NREO-related model has been activated with ALLOW_MODELS in the rollcall declaration for this module function.";
+              backend_error().raise(LOCAL_INFO, msg.str());
+            }
+            c0[i] = *pars[ss0.str()];
+            c1[i] = *pars[ss1.str()];
           }
-          c0[i] = *pars[ss0.str()];
-          c1[i] = *pars[ss1.str()];
        }  
     }
 
