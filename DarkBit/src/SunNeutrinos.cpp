@@ -193,7 +193,16 @@ namespace Gambit
       // There needs to be a check of which basis is being used for the DD_nonrel_WCs to ensure that they are interpreted correctly
       // See DDCalc interface for details / examples
       int coupleNum;
-      for(int j=0; j<12; j++)
+      int maxCouplingIndex;
+      if (Dep::DD_nonrel_WCs->CPTbasis == 0) // if we are using the NREffectiveTheory basis
+      {
+        maxCouplingIndex = 15;
+      }
+      else if (Dep::DD_nonrel_WCs->CPTbasis == 1) // if we are using the NREFT_CPT basis
+      {
+        maxCouplingIndex = 12;
+      }
+      for(int j=0; j<maxCouplingIndex; j++)
       {
         coupleNum = j + 1; // this is the coupling number, ranges 1 to 15 (but not 2)
         if (coupleNum != 2) // 2 is not an allowed coupling constant

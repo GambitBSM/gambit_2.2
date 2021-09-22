@@ -163,6 +163,7 @@ namespace Gambit
     {
        using namespace Pipes::NREO_couplings_from_parameters;
        NREO_couplings = NREO_DM_nucleon_couplings(Param); // Constructor takes care of the parameter copying for us
+       NREO_couplings.CPTbasis = 0;
     }
 
     //////////////////////////////////////////////////////////////////////////
