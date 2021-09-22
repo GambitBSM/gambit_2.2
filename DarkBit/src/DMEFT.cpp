@@ -66,14 +66,18 @@ namespace Gambit
       using namespace Pipes::TH_ProcessCatalog_DMEFT;
       using std::vector;
       using std::string;
+
+      // WIMP and conjugate names
+      str chi = Dep::WIMP_properties->name;
+      str chib = Dep::WIMP_properties->conjugate;
       
       // Initialize empty catalog, main annihilation process
       TH_ProcessCatalog catalog;
-      TH_Process process_ann("chi", "chi");
+      TH_Process process_ann(chi, chib);
       
       // Explicitly state that Dirac DM is not self-conjugate to add extra 
       // factors of 1/2 where necessary
-      process_ann.isSelfConj = false;
+      process_ann.isSelfConj = Dep::WIMP_properties->sc;
       
       // Import particle masses 
       
@@ -134,7 +138,8 @@ namespace Gambit
       
       // DMEFT-specific masses
       double mchi = spec.get(Par::Pole_Mass, "chi");
-      addParticle("chi", mchi, 1);
+      addParticle(chi, mchi, 1);
+      addParticle(chib, mchi, 1);
       addParticle("h0_1", spec.get(Par::Pole_Mass, "h0_1"), 0);
       
       // Get rid of convenience macros
@@ -197,7 +202,7 @@ namespace Gambit
     
     void DarkMatter_ID_DMEFT(std::string& result){ result = "chi"; }
 
-    void DarkMatterConj_ID_DMEFT(std::string& result){ result = "chi"; }
+    void DarkMatterConj_ID_DMEFT(std::string& result){ result = "chi~"; }
 
     /// Relativistic Wilson Coefficients for direct detection
     /// DMEFT basis is the same as that used in DirectDM

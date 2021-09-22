@@ -479,6 +479,7 @@ START_MODULE
 
     #define FUNCTION TH_ProcessCatalog_DMEFT
       START_FUNCTION(TH_ProcessCatalog)
+      DEPENDENCY(WIMP_properties, WIMPprops)
       DEPENDENCY(decay_rates, DecayTable)
       DEPENDENCY(DMEFT_spectrum, Spectrum)
       BACKEND_REQ(CH_Sigma_V, (), double, (str&, std::vector<str>&, std::vector<str>&, double&, const DecayTable&))

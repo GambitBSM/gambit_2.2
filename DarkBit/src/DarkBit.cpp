@@ -67,8 +67,8 @@ namespace Gambit
       props.name = *Dep::DarkMatter_ID;
       props.spinx2 = Models::ParticleDB().get_spinx2(props.name);
       props.sc = not Models::ParticleDB().has_antiparticle(props.name);
-      props.conjugate = props.sc ? props.name : Models::ParticleDB().get_antiparticle(props.name);
-      if(props.conjugate != *Dep::DarkMatterConj_ID)
+      props.conjugate = props.sc ? props.name : *Dep::DarkMatterConj_ID;
+      if(props.conjugate != Models::ParticleDB().get_antiparticle(props.name))
       {
         DarkBit_error().raise(LOCAL_INFO, "WIMP conjugate name does not match the particle database, please change it.");
       }
