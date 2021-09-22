@@ -18,10 +18,10 @@
 ///  \date 2019 June
 ///
 ///  \author Patrick Stoecker
-///          (stoecker@physik.rwth-aachen.de)
+///          (patrick.stoecker@kit.edu)
 ///  \date 2019 July
 ///  \date 2020 Nov
-///  \date 2021 Jan, Mar
+///  \date 2021 Jan, Mar, Sep
 ///
 ///  *********************************************
 
