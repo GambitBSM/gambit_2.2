@@ -437,8 +437,8 @@ namespace Gambit
           // Include final states that are open for T~m/20
           if ( WIMP_mass*2 > mtot_final*0.5 )
           {
-            double A = annihilationProps->A(channel[i]);
-            double B = annihilationProps->B(channel[i]);
+            double A = annihilationProps.A(channel[i]);
+            double B = annihilationProps.B(channel[i]);
             daFunk::Funk kinematicFunction = daFunk::funcM(wimpDM,
                 &WIMP_EFT_DM::sv, channel[i], WIMP_mass, A, B, daFunk::var("v"));
             TH_Channel new_channel(
