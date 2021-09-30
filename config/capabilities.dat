@@ -5030,8 +5030,8 @@ classy_2_9_3_init: |
 classy_2_9_4_init: |
   Initialise CLASS 2.9.4 run through the classy python wrapper.
 
-classy_3_0_2_init: |
-  Initialise CLASS 3.0.2 run through the classy python wrapper.
+classy_3_1_0_init: |
+  Initialise CLASS 3.1.0 run through the classy python wrapper.
 
 classy_exo_2_7_2_init: |
   Initialise ExoCLASS 2.7.2 run through the classy python wrapper.

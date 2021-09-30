@@ -1,8 +1,8 @@
 diff --git a/explanatory.ini b/explanatory.ini
-index e05444d4..79a3ac5d 100644
+index 26138413..8bc31b30 100644
 --- a/explanatory.ini
 +++ b/explanatory.ini
-@@ -583,7 +583,7 @@ scf_shooting_parameter =
+@@ -594,7 +594,7 @@ scf_shooting_parameter =
  
  # 1.a) In order to model energy injection from DM annihilation, specify a
  #      parameter 'annihilation_efficiency' corresponding to
@@ -248,7 +248,7 @@ index 788d9385..770fcc96 100644
    return _SUCCESS_;
  }
 diff --git a/external/heating/injection.h b/external/heating/injection.h
-index 6202ee8f..2d0e4935 100644
+index 769c31f1..f82f8a35 100644
 --- a/external/heating/injection.h
 +++ b/external/heating/injection.h
 @@ -7,7 +7,7 @@
@@ -351,7 +351,7 @@ index b61a20e9..748ad4bb 100644
          return self.ba.Neff
  
 diff --git a/source/input.c b/source/input.c
-index 96512282..06bc0abf 100644
+index efb67a17..a841093d 100644
 --- a/source/input.c
 +++ b/source/input.c
 @@ -25,6 +25,8 @@
@@ -363,7 +363,7 @@ index 96512282..06bc0abf 100644
  /**
   * Initialize input parameters from external file.
   *
-@@ -2996,7 +2998,8 @@ int input_read_parameters_injection(struct file_content * pfc,
+@@ -3030,7 +3032,8 @@ int input_read_parameters_injection(struct file_content * pfc,
  
    /** - Define local variables */
    struct injection* pin = &(pth->in);
@@ -373,7 +373,7 @@ index 96512282..06bc0abf 100644
    char string1[_ARGUMENT_LENGTH_MAX_];
    string1[0]='\0';
  
-@@ -3014,7 +3017,7 @@ int input_read_parameters_injection(struct file_content * pfc,
+@@ -3048,7 +3051,7 @@ int input_read_parameters_injection(struct file_content * pfc,
               "annihilation efficiency cannot be negative");
    class_test(pin->DM_annihilation_efficiency>1.e-4,
               errmsg,
@@ -382,7 +382,7 @@ index 96512282..06bc0abf 100644
    class_test(pin->DM_annihilation_mass<0. || pin->DM_annihilation_cross_section <0,
               errmsg,
               "Both mass and cross section for your dark matter particle must be positive.");
-@@ -3030,7 +3033,7 @@ int input_read_parameters_injection(struct file_content * pfc,
+@@ -3064,7 +3067,7 @@ int input_read_parameters_injection(struct file_content * pfc,
  
    /* Complete set of parameters */
    if(pin->DM_annihilation_mass > 0 && pin->DM_annihilation_cross_section > 0.){
@@ -391,7 +391,7 @@ index 96512282..06bc0abf 100644
    }
  
    if(pin->DM_annihilation_efficiency > 0){
-@@ -3079,10 +3082,27 @@ int input_read_parameters_injection(struct file_content * pfc,
+@@ -3113,10 +3116,27 @@ int input_read_parameters_injection(struct file_content * pfc,
               errmsg,
               "You need to enter a positive fraction of decaying DM. Please adjust your param file.");
  
@@ -422,7 +422,7 @@ index 96512282..06bc0abf 100644
  
    /** 3) PBH evaporation */
    /** 3.a) Fraction */
-@@ -3198,12 +3218,121 @@ int input_read_parameters_injection(struct file_content * pfc,
+@@ -3232,12 +3252,121 @@ int input_read_parameters_injection(struct file_content * pfc,
        /* Complete set of parameters */
        strcpy(pin->f_eff_file, string1);
      }
@@ -545,7 +545,7 @@ index 96512282..06bc0abf 100644
    /** 6) deposition function */
    /* Read */
    class_call(parser_read_string(pfc,"chi_type",&string1,&flag1,errmsg),
-@@ -3685,9 +3814,12 @@ int input_read_parameters_primordial(struct file_content * pfc,
+@@ -3719,9 +3848,12 @@ int input_read_parameters_primordial(struct file_content * pfc,
      else if (strcmp(string1,"external_Pk") == 0){
        ppm->primordial_spec_type = external_Pk;
      }
@@ -559,7 +559,7 @@ index 96512282..06bc0abf 100644
      }
    }
  
-@@ -4195,6 +4327,57 @@ int input_read_parameters_primordial(struct file_content * pfc,
+@@ -4229,6 +4361,57 @@ int input_read_parameters_primordial(struct file_content * pfc,
      class_read_double("custom10",ppm->custom10);
    }
  
@@ -617,7 +617,7 @@ index 96512282..06bc0abf 100644
    /* Final tests */
    if ((ppm->primordial_spec_type == inflation_V) || (ppm->primordial_spec_type == inflation_H) || (ppm->primordial_spec_type == inflation_V_end)) {
      class_test(ppt->has_scalars == _FALSE_,
-@@ -5463,6 +5646,16 @@ int input_default_params(struct background *pba,
+@@ -5504,6 +5687,16 @@ int input_default_params(struct background *pba,
    pin->f_eff = 1.;
    sprintf(pin->f_eff_file,"/external/heating/example_f_eff_file.dat");
  
@@ -634,7 +634,7 @@ index 96512282..06bc0abf 100644
    /** 6) Deposition function */
    pin->chi_type = chi_CK;
    /** 6.1) External file */
-@@ -5584,6 +5777,11 @@ int input_default_params(struct background *pba,
+@@ -5625,6 +5818,11 @@ int input_default_params(struct background *pba,
    ppm->custom9=0.;
    ppm->custom10=0.;
  
@@ -761,10 +761,10 @@ index 2196e2f6..9f66f85a 100644
      dlnk = log(10.)/ppr->k_per_decade_primordial;
  
 diff --git a/source/thermodynamics.c b/source/thermodynamics.c
-index 5aafb3b5..310ccb3d 100644
+index d6f71c4d..723e89c1 100644
 --- a/source/thermodynamics.c
 +++ b/source/thermodynamics.c
-@@ -2550,6 +2550,7 @@ int thermodynamics_derivs(
+@@ -2596,6 +2596,7 @@ int thermodynamics_derivs(
      dy[index_ti]=-dy[index_ti];
    }
  
@@ -772,7 +772,7 @@ index 5aafb3b5..310ccb3d 100644
    return _SUCCESS_;
  }
  
-@@ -2800,7 +2801,7 @@ int thermodynamics_reionization_get_tau(
+@@ -2858,7 +2859,7 @@ int thermodynamics_reionization_get_tau(
               pth->error_message,
               "reionization start = %e > largest redshift in thermodynamics table",pth->z_table[index_reio_start]);
  
