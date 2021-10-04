@@ -189,9 +189,6 @@ namespace Gambit
       call populate Array with the value found in the C++ array and the position in the C++ array
       */
 
-      // FK: IMPORTANT! I made a temporary fix below to ensure that GAMBIT compiles, but the result is maybe not what is desired
-      // There needs to be a check of which basis is being used for the DD_nonrel_WCs to ensure that they are interpreted correctly
-      // See DDCalc interface for details / examples
       int coupleNum;
       int maxCouplingIndex;
       if (Dep::DD_nonrel_WCs->CPTbasis == 0) // if we are using the NREffectiveTheory basis
