@@ -32,6 +32,10 @@
 ///          (l.a.dal@fys.uio.no)
 ///  \date 2015 Jan
 ///
+///  \author Tomas Gonzalo
+///          (gonzalo@physik.rwth-aachen.de)
+///  \date 2021 Sep
+///
 ///  *********************************************
 
 #ifndef __functor_definitions_hpp__
@@ -205,7 +209,7 @@ namespace Gambit
                                                                              str origin_safe_version,
                                                                              str citation_key,
                                                                              Models::ModelFunctorClaw &claw)
-    : functor (func_name, func_capability, result_type, origin_name, claw), //can't put citation_key here
+    : functor (func_name, func_capability, result_type, origin_name, claw),
       myFunction (inputFunction),
       myLogTag(-1),
       inUse(false)
@@ -213,7 +217,6 @@ namespace Gambit
       myVersion = origin_version;
       mySafeVersion = origin_safe_version;
       myCitationKey = citation_key;
-      //std::cout << "citation_key va: " << citation_key << endl;
 
       // Determine LogTag number
       myLogTag = Logging::str2tag(myOrigin);
