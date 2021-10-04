@@ -19,6 +19,7 @@
 #define BACKENDLANG CC
 #define VERSION 3.6.27
 #define SAFE_VERSION 3_6_27
+#define REFERENCE Pukhov:2004ca,Belyaev:2012q
 
 LOAD_LIBRARY
 

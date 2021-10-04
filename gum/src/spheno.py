@@ -3235,6 +3235,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "#define VERSION {1}\n"
             "#define SARAH_VERSION {2}\n"
             "#define SAFE_VERSION {3}\n"
+            "#define REFERENCE Porod:2003um,Porod:2011nf"
             "\n"
             "// Begin\n"
             "LOAD_LIBRARY\n"

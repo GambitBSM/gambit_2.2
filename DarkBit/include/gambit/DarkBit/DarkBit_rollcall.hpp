@@ -90,6 +90,7 @@
 #include "gambit/DarkBit/DarkBit_types.hpp"
 
 #define MODULE DarkBit
+#define REFERENCE GAMBITDarkMatterWorkgroup:2017fax
 START_MODULE
 
   /// Make sure LocalHalo model is initialized in DarkSUSY
@@ -1699,5 +1700,6 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+#undef REFERENCE
 #undef MODULE
 #endif /* defined(__DarkBit_rollcall_hpp__) */
