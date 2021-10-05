@@ -234,7 +234,7 @@
   DEFINEPARS(sd_alpha_sync,      sd_omega_sync, sd_A_sync)
   DEFINEPARS(sd_T_e,             sd_EM)
   DEFINEPARS(sd_nu_p_spin,       sd_A_spin,     sd_A_CO)
-  DEFINEPARS(sd_y_reio_nuisance, sd_mu_nuisance)
+  DEFINEPARS(sd_y_reio_nuisance)
 #undef MODEL
 
 /// add new model holding cosmological nuisance parameters
