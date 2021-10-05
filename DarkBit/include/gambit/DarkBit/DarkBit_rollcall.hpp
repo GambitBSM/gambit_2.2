@@ -98,6 +98,7 @@
 #include "gambit/DarkBit/DarkBit_types.hpp"
 
 #define MODULE DarkBit
+#define REFERENCE GAMBITDarkMatterWorkgroup:2017fax
 START_MODULE
 
   // DarkSUSY-specific initialisation functions ========================
@@ -2164,4 +2165,5 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+#undef REFERENCE
 #undef MODULE

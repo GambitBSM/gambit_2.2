@@ -46,6 +46,7 @@
 
 
 #define MODULE PrecisionBit
+#define REFERENCE GAMBITModelsWorkgroup:2017ilg
 START_MODULE
 
 
@@ -283,7 +284,7 @@ START_MODULE
 
 
 
-
+#undef REFERENCE
 #undef MODULE
 
 

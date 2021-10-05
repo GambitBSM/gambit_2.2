@@ -20,6 +20,7 @@
 #define BACKENDLANG FORTRAN
 #define VERSION 2.1
 #define SAFE_VERSION 2_1
+#define REFERENCE GAMBIT:2018eea,Kozar:2021iur
 
 // Load the library
 LOAD_LIBRARY

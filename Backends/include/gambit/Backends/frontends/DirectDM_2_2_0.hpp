@@ -23,6 +23,7 @@
 #define BACKENDLANG Python
 #define VERSION 2.2.0
 #define SAFE_VERSION 2_2_0
+#define REFERENCE Bishara:2017nnn,Brod:2017bsw
 
 LOAD_LIBRARY
 
