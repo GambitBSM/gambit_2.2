@@ -65,6 +65,7 @@
 
 
 #define MODULE CosmoBit
+#define REFERENCE GAMBITCosmologyWorkgroup:2020htv
 START_MODULE
 
   /// fraction of the abundance of the dark matter candidate in question
@@ -1086,5 +1087,6 @@ START_MODULE
   #undef CAPABILITY
 
 
+#undef REFERENCE
 #undef MODULE
 #endif /* defined __CosmoBit_rollcall_hpp__ */

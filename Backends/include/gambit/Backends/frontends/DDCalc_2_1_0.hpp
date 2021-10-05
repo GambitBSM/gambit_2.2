@@ -39,6 +39,7 @@
 #define BACKENDLANG Fortran
 #define VERSION 2.1.0
 #define SAFE_VERSION 2_1_0
+#define REFERENCE GAMBIT:2017fax,GAMBIT:2018eea
 
 // Load it
 LOAD_LIBRARY
