@@ -29,6 +29,7 @@
 #define BACKENDLANG Python
 #define VERSION 3.1.0
 #define SAFE_VERSION 3_1_0
+#define REFERENCE Blas:2011rf,Lucca:2019rxf
 
 LOAD_LIBRARY
 
