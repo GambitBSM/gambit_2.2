@@ -9,7 +9,7 @@
 
 sd_delta_T:
   prior_type: flat
-  range: [-1e5,1e5]
+  range: [-1e-5,1e-5]
 sd_T_D:
   prior_type: flat
   range: [15.0,25.0]

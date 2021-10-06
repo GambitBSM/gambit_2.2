@@ -41,23 +41,23 @@ Parameters:
       prior_type: flat
       range: [0.9,1.1]
 
-  cosmo_nuisance_SpectralDistortions: !import include/cosmo_nuisance_SpectralDistortions_flat.yaml
-  #cosmo_nuisance_SpectralDistortions: !import include/cosmo_nuisance_SpectralDistortions_fid.yaml
+  #cosmo_nuisance_SpectralDistortions: !import include/cosmo_nuisance_SpectralDistortions_flat.yaml
+  cosmo_nuisance_SpectralDistortions: !import include/cosmo_nuisance_SpectralDistortions_fid.yaml
 
 Priors:
 
 Printer:
-  printer: cout
+  # printer: cout
 
-  # printer: hdf5
-  # options:
-  #   output_file: "CosmoBit_Spectral.hdf5"
-  #   group: "/data"
-  #   delete_file_on_restart: false
-  #   buffer_length: 100
+  printer: hdf5
+  options:
+    output_file: "CosmoBit_Spectral_decayDM_firas_fid.hdf5"
+    group: "/data"
+    delete_file_on_restart: false
+    buffer_length: 100
 
 Scanner:
-  use_scanner: random
+  use_scanner: multinest
 
   scanners:
     multinest:
@@ -87,8 +87,8 @@ ObsLikes:
     sub_capabilities:
       - bao_boss_dr12
       - bao_smallz_2014
-      #- firas
-      - pixie
+      - firas
+      #- pixie
 
   - purpose:      Observable
     capability:   MP_LogLikes
@@ -148,7 +148,7 @@ KeyValues:
 
   debug: true
 
-  default_output_path: "runs/CosmoBit_Spectral"
+  default_output_path: "runs_SpectralDistortions/CosmoBit_Spectral_decayDM_firas_fid"
 
   likelihood:
     model_invalid_for_lnlike_below: -1e30
