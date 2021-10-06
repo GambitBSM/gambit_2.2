@@ -146,7 +146,7 @@ Logger:
 
 KeyValues:
 
-  debug: true
+  debug: false
 
   default_output_path: "runs_SpectralDistortions/CosmoBit_Spectral_decayDM_firas_fid"
 
