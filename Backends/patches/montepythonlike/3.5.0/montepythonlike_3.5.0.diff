@@ -1,3 +1,180 @@
+diff --git a/data/FIRAS_nu_delta_I.dat b/data/FIRAS_nu_delta_I.dat
+new file mode 100644
+index 0000000..064bdca
+--- /dev/null
++++ b/data/FIRAS_nu_delta_I.dat
+@@ -0,0 +1,49 @@
++# This files contains the 
++#  1) the frequency array in GHz,
++#  2) the uncertainty of the monopole spectrum in 10^-26 W/(m^2 Hz sr) and
++# for COBE/FIRAS as given in Tables 3 and 4 of Fixsen et al. 1996.
++# The first line contains the number of lines and the number of columns.
++43 2
++68.05    14.0e3
++81.54    19.0e3
++95.33    25.0e3
++108.82   23.0e3
++122.32   22.0e3
++136.11   21.0e3
++149.60   18.0e3
++163.39   18.0e3
++176.88   16.0e3
++190.37   14.0e3
++204.16   13.0e3
++217.65   12.0e3
++231.14   11.0e3
++244.93   10.0e3
++258.42   11.0e3
++272.21   12.0e3
++285.70   14.0e3
++299.19   16.0e3
++312.98   18.0e3
++326.47   22.0e3
++339.96   22.0e3
++353.76   23.0e3
++367.25   23.0e3
++381.04   23.0e3
++394.53   22.0e3
++408.02   21.0e3
++421.81   20.0e3
++435.30   19.0e3
++448.79   19.0e3
++462.58   19.0e3
++476.07   21.0e3
++489.86   23.0e3
++503.35   26.0e3
++516.84   28.0e3
++530.63   30.0e3
++544.12   32.0e3
++557.91   33.0e3
++571.40   35.0e3
++584.90   41.0e3
++598.69   55.0e3
++612.18   88.0e3
++625.67   155.0e3
++639.46   282.0e3
+diff --git a/data/firas_fiducial.dat b/data/firas_fiducial.dat
+new file mode 100644
+index 0000000..1d951dd
+--- /dev/null
++++ b/data/firas_fiducial.dat
+@@ -0,0 +1,44 @@
++# Fiducial parameters, n_s = 0.9665, A_s = 2.105e-09, sd_delta_T = 0, sd_T_D = 21, sd_beta_D = 1.53, sd_A_D = 1.49e+06, sd_T_CIB = 18.8, sd_beta_CIB = 0.86, sd_A_CIB = 410000, sd_alpha_sync = 0.82, sd_omega_sync = 0.2, sd_A_sync = 288, sd_T_e = 7000, sd_EM = 15, sd_nu_p_spin = 19, sd_A_spin = 1485.33, sd_A_CO = 1, sd_y_reio_nuisance = 1.77e-06, y_sd = 0, mu_sd = 0
++    68  18851.243
++    81  26705.273
++    95  36980.925
++   108  40645.696
++   122  46971.096
++   136  55350.546
++   149  63541.612
++   163  77288.436
++   176  91148.785
++   190  107655.62
++   204  128492.12
++   217  151872.52
++   231  178403.17
++   244  208932.76
++   258  244225.14
++   272  283934.42
++   285  327469.14
++   299  374739.49
++   312  426961.15
++   326  484039.6
++   339  541097.3
++   353  604652.84
++   367  669959.7
++   381  741019.03
++   394  813782.37
++   408  890782.19
++   421  973920.59
++   435  1059551.5
++   448  1150462.9
++   462  1247816
++   476  1349361
++   489  1457501.8
++   503  1568588.1
++   516  1682842.1
++   530  1803850
++   544  1926376.7
++   557  2054716.2
++   571  2185255.9
++   584  2323743.7
++   598  2476969.2
++   612  2649879.3
++   625  2860365.4
++   639  3137632.7
+diff --git a/data/pixie_fiducial.dat b/data/pixie_fiducial.dat
+new file mode 100644
+index 0000000..1fb6116
+--- /dev/null
++++ b/data/pixie_fiducial.dat
+@@ -0,0 +1,66 @@
++# Fiducial parameters, n_s = 0.9665, A_s = 2.105e-09, sd_delta_T = 0, sd_T_D = 21, sd_beta_D = 1.53, sd_A_D = 1.49e+06, sd_T_CIB = 18.8, sd_beta_CIB = 0.86, sd_A_CIB = 410000, sd_alpha_sync = 0.82, sd_omega_sync = 0.2, sd_A_sync = 288, sd_T_e = 7000, sd_EM = 15, sd_nu_p_spin = 19, sd_A_spin = 1485.33, sd_A_CO = 1, sd_y_reio_nuisance = 1.77e-06, y_sd = 0, mu_sd = 0
++    30  2889.4487
++    45  2521.1593
++    60  3697.1264
++    75  6174.8439
++    90  10155.002
++   105  15882.505
++   120  23601.186
++   135  33521.169
++   150  45910.777
++   165  61055.409
++   180  79189.287
++   195  100654.23
++   210  125669.89
++   225  154476.1
++   240  187258.71
++   255  224208.09
++   270  265485.78
++   285  311227.3
++   300  361582.8
++   315  416663.4
++   330  476587.52
++   345  541453.58
++   360  611352.33
++   375  686361.79
++   390  766546.17
++   405  851955.83
++   420  942627.42
++   435  1038583.3
++   450  1139831.3
++   465  1246365.3
++   480  1358164.8
++   495  1475195.9
++   510  1597411.5
++   525  1724751.7
++   540  1857144.2
++   555  1994505.5
++   570  2136740.6
++   585  2283744.3
++   600  2435401.2
++   615  2591586.9
++   630  2752167.9
++   645  2917003
++   660  3085942.9
++   675  3258831.6
++   690  3435506.6
++   705  3615799.3
++   720  3799535.8
++   735  3986537.3
++   750  4176620.5
++   765  4369598.4
++   780  4565280.3
++   795  4763472.8
++   810  4963979.9
++   825  5166603.7
++   840  5371144.4
++   855  5577401.3
++   870  5785172.8
++   885  5994256.9
++   900  6204451.7
++   915  6415555.5
++   930  6627367.5
++   945  6839687.8
++   960  7052318
++   975  7265061.4
++   990  7477723.2
 diff --git a/data/sdss_lrgDR7_fiducialmodel.dat b/data/sdss_lrgDR7_fiducialmodel.dat
 new file mode 100644
 index 0000000..2fa69fe
@@ -883,6 +1060,19 @@ index 9df3412..0b0b140 100644
  
          chi2 = 0.
  
+diff --git a/montepython/likelihoods/firas/firas.data b/montepython/likelihoods/firas/firas.data
+index fca6817..132ae3c 100644
+--- a/montepython/likelihoods/firas/firas.data
++++ b/montepython/likelihoods/firas/firas.data
+@@ -9,7 +9,7 @@ firas.fiducial_file = 'firas_fiducial.dat'
+ 
+ # Do we import noise from file?
+ firas.noise_from_file = True
+-firas.noise_file_directory = os.path.join(data.path['cosmo'], 'external/distortions/')
++firas.noise_file_directory = data.path['data']
+ firas.noise_file_name = 'FIRAS_nu_delta_I.dat'
+ 
+ # Detector name, for CLASS to calculate/read PCA
 diff --git a/montepython/likelihoods/ska1_IM_band1/__init__.py b/montepython/likelihoods/ska1_IM_band1/__init__.py
 index af3c2b6..26b3c5d 100644
 --- a/montepython/likelihoods/ska1_IM_band1/__init__.py

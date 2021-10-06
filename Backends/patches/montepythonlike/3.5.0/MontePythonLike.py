@@ -1727,8 +1727,6 @@ class Likelihood_sd(Likelihood):
             if not hasattr(self, 'detector_bin_number'):
                 self.detector_bin_number = int(round((self.detector_nu_max-self.detector_nu_min)/float(self.detector_nu_delta)))
 
-            print('Computing noise for %d bins', self.detector_bin_number)
-
             self.noise_Ic = np.zeros(self.detector_bin_number, 'float64')
             self.nu_range = np.zeros(self.detector_bin_number, 'float64')
 
@@ -1993,6 +1991,10 @@ class Likelihood_sd(Likelihood):
 
         # Write fiducial model SD, unless it already exists
         if self.fid_values_exist is False:
+            # (PSt) throw error as creation of fiducial file does not work with GAMBIT.
+            # The respective fiducial files for pixie and firas are anyway included in our patch
+            self.raise_fiducial_model_err()
+            '''
             # Store the values now
             fid_file = open(os.path.join(
                 self.data_directory, self.fiducial_file), 'w')
@@ -2010,6 +2012,7 @@ class Likelihood_sd(Likelihood):
             print('\n')
             warnings.warn("Writing fiducial model in %s, for %s likelihood\n" % (os.path.join(self.data_directory,self.fiducial_file), self.name))
             return 1j
+            '''
 
         # Compute likelihood
         chi2 = 0.
