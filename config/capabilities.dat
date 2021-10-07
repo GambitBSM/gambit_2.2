@@ -4811,16 +4811,6 @@ DarkAges_1_2_0_init: |
 get_energy_injection_efficiency_table: |
    Get the energy injection efficiency table from the DarkAges frontend
 
-f_eff: |
-   Effective energy injection effeciency (constant used for on-the-spot approximation)
-
-p_ann: |
-   Annihilation rate (p_ann = f_eff * f^2 * <sv>/m)
-   Unit: cm^3 s^-1 GeV^-1
-
-lnL_p_ann: |
-   Profiled likelihood on p_ann
-
 #----------------------------
 #  CosmoBit Models
 #----------------------------
@@ -5227,6 +5217,9 @@ f_eff: |
 p_ann: |
    Annihilation rate (p_ann = f_eff * f^2 * <sv>/m)
    Unit: cm^3 s^-1 GeV^-1
+
+lnL_p_ann: |
+   Profiled likelihood on p_ann
 
 # -----------
 # AlterBBN
