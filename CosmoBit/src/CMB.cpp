@@ -49,6 +49,7 @@
 
 #include <gsl/gsl_spline.h>
 
+#include "gambit/Utils/statistics.hpp"
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/Utils/ascii_table_reader.hpp"
 
@@ -236,7 +237,8 @@ namespace Gambit
       // Read in the table with the weighting function
       static ASCIItableReader W_table;
       static bool first = true;
-      if (first) {
+      if (first)
+      {
         W_table = std::move( ASCIItableReader(GAMBIT_DIR "/CosmoBit/data/EnergyInjection/f_eff_weighting_function.txt") );
         W_table.setcolnames({"z+1","W(z)"});
         first = false;
@@ -250,23 +252,6 @@ namespace Gambit
       // Retrieve the Energy_injection_efficiency_table.
       static DarkAges::Energy_injection_efficiency_table fz_cached;
       DarkAges::Energy_injection_efficiency_table fz = *Dep::energy_injection_efficiency;
-
-      // For this function f_eff_mode has to be true.
-      // Raise an error if this is not the case.
-      bool f_eff_mode = fz.f_eff_mode;
-      if (!f_eff_mode)
-      {
-        std::ostringstream ss;
-        ss << "Sorry, you cannot use the function \'CosmoBit::f_eff_weighted\' when the energy injection efficiency table "
-           << "does not contain f_eff(z) i.e. the attribute \'f_eff_mode\' is set to \'false\'.\n\n"
-           << "Please fix this in the rules section by choosing the correct operating mode for the backend "
-           << "to calculate the energy injection efficiency table.\n"
-           << "An appropriate rule for the DarkAges backend would look like this:\n\n"
-           << "  - capability: DarkAges_1_2_0_init\n"
-           << "    options:\n"
-           << "      f_eff_mode: true\n";
-        CosmoBit_error().raise(LOCAL_INFO, ss.str());
-      }
 
       const std::vector<double>& z = fz.redshift;
       const std::vector<double>& f_eff = fz.f_eff;
@@ -340,23 +325,6 @@ namespace Gambit
       static DarkAges::Energy_injection_efficiency_table fz_cached;
       DarkAges::Energy_injection_efficiency_table fz = *Dep::energy_injection_efficiency;
 
-      // For this function f_eff_mode has to be true.
-      // Raise an error if this is not the case.
-      bool f_eff_mode = fz.f_eff_mode;
-      if (!f_eff_mode)
-      {
-        std::ostringstream ss;
-        ss << "Sorry, you cannot use the function \'CosmoBit::f_eff_at_z\' when the energy injection efficiency table "
-           << "does not contain f_eff(z) i.e. the attribute \'f_eff_mode\' is set to \'false\'.\n\n"
-           << "Please fix this in the rules section by choosing the correct operating mode for the backend "
-           << "to calculate the energy injection efficiency table.\n"
-           << "An appropriate rule for the DarkAges backend would look like this:\n\n"
-           << "  - capability: DarkAges_1_2_0_init\n"
-           << "    options:\n"
-           << "      f_eff_mode: true\n";
-        CosmoBit_error().raise(LOCAL_INFO, ss.str());
-      }
-
       if (fz_cached != fz)
       {
         const std::vector<double>& z = fz.redshift;
@@ -395,6 +363,23 @@ namespace Gambit
       double f_eff = *Dep::f_eff;
 
       result = f_eff * f2_sv / m;
+    }
+
+    // Profiled likelihood on p_ann.
+    // Used Datasets:
+    //  - P18 highl TT+TE+EE (lite)
+    //  - P18 lowl TT+EE
+    //  - P18 lensing
+    //  - BAO ("smallz 2014" + BOSS DR12)
+    void lnL_p_ann_P18_TTTEEE_lowE_lensing_BAO(double& result)
+    {
+      using namespace Pipes::lnL_p_ann_P18_TTTEEE_lowE_lensing_BAO;
+
+      const double p_ann28 = (*Dep::p_ann)*1e28;
+
+      // The likelihood is given by a Gaussian in p_ann28
+      // centered around -0.48 with a width of 2.48/sqrt(2)
+      result = Stats::gaussian_loglikelihood(p_ann28, -0.48, 0.0, 2.48/sqrt(2.), true);
     }
 
     /// The energy injection spectrum from the AnnihilatingDM model hierarchy.
