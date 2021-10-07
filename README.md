@@ -70,7 +70,7 @@ COMPULSORY:
  - Python 2.7 or greater (Python 3 is supported)
  - Python modules: yaml, future, os, re, datetime, sys, getopt, shutil and itertools.
  - git
- - Boost 1.41 or greater
+ - Boost 1.48 or greater
  - GNU Scientific Library (GSL) 2.1 or greater
  - Eigen 3.1.0 or greater
  - LAPACK
