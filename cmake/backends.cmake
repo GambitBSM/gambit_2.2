@@ -105,7 +105,7 @@ ExternalProject_Add(${name}
   INSTALL_COMMAND ""
 )
 set(rmstring "${CMAKE_BINARY_DIR}/${name}-prefix/src/${name}-stamp/${name}")
-add_custom_target(nuke-castxml COMMAND ${CMAKE_COMMAND} -E remove -f ${rmstring}-download ${rmstring}-download-failed ${rmstring}-mkdir ${rmstring}-patch ${rmstring}-update ${rmstring}-gitclone-lastrun.txt || true
+add_custom_target(nuke-castxml COMMAND ${CMAKE_COMMAND} -E remove -f ${rmstring}-download ${rmstring}-download-failed ${rmstring}-mkdir ${rmstring}-patch ${rmstring}-update || true
                                COMMAND ${CMAKE_COMMAND} -E remove_directory ${dir} || true)
 add_dependencies(nuke-all nuke-castxml)
 set_target_properties(castxml PROPERTIES EXCLUDE_FROM_ALL 1)
