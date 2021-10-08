@@ -88,6 +88,29 @@
 #************************************************
 
 
+# Target for downloading castxml (required by BOSS)
+set(name "castxml")
+set(dir "${CMAKE_SOURCE_DIR}/Backends/scripts/BOSS/castxml")
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set(castxml_dl "https://data.kitware.com/api/v1/file/57b5de9f8d777f10f2696378/download")
+  set(castxml_dl_filename "castxml-macosx.tar.gz")
+else()
+  set(castxml_dl "https://data.kitware.com/api/v1/file/57b5dea08d777f10f2696379/download")
+  set(castxml_dl_filename "castxml-linux.tar.gz")
+endif()
+ExternalProject_Add(${name}
+  DOWNLOAD_COMMAND ${PROJECT_SOURCE_DIR}/cmake/scripts/download_castxml_binaries.sh ${dir} ${CMAKE_COMMAND} ${CMAKE_DOWNLOAD_FLAGS} ${castxml_dl} ${castxml_dl_filename}
+  CONFIGURE_COMMAND ""
+  BUILD_COMMAND ""
+  INSTALL_COMMAND ""
+)
+set(rmstring "${CMAKE_BINARY_DIR}/${name}-prefix/src/${name}-stamp/${name}")
+add_custom_target(nuke-castxml COMMAND ${CMAKE_COMMAND} -E remove -f ${rmstring}-download ${rmstring}-download-failed ${rmstring}-mkdir ${rmstring}-patch ${rmstring}-update ${rmstring}-gitclone-lastrun.txt || true
+                               COMMAND ${CMAKE_COMMAND} -E remove_directory ${dir} || true)
+add_dependencies(nuke-all nuke-castxml)
+set_target_properties(castxml PROPERTIES EXCLUDE_FROM_ALL 1)
+
+
 # Compiler flags for AlterBBN
 if("${CMAKE_C_COMPILER_ID}" STREQUAL "Intel")
   set(AlterBBN_C_FLAGS "${BACKEND_C99_FLAGS} -fast")
@@ -829,6 +852,7 @@ endif()
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
+    DEPENDS castxml
     DEPENDS ${pythia_depends_on}
     DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
     SOURCE_DIR ${dir}
@@ -1292,6 +1316,7 @@ endif()
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
+    DEPENDS castxml
     DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
@@ -1322,6 +1347,7 @@ endif()
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
+    DEPENDS castxml
     DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
@@ -1432,6 +1458,7 @@ set(BOSSregex "s#cpp)#cpp   source/BOSS_factory_VevaciousPlusPlus.cpp       sour
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
+          DEPENDS castxml
           DEPENDS ${Minuit_name}_${Minuit_ver}
           DEPENDS phc_${phc_ver}
           DEPENDS hom4ps_${hom4ps_ver}
@@ -2026,6 +2053,7 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} distclean)
   set_as_default_version("backend" ${name} ${ver})
 endif()
+
 
 # Alternative download command for getting unreleased things from the gambit_internal repository.
 # If you don't know what that is, you don't need to tinker with these.
