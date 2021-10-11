@@ -139,6 +139,10 @@ Rules:
     options:
       f_eff_mode: true
 
+  - capability: classy_3_1_0_init
+    options:
+      max_errors: -1
+
 Logger:
   redirection:
     [Default] : "default.log"
