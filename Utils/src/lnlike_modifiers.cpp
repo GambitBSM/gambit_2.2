@@ -10,7 +10,7 @@
 ///   
 ///  \author Anders Kvellestad
 ///          (anders.kvellestad@fys.uio.no)
-///  \date 2021 Feb
+///  \date 2021 Feb, Oct
 ///
 ///  *********************************************
 
@@ -109,7 +109,7 @@ namespace Gambit
       static const double mu_up = lnlike_modifier_options.getValue<double>("mu_up");
       static const double sigma_up = lnlike_modifier_options.getValue<double>("sigma_up");
       static const bool use_delta_lnlike = lnlike_modifier_options.getValueOrDef<bool>(false, "use_delta_lnlike");
-      static const double sigma_dn_sq = sigma_dn * sigma_up;
+      static const double sigma_dn_sq = sigma_dn * sigma_dn;
       static const double sigma_up_sq = sigma_up * sigma_up;
 
       static double currentbest = lnlike;
