@@ -77,8 +77,8 @@
 #include "gambit/cmake/cmake_variables.hpp"
 
 
-#define FLAVBIT_DEBUG
-#define FLAVBIT_DEBUG_LL
+//#define FLAVBIT_DEBUG
+//#define FLAVBIT_DEBUG_LL
 
 namespace YAML
 {
@@ -172,7 +172,21 @@ namespace Gambit
         }
       }
     }
+    /// Translate B->K*mumu observables from theory to LHCb convention
+    void Kstaree_Theory2Experiment_translation(flav_observable_map& prediction)
+    {
+      vector<std::string > names={"AT_Im"};
+      for (unsigned i=0; i < names.size(); i++)
+        {
+          auto search = prediction.find( names[i]);
+          if (search != prediction.end()) {
+            prediction[names[i]]=(-1.)*prediction[names[i]];
+          }
+        }
+    }
+  
 
+    
     /// Translate B->K*mumu covariances from theory to LHCb convention
     void Kstarmumu_Theory2Experiment_translation(flav_covariance_map& prediction)
     {
@@ -205,7 +219,42 @@ namespace Gambit
         }
       }
     }
+    /// Translate B->K*mumu covariances from theory to LHCb convention
+    void Kstaree_Theory2Experiment_translation(flav_covariance_map& prediction)
+    {
+      vector<std::string > names={"AT_Im"};
+      vector<std::string > names_exist;
 
+      for (unsigned i=0; i < names.size(); i++)
+        {
+          auto search_i = prediction.find(names[i]);
+          if (search_i != prediction.end()) names_exist.push_back(names[i]);
+        }
+      //changing the rows:
+      for (unsigned i=0; i <  names_exist.size(); i++)
+        {
+          string name1=names_exist[i];
+          std::map<const std::string, double> row=prediction[name1];
+          for (std::map<const std::string, double>::iterator it=row.begin(); it !=row.end(); it++)
+            {
+              prediction[name1][it->first]=(-1.)*prediction[name1][it->first];
+            }
+        }
+      // changing the columns:
+      for (flav_covariance_map::iterator it=prediction.begin(); it !=prediction.end(); it++)
+        {
+          string name_columns=it->first;
+          for (unsigned i=0; i <  names_exist.size(); i++)
+            {
+              string name1=names_exist[i];
+              prediction[name_columns][name1]=(-1)*prediction[name_columns][name1];
+            }
+        }
+    }
+
+    
+
+    
     /// Find the path to the latest installed version of the HepLike data
     str path_to_latest_heplike_data()
     {
@@ -837,7 +886,7 @@ namespace Gambit
       {
         cout << "Starting SuperIso_prediction" << std::endl;
         cout << "Changing convention. Before:"<<endl;
-        print(result,{"S3", "S4", "S5", "S8", "S9"});
+        print(result,{"S3", "S4", "S5", "S8", "S9", "AT_Im"});
       }
 
       int nObservables = SI_obslist.size();
@@ -879,7 +928,7 @@ namespace Gambit
 
       //Switch the observables to LHCb convention
       Kstarmumu_Theory2Experiment_translation(result.central_values);
-
+      Kstaree_Theory2Experiment_translation(result.central_values); 
       // If we need to compute the covariance, either because we're doing it for every point or we haven't cached the SM value, do it.
       if (not useSMCovariance or not SMCovarianceCached)
       {
@@ -942,7 +991,7 @@ namespace Gambit
 
         //Switch the covariances to LHCb convention
         Kstarmumu_Theory2Experiment_translation(result.covariance);
-
+        Kstaree_Theory2Experiment_translation(result.covariance); 
         // Free memory  // We are not freeing the memory because we made the variable static. Just keeping this for reference on how to clean up the allocated memory in case of non-static caluclation of **corr.
         // for(int iObservable = 0; iObservable <= nNuisance; ++iObservable) {
         //   free(corr[iObservable]);
@@ -961,7 +1010,7 @@ namespace Gambit
            }
         }
         cout << "Changing convention. After:"<<endl;
-        print(result,{"S3", "S4", "S5", "S8", "S9"});
+        print(result,{"S3", "S4", "S5", "S8", "S9", "AT_Im"});
         std::cout << "Finished SuperIso_prediction" << std::endl;
       }
 
