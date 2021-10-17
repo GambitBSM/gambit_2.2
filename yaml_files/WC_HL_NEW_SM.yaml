@@ -135,7 +135,7 @@ ObsLikes:
     capability: B2KstarmumuAng_LogLikelihood_CMS
 
   - purpose:    LogLike
-    capability: B2KstarmumuAng_LogLikelihood_Belle
+    capability: B2KstarellellAng_LogLikelihood_Belle
 
   - purpose:    LogLike
     capability: B2KstarmumuAng_LogLikelihood_LHCb_2020
@@ -148,6 +148,12 @@ ObsLikes:
 
   - purpose:    LogLike
     capability: B2KmumuBr_LogLikelihood_LHCb
+
+  - purpose:    LogLike
+    capability: Bu2KstarmumuAng_LogLikelihood_LHCb_2020
+
+  - purpose:    LogLike
+    capability: B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020
 
 #  - purpose:    RKTest
 #    capability: RK_LogLikelihood
@@ -189,7 +195,7 @@ Rules:
     options:
       obs_list: [P4prime, P5prime]
 
-  - capability: B2KstarmumuAng_LogLikelihood_Belle
+  - capability: B2KstarellellAng_LogLikelihood_Belle
     options:
       obs_list: [P4prime, P5prime]
 
@@ -200,6 +206,19 @@ Rules:
   - capability: B2KstarmumuAng_LogLikelihood_LHCb_2020
     options:
       obs_list: [FL, AFB, S3, S4, S5, S7, S8, S9]
+
+  - capability: Bu2KstarmumuAng_LogLikelihood_LHCb_2020
+    options:
+      obs_list: [FL, AFB, S3, S4, S5, S7, S8, S9]
+            
+  - capability: prediction_B2KstareeAng_0p0008_0p257_LHCb
+    options:
+      obs_list: [FLee, AT_Re, AT_2, AT_Im]
+
+  - capability: B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020
+    options:
+      obs_list: [FLee, AT_Re, AT_2, AT_Im]
+            
 
   - options:
         use_SM_covariance: true

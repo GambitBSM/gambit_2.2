@@ -33,3 +33,7 @@
 [BRBXsmumu_highq2,                           BR_BXsmumu_14.2_22,                  None                ]
 [AFBBXsmumu_lowq2,                           AFB_BXsmumu_1_6,                     None                ]
 [AFBBXsmumu_highq2,                          AFB_BXsmumu_14.2_22,                 None                ]
+[FLee,                                       FL_B0Kstar0ee,                       F_L                 ]
+[AT_Re,                                      ATRe_B0Kstar0ee,                     AT_Re               ]
+[AT_Im,                                      ATIm_B0Kstar0ee,                     AT_Im               ]
+[AT_2,                                       P1_B0Kstar0ee,                       AT_2                ]

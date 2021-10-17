@@ -455,7 +455,16 @@ namespace Gambit
     double q2_min;
     double q2_max;
   };
-
+  struct Flav_KstarEE_obs
+  {
+    double FL;
+    double AT_Re;
+    double AT_2;
+    double AT_Im;
+    double q2_min;
+    double q2_max;
+    
+  };
 }
-
+ 
 #endif /* defined __SuperIso_types_hpp__ */

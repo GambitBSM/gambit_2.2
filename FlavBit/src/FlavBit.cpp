@@ -77,8 +77,8 @@
 #include "gambit/cmake/cmake_variables.hpp"
 
 
-//#define FLAVBIT_DEBUG
-//#define FLAVBIT_DEBUG_LL
+#define FLAVBIT_DEBUG
+#define FLAVBIT_DEBUG_LL
 
 namespace YAML
 {
@@ -797,10 +797,12 @@ namespace Gambit
     /// Extract central values of the given observables from the central value map.
     std::vector<double> get_obs_theory(const flav_prediction& prediction, const std::vector<std::string>& observables)
     {
+      if(flav_debug) std::cout<<"In get_obs_theory() function"<<std::endl;
       std::vector<double> obs_theory;
       obs_theory.reserve(observables.size());
       for (unsigned int i = 0; i < observables.size(); ++i)
       {
+        if(flav_debug) std::cout<<"Trying to find: "<<observables[i]<<std::endl;
         obs_theory.push_back(prediction.central_values.at(observables[i]));
       }
       return obs_theory;
@@ -839,11 +841,13 @@ namespace Gambit
       }
 
       int nObservables = SI_obslist.size();
-
+      if (flav_debug) std::cout<<"Observables: "<<std::endl;
+      
       char obsnames[nObservables][50];
       for(int iObservable = 0; iObservable < nObservables; iObservable++)
       {
         strcpy(obsnames[iObservable], SI_obslist[iObservable].c_str());
+        if( flav_debug) std::cout<<SI_obslist[iObservable].c_str()<<std::endl;
       }
 
       // ---------- CENTRAL VALUES ----------
@@ -1068,6 +1072,9 @@ namespace Gambit
     SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_6_8,_LHCb)
     SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_15_19,_LHCb)
 
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstareeAng,_0p0008_0p257,_LHCb)
+    
+    
     #undef SI_PRED_HELPER_CALL
     #undef SI_SINGLE_PREDICTION_FUNCTION
     #undef SI_SINGLE_PREDICTION_FUNCTION_BINS
@@ -1092,6 +1099,7 @@ namespace Gambit
       char obsnames[nObservables][50];
       for(int iObservable = 0; iObservable < nObservables; iObservable++) {
           strcpy(obsnames[iObservable], obslist[iObservable].c_str());
+          cout<<obslist[iObservable].c_str()<<endl;
       }
 
       double *res;
@@ -3204,7 +3212,48 @@ namespace Gambit
 
       if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_Belle result: " << result << std::endl;
     }
+    /// HEPLike LogLikelihood B -> K* ell ell Angular (Belle)
+    void HEPLike_B2KstarellellAng_LogLikelihood_Belle(double &result)
+    {
+      using namespace Pipes::HEPLike_B2KstarellellAng_LogLikelihood_Belle;
+      static const std::string inputfile = path_to_latest_heplike_data() + "/data/Belle/RD/Bd2KstarEllEll_Angular/KEK-2016-54_q2_";
+      static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
+      static std::vector<HepLike_default::HL_nDimBifurGaussian> nDimBifurGaussian = {
+        HepLike_default::HL_nDimBifurGaussian(inputfile + "0.1_4.0.yaml"),
+        HepLike_default::HL_nDimBifurGaussian(inputfile + "4.0_8.0.yaml"),
+        HepLike_default::HL_nDimBifurGaussian(inputfile + "10.09_12.9.yaml"),
+        HepLike_default::HL_nDimBifurGaussian(inputfile + "14.18_19.0.yaml"),
+      };
 
+      static bool first = true;
+      if (first)
+        {
+          for (unsigned int i = 0; i < nDimBifurGaussian.size(); i++)
+            {
+              if (flav_debug) std::cout << "Debug: Reading HepLike data file: " << i << endl;
+              nDimBifurGaussian[i].Read();
+            }
+          update_obs_list(obs_list, nDimBifurGaussian[0].GetObservables());
+          first = false;
+        }
+
+      std::vector<flav_prediction> prediction = {
+        *Dep::prediction_B2KstarmumuAng_0p1_4_Belle,
+        *Dep::prediction_B2KstarmumuAng_4_8_Belle,
+        *Dep::prediction_B2KstarmumuAng_10p9_12p9_Belle,
+        *Dep::prediction_B2KstarmumuAng_14p18_19_Belle,
+      };
+
+      result = 0;
+      for (unsigned int i = 0; i < nDimBifurGaussian.size(); i++)
+        {
+          result += nDimBifurGaussian[i].GetLogLikelihood(get_obs_theory(prediction[i], obs_list), get_obs_covariance(prediction[i], obs_list));
+        }
+
+      if (flav_debug) std::cout << "HEPLike_B2KstarellellAng_LogLikelihood_Belle result: " << result << std::endl;
+      
+
+    }
     /// HEPLike LogLikelihood B -> K* mu mu Angular (LHCb)
     void HEPLike_B2KstarmumuAng_LogLikelihood_LHCb(double &result)
     {
@@ -3253,7 +3302,7 @@ namespace Gambit
     void HEPLike_B2KstarmumuAng_LogLikelihood_LHCb_2020(double &result)
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_LHCb_2020;
-      static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/NAME_q2_";
+      static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/CERN-EP-2020-027_q2_";
       static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
       static std::vector<HepLike_default::HL_nDimGaussian> nDimGaussian = {
         HepLike_default::HL_nDimGaussian(inputfile + "0.1_0.98.yaml"),
@@ -3261,7 +3310,7 @@ namespace Gambit
         HepLike_default::HL_nDimGaussian(inputfile + "2.5_4.0.yaml"),
         HepLike_default::HL_nDimGaussian(inputfile + "4.0_6.0.yaml"),
         HepLike_default::HL_nDimGaussian(inputfile + "6.0_8.0.yaml"),
-        HepLike_default::HL_nDimGaussian(inputfile + "15.0_19.yaml"),
+        HepLike_default::HL_nDimGaussian(inputfile + "15.0_19.0.yaml"),
       };
 
       static bool first = true;
@@ -3297,6 +3346,96 @@ namespace Gambit
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+     /// HEPLike LogLikelihood B -> K* e e Angular low q2 (LHCb)
+    void HEPLike_B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020(double &result)
+    {
+      using namespace Pipes::HEPLike_B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020;
+      static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarEE_Angular/CERN-EP-2020-176.yaml";
+      static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
+      static HepLike_default::HL_nDimGaussian nDimGaussian(inputfile);
+      static bool first = true;
+      if (first)
+      {
+        std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
+        nDimGaussian.Read();
+        first = false;
+      }
+      flav_prediction prediction = *Dep::prediction_B2KstareeAng_0p0008_0p257_LHCb;
+      if(flav_debug)
+        {
+          std::cout<<"Have prediction"<<std::endl;
+          for(int i=0; i <obs_list.size(); i++)
+            {
+              std::cout<<obs_list[i]<<std::endl;
+            }
+        }
+
+      result = nDimGaussian.GetLogLikelihood(get_obs_theory(prediction, obs_list), get_obs_covariance(prediction, obs_list));
+      
+      if (flav_debug) std::cout << "HEPLike_B2KstareeAng_Lowq_LogLikelihood result: " << result << std::endl;
+    }
+
+
+
+    
+
+    /// HEPLike LogLikelihood Bu -> K*+ mu mu Angular (LHCb)
+    void HEPLike_Bu2KstarmumuAng_LogLikelihood_LHCb_2020(double &result)
+    {
+      using namespace Pipes::HEPLike_Bu2KstarmumuAng_LogLikelihood_LHCb_2020;
+      static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/Bu2KstarMuMu_Angular/CERN-EP-2020-239_q2_";
+      static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
+      static std::vector<HepLike_default::HL_nDimGaussian> nDimGaussian = {
+        HepLike_default::HL_nDimGaussian(inputfile + "0.1_0.98.yaml"),
+        HepLike_default::HL_nDimGaussian(inputfile + "1.1_2.5.yaml"),
+        HepLike_default::HL_nDimGaussian(inputfile + "2.5_4.0.yaml"),
+        HepLike_default::HL_nDimGaussian(inputfile + "4.0_6.0.yaml"),
+        HepLike_default::HL_nDimGaussian(inputfile + "6.0_8.0.yaml"),
+        HepLike_default::HL_nDimGaussian(inputfile + "15.0_19.0.yaml"),
+      };
+
+      static bool first = true;
+      if (first)
+        {
+          for (unsigned int i = 0; i < nDimGaussian.size(); i++)
+            {
+              if (flav_debug) std::cout << "Debug: Reading HepLike data file: " << i << endl;
+              nDimGaussian[i].Read();
+            }
+          update_obs_list(obs_list, nDimGaussian[0].GetObservables());
+          first = false;
+        }
+
+      std::vector<flav_prediction> prediction = {
+        *Dep::prediction_B2KstarmumuAng_0p1_0p98_LHCb,
+        *Dep::prediction_B2KstarmumuAng_1p1_2p5_LHCb,
+        *Dep::prediction_B2KstarmumuAng_2p5_4_LHCb,
+        *Dep::prediction_B2KstarmumuAng_4_6_LHCb,
+        *Dep::prediction_B2KstarmumuAng_6_8_LHCb,
+        *Dep::prediction_B2KstarmumuAng_15_19_LHCb,
+      };
+
+      result = 0;
+      for (unsigned int i = 0; i < nDimGaussian.size(); i++)
+        {
+          result += nDimGaussian[i].GetLogLikelihood(get_obs_theory(prediction[i], obs_list), get_obs_covariance(prediction[i], obs_list));
+        }
+
+      if (flav_debug) std::cout << "HEPLike_Bu2KstarmumuAng_LogLikelihood_LHCb 2020 result: " << result << std::endl;
+    }
+    
+    
     /// HEPLike LogLikelihood B -> K* mu mu Br (LHCb)
     void HEPLike_B2KstarmumuBr_LogLikelihood_LHCb(double &result)
     {
