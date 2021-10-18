@@ -63,7 +63,7 @@ if [ "${axel_worked}" = "0" ]; then
     if [ -z "$9" ]; then
       # Skip certificate checking if requested because KIT, Hepforge, et al often haven't kept them updated
       if [ "${IGNORE_HTTP_CERTIFICATE}" = "1" ]; then
-        wget --no-check-certificate $3 -O $i/${filename}
+        wget --no-check-certificate $3 -O $1/${filename}
       else
         wget $3 -O $1/${filename}
       fi
