@@ -77,8 +77,8 @@
 #include "gambit/cmake/cmake_variables.hpp"
 
 
-//#define FLAVBIT_DEBUG
-//#define FLAVBIT_DEBUG_LL
+#define FLAVBIT_DEBUG
+#define FLAVBIT_DEBUG_LL
 
 namespace YAML
 {
