@@ -102,6 +102,9 @@ ObsLikes:
     capability: b2sgamma_LogLikelihood
 
   - purpose:    LogLike
+    capability: B2Kstargamma_LogLikelihood
+          
+  - purpose:    LogLike
     capability: B2mumu_LogLikelihood_LHCb
 
   - purpose:    Observable
