@@ -98,6 +98,12 @@ ObsLikes:
     capability: prediction_b2sgamma
 
   - purpose:    Observable
+    capability: prediction_B2Kstargamma
+
+  - purpose:    Observable
+    capability: prediction_B2KstareeAng_0p0008_0p257_LHCb
+      
+  - purpose:    Observable
     capability: prediction_B2KstarmumuAng_0p1_0p98_LHCb
 
   - purpose:    Observable
@@ -250,6 +256,10 @@ Rules:
   - capability: prediction_B2mumu
     options:
       obs_list: [BRuntag_Bsmumu, BR_Bdmumu]
+
+  - capability: prediction_B2KstareeAng_0p0008_0p257_LHCb
+    options:
+      obs_list: [FLee, AT_Re, AT_Im, AT_2]
 
 
   - capability: prediction_Bs2phimumuBr_*
