@@ -40,11 +40,11 @@ Parameters:
     mH: 125.09
 
   WC:
-    Re_DeltaC7: 0.013033019452321326
+    Re_DeltaC7: 0.010904477662564915
     Im_DeltaC7:  0
-    Re_DeltaC9: -1.0284148734252867
+    Re_DeltaC9: -1.0913178587302357
     Im_DeltaC9:  0
-    Re_DeltaC10: 0.07714505127672266
+    Re_DeltaC10: 0.05847570978767758
     Im_DeltaC10: 0
     Re_DeltaCQ1: 0
     Im_DeltaCQ1: 0
@@ -222,7 +222,7 @@ ObsLikes:
   - purpose:    LogLike
     capability: B2KstarmumuAng_LogLikelihood_CMS
 
-  - purpose:    LogLike
+  - purpose:    LogLi, ke
     capability: B2KstarmumuAng_LogLikelihood_Belle
 
   - purpose:    LogLike
@@ -248,6 +248,9 @@ Rules:
     options:
       obs_list: [BRuntag_Bsmumu, BR_Bdmumu]
 
+  - capability: prediction_B2KstareeAng_0p0008_0p257_LHCb
+    options:
+      obs_list: [FLee, AT_Re, AT_Im, AT_2]
 
   - capability: prediction_Bs2phimumuBr_*
     options:
@@ -271,7 +274,7 @@ Rules:
     options:
       obs_list: [B2KmumuBr]
 
-
+    
   - capability: prediction_B2KstarmumuAng_.*_Atlas
     options:
       obs_list: [FL, S3, S4, S5, S7, S8]
