@@ -41,9 +41,9 @@ Parameters:
 
   WC:
     Re_DeltaC7: 0
-    Im_DeltaC7:  0
+    Im_DeltaC7: 0
     Re_DeltaC9: 0
-    Im_DeltaC9:  0
+    Im_DeltaC9: 0
     Re_DeltaC10: 0
     Im_DeltaC10: 0
     Re_DeltaCQ1: 0
@@ -62,7 +62,7 @@ Printer:
   printer: hdf5
 
   options:
-    output_file: "WC_SM.hdf5"
+    output_file: "WC.hdf5"
     group: "/WC"
 
 
@@ -87,22 +87,23 @@ Scanner:
     square_grid:
       plugin: square_grid
       like: LogLike
-      grid_pts: 1
+      grid_pts: 20
 
 
 ObsLikes:
   # FIXME: How are the observables called inside superiso?
-  # OBSERVABLES!!
+  #- purpose:    RDRDstarTest
+  #  capability: RDRDstar_LogLikelihood
 
-  - purpose:    Observable
-    capability: prediction_b2sgamma
+  - purpose:    LogLike
+    capability: b2sgamma_LogLikelihood
 
-  - purpose:    Observable
-    capability: prediction_B2Kstargamma
+  - purpose:    LogLike
+    capability: B2Kstargamma_LogLikelihood
+          
+  - purpose:    LogLike
+    capability: B2mumu_LogLikelihood_LHCb
 
-  - purpose:    Observable
-    capability: prediction_B2KstareeAng_0p0008_0p257_LHCb
-      
   - purpose:    Observable
     capability: prediction_B2KstarmumuAng_0p1_0p98_LHCb
 
@@ -121,99 +122,6 @@ ObsLikes:
   - purpose:    Observable
     capability: prediction_B2KstarmumuAng_15_19_LHCb
 
-  - purpose:    Observable
-    capability: prediction_B2KstarmumuAng_1_2_CMS
-
-  - purpose:    Observable
-    capability: prediction_B2KstarmumuAng_2_4p3_CMS
-
-  - purpose:    Observable
-    capability: prediction_B2KstarmumuAng_4p3_6_CMS
-
-  - purpose:    Observable
-    capability: prediction_B2KstarmumuAng_6_8p68_CMS
-
-  - purpose:    Observable
-    capability: prediction_B2KstarmumuAng_16_19_CMS
-
-  - purpose:    Observable
-    capability: prediction_B2KstarmumuAng_0p1_4_Belle
-
-  - purpose:    Observable
-    capability: prediction_B2KstarmumuAng_4_8_Belle
-
-  - purpose:    Observable
-    capability: prediction_B2KstarmumuAng_14p18_19_Belle
-  
-  - purpose:    Observable
-    capability: prediction_B2KstarmumuBr_15_19
-
-  - purpose:    Observable
-    capability: prediction_B2KstarmumuBr_0p1_0p98
-
-  - purpose:    Observable
-    capability: prediction_B2KstarmumuBr_1p1_2p5
-
-  - purpose:    Observable
-    capability: prediction_B2KstarmumuBr_2p5_4
-
-  - purpose:    Observable
-    capability: prediction_B2KstarmumuBr_4_6
-
-  - purpose:    Observable
-    capability: prediction_B2KstarmumuBr_6_8
-
-  - purpose:    Observable
-    capability: prediction_B2KmumuBr_0p05_2
-
-  - purpose:    Observable
-    capability: prediction_B2KmumuBr_2_4p3
-
-  - purpose:    Observable
-    capability: prediction_B2KmumuBr_4p3_8p68
-
-  - purpose:    Observable
-    capability: prediction_B2KmumuBr_14p18_16
-
-  - purpose:    Observable
-    capability: prediction_B2KmumuBr_16_18
-
-  - purpose:    Observable
-    capability: prediction_B2KmumuBr_18_22
-
-
-  - purpose:    Observable
-    capability: prediction_B2mumu
-
-  - purpose:    Observable
-    capability: prediction_Bs2phimumuBr_1_6
-
-  - purpose:    Observable
-    capability: prediction_Bs2phimumuBr_15_19
-
-  - purpose:    Observable
-    capability: prediction_BRBXsmumu_lowq2
-
-  - purpose:    Observable
-    capability: prediction_BRBXsmumu_highq2
-      
-#  - purpose:    Observable
-#    capability: prediction_AFBBXsmumu_lowq2
-
-#  - purpose:    Observable
-#    capability: prediction_AFBBXsmumu_highq2
-      
-
-    # Likelihoods!
-
-
-
-  - purpose:    LogLike
-    capability: b2sgamma_LogLikelihood
-
-  - purpose:    LogLike
-    capability: B2mumu_LogLikelihood_LHCb
-
   - purpose:    LogLike
     capability: B2mumu_LogLikelihood_CMS
 
@@ -227,7 +135,7 @@ ObsLikes:
     capability: B2KstarmumuAng_LogLikelihood_CMS
 
   - purpose:    LogLike
-    capability: B2KstarmumuAng_LogLikelihood_Belle
+    capability: B2KstarellellAng_LogLikelihood_Belle
 
   - purpose:    LogLike
     capability: B2KstarmumuAng_LogLikelihood_LHCb_2020
@@ -240,6 +148,12 @@ ObsLikes:
 
   - purpose:    LogLike
     capability: B2KmumuBr_LogLikelihood_LHCb
+
+  - purpose:    LogLike
+    capability: Bu2KstarmumuAng_LogLikelihood_LHCb_2020
+
+  - purpose:    LogLike
+    capability: B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020
 
 #  - purpose:    RKTest
 #    capability: RK_LogLikelihood
@@ -257,33 +171,9 @@ Rules:
     options:
       obs_list: [BRuntag_Bsmumu, BR_Bdmumu]
 
-  - capability: prediction_B2KstareeAng_0p0008_0p257_LHCb
-    options:
-      obs_list: [FLee, AT_Re, AT_Im, AT_2]
-
-
-  - capability: prediction_Bs2phimumuBr_*
-    options:
-      obs_list: [Bs2phimumuBr]
-
-  - capability: prediction_b2sgamma
-    options:
-      obs_list: [b2sgamma]
-
-  - capability: prediction_B2KstarmumuBr_*
-    options:
-      obs_list: [B2KstarmumuBr]
-
-
   - capability: B2mumu_LogLikelihood_.*
     options:
       obs_list: [BRuntag_Bsmumu, BR_Bdmumu]
-
-
-  - capability: prediction_B2KmumuBr_*
-    options:
-      obs_list: [B2KmumuBr]
-
 
   - capability: prediction_B2KstarmumuAng_.*_Atlas
     options:
@@ -305,21 +195,34 @@ Rules:
     options:
       obs_list: [P4prime, P5prime]
 
-  - capability: B2KstarmumuAng_LogLikelihood_Belle
+  - capability: B2KstarellellAng_LogLikelihood_Belle
     options:
       obs_list: [P4prime, P5prime]
 
   - capability: prediction_B2KstarmumuAng_.*_LHCb
     options:
-      obs_list: [FL, AFB, S3, S4, S5, S7, S8, S9, P5prime, P1, P4prime]
+      obs_list: [FL, AFB, S3, S4, S5, S7, S8, S9]
 
   - capability: B2KstarmumuAng_LogLikelihood_LHCb_2020
     options:
       obs_list: [FL, AFB, S3, S4, S5, S7, S8, S9]
 
+  - capability: Bu2KstarmumuAng_LogLikelihood_LHCb_2020
+    options:
+      obs_list: [FL, AFB, S3, S4, S5, S7, S8, S9]
+            
+  - capability: prediction_B2KstareeAng_0p0008_0p257_LHCb
+    options:
+      obs_list: [FLee, AT_Re, AT_2, AT_Im]
+
+  - capability: B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020
+    options:
+      obs_list: [FLee, AT_Re, AT_2, AT_Im]
+            
+
   - options:
         use_SM_covariance: true
-
+        
   # Use SuperIso instead of FeynHiggs for b->sgamma
   - capability: bsgamma
     function: SI_bsgamma
@@ -350,6 +253,6 @@ KeyValues:
     model_invalid_for_lnlike_below: -5e5
     model_invalid_for_lnlike_below_alt: -1e5
 
-  default_output_path: "runs/WC_SM"
+  default_output_path: "runs/WC_HL_NEW_SM"
 
   debug: true
