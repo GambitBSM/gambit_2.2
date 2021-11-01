@@ -40,11 +40,10 @@ Parameters:
     mH: 125.09
 
   WC:
-    Re_DeltaC7:  0
+    Re_DeltaC7: 0
     Im_DeltaC7:  0
-    Re_DeltaC9:
-       range: [-3, 3]
-    Im_DeltaC9:  0
+    Re_DeltaC9: 0
+    Im_DeltaC9: [-2, 1]
     Re_DeltaC10: 0
     Im_DeltaC10: 0
     Re_DeltaCQ1: 0
@@ -63,7 +62,7 @@ Printer:
   printer: hdf5
 
   options:
-    output_file: "WC.hdf5"
+    output_file: "WC_C9.hdf5"
     group: "/WC"
 
 
@@ -82,8 +81,8 @@ Scanner:
     de:
       plugin: diver
       like: LogLike
-      NP: 2000
-      convthresh: 1e-3
+      NP: 20000
+      convthresh: 1e-5
 
     square_grid:
       plugin: square_grid
@@ -98,6 +97,9 @@ ObsLikes:
 
   - purpose:    LogLike
     capability: b2sgamma_LogLikelihood
+    
+  - purpose:    LogLike
+    capability: B2Kstargamma_LogLikelihood
 
   - purpose:    LogLike
     capability: B2mumu_LogLikelihood_LHCb
@@ -133,7 +135,7 @@ ObsLikes:
     capability: B2KstarmumuAng_LogLikelihood_CMS
 
   - purpose:    LogLike
-    capability: B2KstarmumuAng_LogLikelihood_Belle
+    capability: B2KstarellellAng_LogLikelihood_Belle
 
   - purpose:    LogLike
     capability: B2KstarmumuAng_LogLikelihood_LHCb_2020
@@ -146,6 +148,12 @@ ObsLikes:
 
   - purpose:    LogLike
     capability: B2KmumuBr_LogLikelihood_LHCb
+
+  - purpose:    LogLike
+    capability: Bu2KstarmumuAng_LogLikelihood_LHCb_2020
+
+  - purpose:    LogLike
+    capability: B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020
 
 #  - purpose:    RKTest
 #    capability: RK_LogLikelihood
@@ -187,7 +195,7 @@ Rules:
     options:
       obs_list: [P4prime, P5prime]
 
-  - capability: B2KstarmumuAng_LogLikelihood_Belle
+  - capability: B2KstarellellAng_LogLikelihood_Belle
     options:
       obs_list: [P4prime, P5prime]
 
@@ -199,10 +207,22 @@ Rules:
     options:
       obs_list: [FL, AFB, S3, S4, S5, S7, S8, S9]
 
-  # Use SM theory covariance matrix for every point
-  - capability: SuperIso_theory_covariance
-    function: SI_theory_covariance_SM
+  - capability: Bu2KstarmumuAng_LogLikelihood_LHCb_2020
+    options:
+      obs_list: [FL, AFB, S3, S4, S5, S7, S8, S9]
+            
+  - capability: prediction_B2KstareeAng_0p0008_0p257_LHCb
+    options:
+      obs_list: [FLee, AT_Re, AT_2, AT_Im]
 
+  - capability: B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020
+    options:
+      obs_list: [FLee, AT_Re, AT_2, AT_Im]
+            
+
+  - options:
+        use_SM_covariance: false
+        
   # Use SuperIso instead of FeynHiggs for b->sgamma
   - capability: bsgamma
     function: SI_bsgamma
