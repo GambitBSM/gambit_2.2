@@ -42,8 +42,9 @@ Parameters:
   WC:
     Re_DeltaC7: 0
     Im_DeltaC7:  0
-    Re_DeltaC9: 0
-    Im_DeltaC9: [-2, 1]
+    Re_DeltaC9:
+      range: [-2, 1]
+    Im_DeltaC9: 0
     Re_DeltaC10: 0
     Im_DeltaC10: 0
     Re_DeltaCQ1: 0
@@ -82,7 +83,7 @@ Scanner:
       plugin: diver
       like: LogLike
       NP: 20000
-      convthresh: 1e-5
+      convthresh: 1e-4
 
     square_grid:
       plugin: square_grid
