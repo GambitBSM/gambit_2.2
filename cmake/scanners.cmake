@@ -144,6 +144,11 @@ else()
   set(pcFFLAGS "${pcFFLAGS} -fno-stack-arrays")
   set(pcCOMPILER_TYPE "gnu")
 endif()
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set(pcCXXFLAGS "${pcCXXFLAGS} -Wl,-undefined,dynamic_lookup")
+  set(pcFFLAGS "${pcFFLAGS} -Wl,-undefined,dynamic_lookup")
+  set(pcSO_LINK "${pcSO_LINK} -lstdc++")
+endif()
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
@@ -311,5 +316,32 @@ if(NOT ditched_${name}_${ver})
   set_as_default_version("scanner" ${name} ${ver})
 endif()
 
+# minuit2
+# omp possible in principle but disabled in gambit, as only likelihood uses omp
+set(name "minuit2")
+set(ver "6.23.01")
+set(lib "libminuit2")
+set(md5 "862cc44a3defa0674e6b5a9960ed6f89")
+set(dl "https://github.com/GooFit/Minuit2/archive/v6-23-01.tar.gz")
+set(dir "${PROJECT_SOURCE_DIR}/ScannerBit/installed/${name}/${ver}")
+# We need to disable MPI for Minuit2 on MacOS as the build system fails to find the proper headers
+set(minuit2_MPI "${MPI_CXX_FOUND}")
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set(minuit2_MPI "OFF")
+endif()
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+    DOWNLOAD_COMMAND ${DL_SCANNER} ${dl} ${md5} ${dir} ${name} ${ver}
+    SOURCE_DIR ${dir}
+    BUILD_IN_SOURCE 1
+    CMAKE_COMMAND ${CMAKE_COMMAND} ..
+    CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DBUILD_SHARED_LIBS=1 -Dminuit2_mpi=${minuit2_MPI} -Dminuit2_openmp=0 -Dminuit2_omp=0 
+    BUILD_COMMAND ${MAKE_PARALLEL}
+    INSTALL_COMMAND ""
+  )
+  add_extra_targets("scanner" ${name} ${ver} ${dir} ${dl} clean)
+  set_as_default_version("scanner" ${name} ${ver})
+endif()
 
 # All other scanners are implemented natively in ScannerBit.
