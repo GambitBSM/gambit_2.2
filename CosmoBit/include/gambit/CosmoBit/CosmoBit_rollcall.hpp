@@ -17,12 +17,12 @@
 ///  \date 2017 Nov
 ///
 ///  \author Patrick Stoecker
-///          (stoecker@physik.rwth-aachen.de)
+///          (patrick.stoecker@kit.edu)
 ///  \date 2017 Nov
 ///  \date 2018 Jan,Feb, Mar
 ///  \date 2019 Jan, Feb, June
 ///  \date 2020 Nov
-///  \date 2021 Jan, Mar, Apr
+///  \date 2021 Jan, Mar, Apr, Sep
 ///
 ///  \author Janina Renk
 ///          (janina.renk@fysik.su.se)
@@ -919,6 +919,22 @@ START_MODULE
     BACKEND_REQ(get_NNUC, (alterbbn_tag), size_t, ())
     BACKEND_REQ(get_abund_map_AlterBBN, (alterbbn_tag), map_str_int, ())
     FORCE_SAME_BACKEND(alterbbn_tag)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  /// First attempt to do something useful with the "Acropolis" backend
+  #define CAPABILITY BBN_abundances_photodissociation
+  START_CAPABILITY
+    #define FUNCTION BBN_abundances_photodissociation_decayingDM
+    START_FUNCTION(BBN_container)
+    ALLOW_MODELS(LCDM, LCDM_theta, LCDM_zreio, etaBBN_rBBN_rCMB_dNurBBN_dNurCMB)
+    ALLOW_MODELS(DecayingDM_mixture)
+    MODEL_GROUP(cosmo,(LCDM, LCDM_theta, LCDM_zreio, etaBBN_rBBN_rCMB_dNurBBN_dNurCMB))
+    MODEL_GROUP(decay,(DecayingDM_mixture))
+    ALLOW_MODEL_COMBINATION(cosmo,decay)
+    MODEL_CONDITIONAL_DEPENDENCY(eta0,double,LCDM,LCDM_theta,LCDM_zreio)
+    DEPENDENCY(BBN_abundances, BBN_container)
+    BACKEND_REQ(abundance_photodissociation_decay, (), void, (double*,double*,double,double,double,double,double))
     #undef FUNCTION
   #undef CAPABILITY
 
