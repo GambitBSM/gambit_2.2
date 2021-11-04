@@ -332,6 +332,18 @@ namespace Gambit
           CosmoBit_error().raise(LOCAL_INFO, err);
         }
 
+        // If photodissociation is downstream, we need all abundances
+        if (Downstream::neededFor("BBN_abundances_photodissociation"))
+        {
+          if(v.size() < 7)
+          {
+            str err = "Photodissociation requires all abundances to be computed.\n"
+                      "Please add the missing elements to the list of subcapabilites in your yaml file as\n"
+                      "  sub_capabilities: [H2, H3, He3, He4, Li6, Li7, Be7]";
+            CosmoBit_error().raise(LOCAL_INFO, err);
+          }
+        }
+
         // Process user-defined correlations (if provided)
         if (use_custom_covariances)
         {
