@@ -111,6 +111,32 @@ add_custom_target(nuke-castxml COMMAND ${CMAKE_COMMAND} -E remove -f ${rmstring}
 add_dependencies(nuke-all nuke-castxml)
 set_target_properties(castxml PROPERTIES EXCLUDE_FROM_ALL 1)
 
+# Acropolis
+set(name "acropolis")
+set(ver "1.2.1")
+set(dl "https://acropolis.hepforge.org/downloads/${name}-${ver}.tar.gz")
+set(md5 "e427da6d401d5b63ad485b4a8841f6d2")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+set(required_modules "numpy,scipy,numba")
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+  check_python_modules(${name} ${ver} ${required_modules})
+  if(modules_missing_${name}_${ver})
+    inform_of_missing_modules(${name} ${ver} ${modules_missing_${name}_${ver}})
+  else()
+    ExternalProject_Add(${name}_${ver}
+      DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+      SOURCE_DIR ${dir}
+      BUILD_IN_SOURCE 1
+      CONFIGURE_COMMAND ""
+      BUILD_COMMAND ""
+      INSTALL_COMMAND ""
+    )
+  endif()
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+  set_as_default_version("backend" ${name} ${ver})
+endif()
+
 
 # Compiler flags for AlterBBN
 if("${CMAKE_C_COMPILER_ID}" STREQUAL "Intel")
