@@ -428,6 +428,53 @@ namespace Gambit
       }
     }
 
+    void BBN_abundances_photodissociation_decayingDM(BBN_container &result)
+    {
+      using namespace Pipes::BBN_abundances_photodissociation_decayingDM;
+
+      // Get all the relevant parameters from the decayingDM_mixture model
+      double m_in_MeV = 1e3*(*Param["mass"]);
+      double tau = *Param["lifetime"];
+      double BR_el = *Param["BR_el"];
+      double BR_ph = *Param["BR_ph"];
+
+      // The last relevant input is "eta" (at BBN).
+      // This can be either taken from the etaBBN_rBBN_rCMB_dNurBBN_dNurCMB model (if it is in use),
+      // or it can be derived from omega_b (parameter of the LCDM models) via the eta0 capability
+      double eta;
+      if (ModelInUse("etaBBN_rBBN_rCMB_dNurBBN_dNurCMB"))
+      {
+        eta = *Param["eta_BBN"];
+      }
+      else
+      {
+        eta = *Dep::eta0;
+      }
+
+      result = *Dep::BBN_abundances;
+
+      std::vector<double> abundances_pre(9,0.0);
+      for(int i=0; i !=9; ++i)
+      {
+        abundances_pre[i] = result.get_BBN_abund(i+1);
+      }
+      std::vector<double> abundances_post(9,0.0);
+
+      BEreq::abundance_photodissociation_decay(abundances_pre.data(),
+                                               abundances_post.data(),
+                                               byVal(m_in_MeV),
+                                               byVal(tau),
+                                               byVal(eta),
+                                               byVal(BR_el),
+                                               byVal(BR_ph));
+
+      for(int i=0; i !=9; ++i)
+      {
+        result.set_BBN_abund(i+1,abundances_post[i]);
+      }
+
+    }
+
     /// Extract helium-4 abundance from BBN abundance container
     void extract_helium_abundance(double &result)
     {

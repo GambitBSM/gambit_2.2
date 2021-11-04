@@ -11,25 +11,29 @@
 ///
 ///  Authors (add name and date if you modify):
 ///
+///  \author Patrick Stoecker
+///          (patrick.stoecker@kit.edu)
+///  \date 2021 Oct
+///
 ///  \author Tomas Gonzalo
 ///          (gonzalo@physik.rwth-aachen.de)
-///  \date 2021 
+///  \date 2021 Oct
 ///
 ///  *********************************************
 
-
 #define BACKENDNAME Acropolis
-#define BACKENDLANG Python
+#define BACKENDLANG Python3
 #define VERSION 1.2.1
 #define SAFE_VERSION 1_2_1
-#define REFERENCE Depta:2020mhj
+#define REFERENCE Depta:2020mhj,Depta:2020zbh,Hufnagel:2018bjp
 
 LOAD_LIBRARY
 
-//BE_ALLOW_MODELS(AnnihilatingDM_general, DecayingDM_general)
+#ifdef HAVE_PYBIND11
 
-BE_CONV_FUNCTION(Acropolis_test, double, (), "acropolis_test")
+  BE_CONV_FUNCTION(abundance_photodissociation_decay, void,(double*,double*,double,double,double,double,double), "abundance_photodissociation_decay")
 
+#endif
 
 // Undefine macros to avoid conflict with other backends
 #include "gambit/Backends/backend_undefs.hpp"

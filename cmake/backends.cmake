@@ -117,6 +117,7 @@ set(ver "1.2.1")
 set(dl "https://acropolis.hepforge.org/downloads/${name}-${ver}.tar.gz")
 set(md5 "e427da6d401d5b63ad485b4a8841f6d2")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/acropolis_numba_patch.diff")
 set(required_modules "numpy,scipy,numba")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
@@ -128,6 +129,7 @@ if(NOT ditched_${name}_${ver})
       DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
       SOURCE_DIR ${dir}
       BUILD_IN_SOURCE 1
+      PATCH_COMMAND patch -p1 < ${patch}
       CONFIGURE_COMMAND ""
       BUILD_COMMAND ""
       INSTALL_COMMAND ""
