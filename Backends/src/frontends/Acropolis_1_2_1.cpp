@@ -54,14 +54,16 @@
 
       // Reshape the numpy array [shape (9,)] into a 1D-matrix [shape (9,1)]
       initial_abundances = initial_abundances.attr("reshape")(9,1);
-
+      std::cout << initial_abundances << std::endl;
+ 
       // Replace the internal initial abundance matrix of the 'InputInterface' with the content of 'intial_abundances'
-      mod.attr("_sII").attr("__sAbundData") = initial_abundances;
-
+      mod.attr("_sII").attr("set_bbn_abundances")(initial_abundances);
+ 
       // Run the disintegration and compute the final abundances
       pyArray_dbl final_abundances = mod.attr("run_disintegration")();
 
       // Write the results into 'abundances_post'
+      std::cout << final_abundances << std::endl;
       for (int i=0; i != final_abundances.size(); ++i)
       {
         *(abundances_post+i) = *(final_abundances.data()+i);

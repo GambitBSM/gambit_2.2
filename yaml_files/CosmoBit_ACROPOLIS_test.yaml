@@ -56,7 +56,7 @@ ObsLikes:
 
   - purpose:      Observable
     capability:   BBN_abundances
-    sub_capabilities: [Li7]
+    sub_capabilities: [He3, Be7, Li7]
 
   - purpose:      Observable
     capability:   BBN_abundances_photodissociation

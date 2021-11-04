@@ -42,3 +42,16 @@ index f1cdae9..6811c3c 100644
  
      c000 = kernel_db[ k(iT  , iE  , iEp  ) ][c]
      c100 = kernel_db[ k(iT+1, iE  , iEp  ) ][c]
+diff --git a/acropolis/input.py b/acropolis/input.py
+--- a/acropolis/input.py	2021-11-04 16:04:57.857595504 +0100
++++ b/acropolis/input.py	2021-11-04 16:05:15.393354618 +0100
+@@ -149,6 +149,8 @@ class InputInterface(object):
+     def bbn_abundances_0(self):
+         return self._sAbundData[:,0]
+ 
++    def set_bbn_abundances(self, abundances):
++        self._sAbundData = abundances
+ 
+     # 3. PARAM_DATA ###########################################################
+ 
+
