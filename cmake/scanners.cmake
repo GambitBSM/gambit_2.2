@@ -291,14 +291,15 @@ endif()
 set(name "great")
 set(ver "1.0.0")
 set(lib "libgreat")
-set(dl "null")
+set(dl "https://gitlab.in2p3.fr/derome/GreAT/-/archive/master/GreAT-master.tar.gz")
+set(md5 "a0b6aeb4c6307f8ba980f69bb797a093")
 set(dir "${PROJECT_SOURCE_DIR}/ScannerBit/installed/${name}/${ver}")
 set(patch "${PROJECT_SOURCE_DIR}/ScannerBit/patches/${name}/${ver}/patch_${name}_${ver}.dif")
 set(build_dir "${PROJECT_BINARY_DIR}/${name}_${ver}-prefix/src/${name}_${ver}-build")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
-    GIT_REPOSITORY https://gitlab.in2p3.fr/derome/GreAT.git
+    DOWNLOAD_COMMAND ${DL_SCANNER} ${dl} ${md5} ${dir} ${name} ${ver}
     SOURCE_DIR ${dir}
     PATCH_COMMAND patch -p1 < ${patch}
     CMAKE_COMMAND ${CMAKE_COMMAND} ..
