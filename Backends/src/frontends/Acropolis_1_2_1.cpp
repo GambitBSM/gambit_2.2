@@ -25,6 +25,8 @@
 
 #include <algorithm>
 
+//#define ACROPOLIS_DEBUG
+
 #ifdef HAVE_PYBIND11
 
   // Convenience functions (definitions)
@@ -41,10 +43,21 @@
     // Reference temperature [in MeV] at which the initial number density of the decaying particle is defined.
     static double T0; 
 
+    void set_input_params(bool verbose, int NE_pd, int NT_pd, double eps)
+    {
+      py::module::import("acropolis.pprint").attr("verbose") = py::bool_(verbose);
+      py::module::import("acropolis.cascade").attr("NE_pd") =  py::int_(NE_pd); // default: 150, fast: 75, aggresive: 30
+      py::module::import("acropolis.cascade").attr("eps") = py::float_(eps); // default: 1e-3, fast: 1e-2, aggresive: 1e-1
+      py::module::import("acropolis.nucl").attr("NT_pd") = py::int_(NT_pd); // default: 50, fast: 25, aggresive: 10
+      py::module::import("acropolis.nucl").attr("eps") = py::float_(eps); // default: 1e-3, fast: 1e-2, aggresive: 1e-1
+    }
+
     void abundance_photodissociation_decay(double* abundances_pre, double* abundances_post, double mass, double tau, double eta, double BR_el, double BR_ph)
     {
-      std::cout << "[ACROPOLIS] Invoking 'DecayModel' with (mass, tau, T0, eta, BR_el, BR_ph) = ";
-      std::cout << "( " << mass << " " << tau << " " << T0 << " " << eta << " " << BR_el << " " << BR_ph << " )" << std::endl;
+      #ifdef ACROPOLIS_DEBUG
+        std::cout << "[ACROPOLIS] Invoking 'DecayModel' with (mass, tau, T0, eta, BR_el, BR_ph) = ";
+        std::cout << "( " << mass << " " << tau << " " << T0 << " " << eta << " " << BR_el << " " << BR_ph << " )" << std::endl;
+      #endif
 
       // Initialise the model
       py::object mod = AC_models.attr("DecayModel")(mass, tau, T0, eta, BR_el, BR_ph);
@@ -54,7 +67,6 @@
 
       // Reshape the numpy array [shape (9,)] into a 1D-matrix [shape (9,1)]
       initial_abundances = initial_abundances.attr("reshape")(9,1);
-      std::cout << initial_abundances << std::endl;
  
       // Replace the internal initial abundance matrix of the 'InputInterface' with the content of 'intial_abundances'
       mod.attr("_sII").attr("set_bbn_abundances")(initial_abundances);
@@ -63,7 +75,6 @@
       pyArray_dbl final_abundances = mod.attr("run_disintegration")();
 
       // Write the results into 'abundances_post'
-      std::cout << final_abundances << std::endl;
       for (int i=0; i != final_abundances.size(); ++i)
       {
         *(abundances_post+i) = *(final_abundances.data()+i);

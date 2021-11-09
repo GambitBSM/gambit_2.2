@@ -450,6 +450,15 @@ namespace Gambit
       double BR_el = *Param["BR_el"];
       double BR_ph = *Param["BR_ph"];
 
+      // Set input parameters
+      BEreq::set_input_params(
+        byVal(runOptions->getValueOrDef<bool>(false, "verbose")),
+        byVal(runOptions->getValueOrDef<int>(150, "NE_pd")), // default: 150, fast: 75, aggresive: 30
+        byVal(runOptions->getValueOrDef<int>(50, "NT_pd")), // default: 50, fast: 25, aggresive: 10
+        byVal(runOptions->getValueOrDef<double>(1e-3, "eps")) // default: 1e-3, fast: 1e-2, aggresive: 1e-1
+      );
+
+
       // The last relevant input is "eta" (at BBN).
       // This can be either taken from the etaBBN_rBBN_rCMB_dNurBBN_dNurCMB model (if it is in use),
       // or it can be derived from omega_b (parameter of the LCDM models) via the eta0 capability

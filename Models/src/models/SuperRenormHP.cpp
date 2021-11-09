@@ -20,7 +20,6 @@
 #include "gambit/Models/model_helpers.hpp"
 #include "gambit/Logs/logger.hpp"
 #include "gambit/Utils/numerical_constants.hpp"
-#include "gambit/DarkBit/DarkBit_types.hpp"
 
 #include "gambit/Models/models/SuperRenormHP.hpp"
 
