@@ -332,18 +332,6 @@ namespace Gambit
           CosmoBit_error().raise(LOCAL_INFO, err);
         }
 
-        // If photodissociation is downstream, we need all abundances
-        if (Downstream::neededFor("BBN_abundances_photodissociation"))
-        {
-          if(v.size() < 7)
-          {
-            str err = "Photodissociation requires all abundances to be computed.\n"
-                      "Please add the missing elements to the list of subcapabilites in your yaml file as\n"
-                      "  sub_capabilities: [H2, H3, He3, He4, Li6, Li7, Be7]";
-            CosmoBit_error().raise(LOCAL_INFO, err);
-          }
-        }
-
         // Process user-defined correlations (if provided)
         if (use_custom_covariances)
         {
@@ -415,7 +403,7 @@ namespace Gambit
 
       // Fill relative (absolute) errors
       std::vector<double> err_ratio(NNUC+1,0);
-      if (use_custom_covariances) for (const int& ie : result.get_active_isotope_indices())
+      if (use_custom_covariances) for (size_t ie=1; ie <= NNUC; ++ie)
       {
         if (has_relative_errors && (err.at(ie) > 0.0))
           err_ratio.at(ie) =  err.at(ie) * ratioH[ie];
@@ -427,10 +415,10 @@ namespace Gambit
       }
 
       // Fill abundances and covariance matrix of BBN_container with requested results from AlterBBN
-      for (const int& ie : result.get_active_isotope_indices())
+      for (size_t ie=1; ie <= NNUC; ++ie)
       {
         result.set_BBN_abund(ie, ratioH[ie]);
-        for (const int& je : result.get_active_isotope_indices())
+        for (size_t je=1; je <= NNUC; ++je)
         {
           if (use_custom_covariances)
             result.set_BBN_covmat(ie, je, corr.at(ie).at(je) * err_ratio.at(ie) * err_ratio.at(je));
