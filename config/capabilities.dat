@@ -5222,6 +5222,13 @@ lnL_p_ann: |
    Profiled likelihood on p_ann
 
 # -----------
+# ACROPOLIS
+# -----------
+
+Acropolis_1_2_1_init: |
+    Initialise ACROPOLIS (v1.2.1)
+
+# -----------
 # AlterBBN
 # -----------
 
