@@ -347,7 +347,7 @@ namespace Gambit
         // Process user-defined correlations (if provided)
         if (use_custom_covariances)
         {
-          for (size_t ie = 1; ie < NNUC; ie++) corr.at(ie).at(ie) = 1.;
+          for (size_t ie = 1; ie <= NNUC; ie++) corr.at(ie).at(ie) = 1.;
           std::map<std::string, int> abund_map = result.get_abund_map();
 
           // Check whether any of the entries in isotope_basis is not recognised
