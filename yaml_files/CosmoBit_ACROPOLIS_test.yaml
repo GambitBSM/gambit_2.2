@@ -52,7 +52,7 @@ ObsLikes:
 
   - purpose:      LogLike
     capability:   BBN_LogLike
-    sub_capabilities: [He4, D]
+    sub_capabilities: [He4, D, He3, Li7]
 
   - purpose:      Observable
     capability:   BBN_abundances

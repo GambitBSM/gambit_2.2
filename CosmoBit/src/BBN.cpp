@@ -500,6 +500,12 @@ namespace Gambit
       int ie,je,s;
 
       BBN_container BBN_res = *Dep::BBN_abundances; // Fill BBN_container with abundance results from AlterBBN
+      // If the dark matter can decay, it may cause dissociation, then use the corrected abundances
+      if(ModelInUse("DecayingDM_mixture"))
+      {
+        BBN_res = *Dep::BBN_abundances_photodissociation;
+      }
+
       const std::map<std::string, int>& abund_map = BBN_res.get_abund_map();
 
       static bool first = true;
@@ -566,6 +572,7 @@ namespace Gambit
 
       // Init vectors with observations, predictions and covariance matrix
       double prediction[nobs],observed[nobs],sigmaobs[nobs],translate[nobs];
+      bool upperlimit[nobs];
       gsl_matrix *cov = gsl_matrix_alloc(nobs, nobs);
       gsl_matrix *invcov = gsl_matrix_alloc(nobs, nobs);
       gsl_permutation *p = gsl_permutation_alloc(nobs);
@@ -573,7 +580,7 @@ namespace Gambit
       // Iterate through observation dictionary to fill observed, sigmaobs and prediction arrays
       for(std::map<std::string,std::vector<double>>::iterator iter = dict.begin(); iter != dict.end(); ++iter)
       {
-        std::string key = iter->first; // iter = ["element key", [mean, sigma]]
+        std::string key = iter->first; // iter = ["element key", [mean, sigma, upper_limit]]
         if(abund_map.count(key)!=1)   // throw error if element not contained in abundance map was entered in data file
         {
           std::ostringstream err;
@@ -583,6 +590,7 @@ namespace Gambit
         translate[ii]=abund_map.at(key); // to order observed and predicted abundances consistently
         observed[ii]=iter->second[0];
         sigmaobs[ii]=iter->second[1];
+        upperlimit[ii] = round(iter->second[2]);
         prediction[ii]= BBN_res.get_BBN_abund(key);
         ii++;
       }
@@ -598,7 +606,15 @@ namespace Gambit
       double det_cov = gsl_linalg_LU_det(cov,s);
 
       // compute chi2
-      for(ie=0;ie<nobs;ie++) for(je=0;je<nobs;je++) chi2+=(prediction[ie]-observed[ie])*gsl_matrix_get(invcov,ie,je)*(prediction[je]-observed[je]);
+      for(ie=0;ie<nobs;ie++)
+      {
+        for(je=0;je<nobs;je++)
+        {
+          if( (not upperlimit[ie] or prediction[ie] > observed[ie]) and
+              (not upperlimit[je] or prediction[je] > observed[je]) )
+            chi2+=(prediction[ie]-observed[ie])*gsl_matrix_get(invcov,ie,je)*(prediction[je]-observed[je]);
+        }
+      }
       result = -0.5*(chi2 + log(pow(2*pi,nobs)*det_cov));
 
       logger() << "BBN LogLike computed to be: " << result << EOM;
