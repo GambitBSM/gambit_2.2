@@ -54,3 +54,14 @@ diff --git a/acropolis/input.py b/acropolis/input.py
  
      # 3. PARAM_DATA ###########################################################
  
+--- a/acropolis/models.py	2021-11-11 14:47:05.455926528 +0100
++++ b/acropolis/models.py	2021-11-11 14:47:22.871851143 +0100
+@@ -87,7 +87,7 @@ class AbstractModel(ABC):
+             list( transf_mat.dot( Y0i ) for Y0i in self._sII.bbn_abundances().transpose() )
+         )
+ 
+-        return Yf
++        return {'abundances':Yf, 'transfer_matrix':transf_mat}
+ 
+ 
+     def _pdi_matrix(self):

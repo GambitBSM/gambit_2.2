@@ -935,7 +935,7 @@ START_MODULE
     MODEL_CONDITIONAL_DEPENDENCY(eta0,double,LCDM,LCDM_theta,LCDM_zreio)
     DEPENDENCY(BBN_abundances, BBN_container)
     BACKEND_REQ(set_input_params, (), void, (bool,int,int,double))
-    BACKEND_REQ(abundance_photodissociation_decay, (), void, (double*,double*,double,double,double,double,double))
+    BACKEND_REQ(abundance_photodissociation_decay, (), void, (double*,double*,double*,double*,double,double,double,double,double,int))
     #undef FUNCTION
   #undef CAPABILITY
 

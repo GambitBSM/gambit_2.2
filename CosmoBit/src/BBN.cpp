@@ -438,6 +438,9 @@ namespace Gambit
       double BR_el = *Param["BR_el"];
       double BR_ph = *Param["BR_ph"];
 
+      // Fixed number of isotopes
+      int niso = 9;
+
       // Set input parameters
       BEreq::set_input_params(
         byVal(runOptions->getValueOrDef<bool>(false, "verbose")),
@@ -462,24 +465,37 @@ namespace Gambit
 
       result = *Dep::BBN_abundances;
 
-      std::vector<double> abundances_pre(9,0.0);
-      for(int i=0; i !=9; ++i)
+      std::vector<double> abundances_pre(niso,0.0);
+      std::vector<double> covariance_pre(niso*niso,0.0);
+      for(int i=0; i !=niso; ++i)
       {
         abundances_pre[i] = result.get_BBN_abund(i+1);
+        for(int j=0; j<niso; ++j)
+        {
+          covariance_pre[i*niso + j] = result.get_BBN_covmat(i+1,j+1);
+        }
       }
-      std::vector<double> abundances_post(9,0.0);
+      std::vector<double> abundances_post(niso,0.0);
+      std::vector<double> covariance_post(niso*niso,0.0);
 
       BEreq::abundance_photodissociation_decay(abundances_pre.data(),
+                                               covariance_pre.data(),
                                                abundances_post.data(),
+                                               covariance_post.data(),
                                                byVal(m_in_MeV),
                                                byVal(tau),
                                                byVal(eta),
                                                byVal(BR_el),
-                                               byVal(BR_ph));
+                                               byVal(BR_ph),
+                                               byVal(niso));
 
-      for(int i=0; i !=9; ++i)
+      for(int i=0; i !=niso; ++i)
       {
         result.set_BBN_abund(i+1,abundances_post[i]);
+        for(int j=0; j < niso; ++j)
+        {
+          result.set_BBN_covmat(i+1,j+1,covariance_post[i*niso+j]);
+        }
       }
 
     }

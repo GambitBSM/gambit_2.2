@@ -52,7 +52,7 @@
       py::module::import("acropolis.nucl").attr("eps") = py::float_(eps); // default: 1e-3, fast: 1e-2, aggresive: 1e-1
     }
 
-    void abundance_photodissociation_decay(double* abundances_pre, double* abundances_post, double mass, double tau, double eta, double BR_el, double BR_ph)
+    void abundance_photodissociation_decay(double* abundances_pre, double* covariance_pre, double* abundances_post, double* covariance_post, double mass, double tau, double eta, double BR_el, double BR_ph, int niso)
     {
       #ifdef ACROPOLIS_DEBUG
         std::cout << "[ACROPOLIS] Invoking 'DecayModel' with (mass, tau, T0, eta, BR_el, BR_ph) = ";
@@ -63,21 +63,31 @@
       py::object mod = AC_models.attr("DecayModel")(mass, tau, T0, eta, BR_el, BR_ph);
 
       // Get the initial abundances of the isotopes n, p, H2, H3, He3, He4, Li6, Li7, Be7
-      pyArray_dbl initial_abundances(9, abundances_pre);
+      pyArray_dbl initial_abundances(niso, abundances_pre);
 
-      // Reshape the numpy array [shape (9,)] into a 1D-matrix [shape (9,1)]
-      initial_abundances = initial_abundances.attr("reshape")(9,1);
+      // Reshape the numpy array [shape (niso,)] into a 1D-matrix [shape (niso,1)]
+      initial_abundances = initial_abundances.attr("reshape")(niso,1);
  
       // Replace the internal initial abundance matrix of the 'InputInterface' with the content of 'intial_abundances'
       mod.attr("_sII").attr("set_bbn_abundances")(initial_abundances);
  
       // Run the disintegration and compute the final abundances
-      pyArray_dbl final_abundances = mod.attr("run_disintegration")();
+      py::dict result = mod.attr("run_disintegration")();
+      pyArray_dbl final_abundances  = py::cast<pyArray_dbl>(result["abundances"]);
 
-      // Write the results into 'abundances_post'
-      for (int i=0; i != final_abundances.size(); ++i)
+      // Get the transfer matrix
+      pyArray_dbl transfer_matrix = py::cast<pyArray_dbl>(result["transfer_matrix"]);
+      std::cout << transfer_matrix << std::endl;
+
+      // Write the results into 'abundances_post' and 'covariance_post'
+      for (int i=0; i != niso; ++i)
       {
         *(abundances_post+i) = *(final_abundances.data()+i);
+        for (int j=0; j < niso; ++j)
+        {
+          for (int k=0; k < niso; ++k) for (int l=0; l < niso; ++l)
+            *(covariance_post+i*niso+j) += *(transfer_matrix.data()+i*niso+k) *  *(covariance_pre+k*niso+l) * *(transfer_matrix.data()+j*niso+l);
+        }
       }
     }
 
