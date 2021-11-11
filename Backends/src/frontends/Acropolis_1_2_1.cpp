@@ -77,7 +77,6 @@
 
       // Get the transfer matrix
       pyArray_dbl transfer_matrix = py::cast<pyArray_dbl>(result["transfer_matrix"]);
-      std::cout << transfer_matrix << std::endl;
 
       // Write the results into 'abundances_post' and 'covariance_post'
       for (int i=0; i != niso; ++i)
