@@ -14,7 +14,7 @@
 # Sources:
 #   He: PDG_2017; http://pdg.lbl.gov/2017/reviews/rpp2017-rev-bbang-nucleosynthesis.pdf
 #    D: Cooke et al. 2017, https://arxiv.org/abs/1710.11129. Updated with Depta et al. 2020, https://arxiv.org/abs/2011.06519.pdf
-#  He3: Depta el al. 2020, https://arxiv.org/abs/2011.06519.pdf
+#  He3: Depta el al. 2020, https://arxiv.org/abs/2011.06519.pdf, corrected by Sebastian Hoof
 #  Li7: Depta el al. 2020, https://arxiv.org/abs/2011.06519.pdf
 #
 # -------------------------
@@ -22,5 +22,5 @@
 # Isotope  central value  1 sigma uncertainty   upper limit
 Yp         0.245          0.003                 0
 D          2.547e-5       0.025e-5              0
-He3        0.83           0.15                  1
+He3        0.84264        0.15988               1
 Li7        1.6e-10        0.3e-10               0
