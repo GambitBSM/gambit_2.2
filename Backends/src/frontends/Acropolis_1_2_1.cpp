@@ -43,6 +43,34 @@
     // Reference temperature [in MeV] at which the initial number density of the decaying particle is defined.
     static double T0; 
 
+    // Translate the results of AlterBBN (ratioH) into the abundances (Y0) that are assumed by ACROPOLIS.
+    //
+    // This function is adapted from tools/create_sm_abundance_file.c  on the ACROPOLIS git repository.
+    // https://github.com/hep-mh/acropolis.git [added at commit 59d76e9]
+    //
+    // (The only change is the implicit shift in the index: AlterBBN starts counting at 1, other people would start at 0)
+    void ratioH_to_Y0(double ratioH[], double Y0[], int NY) {
+      // Handle the special case 'p'
+      Y0[1] = ratioH[1];
+      // Handle the secial case 'He4'
+      Y0[5] = ratioH[5]/4;
+
+      // All other isotopes are normalised with respect to 'p'
+      for ( int i = 0; i < NY; i++ ) {
+        // Skip the special cases from above
+        if ( i == 1 || i == 5 ) continue;
+        Y0[i] = ratioH[i]*Y0[1];
+      }
+
+      // Revert the decays of 'H3' and 'Be7'
+      Y0[4] = Y0[4] - ratioH[3]*Y0[1]; // H3
+      Y0[7] = Y0[7] - ratioH[8]*Y0[1]; // Be7
+
+      // Perform the neutron decay
+      Y0[1] = Y0[1] + Y0[0];           // p
+      Y0[0] = 0.;                      // n
+    }
+
     void set_input_params(bool verbose, int NE_pd, int NT_pd, double eps)
     {
       py::module::import("acropolis.pprint").attr("verbose") = py::bool_(verbose);
@@ -52,7 +80,7 @@
       py::module::import("acropolis.nucl").attr("eps") = py::float_(eps); // default: 1e-3, fast: 1e-2, aggresive: 1e-1
     }
 
-    void abundance_photodissociation_decay(double* abundances_pre, double* covariance_pre, double* abundances_post, double* covariance_post, double mass, double tau, double eta, double BR_el, double BR_ph, int niso)
+    void abundance_photodissociation_decay(double* ratioH_pre, double* cov_ratioH_pre, double* ratioH_post, double* cov_ratioH_post, double mass, double tau, double eta, double BR_el, double BR_ph, int niso)
     {
       #ifdef ACROPOLIS_DEBUG
         std::cout << "[ACROPOLIS] Invoking 'DecayModel' with (mass, tau, T0, eta, BR_el, BR_ph) = ";
@@ -62,30 +90,32 @@
       // Initialise the model
       py::object mod = AC_models.attr("DecayModel")(mass, tau, T0, eta, BR_el, BR_ph);
 
-      // Get the initial abundances of the isotopes n, p, H2, H3, He3, He4, Li6, Li7, Be7
-      pyArray_dbl initial_abundances(niso, abundances_pre);
+      // Get the initial abundances (in the 'AlterBBN basis') of the isotopes n, p, H2, H3, He3, He4, Li6, Li7, Be7
+      pyArray_dbl Y0_pre(niso, ratioH_pre);
+
+      // Translate the results of AlterBBN ('ratioH') into pure abundances ('Y0') needed by ACROPOLIS.
+      ratioH_to_Y0(ratioH_pre, Y0_pre.mutable_data(), niso);
 
       // Reshape the numpy array [shape (niso,)] into a 1D-matrix [shape (niso,1)]
-      initial_abundances = initial_abundances.attr("reshape")(niso,1);
- 
+      Y0_pre = Y0_pre.attr("reshape")(niso,1);
+
       // Replace the internal initial abundance matrix of the 'InputInterface' with the content of 'intial_abundances'
-      mod.attr("_sII").attr("set_bbn_abundances")(initial_abundances);
- 
+      mod.attr("_sII").attr("set_bbn_abundances")(Y0_pre);
+
       // Run the disintegration and compute the final abundances
       py::dict result = mod.attr("run_disintegration")();
-      pyArray_dbl final_abundances  = py::cast<pyArray_dbl>(result["abundances"]);
 
       // Get the transfer matrix
       pyArray_dbl transfer_matrix = py::cast<pyArray_dbl>(result["transfer_matrix"]);
 
-      // Write the results into 'abundances_post' and 'covariance_post'
+      // Write the results into 'ratioH_post' and 'cov_ratioH_post'
       for (int i=0; i != niso; ++i)
       {
-        *(abundances_post+i) = *(final_abundances.data()+i);
         for (int j=0; j < niso; ++j)
         {
+          *(ratioH_post+i) += *(transfer_matrix.data()+i*niso+j) * *(ratioH_pre+j);
           for (int k=0; k < niso; ++k) for (int l=0; l < niso; ++l)
-            *(covariance_post+i*niso+j) += *(transfer_matrix.data()+i*niso+k) *  *(covariance_pre+k*niso+l) * *(transfer_matrix.data()+j*niso+l);
+            *(cov_ratioH_post+i*niso+j) += *(transfer_matrix.data()+i*niso+k) *  *(cov_ratioH_pre+k*niso+l) * *(transfer_matrix.data()+j*niso+l);
         }
       }
     }
