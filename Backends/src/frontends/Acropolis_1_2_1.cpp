@@ -49,14 +49,16 @@
     // https://github.com/hep-mh/acropolis.git [added at commit 59d76e9]
     //
     // (The only change is the implicit shift in the index: AlterBBN starts counting at 1, other people would start at 0)
-    void ratioH_to_Y0(double ratioH[], double Y0[], int NY) {
+    void ratioH_to_Y0(double ratioH[], double Y0[], int NY)
+    {
       // Handle the special case 'p'
       Y0[1] = ratioH[1];
       // Handle the secial case 'He4'
       Y0[5] = ratioH[5]/4;
 
       // All other isotopes are normalised with respect to 'p'
-      for ( int i = 0; i < NY; i++ ) {
+      for ( int i = 0; i < NY; i++ )
+      {
         // Skip the special cases from above
         if ( i == 1 || i == 5 ) continue;
         Y0[i] = ratioH[i]*Y0[1];
@@ -69,6 +71,24 @@
       // Perform the neutron decay
       Y0[1] = Y0[1] + Y0[0];           // p
       Y0[0] = 0.;                      // n
+    }
+
+    // Reverse translation
+    void Y0_to_ratioH(double ratioH[], double Y0[], int NY)
+    {
+      // Handle the special case 'p'
+      ratioH[1] = Y0[1];
+      // Handle the secial case 'He4'
+      ratioH[5] = Y0[5]*4;
+
+      // All other isotopes are normalised with respect to 'p'
+      for ( int i = 0; i < NY; i++ )
+      {
+        // Skip the special cases from above
+        if ( i == 1 || i == 5 ) continue;
+        ratioH[i] = Y0[i]/Y0[1];
+      }
+
     }
 
     void set_input_params(bool verbose, int NE_pd, int NT_pd, double eps)
@@ -108,16 +128,27 @@
       // Get the transfer matrix
       pyArray_dbl transfer_matrix = py::cast<pyArray_dbl>(result["transfer_matrix"]);
 
+      // Pure abundances post acropolis
+      double Y0_post[niso];
+
       // Write the results into 'ratioH_post' and 'cov_ratioH_post'
       for (int i=0; i != niso; ++i)
       {
+        Y0_post[i] = 0.0;
         for (int j=0; j < niso; ++j)
         {
-          *(ratioH_post+i) += *(transfer_matrix.data()+i*niso+j) * *(ratioH_pre+j);
-          for (int k=0; k < niso; ++k) for (int l=0; l < niso; ++l)
-            *(cov_ratioH_post+i*niso+j) += *(transfer_matrix.data()+i*niso+k) *  *(cov_ratioH_pre+k*niso+l) * *(transfer_matrix.data()+j*niso+l);
+          *(Y0_post+i) += *(transfer_matrix.data()+i*niso+j) * *(ratioH_pre+j);
+          // TODO: Set the covariances to 0 for now. Might expand later
+          *(cov_ratioH_post+i*niso+j) = 0.0;
+          //for (int k=0; k < niso; ++k) for (int l=0; l < niso; ++l)
+          //{
+          //  *(cov_ratioH_post+i*niso+j) += *(transfer_matrix.data()+i*niso+k) *  *(cov_ratioH_pre+k*niso+l) * *(transfer_matrix.data()+j*niso+l);
+          //}
         }
       }
+
+      // Transalte the results from pure abundances to ratioH
+      Y0_to_ratioH(ratioH_post, Y0_post, niso);
     }
 
   }
