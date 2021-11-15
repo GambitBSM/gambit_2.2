@@ -89,6 +89,11 @@
         ratioH[i] = Y0[i]/Y0[1];
       }
 
+      // Perform the 'post-BBN' decays of 'H3' and 'Be7'
+      // (c.f. plots/plot_annih_pwave_1MeV_ee.py of the ACROPOLIS git repository)
+      ratioH[4] = ratioH[4] + ratioH[3]; // H3 -> He3
+      ratioH[7] = ratioH[7] + ratioH[8]; // Be7 -> li7
+
     }
 
     void set_input_params(bool verbose, int NE_pd, int NT_pd, double eps)
@@ -137,7 +142,7 @@
         Y0_post[i] = 0.0;
         for (int j=0; j < niso; ++j)
         {
-          *(Y0_post+i) += *(transfer_matrix.data()+i*niso+j) * *(ratioH_pre+j);
+          *(Y0_post+i) += *(transfer_matrix.data()+i*niso+j) * *(Y0_pre.data()+j);
           // TODO: Set the covariances to 0 for now. Might expand later
           *(cov_ratioH_post+i*niso+j) = 0.0;
           //for (int k=0; k < niso; ++k) for (int l=0; l < niso; ++l)
