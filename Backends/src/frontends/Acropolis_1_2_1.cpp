@@ -69,9 +69,8 @@
       Y0[7] = Y0[7] - ratioH[8]*Y0[1]; // Be7
 
       // Perform the neutron decay
-      // TODO: This happens after photodissociation, not now
-      //Y0[1] = Y0[1] + Y0[0];           // p
-      //Y0[0] = 0.;                      // n
+      Y0[1] = Y0[1] + Y0[0];           // p
+      Y0[0] = 0.;                      // n
     }
 
     // Reverse translation
@@ -90,12 +89,34 @@
         ratioH[i] = Y0[i]/Y0[1];
       }
 
-      // Perform the 'post-BBN' decays of 'H3' and 'Be7'
-      // (c.f. plots/plot_annih_pwave_1MeV_ee.py of the ACROPOLIS git repository)
-      // TODO: This decays are already computed by ACROPOLIS
-      //ratioH[4] = ratioH[4] + ratioH[3]; // H3 -> He3
-      //ratioH[7] = ratioH[7] + ratioH[8]; // Be7 -> li7
+    }
 
+    // Function to apply variable transformation to the transfer matrix
+    // This is an approximation assuming one can linearize the transformation, so it should only be used for the covariance
+    void transform_transfer_matrix(std::vector<double> &ctf, pyArray_dbl &tf, double ratioH[], int NY)
+    {
+      double Jacobian[NY][NY] =        {{ratioH[1], ratioH[0], 0., 0., 0., 0., 0., 0., 0.},
+                                        {0., 1., 0., 0., 0., 0., 0., 0., 0.},
+                                        {0., ratioH[2], ratioH[1], 0., 0., 0., 0., 0., 0.},
+                                        {0., ratioH[3], 0., ratioH[1], 0., 0., 0., 0., 0.},
+                                        {0., ratioH[4], 0., 0., ratioH[1], 0., 0., 0., 0.},
+                                        {0., 0., 0., 0., 0., 1., 0., 0., 0.},
+                                        {0., ratioH[6], 0., 0., 0., 0., ratioH[1], 0., 0.},
+                                        {0., ratioH[7], 0., 0., 0., 0., 0., ratioH[1], 0.},
+                                            {0., ratioH[8], 0., 0., 0., 0., 0., 0., ratioH[1]}};
+      double InverseJacobian[NY][NY] = {{1./ratioH[1], -ratioH[0]/ratioH[1], 0., 0., 0., 0., 0., 0., 0.},
+                                        {0., 1., 0., 0., 0., 0., 0., 0., 0.},
+                                        {0., -ratioH[2]/ratioH[1], 1./ratioH[1], 0., 0., 0., 0., 0., 0.},
+                                        {0., -ratioH[3]/ratioH[1], 0., 1./ratioH[1], 0., 0., 0., 0., 0.},
+                                        {0., -ratioH[4]/ratioH[1], 0., 0., 1./ratioH[1], 0., 0., 0., 0.},
+                                        {0., 0., 0., 0., 0., 1., 0., 0., 0.},
+                                        {0., -ratioH[6]/ratioH[1], 0., 0., 0., 0., 1./ratioH[1], 0., 0.},
+                                        {0., -ratioH[7]/ratioH[1], 0., 0., 0., 0., 0., 1./ratioH[1], 0.},
+                                        {0., -ratioH[8]/ratioH[1], 0., 0., 0., 0., 0., 0., 1./ratioH[1]}};
+
+      for(int i=0; i<NY; ++i) for(int j=0; j<NY; ++j) for(int k=0; k<NY; ++k) for(int l=0; l<NY; ++l)
+          ctf[i*NY+j] += Jacobian[i][k] * *(tf.data()+k*NY+l) * InverseJacobian[l][j];
+ 
     }
 
     void set_input_params(bool verbose, int NE_pd, int NT_pd, double eps)
@@ -119,7 +140,7 @@
 
       // Get the initial abundances (in the 'AlterBBN basis') of the isotopes n, p, H2, H3, He3, He4, Li6, Li7, Be7
       pyArray_dbl Y0_pre(niso, ratioH_pre);
-
+ 
       // Translate the results of AlterBBN ('ratioH') into pure abundances ('Y0') needed by ACROPOLIS.
       ratioH_to_Y0(ratioH_pre, Y0_pre.mutable_data(), niso);
 
@@ -138,6 +159,10 @@
       // Pure abundances post acropolis
       double Y0_post[niso];
 
+      // Transform transfer matrix
+      std::vector<double> corrected_transfer_matrix(niso*niso,0.0);
+      transform_transfer_matrix(corrected_transfer_matrix, transfer_matrix, ratioH_pre, niso);
+
       // Write the results into 'ratioH_post' and 'cov_ratioH_post'
       for (int i=0; i != niso; ++i)
       {
@@ -145,12 +170,10 @@
         for (int j=0; j < niso; ++j)
         {
           *(Y0_post+i) += *(transfer_matrix.data()+i*niso+j) * *(Y0_pre.data()+j);
-          // TODO: Set the covariances to 0 for now. Might expand later
-          *(cov_ratioH_post+i*niso+j) = 0.0;
-          //for (int k=0; k < niso; ++k) for (int l=0; l < niso; ++l)
-          //{
-          //  *(cov_ratioH_post+i*niso+j) += *(transfer_matrix.data()+i*niso+k) *  *(cov_ratioH_pre+k*niso+l) * *(transfer_matrix.data()+j*niso+l);
-          //}
+          for (int k=0; k < niso; ++k) for (int l=0; l < niso; ++l)
+          {
+            *(cov_ratioH_post+i*niso+j) += corrected_transfer_matrix[i*niso+k] *  *(cov_ratioH_pre+k*niso+l) * corrected_transfer_matrix[j*niso+l];
+          }
         }
       }
 
