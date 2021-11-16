@@ -524,6 +524,9 @@ namespace Gambit
 
       const std::map<std::string, int>& abund_map = BBN_res.get_abund_map();
 
+      // The measurement of the abundance for 3He is done for 3H/D, whereas the computed abundance is 3He/H, so convert it
+      BBN_res.set_BBN_abund(abund_map.at("He3"), BBN_res.get_BBN_abund("He3")/BBN_res.get_BBN_abund("D"));
+
       static bool first = true;
       const static str filename = runOptions->getValueOrDef<std::string>("default.dat", "DataFile");
       const static str path_to_file = GAMBIT_DIR "/CosmoBit/data/BBN/" + filename;
