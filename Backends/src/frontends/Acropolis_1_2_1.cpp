@@ -69,8 +69,9 @@
       Y0[7] = Y0[7] - ratioH[8]*Y0[1]; // Be7
 
       // Perform the neutron decay
-      Y0[1] = Y0[1] + Y0[0];           // p
-      Y0[0] = 0.;                      // n
+      // TODO: This happens after photodissociation, not now
+      //Y0[1] = Y0[1] + Y0[0];           // p
+      //Y0[0] = 0.;                      // n
     }
 
     // Reverse translation
@@ -91,8 +92,9 @@
 
       // Perform the 'post-BBN' decays of 'H3' and 'Be7'
       // (c.f. plots/plot_annih_pwave_1MeV_ee.py of the ACROPOLIS git repository)
-      ratioH[4] = ratioH[4] + ratioH[3]; // H3 -> He3
-      ratioH[7] = ratioH[7] + ratioH[8]; // Be7 -> li7
+      // TODO: This decays are already computed by ACROPOLIS
+      //ratioH[4] = ratioH[4] + ratioH[3]; // H3 -> He3
+      //ratioH[7] = ratioH[7] + ratioH[8]; // Be7 -> li7
 
     }
 
