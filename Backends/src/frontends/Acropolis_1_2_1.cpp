@@ -95,24 +95,24 @@
     // This is an approximation assuming one can linearize the transformation, so it should only be used for the covariance
     void transform_transfer_matrix(std::vector<double> &ctf, pyArray_dbl &tf, double ratioH[], int NY)
     {
-      double Jacobian[NY][NY] =        {{ratioH[1], ratioH[0], 0., 0., 0., 0., 0., 0., 0.},
-                                        {0., 1., 0., 0., 0., 0., 0., 0., 0.},
-                                        {0., ratioH[2], ratioH[1], 0., 0., 0., 0., 0., 0.},
-                                        {0., ratioH[3], 0., ratioH[1], 0., 0., 0., 0., 0.},
-                                        {0., ratioH[4], 0., 0., ratioH[1], 0., 0., 0., 0.},
-                                        {0., 0., 0., 0., 0., 1., 0., 0., 0.},
-                                        {0., ratioH[6], 0., 0., 0., 0., ratioH[1], 0., 0.},
-                                        {0., ratioH[7], 0., 0., 0., 0., 0., ratioH[1], 0.},
-                                            {0., ratioH[8], 0., 0., 0., 0., 0., 0., ratioH[1]}};
-      double InverseJacobian[NY][NY] = {{1./ratioH[1], -ratioH[0]/ratioH[1], 0., 0., 0., 0., 0., 0., 0.},
-                                        {0., 1., 0., 0., 0., 0., 0., 0., 0.},
-                                        {0., -ratioH[2]/ratioH[1], 1./ratioH[1], 0., 0., 0., 0., 0., 0.},
-                                        {0., -ratioH[3]/ratioH[1], 0., 1./ratioH[1], 0., 0., 0., 0., 0.},
-                                        {0., -ratioH[4]/ratioH[1], 0., 0., 1./ratioH[1], 0., 0., 0., 0.},
-                                        {0., 0., 0., 0., 0., 1., 0., 0., 0.},
-                                        {0., -ratioH[6]/ratioH[1], 0., 0., 0., 0., 1./ratioH[1], 0., 0.},
-                                        {0., -ratioH[7]/ratioH[1], 0., 0., 0., 0., 0., 1./ratioH[1], 0.},
-                                        {0., -ratioH[8]/ratioH[1], 0., 0., 0., 0., 0., 0., 1./ratioH[1]}};
+      mat_dbl Jacobian =        {{ratioH[1], ratioH[0], 0., 0., 0., 0., 0., 0., 0.},
+                                 {0., 1., 0., 0., 0., 0., 0., 0., 0.},
+                                 {0., ratioH[2], ratioH[1], 0., 0., 0., 0., 0., 0.},
+                                 {0., ratioH[3], 0., ratioH[1], 0., 0., 0., 0., 0.},
+                                 {0., ratioH[4], 0., 0., ratioH[1], 0., 0., 0., 0.},
+                                 {0., 0., 0., 0., 0., 1., 0., 0., 0.},
+                                 {0., ratioH[6], 0., 0., 0., 0., ratioH[1], 0., 0.},
+                                 {0., ratioH[7], 0., 0., 0., 0., 0., ratioH[1], 0.},
+                                 {0., ratioH[8], 0., 0., 0., 0., 0., 0., ratioH[1]}};
+      mat_dbl InverseJacobian = {{1./ratioH[1], -ratioH[0]/ratioH[1], 0., 0., 0., 0., 0., 0., 0.},
+                                 {0., 1., 0., 0., 0., 0., 0., 0., 0.},
+                                 {0., -ratioH[2]/ratioH[1], 1./ratioH[1], 0., 0., 0., 0., 0., 0.},
+                                 {0., -ratioH[3]/ratioH[1], 0., 1./ratioH[1], 0., 0., 0., 0., 0.},
+                                 {0., -ratioH[4]/ratioH[1], 0., 0., 1./ratioH[1], 0., 0., 0., 0.},
+                                 {0., 0., 0., 0., 0., 1., 0., 0., 0.},
+                                 {0., -ratioH[6]/ratioH[1], 0., 0., 0., 0., 1./ratioH[1], 0., 0.},
+                                 {0., -ratioH[7]/ratioH[1], 0., 0., 0., 0., 0., 1./ratioH[1], 0.},
+                                 {0., -ratioH[8]/ratioH[1], 0., 0., 0., 0., 0., 0., 1./ratioH[1]}};
 
       for(int i=0; i<NY; ++i) for(int j=0; j<NY; ++j) for(int k=0; k<NY; ++k) for(int l=0; l<NY; ++l)
           ctf[i*NY+j] += Jacobian[i][k] * *(tf.data()+k*NY+l) * InverseJacobian[l][j];
