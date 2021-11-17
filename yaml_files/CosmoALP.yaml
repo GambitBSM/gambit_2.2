@@ -48,6 +48,7 @@ Parameters:
       prior_type: log
     f0_thermal:
       range: [1e-12, 1e2]
+      prior_type: log
     fa: 1e9
     thetai: 0.0
     T_R: 5.0
@@ -56,10 +57,10 @@ Parameters:
 
   cosmo_nuisance_Planck_lite: !import include/Planck_2018/cosmo_nuisance_Planck_lite_flat.yaml
 
-  #cosmo_nuisance_Pantheon:
-  #  M:
-  #    prior_type: flat
-  #    range: [-20,-18]
+  cosmo_nuisance_Pantheon:
+    M:
+      prior_type: flat
+      range: [-20,-18]
 
   cosmo_nuisance_SpectralDistortions: !import include/cosmo_nuisance_SpectralDistortions_fid.yaml
 
@@ -67,18 +68,17 @@ Parameters:
     neutron_lifetime:
       range: [875,895]
 
-  # TODO: Not needed
-  #rBBN_dNurBBN:
-  #  r_BBN: 1.0
-  #  dNur_BBN: 0.0
+  rBBN_dNurBBN:
+    r_BBN: 1.0
+    dNur_BBN: 0.0
 
 Priors:
 
 Printer:
 
-  printer: cout
+  #printer: cout
 
-  #printer: hdf5
+  printer: hdf5
   options:
     output_file: "CosmoALP.hdf5"
     group: "/CosmoALP"
@@ -87,7 +87,7 @@ Printer:
 
 Scanner:
 
-  use_scanner: random
+  use_scanner: diver
 
   scanners:
 
@@ -146,12 +146,11 @@ ObsLikes:
   - purpose:      LogLike
     capability:   MP_Combined_LogLike
     sub_capabilities:
-      #TODO BAO? Pantheon?
-      #- bao_boss_dr12
-      #- bao_smallz_2014
-      #- Pantheon
+      - bao_boss_dr12
+      - bao_smallz_2014
+      - Pantheon
       - firas
-      #- pixie #TODO: Can't run at the same time, might have to do after
+      #- pixie  # Can't run at the same time, might have to do after
       
 
   - purpose:          Observable
@@ -192,16 +191,15 @@ Rules:
       failsafe: 3
       err: 0
 
-# TODO: Why?
-#  - capability: BBN_abundances
-#    options:
-#      isotope_basis: [Yp, D, He3, Be7, Li7]
-#      correlation_matrix: [[+1.000e00, +1.524e-2, +2.667e-2, +2.303e-2, +2.429e-2],
-#                           [+1.524e-2, +1.000e00, -8.160e-1, -3.775e-1, -3.653e-1],
-#                           [+2.667e-2, -8.160e-1, +1.000e00, +3.897e-1, +3.780e-1],
-#                           [+2.303e-2, -3.775e-1, +3.897e-1, +1.000e00, +9.974e-1],
-#                           [+2.429e-2, -3.653e-1, +3.780e-1, +9.974e-1, +1.000e00]]
-#      relative_errors: [1.348e-3, 1.596e-2, 1.618e-2, 6.788e-2, 6.579e-2]
+  - capability: BBN_abundances
+    options:
+      isotope_basis: [Yp, D, He3, Be7, Li7]
+      correlation_matrix: [[+1.000e00, +1.524e-2, +2.667e-2, +2.303e-2, +2.429e-2],
+                           [+1.524e-2, +1.000e00, -8.160e-1, -3.775e-1, -3.653e-1],
+                           [+2.667e-2, -8.160e-1, +1.000e00, +3.897e-1, +3.780e-1],
+                           [+2.303e-2, -3.775e-1, +3.897e-1, +1.000e00, +9.974e-1],
+                           [+2.429e-2, -3.653e-1, +3.780e-1, +9.974e-1, +1.000e00]]
+      relative_errors: [1.348e-3, 1.596e-2, 1.618e-2, 6.788e-2, 6.579e-2]
 
   - capability: BBN_abundances_photodissociation
     options:
@@ -220,38 +218,21 @@ Rules:
       print_table: false   # Print the table to stdout. Useful for debugging
       z_max: 1.e7          # Constant continuation of efficiency table up to a given redshift. (f(z) = const. for 2.7e3 < z < z_max)
 
-  # TODO: Needed?
-  - capability: classy_input_params
-    function: set_classy_input_params
-    options:
-      log_classy_inputs: true
-      classy_dict:
-        z_end_reco_test: 49 # disable check whether recombination has ended.
-        input_verbose: 1
-        background_verbose: 1
-        thermodynamics_verbose: 1
-        recombination: recfast
-
-  # Use the full f(z) treatment for CMB energy injection
+  # Use the on the spot treatment for CMB energy injection
   - capability: classy_parameters_EnergyInjection
-    function: set_classy_parameters_EnergyInjection_DecayingDM
-    #TODO: Why not this?
-    #function: set_classy_parameters_EnergyInjection_DecayingDM_onSpot
+    function: set_classy_parameters_EnergyInjection_DecayingDM_onSpot
 
-  #- capability: f_eff
-  #  function: f_eff_constant
-  #  options:
-  #    f_eff: 1.0
+  - capability: f_eff
+    function: f_eff_constant
+    options:
+      f_eff: 1.0
 
   - capability: classy_MPLike_input
     function: set_classy_input_with_MPLike
-    module: CosmoBit
 
-  # TODO: This seems to be needed
-  - capability: energy_injection_spectrum
-    function: energy_injection_spectrum_DecayingDM_mixture
+  - capability: parameter_dict_for_MPLike
+    function: set_parameter_dict_for_MPLike
 
-  # TODO: What does this do?
   - capability: external_dNeff_etaBBN
     options:
       grid_size: 3000   # set grid size of time grid to solve differntial equation to compute dNeff and etaBBN for CosmoALP model (default: 3000)
@@ -266,10 +247,9 @@ Logger:
 
 KeyValues:
 
-  debug: true
+  debug: false
 
   default_output_path: "runs/CosmoALP"
 
   likelihood:
     model_invalid_for_lnlike_below: -1e9
-
