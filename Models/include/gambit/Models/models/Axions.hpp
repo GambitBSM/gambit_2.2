@@ -29,6 +29,7 @@
   //                 f0_thermal [dimensionless], T_R [MeV]
   DEFINEPARS(gagg,gaee,gaN,fa,ma0,Tchi,beta,thetai)
   DEFINEPARS(f0_thermal, T_R)
+  MAP_TO_CAPABILITY(gagg,gagg)
   
   // Friendship with "DecayingDM_photon" (Mapping is defined in Axions.cpp)
   // (Energy injection into CMB)
