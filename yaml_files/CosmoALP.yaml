@@ -27,17 +27,17 @@ Parameters:
       prior_type: flat
       range: [4.5,9.5]
 
-  #PowerLaw_ps:
-  #  ln10A_s:
-  #    prior_type: flat
-  #    range: [2.9,3.2]
-  #  n_s:
-  #    prior_type: flat
-  #    range: [0.9,1.10]
-  #  r: 0
-  #  N_pivot: 55
+  PowerLaw_ps:
+    ln10A_s:
+      prior_type: flat
+      range: [2.9,3.2]
+    n_s:
+      prior_type: flat
+      range: [0.9,1.10]
+    r: 0
+    N_pivot: 55
 
-  #StandardModel_SLHA2: !import include/StandardModel_SLHA2_Planckbaseline.yaml
+  StandardModel_SLHA2: !import include/StandardModel_SLHA2_Planckbaseline.yaml
 
   CosmoALP_gg_tau:
     tau:
@@ -61,10 +61,13 @@ Parameters:
   #    prior_type: flat
   #    range: [-20,-18]
 
+  cosmo_nuisance_SpectralDistortions: !import include/cosmo_nuisance_SpectralDistortions_fid.yaml
+
   nuclear_params_neutron_lifetime:
     neutron_lifetime:
       range: [875,895]
 
+  # TODO: Not needed
   #rBBN_dNurBBN:
   #  r_BBN: 1.0
   #  dNur_BBN: 0.0
@@ -139,6 +142,48 @@ ObsLikes:
     capability:   Planck_lowl_loglike
     function:     function_Planck_lowl_TTEE_2018_loglike
 
+  # ---- Late-time cosmology (MontePython Likelihoods) -----
+  - purpose:      LogLike
+    capability:   MP_Combined_LogLike
+    sub_capabilities:
+      #TODO BAO? Pantheon?
+      bao_boss_dr12: default
+      #bao_smallz_2014: default
+      #Pantheon: default
+      firas: default
+      #pixie: default #TODO: Can't run at the same time, might have to do after
+      
+
+  - purpose:          Observable
+    capability:       MP_LogLikes
+    type:             map_str_dbl
+
+  # ---- Axion (astrophysical likelihoods) -----
+  - purpose:      LogLike
+    capability:   lnL_SN1987A
+    module:       DarkBit
+    type:         double
+
+  - purpose:      LogLike
+    capability:   lnL_RParameter
+    module:       DarkBit
+    type:         double
+
+  # ---- Further GeneralCosmoALP Observables -----
+  - purpose:      Observable
+    capability:   gagg
+    type:         double
+
+  - purpose:      Observable
+    capability:   DM_fraction
+    type:         double
+
+  - purpose:      Observable
+    capability:   minimum_fraction
+    type:         double
+
+  - purpose:      Observable
+    capability:   tau_reio
 
 Rules:
 
@@ -169,24 +214,44 @@ Rules:
     options:
       DataFile: default.dat
 
-#Likelihoods:
+  - capability: DarkAges_1_2_0_init
+    options:
+      f_eff_mode: false    # Calculate the single f_eff(z) rather than the full f_c(z) table? By default f_c(z) is calculated
+      print_table: false   # Print the table to stdout. Useful for debugging
+      z_max: 1.e7          # Constant continuation of efficiency table up to a given redshift. (f(z) = const. for 2.7e3 < z < z_max)
 
-#- SN likelihood
+  # TODO: Needed?
+  - capability: classy_input_params
+    function: set_classy_input_params
+    options:
+      log_classy_inputs: true
+      classy_dict:
+        z_end_reco_test: 49 # disable check whether recombination has ended.
+        input_verbose: 1
+        background_verbose: 1
+        thermodynamics_verbose: 1
+        recombination: recfast
 
-#- HB likelihood
+  # Use the full f(z) treatment for CMB energy injection
+  - capability: classy_parameters_EnergyInjection
+    function: set_classy_parameters_EnergyInjection_DecayingDM
+    #TODO: Why not this?
+    #function: set_classy_parameters_EnergyInjection_DecayingDM_onSpot
 
-#- FIRAS spectral distortion
+  - capability: classy_MPLike_input
+    function: set_classy_input_with_MPLike
+    module: CosmoBit
 
-#(Bound on reheating temperature implemented by invalidation rather than
-#likelihood)
+  # TODO: This seems to be needed
+  - capability: energy_injection_spectrum
+    function: energy_injection_spectrum_DecayingDM_mixture
 
-#Observables:
+  # TODO: What does this do?
+  - capability: external_dNeff_etaBBN
+    options:
+      grid_size: 3000   # set grid size of time grid to solve differntial equation to compute dNeff and etaBBN for CosmoALP model (default: 3000)
+      max_iter: 15      # set max. number of iterations until convergence (of default 1e-6 accuracy) is reached. If not: point invalidated
 
-#- ALP-photon coupling
-
-#- ALP abundance
-
-#- PIXIE mock likelihood
 
 Logger:
   redirection:
