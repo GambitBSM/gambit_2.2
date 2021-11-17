@@ -254,7 +254,7 @@ START_MODULE
     ALLOW_MODEL(StandardModel_SLHA2)
     ALLOW_MODEL_DEPENDENCE(etaBBN_rBBN_rCMB_dNurBBN_dNurCMB)
     MODEL_GROUP(group1, StandardModel_SLHA2)
-    MODEL_GROUP(gorup2, etaBBN_rBBN_rCMB_dNurBBN_dNurCMB)
+    MODEL_GROUP(group2, etaBBN_rBBN_rCMB_dNurBBN_dNurCMB)
     ALLOW_MODEL_COMBINATION(group1, group2)
     DEPENDENCY(Neff_SM, double)
     #undef FUNCTION
