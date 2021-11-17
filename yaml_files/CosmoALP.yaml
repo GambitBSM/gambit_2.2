@@ -147,11 +147,11 @@ ObsLikes:
     capability:   MP_Combined_LogLike
     sub_capabilities:
       #TODO BAO? Pantheon?
-      bao_boss_dr12: default
-      #bao_smallz_2014: default
-      #Pantheon: default
-      firas: default
-      #pixie: default #TODO: Can't run at the same time, might have to do after
+      #- bao_boss_dr12
+      #- bao_smallz_2014
+      #- Pantheon
+      - firas
+      #- pixie #TODO: Can't run at the same time, might have to do after
       
 
   - purpose:          Observable
@@ -237,6 +237,11 @@ Rules:
     function: set_classy_parameters_EnergyInjection_DecayingDM
     #TODO: Why not this?
     #function: set_classy_parameters_EnergyInjection_DecayingDM_onSpot
+
+  #- capability: f_eff
+  #  function: f_eff_constant
+  #  options:
+  #    f_eff: 1.0
 
   - capability: classy_MPLike_input
     function: set_classy_input_with_MPLike
