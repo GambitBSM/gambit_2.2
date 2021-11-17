@@ -2,8 +2,7 @@ Parameters:
 
   LCDM:
     omega_b:
-      prior_type: flat
-      range: [0.020,0.024]
+      fixed_value: 0.02237
     omega_cdm:
       fixed_value: 0.1200
     H0:
@@ -30,7 +29,8 @@ Parameters:
     lifetime:               # (lifetime in s)
       fixed_value: 1e5
     fraction:               # (initial fractional decaying dark matter abundance)
-      fixed_value: 1.0
+      prior_type: log
+      range: [1e-10,1e2]
 
 Priors:
 

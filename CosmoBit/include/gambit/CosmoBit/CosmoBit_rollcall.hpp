@@ -927,12 +927,11 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION BBN_abundances_photodissociation_decayingDM
     START_FUNCTION(BBN_container)
-    ALLOW_MODELS(LCDM, LCDM_theta, LCDM_zreio, etaBBN_rBBN_rCMB_dNurBBN_dNurCMB)
+    ALLOW_MODELS(LCDM, LCDM_theta, LCDM_zreio)
     ALLOW_MODELS(DecayingDM_mixture)
-    MODEL_GROUP(cosmo,(LCDM, LCDM_theta, LCDM_zreio, etaBBN_rBBN_rCMB_dNurBBN_dNurCMB))
+    MODEL_GROUP(cosmo,(LCDM, LCDM_theta, LCDM_zreio))
     MODEL_GROUP(decay,(DecayingDM_mixture))
     ALLOW_MODEL_COMBINATION(cosmo,decay)
-    MODEL_CONDITIONAL_DEPENDENCY(eta0,double,LCDM,LCDM_theta,LCDM_zreio)
     DEPENDENCY(BBN_abundances, BBN_container)
     BACKEND_REQ(set_input_params, (), void, (bool,int,int,double))
     BACKEND_REQ(abundance_photodissociation_decay, (), void, (double*,double*,double*,double*,double,double,double,double,double,int))

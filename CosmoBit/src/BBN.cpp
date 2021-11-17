@@ -433,10 +433,21 @@ namespace Gambit
       using namespace Pipes::BBN_abundances_photodissociation_decayingDM;
 
       // Get all the relevant parameters from the decayingDM_mixture model
-      double m_in_MeV = 1e3*(*Param["mass"]);
-      double tau = *Param["lifetime"];
-      double BR_el = *Param["BR_el"];
-      double BR_ph = *Param["BR_ph"];
+      const double m_in_MeV = 1e3*(*Param["mass"]);
+      const double tau = *Param["lifetime"];
+      const double BR_el = *Param["BR_el"];
+      const double BR_ph = *Param["BR_ph"];
+      const double xi = *Param["fraction"];
+
+      // Calculate the number density of the decaying particles today as if they would not have decayed. (in MeV^3)
+      const double rho0_crit_by_h2 = 3.*pow(m_planck_red*1e3,2) * pow((1e5*1e3*hbar/Mpc_SI),2);  // rho0_crit/(h^2) in MeV^4
+      const double omega_cdm = *Param["omega_cdm"];
+      const double n0_a = xi / m_in_MeV * omega_cdm * rho0_crit_by_h2;
+
+      // Normalise n0_a with respect to the photon number density at T0.
+      const double T_cmb_in_MeV = 1e-6 * kB_eV_over_K * *Param["T_cmb"];
+      const double n0_gamma = 2. * zeta3 / pow(pi,2) * pow(T_cmb_in_MeV,3);
+      const double N0a = n0_a / n0_gamma;
 
       // Fixed number of isotopes
       int niso = 9;
@@ -448,20 +459,6 @@ namespace Gambit
         byVal(runOptions->getValueOrDef<int>(50, "NT_pd")), // default: 50, fast: 25, aggresive: 10
         byVal(runOptions->getValueOrDef<double>(1e-3, "eps")) // default: 1e-3, fast: 1e-2, aggresive: 1e-1
       );
-
-
-      // The last relevant input is "eta" (at BBN).
-      // This can be either taken from the etaBBN_rBBN_rCMB_dNurBBN_dNurCMB model (if it is in use),
-      // or it can be derived from omega_b (parameter of the LCDM models) via the eta0 capability
-      double eta;
-      if (ModelInUse("etaBBN_rBBN_rCMB_dNurBBN_dNurCMB"))
-      {
-        eta = *Param["eta_BBN"];
-      }
-      else
-      {
-        eta = *Dep::eta0;
-      }
 
       result = *Dep::BBN_abundances;
 
@@ -484,7 +481,7 @@ namespace Gambit
                                                covariance_post.data(),
                                                byVal(m_in_MeV),
                                                byVal(tau),
-                                               byVal(eta),
+                                               byVal(N0a),
                                                byVal(BR_el),
                                                byVal(BR_ph),
                                                byVal(niso));

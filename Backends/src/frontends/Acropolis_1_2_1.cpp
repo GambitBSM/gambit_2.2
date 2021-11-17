@@ -128,15 +128,15 @@
       py::module::import("acropolis.nucl").attr("eps") = py::float_(eps); // default: 1e-3, fast: 1e-2, aggresive: 1e-1
     }
 
-    void abundance_photodissociation_decay(double* ratioH_pre, double* cov_ratioH_pre, double* ratioH_post, double* cov_ratioH_post, double mass, double tau, double eta, double BR_el, double BR_ph, int niso)
+    void abundance_photodissociation_decay(double* ratioH_pre, double* cov_ratioH_pre, double* ratioH_post, double* cov_ratioH_post, double mass, double tau, double N0a, double BR_el, double BR_ph, int niso)
     {
       #ifdef ACROPOLIS_DEBUG
-        std::cout << "[ACROPOLIS] Invoking 'DecayModel' with (mass, tau, T0, eta, BR_el, BR_ph) = ";
-        std::cout << "( " << mass << " " << tau << " " << T0 << " " << eta << " " << BR_el << " " << BR_ph << " )" << std::endl;
+        std::cout << "[ACROPOLIS] Invoking 'DecayModel' with (mass, tau, T0, N0a, BR_el, BR_ph) = ";
+        std::cout << "( " << mass << " " << tau << " " << T0 << " " << N0a << " " << BR_el << " " << BR_ph << " )" << std::endl;
       #endif
 
       // Initialise the model
-      py::object mod = AC_models.attr("DecayModel")(mass, tau, T0, eta, BR_el, BR_ph);
+      py::object mod = AC_models.attr("DecayModel")(mass, tau, T0, N0a, BR_el, BR_ph);
 
       // Get the initial abundances (in the 'AlterBBN basis') of the isotopes n, p, H2, H3, He3, He4, Li6, Li7, Be7
       pyArray_dbl Y0_pre(niso, ratioH_pre);
