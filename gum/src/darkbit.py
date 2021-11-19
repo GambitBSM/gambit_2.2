@@ -537,7 +537,7 @@ def proc_cat(dm, sv, products, propagators, gambit_pdg_dict,
 def write_wimp_props(model_name):
 
     wimp_prop_h = dumb_indent(4, (
-              "MODEL_CONDITIONAL_DEPENDENCY({0}M_spectrum, Spectrum, {0})\n"
+              "MODEL_CONDITIONAL_DEPENDENCY({0}_spectrum, Spectrum, {0})\n"
               "ALLOW_MODELS({0})\n"
     ).format(model_name))
     
