@@ -1173,6 +1173,10 @@ def add_micromegas_to_darkbit_rollcall(model_name, reset_dict, does_DM_decay):
         towrite = (
             "      BACKEND_OPTION((MicrOmegas_{}),(gimmemicro))\n"
             ).format(model_name)
+        if function == "RD_oh2_Xf_MicrOmegas":
+          towrite += (
+            "      ALLOW_MODEL({})\n"
+            ).format(model_name)
 
         if linenum != 0:
             amend_file("DarkBit_rollcall.hpp", "DarkBit", towrite, linenum,
@@ -1184,10 +1188,6 @@ def add_micromegas_to_darkbit_rollcall(model_name, reset_dict, does_DM_decay):
     # Add the model to the function arguments
     file = "DarkBit_rollcall.hpp"
     module = "DarkBit"
-    if not does_DM_decay:
-        add_new_model_to_function(file, module, "RD_oh2_Xf",
-                                  "RD_oh2_Xf_MicrOmegas", model_name,
-                                  reset_dict, pattern="ALLOW_MODELS")
     add_new_model_to_function(file, module, "DD_couplings",
                               "DD_couplings_MicrOmegas", model_name,
                               reset_dict, pattern="ALLOW_MODEL_DEPENDENCE")
