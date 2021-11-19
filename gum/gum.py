@@ -781,7 +781,7 @@ if args.file:
                            reset_contents)
             # Add to the wimp properties
             num = find_string("DarkBit_rollcall.hpp", m,"MODEL_CONDITIONAL_DEPENDENCY(DMEFT_spectrum, Spectrum, DMEFT)")[1]
-            amend_file("DarkBit_rollcall.hpp", m, wimp_prop_h,num+1, reset_contents)
+            amend_file("DarkBit_rollcall.hpp", m, wimp_prop_h,num, reset_contents)
             
             num = find_string("DarkBit.cpp", m,"if(ModelInUse(\"DMEFT\"))")[1]
             amend_file("DarkBit.cpp", m, wimp_prop_c,num-1, reset_contents)
