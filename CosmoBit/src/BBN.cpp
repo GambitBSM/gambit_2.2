@@ -525,17 +525,21 @@ namespace Gambit
       // The measurement of the abundance for 3He is done for 3H/D, whereas the computed abundance is 3He/H, so convert it
       int He3 = abund_map.at("He3"), D = abund_map.at("D");
       double YD = BBN_res.get_BBN_abund("D"), YHe3 = BBN_res.get_BBN_abund("He3")/BBN_res.get_BBN_abund("D");
-      double old_covmat_He3_D = BBN_res.get_BBN_covmat(He3,D);
-      BBN_res.set_BBN_abund(He3, YHe3);
-      for(int i=1; i<=niso; i++)
+      // If the abundance of deuterium is smaller than same arbitrary value, it is effectively zero, so no need to compute anything
+      if(YD > 1.0e-50)
       {
-        if(i != He3)
+        double old_covmat_He3_D = BBN_res.get_BBN_covmat(He3,D);
+        BBN_res.set_BBN_abund(He3, YHe3);
+        for(int i=1; i<=niso; i++)
         {
-          BBN_res.set_BBN_covmat(i, He3, (BBN_res.get_BBN_covmat(i,He3)-BBN_res.get_BBN_covmat(i,D)*YHe3) / YD);
-          BBN_res.set_BBN_covmat(He3, i, BBN_res.get_BBN_covmat(i,He3));
+          if(i != He3)
+          {
+            BBN_res.set_BBN_covmat(i, He3, (BBN_res.get_BBN_covmat(i,He3)-BBN_res.get_BBN_covmat(i,D)*YHe3) / YD);
+            BBN_res.set_BBN_covmat(He3, i, BBN_res.get_BBN_covmat(i,He3));
+          }
+          else
+            BBN_res.set_BBN_covmat(He3, He3, (BBN_res.get_BBN_covmat(He3,He3) + YHe3*YHe3*BBN_res.get_BBN_covmat(D,D) - 2*YHe3*old_covmat_He3_D)/pow(YD,2));
         }
-        else
-          BBN_res.set_BBN_covmat(He3, He3, (BBN_res.get_BBN_covmat(He3,He3) + YHe3*YHe3*BBN_res.get_BBN_covmat(D,D) - 2*YHe3*old_covmat_He3_D)/pow(YD,2));
       }
 
       static bool first = true;
