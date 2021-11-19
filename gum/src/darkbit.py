@@ -534,6 +534,20 @@ def proc_cat(dm, sv, products, propagators, gambit_pdg_dict,
 
     return towrite
 
+def write_wimp_props(model_name):
+
+    wimp_prop_h = dumb_indent(4, (
+              "MODEL_CONDITIONAL_DEPENDENCY({0}M_spectrum, Spectrum, {0})\n"
+              "ALLOW_MODELS({0})\n"
+    ).format(model_name))
+    
+    wimp_prop_c = dumb_indent(6, (
+              "if(ModelInUse(\"{0}\"))\n"
+              "  props.mass = Dep::{0}_spectrum->get(Par::Pole_Mass, props.name);\n"
+    ).format(model_name))
+    
+    return wimp_prop_h, wimp_prop_c
+
 
 def write_darkbit_src(dm, pc, sv, products, propagators, does_DM_decay,
                       gambit_pdg_dict, gambit_model_name, calchep_pdg_dict,
@@ -703,6 +717,7 @@ def write_darkbit_rollcall(model_name, pc, does_DM_decay):
         pro_cat = dumb_indent(4, (
                 "#define FUNCTION TH_ProcessCatalog_{0}\n"
                 "  START_FUNCTION(TH_ProcessCatalog)\n"
+                "  DEPENDENCY(WIMP_properties, WIMPprops)\n"
                 "  DEPENDENCY(decay_rates, DecayTable)\n"
                 "  DEPENDENCY({0}_spectrum, Spectrum)\n"
                 "{1}"
