@@ -74,3 +74,25 @@ diff --git a/acropolis/input.py b/acropolis/input.py
  
  
      def _pdi_matrix(self):
+--- a/acropolis/utils.py	2021-02-16 18:07:22.000000000 +0100
++++ b/acropolis/utils.py	2021-11-23 11:21:52.174947621 +0100
+@@ -2,6 +2,8 @@
+ from math import log, pow
+ # numpy
+ import numpy as np
++# sys
++import sys
+ 
+ 
+ class LogInterp(object):
+@@ -11,6 +13,9 @@ class LogInterp(object):
+         self._sLogBase = log(self._sBase)
+ 
+         self._sFillValue = fill_value
++ 
++        x_grid = [x if x > 0 else sys.float_info.min for x in x_grid]
++        y_grid = [y if y > 0 else sys.float_info.min for y in y_grid]
+ 
+         self._sXLog = np.log(x_grid)/self._sLogBase
+         self._sYLog = np.log(y_grid)/self._sLogBase
+
