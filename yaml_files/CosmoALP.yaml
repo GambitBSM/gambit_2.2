@@ -233,6 +233,11 @@ Rules:
   - capability: parameter_dict_for_MPLike
     function: set_parameter_dict_for_MPLike
 
+  # Use numerical results for the minimal abundance through freeze in.
+  - capability: minimum_abundance
+    #function: minimum_abundance_ALP_analytical
+    function: minimum_abundance_ALP_numerical
+
   - capability: external_dNeff_etaBBN
     options:
       grid_size: 3000   # set grid size of time grid to solve differntial equation to compute dNeff and etaBBN for CosmoALP model (default: 3000)

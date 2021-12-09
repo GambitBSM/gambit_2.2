@@ -218,10 +218,19 @@ Rules:
   - capability: classy_parameters_EnergyInjection
     function: set_classy_parameters_EnergyInjection_DecayingDM
 
+  - capability: energy_injection_spectrum
+    function: energy_injection_spectrum_DecayingDM_mixture
+    module: CosmoBit
+
   - capability: external_dNeff_etaBBN
     options:
       grid_size: 3000   # set grid size of time grid to solve differntial equation to compute dNeff and etaBBN for CosmoALP model (default: 3000)
       max_iter: 8       # set max. number of iterations until convergence (of default 1e-6 accuracy) is reached. If not: point invalidated
+
+  # Use numerical results for the minimal abundance through freeze in.
+  - capability: minimum_abundance
+    #function: minimum_abundance_ALP_analytical
+    function: minimum_abundance_ALP_numerical
 
   - capability: lifetime
     function: lifetime_ALP_agg

@@ -109,7 +109,12 @@ START_MODULE
   /// minimal Freeze-in abundance of axion-like particles, produced via Primakoff processes
   #define CAPABILITY minimum_abundance
   START_CAPABILITY
-    #define FUNCTION minimum_abundance_ALP
+    #define FUNCTION minimum_abundance_ALP_analytical
+    START_FUNCTION(double)
+    ALLOW_MODELS(GeneralCosmoALP)
+    #undef FUNCTION
+
+    #define FUNCTION minimum_abundance_ALP_numerical
     START_FUNCTION(double)
     ALLOW_MODELS(GeneralCosmoALP)
     #undef FUNCTION
