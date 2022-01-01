@@ -307,7 +307,7 @@ if(";${GAMBIT_BITS};" MATCHES ";SpecBit;")
   set_compiler_warning("no-unneeded-internal-declaration" FS_CXX_FLAGS)
 
   # Construct the command to create the shared library
-  set(FS_SO_LINK_COMMAND "${CMAKE_CXX_COMPILER} ${CMAKE_SHARED_LINKER_FLAGS} -shared -o")
+  set(FS_SO_LINK_COMMAND "${CMAKE_CXX_COMPILER} ${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS} -o")
 
   # FlexibleSUSY configure options
   set(FS_OPTIONS ${FS_OPTIONS}

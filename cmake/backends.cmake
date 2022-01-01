@@ -147,12 +147,9 @@ if(NOT ditched_${name}_${ver})
     BUILD_IN_SOURCE 1
     PATCH_COMMAND patch -p1 < ${patch}
     CONFIGURE_COMMAND ""
-    BUILD_COMMAND sed ${dashi} -e "s#CC = gcc#CC = ${CMAKE_C_COMPILER}#g" Makefile
-          COMMAND sed ${dashi} -e "s/CFLAGS= -O3 -pipe -fomit-frame-pointer -mtune=native -ffast-math -fno-finite-math-only/CFLAGS= ${AlterBBN_C_FLAGS}/g" Makefile
-          COMMAND sed ${dashi} -e "s/CFLAGS_MP= -fopenmp/CFLAGS_MP= ${OpenMP_C_FLAGS}/g" Makefile
-          COMMAND ${MAKE_PARALLEL}
+    BUILD_COMMAND ${MAKE_PARALLEL} CC=${CMAKE_C_COMPILER} ARFLAGS=rcs CFLAGS=${AlterBBN_C_FLAGS} CFLAGS_MP=${OpenMP_C_FLAGS}
           COMMAND ar x src/libbbn.a
-          COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_C_COMPILER} ${OpenMP_C_FLAGS} ${CMAKE_SHARED_LIBRARY_CREATE_C_FLAGS} -o ${lib}.so *.o" > make_so.sh
+          COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_C_COMPILER} ${OpenMP_C_FLAGS} ${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LIBRARY_CREATE_C_FLAGS} -o ${lib}.so *.o" > make_so.sh
           COMMAND chmod u+x make_so.sh
           COMMAND ./make_so.sh
     INSTALL_COMMAND ""
@@ -398,10 +395,10 @@ if(NOT ditched_${name}_${ver})
     CONFIGURE_COMMAND ""
     BUILD_COMMAND sed ${dashi} -e "s#CC = gcc#CC = ${CMAKE_C_COMPILER}#g" Makefile
           COMMAND sed ${dashi} -e "s#rcsU#rcs#g" src/Makefile
-          COMMAND sed ${dashi} -e "s/CFLAGS= -O3 -pipe -fomit-frame-pointer/CFLAGS= -fPIC ${BACKEND_C_FLAGS}/g" Makefile
+          COMMAND sed ${dashi} -e "s|CFLAGS= -O3 -pipe -fomit-frame-pointer|CFLAGS= -fPIC ${BACKEND_C_FLAGS}|g" Makefile
           COMMAND ${MAKE_PARALLEL}
           COMMAND ar x src/libisospin.a
-          COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_C_COMPILER} ${CMAKE_SHARED_LIBRARY_CREATE_C_FLAGS} -o ${lib}.so *.o" > make_so.sh
+          COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_C_COMPILER} ${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LIBRARY_CREATE_C_FLAGS} -o ${lib}.so *.o" > make_so.sh
           COMMAND chmod u+x make_so.sh
           COMMAND ./make_so.sh
     INSTALL_COMMAND ""
@@ -1051,7 +1048,7 @@ if(NOT ditched_${name}_${ver})
               COMMAND ./configure FC=${CMAKE_Fortran_COMPILER} FFLAGS=${FH_Fortran_FLAGS} CC=${CMAKE_C_COMPILER} CFLAGS=${FH_C_FLAGS} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${FH_CXX_FLAGS}
     BUILD_COMMAND ${MAKE_PARALLEL}
           COMMAND ${CMAKE_COMMAND} -E make_directory lib
-          COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_Fortran_COMPILER} ${CMAKE_SHARED_LIBRARY_CREATE_C_FLAGS} -o lib/${lib}.so build/*.o" > make_so.sh
+          COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_Fortran_COMPILER} ${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LIBRARY_CREATE_Fortran_FLAGS} -o lib/${lib}.so build/*.o" > make_so.sh
           COMMAND chmod u+x make_so.sh
           COMMAND ./make_so.sh
     INSTALL_COMMAND ""
@@ -1080,7 +1077,7 @@ if(NOT ditched_${name}_${ver})
               COMMAND ./configure FC=${CMAKE_Fortran_COMPILER} FFLAGS=${FH_Fortran_FLAGS} CC=${CMAKE_C_COMPILER} CFLAGS=${FH_C_FLAGS} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${FH_CXX_FLAGS}
     BUILD_COMMAND ${MAKE_PARALLEL}
           COMMAND ${CMAKE_COMMAND} -E make_directory lib
-          COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_Fortran_COMPILER} ${CMAKE_SHARED_LIBRARY_CREATE_C_FLAGS} -o lib/${lib}.so build/*.o" > make_so.sh
+          COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_Fortran_COMPILER} ${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LIBRARY_CREATE_Fortran_FLAGS} -o lib/${lib}.so build/*.o" > make_so.sh
           COMMAND chmod u+x make_so.sh
           COMMAND ./make_so.sh
     INSTALL_COMMAND ""
@@ -1109,7 +1106,7 @@ if(NOT ditched_${name}_${ver})
               COMMAND ./configure FC=${CMAKE_Fortran_COMPILER} FFLAGS=${FH_Fortran_FLAGS} CC=${CMAKE_C_COMPILER} CFLAGS=${FH_C_FLAGS} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${FH_CXX_FLAGS}
     BUILD_COMMAND ${MAKE_PARALLEL}
           COMMAND ${CMAKE_COMMAND} -E make_directory lib
-          COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_Fortran_COMPILER} ${CMAKE_SHARED_LIBRARY_CREATE_C_FLAGS} -o lib/${lib}.so build/*.o" > make_so.sh
+          COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_Fortran_COMPILER} ${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LIBRARY_CREATE_Fortran_FLAGS} -o lib/${lib}.so build/*.o" > make_so.sh
           COMMAND chmod u+x make_so.sh
           COMMAND ./make_so.sh
     INSTALL_COMMAND ""
@@ -1170,7 +1167,7 @@ if(NOT ditched_${name}_${ver})
               COMMAND ./my_configure
     BUILD_COMMAND ${MAKE_PARALLEL}
           COMMAND ${CMAKE_COMMAND} -E make_directory lib
-          COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_Fortran_COMPILER} ${CMAKE_SHARED_LIBRARY_CREATE_C_FLAGS} -o lib/${lib}.so *.o" > make_so.sh
+          COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_Fortran_COMPILER} ${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LIBRARY_CREATE_Fortran_FLAGS} -o lib/${lib}.so *.o" > make_so.sh
           COMMAND chmod u+x make_so.sh
           COMMAND ./make_so.sh
     INSTALL_COMMAND ""
@@ -1208,7 +1205,7 @@ if(NOT ditched_${name}_${ver})
               COMMAND ./my_configure
     BUILD_COMMAND ${MAKE_PARALLEL}
           COMMAND ${CMAKE_COMMAND} -E make_directory lib
-          COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_Fortran_COMPILER} ${CMAKE_SHARED_LIBRARY_CREATE_C_FLAGS} -o lib/${lib}.so *.o" > make_so.sh
+          COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_Fortran_COMPILER} ${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LIBRARY_CREATE_Fortran_FLAGS} -o lib/${lib}.so *.o" > make_so.sh
           COMMAND chmod u+x make_so.sh
           COMMAND ./make_so.sh
     INSTALL_COMMAND ""
@@ -1249,7 +1246,7 @@ if(NOT ditched_${name}_${ver})
     BUILD_COMMAND ${MAKE_PARALLEL}
           COMMAND ${CMAKE_COMMAND} -E make_directory lib
           COMMAND ${CMAKE_COMMAND} -E remove HiggsSignals.o
-          COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_Fortran_COMPILER} ${CMAKE_SHARED_LIBRARY_CREATE_C_FLAGS} -o lib/${lib}.so ./*.o ../../${hb_name}/${hb_ver}/*.o" > make_so.sh
+          COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_Fortran_COMPILER} ${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LIBRARY_CREATE_Fortran_FLAGS} -o lib/${lib}.so ./*.o ../../${hb_name}/${hb_ver}/*.o" > make_so.sh
           COMMAND chmod u+x make_so.sh
           COMMAND ./make_so.sh
     INSTALL_COMMAND ""
@@ -1322,7 +1319,7 @@ set_compiler_warning("no-deprecated-declarations" GM2CALC_CXX_FLAGS)
 if(COMPILER_SUPPORTS_CXX17)
   string(REGEX REPLACE "-std=c\\+\\+17" "-std=c++14" GM2CALC_CXX_FLAGS "${GM2CALC_CXX_FLAGS}")
 endif()
-set(GM2CALC_MAKESHAREDLIB "${CMAKE_CXX_COMPILER} ${CMAKE_SHARED_LINKER_FLAGS} -shared")
+set(GM2CALC_MAKESHAREDLIB "${CMAKE_CXX_COMPILER} ${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS}")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
@@ -1354,7 +1351,7 @@ set_compiler_warning("no-deprecated-declarations" GM2CALC_CXX_FLAGS)
 if(COMPILER_SUPPORTS_CXX17)
   string(REGEX REPLACE "-std=c\\+\\+17" "-std=c++14" GM2CALC_CXX_FLAGS "${GM2CALC_CXX_FLAGS}")
 endif()
-set(GM2CALC_MAKESHAREDLIB "${CMAKE_CXX_COMPILER} ${CMAKE_SHARED_LINKER_FLAGS} -shared")
+set(GM2CALC_MAKESHAREDLIB "${CMAKE_CXX_COMPILER} ${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS}")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
@@ -1385,8 +1382,8 @@ if(NOT ditched_${name}_${ver})
             DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
             SOURCE_DIR ${dir}
             BUILD_IN_SOURCE 1
-            CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=-fPIC ./configure --prefix=${dir} --disable-openmp --with-pic
-            BUILD_COMMAND ${MAKE_PARALLEL}
+            CONFIGURE_COMMAND ./configure CC=${CMAKE_C_COMPILER} CFLAGS=${BACKEND_C_FLAGS} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${BACKEND_CXX_FLAGS} LDFLAGS=${CMAKE_SHARED_LINKER_FLAGS} --prefix=${dir} --disable-openmp --with-pic
+            BUILD_COMMAND ${MAKE_PARALLEL} LDFLAGS=${CMAKE_SHARED_LINKER_FLAGS}
             INSTALL_COMMAND ${MAKE_PARALLEL} install
             )
     add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
@@ -1462,10 +1459,12 @@ set(phc_ver "2.4.58")
 set(hom4ps_ver "2.0")
 set(Minuit_include "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/include/")
 set(Minuit_lib "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/lib/")
-set(VPP_CMAKE_FLAGS -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DEIGEN3_INCLUDE_DIR=${EIGEN3_INCLUDE_DIR} -DBoost_INCLUDE_DIR=${Boost_INCLUDE_DIR} -DWITHIN_GAMBIT=True -DSILENT_MODE=TRUE -DMinuit_include=${Minuit_include} -DMinuit_lib=${Minuit_lib})
+set(VPP_CMAKE_FLAGS -DCMAKE_C_FLAGS=${BACKEND_C_FLAGS} -DCMAKE_CXX_FLAGS=${BACKEND_CXX_FLAGS} -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_SHARED_LINKER_FLAGS=${CMAKE_SHARED_LINKER_FLAGS} -DEIGEN3_INCLUDE_DIR=${EIGEN3_INCLUDE_DIR} -DBoost_INCLUDE_DIR=${Boost_INCLUDE_DIR} -DWITHIN_GAMBIT=True -DSILENT_MODE=TRUE -DMinuit_include=${Minuit_include} -DMinuit_lib=${Minuit_lib})
 set(VPP_FLAGS "${BACKEND_CXX_FLAGS} -Wno-unused-local-typedefs -I./include/ -I./include/LHPC/ -I${Boost_INCLUDE_DIR} -I${EIGEN3_INCLUDE_DIR} -I${Minuit_include}")
 set_compiler_warning("no-unused-parameter" VPP_FLAGS)
 set(BOSSregex "s#cpp)#cpp   source/BOSS_factory_VevaciousPlusPlus.cpp       source/BOSS_wrapperutils.cpp        source/BOSS_VevaciousPlusPlus.cpp)#g")
+set(FLAGSregex1 "s#_FLAGS} -O3 -fPIC#_FLAGS}#g")
+set(FLAGSregex2 "s#_FLAGS} -Wall -Wno-unused-local-typedefs -O3 -fPIC -fopenmp#_FLAGS}#g")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
@@ -1475,10 +1474,12 @@ if(NOT ditched_${name}_${ver})
           DEPENDS hom4ps_${hom4ps_ver}
           DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
           SOURCE_DIR ${dir}
-          BUILD_IN_SOURCE 1
-          UPDATE_COMMAND  sed ${dashi} -e "${BOSSregex}" ${dir}/CMakeLists.txt
-          CONFIGURE_COMMAND ${CMAKE_COMMAND} ${VPP_CMAKE_FLAGS} ${dir}
-          BUILD_COMMAND ${MAKE_PARALLEL} CC=${CMAKE_CXX_COMPILER} CCFLAGS=${VPP_FLAGS} MINUITLIBDIR=${Minuit_lib} MINUITLIBNAME=${Minuit_lib_name} VevaciousPlusPlus-lib
+          UPDATE_COMMAND sed ${dashi} -e "${BOSSregex}" ${dir}/CMakeLists.txt
+                 COMMAND sed ${dashi} -e "${FLAGSregex1}" ${dir}/CMakeLists.txt
+                 COMMAND sed ${dashi} -e "${FLAGSregex2}" ${dir}/CMakeLists.txt
+          CMAKE_COMMAND ${CMAKE_COMMAND} ${dir}
+          CMAKE_ARGS ${VPP_CMAKE_FLAGS}
+          BUILD_COMMAND ${MAKE_PARALLEL} MINUITLIBDIR=${Minuit_lib} MINUITLIBNAME=${Minuit_lib_name} VevaciousPlusPlus-lib
                 COMMAND ${CMAKE_COMMAND} -E make_directory ${patchdir}/VevaciousPlusPlus/ModelFiles/
                 COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/VevaciousPlusPlus/ModelFiles/ ${dir}/ModelFiles/
           INSTALL_COMMAND ""
