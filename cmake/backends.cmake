@@ -92,8 +92,14 @@
 set(name "castxml")
 set(dir "${CMAKE_SOURCE_DIR}/Backends/scripts/BOSS/castxml")
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-  set(castxml_dl "https://data.kitware.com/api/v1/file/57b5de9f8d777f10f2696378/download")
-  set(castxml_dl_filename "castxml-macosx.tar.gz")
+  if(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "arm64")
+    set(castxml_hash 5faef93541cb5f30414286a844e47b5732777f26246c6e0933170668e9cf2ff4f3fa4292e861e73e91ed50971caa9d6e7481eead9c9cefda6d54a9042634bf5c)
+    set(castxml_dl "https://data.kitware.com/api/v1/file/hashsum/sha512/${castxml_hash}/download")
+    set(castxml_dl_filename "castxml-macos-arm64.tar.gz")
+  else()
+    set(castxml_dl "https://data.kitware.com/api/v1/file/57b5de9f8d777f10f2696378/download")
+    set(castxml_dl_filename "castxml-macosx.tar.gz")
+  endif()
 else()
   set(castxml_dl "https://data.kitware.com/api/v1/file/57b5dea08d777f10f2696379/download")
   set(castxml_dl_filename "castxml-linux.tar.gz")
@@ -1316,6 +1322,7 @@ set_compiler_warning("no-deprecated-declarations" GM2CALC_CXX_FLAGS)
 if(COMPILER_SUPPORTS_CXX17)
   string(REGEX REPLACE "-std=c\\+\\+17" "-std=c++14" GM2CALC_CXX_FLAGS "${GM2CALC_CXX_FLAGS}")
 endif()
+set(GM2CALC_MAKESHAREDLIB "${CMAKE_CXX_COMPILER} ${CMAKE_SHARED_LINKER_FLAGS} -shared")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
@@ -1325,7 +1332,7 @@ if(NOT ditched_${name}_${ver})
     BUILD_IN_SOURCE 1
     PATCH_COMMAND patch -p1 < ${patch}_error.dif
     CONFIGURE_COMMAND ""
-    BUILD_COMMAND ${MAKE_PARALLEL} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${GM2CALC_CXX_FLAGS} EIGENFLAGS=-I${EIGEN3_INCLUDE_DIR} BOOSTFLAGS=-I${Boost_INCLUDE_DIR} alllib
+    BUILD_COMMAND ${MAKE_PARALLEL} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${GM2CALC_CXX_FLAGS} EIGENFLAGS=-I${EIGEN3_INCLUDE_DIR} BOOSTFLAGS=-I${Boost_INCLUDE_DIR} MAKESHAREDLIB=${GM2CALC_MAKESHAREDLIB} alllib
     INSTALL_COMMAND ""
   )
   BOSS_backend(${name} ${ver})
@@ -1347,6 +1354,7 @@ set_compiler_warning("no-deprecated-declarations" GM2CALC_CXX_FLAGS)
 if(COMPILER_SUPPORTS_CXX17)
   string(REGEX REPLACE "-std=c\\+\\+17" "-std=c++14" GM2CALC_CXX_FLAGS "${GM2CALC_CXX_FLAGS}")
 endif()
+set(GM2CALC_MAKESHAREDLIB "${CMAKE_CXX_COMPILER} ${CMAKE_SHARED_LINKER_FLAGS} -shared")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
@@ -1358,7 +1366,7 @@ if(NOT ditched_${name}_${ver})
           COMMAND patch -p1 < ${patch}_module.dif
           COMMAND patch -p1 < ${patch}_error.dif
     CONFIGURE_COMMAND ""
-    BUILD_COMMAND ${MAKE_PARALLEL} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${GM2CALC_CXX_FLAGS} EIGENFLAGS=-I${EIGEN3_INCLUDE_DIR} BOOSTFLAGS=-I${Boost_INCLUDE_DIR} sharedlib
+    BUILD_COMMAND ${MAKE_PARALLEL} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${GM2CALC_CXX_FLAGS} EIGENFLAGS=-I${EIGEN3_INCLUDE_DIR} BOOSTFLAGS=-I${Boost_INCLUDE_DIR} MAKESHAREDLIB=${GM2CALC_MAKESHAREDLIB} sharedlib
     INSTALL_COMMAND ""
   )
   BOSS_backend(${name} ${ver})
