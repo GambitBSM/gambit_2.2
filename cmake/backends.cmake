@@ -162,6 +162,10 @@ set(lib "gencaplib")
 set(dl "https://github.com/aaronvincent/captngen/archive/refs/tags/${ver}.tar.gz")
 set(md5 "128871ed6f0b61330c3d18571f01f2ab")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+set(capgen_Fortran_FLAGS "${BACKEND_Fortran_FLAGS}")
+if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU" AND NOT CMAKE_Fortran_COMPILER_VERSION VERSION_LESS 10)
+  set(capgen_Fortran_FLAGS "${capgen_Fortran_FLAGS} -std=legacy")
+endif()
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
@@ -169,7 +173,7 @@ if(NOT ditched_${name}_${ver})
   SOURCE_DIR ${dir}
   BUILD_IN_SOURCE 1
   CONFIGURE_COMMAND ""
-  BUILD_COMMAND ${MAKE_PARALLEL} ${lib}.so FC=${CMAKE_Fortran_COMPILER} FOPT=${BACKEND_Fortran_FLAGS} MODULE=${FMODULE}
+  BUILD_COMMAND ${MAKE_PARALLEL} ${lib}.so FC=${CMAKE_Fortran_COMPILER} FOPT=${capgen_Fortran_FLAGS} MODULE=${FMODULE}
   INSTALL_COMMAND ""
   )
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
