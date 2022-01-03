@@ -1383,7 +1383,7 @@ if(NOT ditched_${name}_${ver})
             SOURCE_DIR ${dir}
             BUILD_IN_SOURCE 1
             CONFIGURE_COMMAND ./configure CC=${CMAKE_C_COMPILER} CFLAGS=${BACKEND_C_FLAGS} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${BACKEND_CXX_FLAGS} LDFLAGS=${CMAKE_SHARED_LINKER_FLAGS} --prefix=${dir} --disable-openmp --with-pic
-            BUILD_COMMAND ${MAKE_PARALLEL} LDFLAGS=${CMAKE_SHARED_LINKER_FLAGS}
+            BUILD_COMMAND ${MAKE_PARALLEL}
             INSTALL_COMMAND ${MAKE_PARALLEL} install
             )
     add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
@@ -1778,7 +1778,7 @@ if(NOT ditched_${name}_${ver})
     BUILD_IN_SOURCE 1
     PATCH_COMMAND ""
     CONFIGURE_COMMAND ./configure FC=${CMAKE_Fortran_COMPILER} FCFLAGS=${BACKEND_Fortran_FLAGS} FFLAGS=${BACKEND_Fortran_FLAGS} CC=${CMAKE_C_COMPILER} CFLAGS=${BACKEND_C_FLAGS} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${BACKEND_CXX_FLAGS} --with-yoda=${yoda_dir} --with-hepmc3=${hepmc_dir} --with-fastjet=${fastjet_dir} --prefix=${dir}/local
-    BUILD_COMMAND ${MAKE_PARALLEL} CXX="${CMAKE_CXX_COMPILER}"
+    BUILD_COMMAND ${MAKE_PARALLEL}
     INSTALL_COMMAND ${CMAKE_INSTALL_COMMAND}
   )
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
@@ -1811,6 +1811,12 @@ if(NOT ditched_${name}_${ver})
   #set_as_default_version("backend" ${name} ${ver})
 endif()
 
+# Modified OpenMP flags for classy
+if(FOUND_BREW_OPENMP)
+  set(CLASSY_OpenMP_C_FLAGS "${OpenMP_C_FLAGS} -I${BREW_LIBOMP_PREFIX}/include") 
+else()
+  set(CLASSY_OpenMP_C_FLAGS "${OpenMP_C_FLAGS}")
+endif()
 
 # classy
 set(name "classy")
@@ -1835,10 +1841,11 @@ if(NOT ditched_${name}_${ver})
       BUILD_IN_SOURCE 1
       PATCH_COMMAND patch -p1 < ${patch}/${name}_${ver}.diff
       CONFIGURE_COMMAND ""
+      COMMAND sed ${dashi} -e "s#'-lgomp'#'${OpenMP_omp_LIBRARY}', '-arch', '${CMAKE_SYSTEM_PROCESSOR}'#g" python/setup.py
       COMMAND sed ${dashi} -e "s#autosetup.py install#autosetup.py build#g" Makefile
       COMMAND sed ${dashi} -e "s#rm -f libclass.a#rm -rf libclass.a lib#g" Makefile
       COMMAND sed ${dashi} -e "s#\"[.]\"#\"${dir}\"#g" include/common.h
-      BUILD_COMMAND ${MAKE_PARALLEL} CC=${CMAKE_C_COMPILER} OMPFLAG=${OpenMP_C_FLAGS} OPTFLAG= CCFLAG=${BACKEND_GNU99_FLAGS} LDFLAG=${BACKEND_GNU99_FLAGS} PYTHON=${PYTHON_EXECUTABLE} all
+      BUILD_COMMAND ${MAKE_PARALLEL} CC=${CMAKE_C_COMPILER} OMPFLAG=${CLASSY_OpenMP_C_FLAGS} OPTFLAG= CCFLAG=${BACKEND_C_FLAGS} LDFLAG=${CMAKE_SHARED_LINKER_FLAGS} PYTHON=${PYTHON_EXECUTABLE} all
       COMMAND ${CMAKE_COMMAND} -E make_directory lib
       COMMAND find python/ -name "classy*.so" | xargs -I {} cp "{}" lib/
       COMMAND ${CMAKE_COMMAND} -E echo "#This is a trampoline script to import the cythonized python module under a different name" > lib/${lib}_${sfver}.py
@@ -1873,10 +1880,11 @@ if(NOT ditched_${name}_${ver})
       BUILD_IN_SOURCE 1
       PATCH_COMMAND patch -p1 < ${patch}/${name}_${ver}.diff
       CONFIGURE_COMMAND ""
+      COMMAND sed ${dashi} -e "s#'-lgomp'#'${OpenMP_omp_LIBRARY}', '-arch', '${CMAKE_SYSTEM_PROCESSOR}'#g" python/setup.py
       COMMAND sed ${dashi} -e "s#autosetup.py install#autosetup.py build#g" Makefile
       COMMAND sed ${dashi} -e "s#rm -f libclass.a#rm -rf libclass.a lib#g" Makefile
       COMMAND sed ${dashi} -e "s#\"[.]\"#\"${dir}\"#g" include/common.h
-      BUILD_COMMAND ${MAKE_PARALLEL} CC=${CMAKE_C_COMPILER} OMPFLAG=${OpenMP_C_FLAGS} OPTFLAG= CCFLAG=${BACKEND_GNU99_FLAGS} LDFLAG=${BACKEND_GNU99_FLAGS} PYTHON=${PYTHON_EXECUTABLE} all
+      BUILD_COMMAND ${MAKE_PARALLEL} CC=${CMAKE_C_COMPILER} OMPFLAG=${CLASSY_OpenMP_C_FLAGS} OPTFLAG= CCFLAG=${BACKEND_C_FLAGS} LDFLAG=${CMAKE_SHARED_LINKER_FLAGS} PYTHON=${PYTHON_EXECUTABLE} all
       COMMAND ${CMAKE_COMMAND} -E make_directory lib
       COMMAND find python/ -name "classy*.so" | xargs -I {} cp "{}" lib/
       COMMAND ${CMAKE_COMMAND} -E echo "#This is a trampoline script to import the cythonized python module under a different name" > lib/${lib}_${sfver}.py
@@ -1911,10 +1919,11 @@ if(NOT ditched_${name}_${ver})
       BUILD_IN_SOURCE 1
       PATCH_COMMAND patch -p1 < ${patch}/${name}_${ver}.diff
       CONFIGURE_COMMAND ""
+      COMMAND sed ${dashi} -e "s#'-lgomp'#'${OpenMP_omp_LIBRARY}', '-arch', '${CMAKE_SYSTEM_PROCESSOR}'#g" python/setup.py
       COMMAND sed ${dashi} -e "s#autosetup.py install#autosetup.py build#g" Makefile
       COMMAND sed ${dashi} -e "s#rm -f libclass.a#rm -rf libclass.a lib#g" Makefile
       COMMAND sed ${dashi} -e "s#\"[.]\"#\"${dir}\"#g" include/common.h
-      BUILD_COMMAND ${MAKE_PARALLEL} CC=${CMAKE_C_COMPILER} OMPFLAG=${OpenMP_C_FLAGS} OPTFLAG= CCFLAG=${BACKEND_GNU99_FLAGS} LDFLAG=${BACKEND_GNU99_FLAGS} PYTHON=${PYTHON_EXECUTABLE} all
+      BUILD_COMMAND ${MAKE_PARALLEL} CC=${CMAKE_C_COMPILER} OMPFLAG=${CLASSY_OpenMP_C_FLAGS} OPTFLAG= CCFLAG=${BACKEND_C_FLAGS} LDFLAG=${CMAKE_SHARED_LINKER_FLAGS} PYTHON=${PYTHON_EXECUTABLE} all
       COMMAND ${CMAKE_COMMAND} -E make_directory lib
       COMMAND find python/ -name "classy*.so" | xargs -I {} cp "{}" lib/
       COMMAND ${CMAKE_COMMAND} -E echo "#This is a trampoline script to import the cythonized python module under a different name" > lib/${lib}_${sfver}.py
@@ -1950,10 +1959,11 @@ if(NOT ditched_${name}_${ver})
       BUILD_IN_SOURCE 1
       PATCH_COMMAND patch -p1 < ${patch}/${name}_${ver}.diff
       CONFIGURE_COMMAND ""
+      COMMAND sed ${dashi} -e "s#'-lgomp'#'${OpenMP_omp_LIBRARY}', '-arch', '${CMAKE_SYSTEM_PROCESSOR}'#g" python/setup.py
       COMMAND sed ${dashi} -e "s#autosetup.py install#autosetup.py build#g" Makefile
       COMMAND sed ${dashi} -e "s#rm -f libclass.a#rm -rf libclass.a lib#g" Makefile
       COMMAND sed ${dashi} -e "s#\"[.]\"#\"${dir}\"#g" include/common.h
-      BUILD_COMMAND ${MAKE_PARALLEL} CC=${CMAKE_C_COMPILER} OMPFLAG=${OpenMP_C_FLAGS} OPTFLAG= CCFLAG=${BACKEND_GNU99_FLAGS} LDFLAG=${BACKEND_GNU99_FLAGS} PYTHON=${PYTHON_EXECUTABLE} all
+      BUILD_COMMAND ${MAKE_PARALLEL} CC=${CMAKE_C_COMPILER} OMPFLAG=${CLASSY_OpenMP_C_FLAGS} OPTFLAG= CCFLAG=${BACKEND_C_FLAGS} LDFLAGS=${CMAKE_SHARED_LINKER_FLAGS} PYTHON=${PYTHON_EXECUTABLE} all
       COMMAND ${CMAKE_COMMAND} -E make_directory lib
       COMMAND find python/ -name "classy*.so" | xargs -I {} cp "{}" lib/
       COMMAND ${CMAKE_COMMAND} -E echo "#This is a trampoline script to import the cythonized python module under a different name" > lib/${lib}_${sfver}.py
