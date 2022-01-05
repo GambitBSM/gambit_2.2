@@ -1581,6 +1581,7 @@ if(NOT ditched_${name}_${ver})
   set_as_default_version("backend" ${name} ${ver})
 endif()
 
+
 # Yoda
 set(name "yoda")
 set(ver "1.7.7")
@@ -1588,15 +1589,18 @@ set(dl "https://yoda.hepforge.org/downloads/?f=YODA-1.7.7.tar.gz")
 set(md5 "9106b343cbf64319e117aafba663467a")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 check_ditch_status(${name} ${ver} ${dir})
+# OpenMP flags don't play nicely with clang and Yoda's antiquated libtoolized build system.
+string(REGEX REPLACE "-Xclang -fopenmp" "" YODA_C_FLAGS "${BACKEND_C_FLAGS}")
+string(REGEX REPLACE "-Xclang -fopenmp" "" YODA_CXX_FLAGS "${BACKEND_CXX_FLAGS}")
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
     DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir}
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
     PATCH_COMMAND ""
-    CONFIGURE_COMMAND ./configure FC=${CMAKE_Fortran_COMPILER} FCFLAGS=${BACKEND_Fortran_FLAGS} FFLAGS=${BACKEND_Fortran_FLAGS} CC=${CMAKE_C_COMPILER} CFLAGS=${BACKEND_C_FLAGS} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${BACKEND_CXX_FLAGS} --prefix=${dir}/local --disable-pyext
-    BUILD_COMMAND ${MAKE_PARALLEL} CXX="${CMAKE_CXX_COMPILER}"
-    INSTALL_COMMAND ${CMAKE_INSTALL_COMMAND}
+    CONFIGURE_COMMAND ./configure FC=${CMAKE_Fortran_COMPILER} FCFLAGS=${BACKEND_Fortran_FLAGS} FFLAGS=${BACKEND_Fortran_FLAGS} CC=${CMAKE_C_COMPILER} CFLAGS=${YODA_C_FLAGS} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${YODA_CXX_FLAGS} LDFLAGS=${CMAKE_SHARED_LINKER_FLAGS} --prefix=${dir}/local --disable-pyext
+    BUILD_COMMAND ${MAKE_PARALLEL}
+    INSTALL_COMMAND ""
   )
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
   #set_as_default_version("backend" ${name} ${ver})
@@ -1642,7 +1646,7 @@ if(NOT ditched_${name}_${ver})
     PATCH_COMMAND ""
     CONFIGURE_COMMAND ./configure FC=${CMAKE_Fortran_COMPILER} FCFLAGS=${BACKEND_Fortran_FLAGS} FFLAGS=${BACKEND_Fortran_FLAGS} CC=${CMAKE_C_COMPILER} CFLAGS=${BACKEND_C_FLAGS} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${BACKEND_CXX_FLAGS} --prefix=${dir}/local --enable-allcxxplugins
     BUILD_COMMAND ${MAKE_PARALLEL} CXX="${CMAKE_CXX_COMPILER}"
-    INSTALL_COMMAND ${CMAKE_INSTALL_COMMAND}
+    INSTALL_COMMAND ""
   )
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
   #set_as_default_version("backend" ${name} ${ver})
@@ -1667,7 +1671,7 @@ if(NOT ditched_${name}_${ver})
     PATCH_COMMAND ""
     CONFIGURE_COMMAND ./configure FC=${CMAKE_Fortran_COMPILER} FCFLAGS=${BACKEND_Fortran_FLAGS} FFLAGS=${BACKEND_Fortran_FLAGS} CC=${CMAKE_C_COMPILER} CFLAGS=${BACKEND_C_FLAGS} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${BACKEND_CXX_FLAGS} --fastjet-config=${fastjet_dir}/fastjet-config --prefix=${fastjet_dir}/local
     BUILD_COMMAND ${MAKE_PARALLEL} CXX="${CMAKE_CXX_COMPILER}" fragile-shared-install
-    INSTALL_COMMAND ${CMAKE_INSTALL_COMMAND}
+    INSTALL_COMMAND ""
   )
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
   #set_as_default_version("backend" ${name} ${ver})
@@ -1780,7 +1784,7 @@ if(NOT ditched_${name}_${ver})
     PATCH_COMMAND ""
     CONFIGURE_COMMAND ./configure FC=${CMAKE_Fortran_COMPILER} FCFLAGS=${BACKEND_Fortran_FLAGS} FFLAGS=${BACKEND_Fortran_FLAGS} CC=${CMAKE_C_COMPILER} CFLAGS=${BACKEND_C_FLAGS} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${BACKEND_CXX_FLAGS} --with-yoda=${yoda_dir} --with-hepmc3=${hepmc_dir} --with-fastjet=${fastjet_dir} --prefix=${dir}/local
     BUILD_COMMAND ${MAKE_PARALLEL}
-    INSTALL_COMMAND ${CMAKE_INSTALL_COMMAND}
+    INSTALL_COMMAND ""
   )
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
   #set_as_default_version("backend" ${name} ${ver})
@@ -1964,7 +1968,7 @@ if(NOT ditched_${name}_${ver})
       COMMAND sed ${dashi} -e "s#autosetup.py install#autosetup.py build#g" Makefile
       COMMAND sed ${dashi} -e "s#rm -f libclass.a#rm -rf libclass.a lib#g" Makefile
       COMMAND sed ${dashi} -e "s#\"[.]\"#\"${dir}\"#g" include/common.h
-      BUILD_COMMAND ${MAKE_PARALLEL} CC=${CMAKE_C_COMPILER} OMPFLAG=${CLASSY_OpenMP_C_FLAGS} OPTFLAG= CCFLAG=${BACKEND_C_FLAGS} LDFLAGS=${CMAKE_SHARED_LINKER_FLAGS} PYTHON=${PYTHON_EXECUTABLE} all
+      BUILD_COMMAND ${MAKE_PARALLEL} CC=${CMAKE_C_COMPILER} OMPFLAG=${CLASSY_OpenMP_C_FLAGS} OPTFLAG= CCFLAG=${BACKEND_C_FLAGS} LDFLAG=${CMAKE_SHARED_LINKER_FLAGS} PYTHON=${PYTHON_EXECUTABLE} all
       COMMAND ${CMAKE_COMMAND} -E make_directory lib
       COMMAND find python/ -name "classy*.so" | xargs -I {} cp "{}" lib/
       COMMAND ${CMAKE_COMMAND} -E echo "#This is a trampoline script to import the cythonized python module under a different name" > lib/${lib}_${sfver}.py

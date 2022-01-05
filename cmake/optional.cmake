@@ -60,7 +60,11 @@ if(WITH_MPI)
       endforeach()
       string(STRIP "${GAMBIT_MPI_F_INC}" GAMBIT_MPI_F_INC)
       set(BACKEND_Fortran_FLAGS_PLUS_MPI "${MPI_Fortran_COMPILE_FLAGS} ${BACKEND_Fortran_FLAGS} -DMPI ${GAMBIT_MPI_F_INC}")
-      string(STRIP "${BACKEND_Fortran_FLAGS_PLUS_MPI}" BACKEND_Fortran_FLAGS_PLUS_MPI)
+      # Avoid errors from old-style Fortran MPI headers when compiling with gfortran 10 or later.
+      if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU" AND NOT CMAKE_Fortran_COMPILER_VERSION VERSION_LESS 10)
+		set(BACKEND_Fortran_FLAGS_PLUS_MPI "${BACKEND_Fortran_FLAGS_PLUS_MPI} -fallow-argument-mismatch")
+	  endif()
+	  string(STRIP "${BACKEND_Fortran_FLAGS_PLUS_MPI}" BACKEND_Fortran_FLAGS_PLUS_MPI)
       # Libraries
       foreach(lib ${MPI_Fortran_LIBRARIES})
         set(GAMBIT_MPI_F_LIB "${GAMBIT_MPI_F_LIB} ${lib}")
