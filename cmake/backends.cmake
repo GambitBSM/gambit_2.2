@@ -1361,24 +1361,24 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
 endif()
 
-# Minuit2
-set(name "minuit2")
-set(ver "5.34.14")
-set(md5 "7fc00378a2ed1f731b719d4837d62d6a")
-set(dl "http://seal.web.cern.ch/seal/MathLibs/5_34_14/Minuit2/Minuit2-5.34.14.tar.gz")
-set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
-check_ditch_status(${name} ${ver} ${dir})
-if(NOT ditched_${name}_${ver})
-    ExternalProject_Add(${name}_${ver}
-            DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
-            SOURCE_DIR ${dir}
-            BUILD_IN_SOURCE 1
-            CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=-fPIC ./configure --prefix=${dir} --disable-openmp --with-pic
-            BUILD_COMMAND ${MAKE_PARALLEL}
-            INSTALL_COMMAND ${MAKE_PARALLEL} install
-            )
-    add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
-endif()
+# # Minuit2
+# set(name "min2_4_vev")
+# set(ver "5.34.14")
+# set(md5 "7fc00378a2ed1f731b719d4837d62d6a")
+# set(dl "http://seal.web.cern.ch/seal/MathLibs/5_34_14/Minuit2/Minuit2-5.34.14.tar.gz")
+# set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+# check_ditch_status(${name} ${ver} ${dir})
+# if(NOT ditched_${name}_${ver})
+#     ExternalProject_Add(${name}_${ver}
+#             DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+#             SOURCE_DIR ${dir}
+#             BUILD_IN_SOURCE 1
+#             CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=-fPIC ./configure --prefix=${dir} --disable-openmp --with-pic
+#             BUILD_COMMAND ${MAKE_PARALLEL}
+#             INSTALL_COMMAND ${MAKE_PARALLEL} install
+#             )
+#     add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+# endif()
 
 # phc
 set(name "phc")
@@ -1443,13 +1443,21 @@ set(dl "http://github.com/JoseEliel/VevaciousPlusPlus_Development/archive/refs/h
 set(md5 "none") # Keep none for now because there is no tagged release of vevacious yet
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 set(patchdir "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}")
+# 
+# set(Minuit_name "min2_4_vev")
+# set(Minuit_lib_name "Minuit2")
+# set(Minuit_ver "5.34.14")
+# 
 set(Minuit_name "minuit2")
-set(Minuit_lib_name "Minuit2")
-set(Minuit_ver "5.34.14")
+set(Minuit_ver "6.23.01")
+set(Minuit_lib_name "libminuit2")
+# 
 set(phc_ver "2.4.58")
 set(hom4ps_ver "2.0")
-set(Minuit_include "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/include/")
-set(Minuit_lib "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/lib/")
+# set(Minuit_include "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/include/")
+# set(Minuit_lib "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/lib/")
+set(Minuit_include "${PROJECT_SOURCE_DIR}/ScannerBit/installed/${Minuit_name}/${Minuit_ver}/inc/")
+set(Minuit_lib "${PROJECT_SOURCE_DIR}/ScannerBit/installed/${Minuit_name}/${Minuit_ver}/lib/")
 set(VPP_CMAKE_FLAGS -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DEIGEN3_INCLUDE_DIR=${EIGEN3_INCLUDE_DIR} -DBoost_INCLUDE_DIR=${Boost_INCLUDE_DIR} -DWITHIN_GAMBIT=True -DSILENT_MODE=TRUE -DMinuit_include=${Minuit_include} -DMinuit_lib=${Minuit_lib})
 set(VPP_FLAGS "${BACKEND_CXX_FLAGS} -Wno-unused-local-typedefs -I./include/ -I./include/LHPC/ -I${Boost_INCLUDE_DIR} -I${EIGEN3_INCLUDE_DIR} -I${Minuit_include}")
 set_compiler_warning("no-unused-parameter" VPP_FLAGS)
