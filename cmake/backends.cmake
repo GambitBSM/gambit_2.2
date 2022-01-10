@@ -1552,6 +1552,16 @@ if(NOT ditched_${name}_${ver})
     set(calchep_C_FLAGS "${calchep_C_FLAGS} -Wl,-undefined,dynamic_lookup")
     set(calchep_Fortran_FLAGS "${calchep_Fortran_FLAGS} -Wl,-undefined,dynamic_lookup")
   endif()
+  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
+    # Fix error due to C99 non-compliance
+    set(calchep_C_FLAGS "${calchep_C_FLAGS} -Wno-error=implicit-function-declaration")
+    # Find the path to libx11
+    execute_process(COMMAND ${BREW} --prefix libx11 RESULT_VARIABLE BREW_RESULT_CODE OUTPUT_VARIABLE X11_INSTALL_DIR)
+    if(NOT BREW_RESULT_CODE)
+      STRING(REPLACE "\n" "" X11_INSTALL_DIR "${X11_INSTALL_DIR}")
+      set(calchep_LX11 "-L${X11_INSTALL_DIR}/lib")
+    endif()
+  endif()
   ExternalProject_Add(${name}_${ver}
     DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
     SOURCE_DIR ${dir}
@@ -1560,7 +1570,8 @@ if(NOT ditched_${name}_${ver})
               COMMAND ${CMAKE_COMMAND} -E copy ${dir}/c_source/strfun/pdf_dummy.c ${dir}/c_source/num/pdf_dummy.c
     PATCH_COMMAND patch -p0 < ${patchdir}/patch_${name}_${ver}.dif
           COMMAND sed ${dashi} -e "s#GAMBITDIR#${PROJECT_SOURCE_DIR}#g" ${dir}/c_source/dynamicME/vp_dynam.c
-          COMMAND ${dir}/getFlags
+          COMMAND sed ${dashi} -e "s|\$CC -o a\\.out test\\.c  1>/dev/null 2>/dev/null|#Fails with AppleClang: $CC -o a.out test.c  1>/dev/null 2>/dev/null|g" ${dir}/getFlags
+          COMMAND LX11=${calchep_LX11} ${dir}/getFlags
           COMMAND sed ${dashi} -e "s|FC =.*|FC = ${CMAKE_Fortran_COMPILER}|" ${dir}/FlagsForMake
           COMMAND sed ${dashi} -e "s|CC =.*|CC = ${CMAKE_C_COMPILER}|" ${dir}/FlagsForMake
           COMMAND sed ${dashi} -e "s|CXX =.*|CXX = ${CMAKE_CXX_COMPILER}|" ${dir}/FlagsForMake
@@ -1574,6 +1585,7 @@ if(NOT ditched_${name}_${ver})
           COMMAND sed ${dashi} -e "s|CFLAGS=.*|CFLAGS=\"${calchep_C_FLAGS}\"|" ${dir}/FlagsForSh
           COMMAND sed ${dashi} -e "s|CXXFLAGS=.*|CXXFLAGS=\"${calchep_CXX_FLAGS}\"|" ${dir}/FlagsForSh
           COMMAND sed ${dashi} -e "s|lFort=.*|lFort=|" ${dir}/FlagsForSh
+          COMMAND sed ${dashi} -e "s|@if(test -z \"`grep lX11 FlagsForMake|#@if(test -z \"`grep lX11 FlagsForMake|" ${dir}/Makefile
     BUILD_COMMAND ${MAKE_SERIAL}
     INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/Models/ ${dir}/models/
   )
@@ -1825,7 +1837,7 @@ endif()
 
 # Modified OpenMP flags for classy
 if(FOUND_BREW_OPENMP)
-  set(CLASSY_OpenMP_C_FLAGS "${OpenMP_C_FLAGS} -I${BREW_LIBOMP_PREFIX}/include") 
+  set(CLASSY_OpenMP_C_FLAGS "${OpenMP_C_FLAGS} -I${BREW_LIBOMP_PREFIX}/include")
 else()
   set(CLASSY_OpenMP_C_FLAGS "${OpenMP_C_FLAGS}")
 endif()
