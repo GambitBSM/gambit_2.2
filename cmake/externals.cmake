@@ -337,9 +337,6 @@ endif()
 if(EXISTS "${PROJECT_SOURCE_DIR}/Backends/")
   include(cmake/backends.cmake)
 endif()
-# if(EXISTS "${PROJECT_SOURCE_DIR}/ScannerBit/")
-#   include(cmake/scanners.cmake)
-# endif()
 
 # Print outcomes of BOSSing efforts
 if(NOT needs_BOSSing STREQUAL "")

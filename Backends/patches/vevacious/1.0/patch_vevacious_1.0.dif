@@ -1,0 +1,21 @@
+diff -rupN vevacious_pristine/CMakeLists.txt vevacious/CMakeLists.txt
+--- vevacious_pristine/CMakeLists.txt	2022-01-10 16:40:58.420250624 +0100
++++ vevacious/CMakeLists.txt	2022-01-10 16:41:16.756223022 +0100
+@@ -238,7 +238,7 @@ else()
+     set(Minuit_lib "${PROJECT_SOURCE_DIR}/${Minuit_name}/${Minuit_ver}/lib/")
+ endif()
+ 
+-target_link_libraries(VevaciousPlusPlus ${Minuit_lib}/libMinuit2.a)
++target_link_libraries(VevaciousPlusPlus ${Minuit_lib}/libMinuit2.so)
+ 
+ 
+ 
+@@ -252,7 +252,7 @@ add_library(VevaciousPlusPlus-lib SHARED
+ 
+ # Linking to minuit
+ 
+-target_link_libraries(VevaciousPlusPlus-lib ${Minuit_lib}/libMinuit2.a)
++target_link_libraries(VevaciousPlusPlus-lib ${Minuit_lib}/libMinuit2.so)
+ 
+ add_dependencies(VevaciousPlusPlus-lib objlib)
+
