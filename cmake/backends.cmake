@@ -599,12 +599,6 @@ if(NOT ditched_${name}_${ver})
 endif()
 
 
-# Ditch all MicrOmegas backends if using clang, as clang is apparently not supported by MO3.
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
-  message("   Compiling with clang; disabling MicrOmegas support in GAMBIT configuration.")
-  set (itch "${itch}" "micromegas")
-endif()
-
 # MicrOmegas base (for all models)
 set(name "micromegas")
 set(ver "3.6.9.2")
@@ -614,27 +608,42 @@ set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_.${name}_${ver}_base)
+  set(MO_C_FLAGS "${BACKEND_C_FLAGS}")
+  set(MO_CXX_FLAGS "${BACKEND_CXX_FLAGS}")
+  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
+    # Fix error due to C99 non-compliance
+    set(MO_C_FLAGS "${BACKEND_C_FLAGS} -Wno-error=implicit-function-declaration")
+    set(MO_CXX_FLAGS "${BACKEND_CXX_FLAGS} -Wno-error=implicit-function-declaration")
+    # Find the path to libx11
+    execute_process(COMMAND ${BREW} --prefix libx11 RESULT_VARIABLE BREW_RESULT_CODE OUTPUT_VARIABLE X11_INSTALL_DIR)
+    if(NOT BREW_RESULT_CODE)
+      STRING(REPLACE "\n" "" X11_INSTALL_DIR "${X11_INSTALL_DIR}")
+      set(MO_LX11 "-L${X11_INSTALL_DIR}/lib")
+    endif()
+  endif()
   ExternalProject_Add(.${name}_${ver}_base
     DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
     SOURCE_DIR ${dir}
     PATCH_COMMAND patch -p1 < ${patch}
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""
-    BUILD_COMMAND make flags
+    BUILD_COMMAND sed ${dashi} -e "s|\$CC -o a\\.out test\\.c  1>/dev/null 2>/dev/null|#Fails with AppleClang: $CC -o a.out test.c  1>/dev/null 2>/dev/null|g" CalcHEP_src/getFlags
+          COMMAND make LX11=${MO_LX11} flags
           COMMAND sed ${dashi} -e "s|FC =.*|FC = ${CMAKE_Fortran_COMPILER}|" CalcHEP_src/FlagsForMake
           COMMAND sed ${dashi} -e "s|CC =.*|CC = ${CMAKE_C_COMPILER}|" CalcHEP_src/FlagsForMake
           COMMAND sed ${dashi} -e "s|CXX =.*|CXX = ${CMAKE_CXX_COMPILER}|" CalcHEP_src/FlagsForMake
           COMMAND sed ${dashi} -e "s|FFLAGS =.*|FFLAGS = ${BACKEND_Fortran_FLAGS}|" CalcHEP_src/FlagsForMake
-          COMMAND sed ${dashi} -e "s|CFLAGS =.*|CFLAGS = ${BACKEND_C_FLAGS}|" CalcHEP_src/FlagsForMake
-          COMMAND sed ${dashi} -e "s|CXXFLAGS =.*|CXXFLAGS = ${BACKEND_CXX_FLAGS}|" CalcHEP_src/FlagsForMake
+          COMMAND sed ${dashi} -e "s|CFLAGS =.*|CFLAGS = ${MO_C_FLAGS}|" CalcHEP_src/FlagsForMake
+          COMMAND sed ${dashi} -e "s|CXXFLAGS =.*|CXXFLAGS = ${MO_CXX_FLAGS}|" CalcHEP_src/FlagsForMake
           COMMAND sed ${dashi} -e "s|FC=.*|FC=\"${CMAKE_Fortran_COMPILER}\"|" CalcHEP_src/FlagsForSh
           COMMAND sed ${dashi} -e "s|CC=.*|CC=\"${CMAKE_C_COMPILER}\"|" CalcHEP_src/FlagsForSh
           COMMAND sed ${dashi} -e "s|CXX=.*|CXX=\"${CMAKE_CXX_COMPILER}\"|" CalcHEP_src/FlagsForSh
           COMMAND sed ${dashi} -e "s|FFLAGS=.*|FFLAGS=\"${CMAKE_Fortran_FLAGS}\"|" CalcHEP_src/FlagsForSh
-          COMMAND sed ${dashi} -e "s|CFLAGS=.*|CFLAGS=\"${CMAKE_C_FLAGS}\"|" CalcHEP_src/FlagsForSh
-          COMMAND sed ${dashi} -e "s|CXXFLAGS=.*|CXXFLAGS=\"${BACKEND_CXX_FLAGS}\"|" CalcHEP_src/FlagsForSh
+          COMMAND sed ${dashi} -e "s|CFLAGS=.*|CFLAGS=\"${MO_C_FLAGS}\"|" CalcHEP_src/FlagsForSh
+          COMMAND sed ${dashi} -e "s|CXXFLAGS=.*|CXXFLAGS=\"${MO_CXX_FLAGS}\"|" CalcHEP_src/FlagsForSh
           COMMAND sed ${dashi} -e "s|lFort=.*|lFort=|" CalcHEP_src/FlagsForSh
-          COMMAND make
+          COMMAND sed ${dashi} -e "s|@if(test -z \"`grep lX11 FlagsForMake|#@if(test -z \"`grep lX11 FlagsForMake|" CalcHEP_src/Makefile
+          COMMAND make CFLAGS=${MO_C_FLAGS}
     INSTALL_COMMAND ""
   )
   add_extra_targets("backend base (functional alone)" ${name} ${ver} ${dir} ${dl} "yes | clean")
@@ -652,7 +661,7 @@ if(NOT ditched_${name}_${model}_${ver})
     PATCH_COMMAND patch -p1 < ${patch}
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""
-    BUILD_COMMAND ${CMAKE_COMMAND} -E chdir ${model} ${MAKE_PARALLEL} sharedlib main=main.c
+    BUILD_COMMAND ${CMAKE_COMMAND} -E chdir ${model} ${MAKE_PARALLEL} CFLAGS=${MO_C_FLAGS} CXXFLAGS=${MO_CXX_FLAGS} sharedlib main=main.c
     INSTALL_COMMAND ""
   )
   add_extra_targets("backend model" ${name} ${ver} ${dir}/${model} ${model} "yes | clean")
@@ -670,7 +679,7 @@ if(NOT ditched_${name}_${model}_${ver})
     PATCH_COMMAND ./newProject ${model} && patch -p1 < ${patch}
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""
-    BUILD_COMMAND ${CMAKE_COMMAND} -E chdir ${model} ${MAKE_PARALLEL} sharedlib main=main.c
+    BUILD_COMMAND ${CMAKE_COMMAND} -E chdir ${model} ${MAKE_PARALLEL} CFLAGS=${MO_C_FLAGS} sharedlib main=main.c
     INSTALL_COMMAND ""
   )
   add_extra_targets("backend model" ${name} ${ver} ${dir}/${model} ${model} "yes | clean")
@@ -688,7 +697,7 @@ if(NOT ditched_${name}_${model}_${ver})
     PATCH_COMMAND ./newProject ${model} && patch -p1 < ${patch}
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""
-    BUILD_COMMAND ${CMAKE_COMMAND} -E chdir ${model} ${MAKE_PARALLEL} sharedlib main=main.c
+    BUILD_COMMAND ${CMAKE_COMMAND} -E chdir ${model} ${MAKE_PARALLEL} CFLAGS=${MO_C_FLAGS} sharedlib main=main.c
     INSTALL_COMMAND ""
   )
   add_extra_targets("backend model" ${name} ${ver} ${dir}/${model} ${model} "yes | clean")
@@ -706,7 +715,7 @@ if(NOT ditched_${name}_${model}_${ver})
     PATCH_COMMAND ./newProject ${model} && patch -p1 < ${patch}
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""
-    BUILD_COMMAND ${CMAKE_COMMAND} -E chdir ${model} ${MAKE_PARALLEL} sharedlib main=main.c
+    BUILD_COMMAND ${CMAKE_COMMAND} -E chdir ${model} ${MAKE_PARALLEL} CFLAGS=${MO_C_FLAGS} sharedlib main=main.c
     INSTALL_COMMAND ""
   )
   add_extra_targets("backend model" ${name} ${ver} ${dir}/${model} ${model} "yes | clean")
@@ -724,7 +733,7 @@ if(NOT ditched_${name}_${model}_${ver})
     PATCH_COMMAND ./newProject ${model} && patch -p1 < ${patch}
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""
-    BUILD_COMMAND ${CMAKE_COMMAND} -E chdir ${model} ${MAKE_PARALLEL} sharedlib main=main.c
+    BUILD_COMMAND ${CMAKE_COMMAND} -E chdir ${model} ${MAKE_PARALLEL} CFLAGS=${MO_C_FLAGS} sharedlib main=main.c
     INSTALL_COMMAND ""
   )
   add_extra_targets("backend model" ${name} ${ver} ${dir}/${model} ${model} "yes | clean")
@@ -742,7 +751,7 @@ if(NOT ditched_${name}_${model}_${ver})
     PATCH_COMMAND ./newProject ${model} && patch -p1 < ${patch}
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""
-    BUILD_COMMAND ${CMAKE_COMMAND} -E chdir ${model} ${MAKE_PARALLEL} sharedlib main=main.c
+    BUILD_COMMAND ${CMAKE_COMMAND} -E chdir ${model} ${MAKE_PARALLEL} CFLAGS=${MO_C_FLAGS} sharedlib main=main.c
     INSTALL_COMMAND ""
   )
   add_extra_targets("backend model" ${name} ${ver} ${dir}/${model} ${model} "yes | clean")
