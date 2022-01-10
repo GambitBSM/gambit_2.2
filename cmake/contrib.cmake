@@ -135,17 +135,21 @@ if(NOT EXCLUDE_RESTFRAMES)
   include_directories(${RESTFRAMES_INCLUDE})
   set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH};${dir}/lib")
   set(RESTFRAMES_CONFIG_LDFLAGS "-L${CMAKE_BINARY_DIR}/contrib -Wl,-rpath,${CMAKE_BINARY_DIR}/contrib")
+  # OpenMP flags don't play nicely with clang and RestFrames' antiquated libtoolized build system.
+  string(REGEX REPLACE "-Xclang -fopenmp" "" RESTFRAMES_C_FLAGS "${BACKEND_C_FLAGS}")
+  string(REGEX REPLACE "-Xclang -fopenmp" "" RESTFRAMES_CXX_FLAGS "${BACKEND_CXX_FLAGS}")
   if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    set(RESTFRAMES_CONFIG_LIBS "-lgambit_preload")
+    set(RESTFRAMES_CONFIG_LIBS "${CMAKE_SHARED_LINKER_FLAGS} -lgambit_preload")
   else()
-    set(RESTFRAMES_CONFIG_LIBS "-Wl,--no-as-needed -lgambit_preload")
+    set(RESTFRAMES_CONFIG_LIBS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-as-needed -lgambit_preload")
   endif()
   ExternalProject_Add(${name}
     DOWNLOAD_COMMAND git clone https://github.com/crogan/RestFrames ${dir}
              COMMAND ${CMAKE_COMMAND} -E chdir ${dir} git checkout -q v${ver}
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND ./configure -prefix=${dir} CC=${CMAKE_C_COMPILER} CFLAGS=${BACKEND_C_FLAGS} CPP=${RESTFRAMES_CPP} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${BACKEND_CXX_FLAGS} CXXCPP=${RESTFRAMES_CXXCPP} LDFLAGS=${RESTFRAMES_CONFIG_LDFLAGS} LIBS=${RESTFRAMES_CONFIG_LIBS}
+    CONFIGURE_COMMAND ./configure -prefix=${dir} CC=${CMAKE_C_COMPILER} CFLAGS=${RESTFRAMES_C_FLAGS} CPP=${RESTFRAMES_CPP} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${RESTFRAMES_CXX_FLAGS} CXXCPP=${RESTFRAMES_CXXCPP} LDFLAGS=${RESTFRAMES_CONFIG_LDFLAGS} LIBS=${RESTFRAMES_CONFIG_LIBS}
+              COMMAND sed ${dashi} -e "s|.(ROOTAUXCXXFLAGS) .(ROOTCXXFLAGS)||" src/Makefile
     BUILD_COMMAND ${MAKE_PARALLEL}
     INSTALL_COMMAND ${MAKE_PARALLEL} install
     )
