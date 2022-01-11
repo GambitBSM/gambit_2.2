@@ -42,6 +42,8 @@ cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 # Define minimum compiler versions
 set(MIN_GCC_VERSION 5.1)
 set(MIN_ICC_VERSION 15.0.2)
+set(MIN_CLANG_VERSION 10.0.0)
+set(MIN_APPLECLANG_VERSION 13.0.0)
 
 SET(CMAKE_BUILD_TYPE_STRING "Choose the type of build, options are: None Debug Release Release_O3 RelWithDebInfo MinSizeRel.")
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
@@ -89,7 +91,9 @@ include(cmake/utilities.cmake)
 
 # Enforce minimum versions for the C/C++ compiler
 if (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS MIN_ICC_VERSION) OR
-    ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS MIN_GCC_VERSION))
+    ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS MIN_GCC_VERSION) OR
+    ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS MIN_CLANG_VERSION) OR
+    ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS MIN_APPLECLANG_VERSION))
   message(FATAL_ERROR "${BoldRed}\nGAMBIT requires at least g++ ${MIN_GCC_VERSION} or icpc ${MIN_ICC_VERSION}.  Please install a newer compiler.${ColourReset}")
 endif()
 
@@ -262,35 +266,6 @@ endif()
 # Do OSX checks
 include(cmake/MacOSX.cmake)
 
-# Add -fPIC for 64 bit systems
-if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-  set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fPIC")
-endif()
-
-# Add some Fortran compiler flags
-if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU")
-  set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffree-line-length-none -ffixed-line-length-none -cpp")
-elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
-  set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -extend-source -fpp")
-endif()
-
-# Set output paths
-set(mylibdir ${PROJECT_SOURCE_DIR}/lib)
-set(mybindir ${PROJECT_SOURCE_DIR})
-# First for the generic no-config case (e.g. with mingw)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${mybindir} )
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${mylibdir} )
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${mylibdir} )
-# Second, for multi-config builds (e.g. msvc)
-foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
-  string(TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG )
-  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${mybindir} )
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${mylibdir} )
-  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${mylibdir} )
-endforeach()
-
 # Check if we are using 2019 intel compilers or gcc 6.1 or 6.2 together with pybind11, and forbid the use of C++17 if so.
 if(HAVE_PYBIND11)
   if(("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 18.0.6) OR
@@ -346,6 +321,35 @@ if(NOT COMPILER_SUPPORTS_C99)
   set(itch "${itch};alterbbn")
 endif()
 
+# Add -fPIC for 64 bit systems
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+  set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fPIC")
+endif()
+
+# Add some Fortran compiler flags
+if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU")
+  set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffree-line-length-none -ffixed-line-length-none -cpp")
+elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
+  set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -extend-source -fpp")
+endif()
+
+# Set output paths
+set(mylibdir ${PROJECT_SOURCE_DIR}/lib)
+set(mybindir ${PROJECT_SOURCE_DIR})
+# First for the generic no-config case (e.g. with mingw)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${mybindir} )
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${mylibdir} )
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${mylibdir} )
+# Second, for multi-config builds (e.g. msvc)
+foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
+  string(TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG )
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${mybindir} )
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${mylibdir} )
+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${mylibdir} )
+endforeach()
+
 # Check for Boost
 set(Boost_NO_BOOST_CMAKE ON)
 find_package(Boost 1.48)
@@ -391,7 +395,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
       if(NOT OPENMP_FOUND)
         set(OpenMP_CXX_FLAGS "-Xclang -fopenmp")
         set(OpenMP_C_FLAGS "-Xclang -fopenmp")
-      endif()    
+      endif()
       set(OpenMP_CXX_LIB_NAMES "omp")
       set(OpenMP_C_LIB_NAMES "omp")
       set(OpenMP_omp_LIBRARY "${BREW_LIBOMP_PREFIX}/lib/libomp.dylib")
