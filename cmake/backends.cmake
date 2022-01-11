@@ -1844,12 +1844,23 @@ if(NOT ditched_${name}_${ver})
   #set_as_default_version("backend" ${name} ${ver})
 endif()
 
-# Modified OpenMP flags for classy
+# Modified OpenMP settings for classy
 if(FOUND_BREW_OPENMP)
   set(CLASSY_OpenMP_C_FLAGS "${OpenMP_C_FLAGS} -I${BREW_LIBOMP_PREFIX}/include")
 else()
   set(CLASSY_OpenMP_C_FLAGS "${OpenMP_C_FLAGS}")
 endif()
+if(OpenMP_omp_LIBRARY)
+  set(lgomp_REPLACEMENT "'${OpenMP_omp_LIBRARY}'")
+else()
+  set(lgomp_REPLACEMENT "'-lgomp'")
+endif()
+if("${CMAKE_C_COMPILER_ID}" STREQUAL "AppleClang")
+  set(lgomp_REPLACEMENT "${lgomp_REPLACEMENT},  '-arch', '${CMAKE_SYSTEM_PROCESSOR}'")
+else()
+  set(lgomp_REPLACEMENT "${lgomp_REPLACEMENT},  '-march=${CMAKE_SYSTEM_PROCESSOR}'")
+endif()
+
 
 # classy
 set(name "classy")
@@ -1874,7 +1885,7 @@ if(NOT ditched_${name}_${ver})
       BUILD_IN_SOURCE 1
       PATCH_COMMAND patch -p1 < ${patch}/${name}_${ver}.diff
       CONFIGURE_COMMAND ""
-      COMMAND sed ${dashi} -e "s#'-lgomp'#'${OpenMP_omp_LIBRARY}', '-arch', '${CMAKE_SYSTEM_PROCESSOR}'#g" python/setup.py
+      COMMAND sed ${dashi} -e "s#'-lgomp'#${lgomp_REPLACEMENT}#g" python/setup.py
       COMMAND sed ${dashi} -e "s#autosetup.py install#autosetup.py build#g" Makefile
       COMMAND sed ${dashi} -e "s#rm -f libclass.a#rm -rf libclass.a lib#g" Makefile
       COMMAND sed ${dashi} -e "s#\"[.]\"#\"${dir}\"#g" include/common.h
@@ -1913,7 +1924,7 @@ if(NOT ditched_${name}_${ver})
       BUILD_IN_SOURCE 1
       PATCH_COMMAND patch -p1 < ${patch}/${name}_${ver}.diff
       CONFIGURE_COMMAND ""
-      COMMAND sed ${dashi} -e "s#'-lgomp'#'${OpenMP_omp_LIBRARY}', '-arch', '${CMAKE_SYSTEM_PROCESSOR}'#g" python/setup.py
+      COMMAND sed ${dashi} -e "s#'-lgomp'#${lgomp_REPLACEMENT}#g" python/setup.py
       COMMAND sed ${dashi} -e "s#autosetup.py install#autosetup.py build#g" Makefile
       COMMAND sed ${dashi} -e "s#rm -f libclass.a#rm -rf libclass.a lib#g" Makefile
       COMMAND sed ${dashi} -e "s#\"[.]\"#\"${dir}\"#g" include/common.h
@@ -1952,7 +1963,7 @@ if(NOT ditched_${name}_${ver})
       BUILD_IN_SOURCE 1
       PATCH_COMMAND patch -p1 < ${patch}/${name}_${ver}.diff
       CONFIGURE_COMMAND ""
-      COMMAND sed ${dashi} -e "s#'-lgomp'#'${OpenMP_omp_LIBRARY}', '-arch', '${CMAKE_SYSTEM_PROCESSOR}'#g" python/setup.py
+      COMMAND sed ${dashi} -e "s#'-lgomp'#${lgomp_REPLACEMENT}#g" python/setup.py
       COMMAND sed ${dashi} -e "s#autosetup.py install#autosetup.py build#g" Makefile
       COMMAND sed ${dashi} -e "s#rm -f libclass.a#rm -rf libclass.a lib#g" Makefile
       COMMAND sed ${dashi} -e "s#\"[.]\"#\"${dir}\"#g" include/common.h
@@ -1992,7 +2003,7 @@ if(NOT ditched_${name}_${ver})
       BUILD_IN_SOURCE 1
       PATCH_COMMAND patch -p1 < ${patch}/${name}_${ver}.diff
       CONFIGURE_COMMAND ""
-      COMMAND sed ${dashi} -e "s#'-lgomp'#'${OpenMP_omp_LIBRARY}', '-arch', '${CMAKE_SYSTEM_PROCESSOR}'#g" python/setup.py
+      COMMAND sed ${dashi} -e "s#'-lgomp'#${lgomp_REPLACEMENT}#g" python/setup.py
       COMMAND sed ${dashi} -e "s#autosetup.py install#autosetup.py build#g" Makefile
       COMMAND sed ${dashi} -e "s#rm -f libclass.a#rm -rf libclass.a lib#g" Makefile
       COMMAND sed ${dashi} -e "s#\"[.]\"#\"${dir}\"#g" include/common.h
