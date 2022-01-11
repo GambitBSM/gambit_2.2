@@ -42,6 +42,7 @@
 ///  \author Tomas Gonzalo
 ///          (tomas.gonzalo@monash.edu)
 ///  \date 2020 Sep
+///  \date 2022 Jan
 ///
 ///  *********************************************
 
@@ -265,6 +266,8 @@ namespace Gambit
       // Using a unique pointer for ratioH and a 2D vector for cov_ratioH avoids these problems.
       auto deleter = [&](double* ptr){delete [] ptr;};
       std::unique_ptr<double[], decltype(deleter)> ratioH(new double[NNUC+1](), deleter);
+      std::unique_ptr<double[], decltype(deleter)> ratioH_upper(new double[NNUC+1](), deleter);
+      std::unique_ptr<double[], decltype(deleter)> ratioH_lower(new double[NNUC+1](), deleter);
       std::unique_ptr<double[], decltype(deleter)> cov_ratioH(new double[(NNUC+1)*(NNUC+1)](), deleter);
 
       static bool first = true;
@@ -283,6 +286,7 @@ namespace Gambit
       const static bool has_relative_errors = runOptions->hasKey("relative_errors");
       const static bool has_absolute_errors = runOptions->hasKey("absolute_errors");
       const static bool has_custom_correlations = runOptions->hasKey("correlation_matrix");
+      const static bool use_diff_uncertainties = runOptions->getValueOrDef<bool>(false, "diff_uncertainties");
 
       // Raise error if the modified uncertainty treatment is intended but 'isotope_basis' is missing
       if( !use_custom_covariances &&
@@ -302,6 +306,13 @@ namespace Gambit
       {
         str err = "You specified both \'relative_errors\' and \'absolute_errors\'.\n"
                   "This is contradictory. Please choose only one option.\n";
+        CosmoBit_error().raise(LOCAL_INFO, err);
+      }
+
+      if (use_custom_covariances and use_diff_uncertainties)
+      {
+        str err = "The options \'use_custom_covariances\' and \'use_diff_uncertainties\' are mutually exclusive.\n"
+                  "Please choose only one option.\n";
         CosmoBit_error().raise(LOCAL_INFO, err);
       }
 
@@ -401,6 +412,23 @@ namespace Gambit
         invalid_point().raise(err.str());
       }
 
+      // If the uncertainties are to be taken as difference of high/low values, compute the high and low abundances
+      if(use_diff_uncertainties)
+      {
+        int err = AlterBBN_input["err"];
+        AlterBBN_input["err"] = 1;
+        int err1 = BEreq::call_nucl(AlterBBN_input, &ratioH_upper[0]);
+        AlterBBN_input["err"] = 2;
+        int err2 = BEreq::call_nucl(AlterBBN_input, &ratioH_lower[0]);
+        AlterBBN_input["err"] = err;
+        if (not err1 or not err2)
+        {
+          std::ostringstream err;
+          err << "AlterBBN calculation for primordial element abundances failed.";
+          CosmoBit_error().raise(LOCAL_INFO, err.str());
+        }
+      }
+
       // Fill relative (absolute) errors
       std::vector<double> err_ratio(NNUC+1,0);
       if (use_custom_covariances) for (size_t ie=1; ie <= NNUC; ++ie)
@@ -417,7 +445,7 @@ namespace Gambit
       // Fill abundances and covariance matrix of BBN_container with requested results from AlterBBN
       for (size_t ie=1; ie <= NNUC; ++ie)
       {
-        result.set_BBN_abund(ie, ratioH[ie]);
+        result.set_BBN_abund(ie, triplet<double>(ratioH[ie],ratioH_upper[ie],ratioH_lower[ie]));
         for (size_t je=1; je <= NNUC; ++je)
         {
           if (use_custom_covariances)
@@ -495,6 +523,43 @@ namespace Gambit
         }
       }
 
+      // If there are higher and lower abundances, apply photodissociation on them too
+      // and take the uncertainty as the largest difference
+      if(result.has_BBN_abund_upper() or result.has_BBN_abund_lower())
+      {
+        std::vector<double> abundances_upper_post(niso,0.0);
+        std::vector<double> abundances_lower_post(niso,0.0);
+
+        for(int i=0; i !=niso; ++i) abundances_pre[i] = result.get_BBN_abund_upper(i+1);
+        BEreq::abundance_photodissociation_decay(abundances_pre.data(),
+                                                 covariance_pre.data(),
+                                                 abundances_upper_post.data(),
+                                                 covariance_post.data(),
+                                                 byVal(m_in_MeV),
+                                                 byVal(tau),
+                                                 byVal(N0a),
+                                                 byVal(BR_el),
+                                                 byVal(BR_ph),
+                                                 byVal(niso));
+
+        for(int i=0; i !=niso; ++i) abundances_pre[i] = result.get_BBN_abund_lower(i+1);
+        BEreq::abundance_photodissociation_decay(abundances_pre.data(),
+                                                 covariance_pre.data(),
+                                                 abundances_lower_post.data(),
+                                                 covariance_post.data(),
+                                                 byVal(m_in_MeV),
+                                                 byVal(tau),
+                                                 byVal(N0a),
+                                                 byVal(BR_el),
+                                                 byVal(BR_ph),
+                                                 byVal(niso));
+
+        for(int i=0; i !=niso; ++i)
+        {
+          result.set_BBN_abund(i+1,triplet<double>(abundances_post[i], abundances_upper_post[i], abundances_lower_post[i]));
+          result.set_BBN_covmat(i+1,i+1,pow(std::max(std::abs(abundances_upper_post[i]-abundances_post[i]),std::abs(abundances_lower_post[i]-abundances_post[i])),2));
+        }
+      }
     }
 
     /// Extract helium-4 abundance from BBN abundance container
