@@ -233,6 +233,11 @@ if(NOT ditched_.${name}_${ver}_base)
   add_extra_targets("backend base (not functional alone)" ${name} ${ver} ${dir} ${dl} clean)
 endif()
 
+# Ditch DarkSUSY_MSSM if using gfortran 10 or later, as it won't compile due to FeynHiggs
+if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU" AND NOT CMAKE_Fortran_COMPILER_VERSION VERSION_LESS 10)
+  set(itch "${itch}" "darksusy_MSSM")
+endif()
+
 # DarkSUSY MSSM module
 set(model "MSSM")
 check_ditch_status(${name}_${model} ${ver} ${dir})
@@ -1036,6 +1041,11 @@ if(NOT ditched_${name}_${ver})
 endif()
 
 
+# Ditch all FeynHiggs if using gfortran 10 or later, as it won't compile
+if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU" AND NOT CMAKE_Fortran_COMPILER_VERSION VERSION_LESS 10)
+  set(itch "${itch}" "feynhiggs")
+endif()
+
 # FeynHiggs
 set(name "feynhiggs")
 set(ver "2.12.0")
@@ -1092,6 +1102,7 @@ if(NOT ditched_${name}_${ver})
     INSTALL_COMMAND ""
   )
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+  set_as_default_version("backend" ${name} ${ver})
 endif()
 
 # FeynHiggs
