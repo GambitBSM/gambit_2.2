@@ -77,6 +77,7 @@ You can then do
 ```
 brew install root
 echo 'pushd /opt/homebrew >/dev/null; . bin/thisroot.sh; popd >/dev/null' >> ~/.zprofile
+. ~/.zprofile
 ```
 
 Then, rerun cmake in your GAMBIT build dir with the optional extra(s):
