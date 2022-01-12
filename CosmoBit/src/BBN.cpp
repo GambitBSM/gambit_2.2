@@ -590,8 +590,8 @@ namespace Gambit
       // The measurement of the abundance for 3He is done for 3H/D, whereas the computed abundance is 3He/H, so convert it
       int He3 = abund_map.at("He3"), D = abund_map.at("D");
       double YD = BBN_res.get_BBN_abund("D"), YHe3 = BBN_res.get_BBN_abund("He3")/BBN_res.get_BBN_abund("D");
-      // If the abundance of deuterium is smaller than same arbitrary value, it is effectively zero, so no need to compute anything
-      if(YD > 1.0e-50)
+      // If the abundance of deuterium is smaller than same arbitrary value, it is effectively zero, so no need to compute anything as the point will be invalidated anyway
+      if(YD > 1.0e-40)
       {
         double old_covmat_He3_D = BBN_res.get_BBN_covmat(He3,D);
         BBN_res.set_BBN_abund(He3, YHe3);
