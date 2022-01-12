@@ -591,7 +591,7 @@ namespace Gambit
       int He3 = abund_map.at("He3"), D = abund_map.at("D");
       double YD = BBN_res.get_BBN_abund("D"), YHe3 = BBN_res.get_BBN_abund("He3")/BBN_res.get_BBN_abund("D");
       // If the abundance of deuterium is smaller than same arbitrary value, it is effectively zero, so no need to compute anything as the point will be invalidated anyway
-      if(YD > 1.0e-40)
+      if(YD > 1.0e-20)
       {
         double old_covmat_He3_D = BBN_res.get_BBN_covmat(He3,D);
         BBN_res.set_BBN_abund(He3, YHe3);
@@ -605,6 +605,12 @@ namespace Gambit
           else
             BBN_res.set_BBN_covmat(He3, He3, (BBN_res.get_BBN_covmat(He3,He3) + YHe3*YHe3*BBN_res.get_BBN_covmat(D,D) - 2*YHe3*old_covmat_He3_D)/pow(YD,2));
         }
+      }
+      else
+      {
+        std::ostringstream err;
+        err << "Deuterium abundance is too small Invalidating Point.";
+        invalid_point().raise(err.str());
       }
 
       static bool first = true;
