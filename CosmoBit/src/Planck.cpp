@@ -330,7 +330,17 @@ namespace Gambit
       //--------------------------------------------------------------------------
       double tmp_result = 0.0; // temporary to not spoil the printer output if the TT works but EE fails.
       tmp_result += BEreq::plc_loglike_lowl_TT_2018(&cl_and_pars_TT[0]);
+      if(tmp_result > 1e100)
+      {
+        logger() << "TT lowl Planck likelihood is problematic" << EOM;
+        invalid_point().raise("TT lowl Planck likelihood is problematic");
+      }
       tmp_result += BEreq::plc_loglike_lowl_EE_2018(&cl_and_pars_EE[0]);
+      if(tmp_result > 1e100)
+      {
+        logger() << "EE lowl Planck likelihood is problematic" << EOM;
+        invalid_point().raise("EE lowl Planck likelihood is problematic");
+      }
 
       // Now update result
       result = tmp_result;
