@@ -329,18 +329,22 @@ namespace Gambit
       //------calculation of the planck loglikelihood-----------------------------
       //--------------------------------------------------------------------------
       double tmp_result = 0.0; // temporary to not spoil the printer output if the TT works but EE fails.
-      tmp_result += BEreq::plc_loglike_lowl_TT_2018(&cl_and_pars_TT[0]);
-      if(tmp_result > 1e100)
+      double TT = BEreq::plc_loglike_lowl_TT_2018(&cl_and_pars_TT[0]);
+      if(TT > 1e10)
       {
-        logger() << "TT lowl Planck likelihood is problematic" << EOM;
-        invalid_point().raise("TT lowl Planck likelihood is problematic");
+        logger() << "TT lowl Planck likelihood is problematic, with value " << TT << ", redoing calculation" << EOM;
+        TT = BEreq::plc_loglike_lowl_TT_2018(&cl_and_pars_TT[0]);
+        logger() << "New value: " << TT << EOM;
       }
-      tmp_result += BEreq::plc_loglike_lowl_EE_2018(&cl_and_pars_EE[0]);
-      if(tmp_result > 1e100)
+      tmp_result += TT;
+      double EE = BEreq::plc_loglike_lowl_EE_2018(&cl_and_pars_EE[0]);
+      if(EE > 1e10)
       {
-        logger() << "EE lowl Planck likelihood is problematic" << EOM;
-        invalid_point().raise("EE lowl Planck likelihood is problematic");
+        logger() << "EE lowl Planck likelihood is problematic, with value " << EE << ", redoing calculation" << EOM;
+        EE = BEreq::plc_loglike_lowl_EE_2018(&cl_and_pars_EE[0]);
+        logger() << "New value: " << EE << EOM;
       }
+      tmp_result += EE;
 
       // Now update result
       result = tmp_result;
