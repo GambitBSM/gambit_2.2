@@ -61,10 +61,10 @@ echo 'export PATH="/opt/homebrew/opt/hdf5@1.10/bin:$PATH"' >> ~/.zprofile
 ```
 
 Configure GAMBIT.  Key optional extras:
-  `-DWITH_MPI=ON` if you want scanners to be parallelised
-  `-DWITH_HEPMC` if you want HepMC enabled
+  `-D WITH_MPI=ON` if you want scanners to be parallelised
+  `-D WITH_HEPMC=ON` if you want HepMC enabled
 ```
-cmake -D PYTHON_EXECUTABLE=/usr/bin/python3 .. -D PYTHON_LIBRARY=/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/Current/Python3 -D PYTHON_INCLUDE_DIR=/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Headers ..
+cmake -D PYTHON_EXECUTABLE=/usr/bin/python3 -D PYTHON_LIBRARY=/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/Current/Python3 -D PYTHON_INCLUDE_DIR=/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Headers ..
 ```
 
 Now, see the instructions in the main README.md for possible make targets, and CMAKE_FLAGS.md for other cmake options.
@@ -81,8 +81,8 @@ echo 'pushd /opt/homebrew >/dev/null; . bin/thisroot.sh; popd >/dev/null' >> ~/.
 ```
 
 Then, rerun cmake in your GAMBIT build dir with the optional extra(s):
-  `-DWITH_ROOT` if you want just ROOT enabled (and therefore GReAT and HepLike but no RestFrames)
-  `-DWITH_ROOT -DWITH_RESTFRAMES` if you want RestFrames too.
+  `-D WITH_ROOT=ON ` if you want just ROOT enabled (and therefore GReAT and HepLike but no RestFrames)
+  `-D WITH_ROOT=ON -DWITH_RESTFRAMES=ON` if you want RestFrames too.
 If you want to use GReAT, now do
 ```
 make great
