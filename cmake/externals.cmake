@@ -332,11 +332,11 @@ macro(inform_of_missing_modules name ver missing_with_commas)
 endmacro()
 
 # Bring in the actual backends and scanners
-if(EXISTS "${PROJECT_SOURCE_DIR}/Backends/")
-  include(cmake/backends.cmake)
-endif()
 if(EXISTS "${PROJECT_SOURCE_DIR}/ScannerBit/")
   include(cmake/scanners.cmake)
+endif()
+if(EXISTS "${PROJECT_SOURCE_DIR}/Backends/")
+  include(cmake/backends.cmake)
 endif()
 
 # Print outcomes of BOSSing efforts
