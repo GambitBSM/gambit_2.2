@@ -309,10 +309,10 @@ namespace Gambit
         CosmoBit_error().raise(LOCAL_INFO, err);
       }
 
-      if (use_custom_covariances and use_diff_uncertainties)
+      if ((has_relative_errors or has_absolute_errors) and use_diff_uncertainties)
       {
-        str err = "The options \'use_custom_covariances\' and \'use_diff_uncertainties\' are mutually exclusive.\n"
-                  "Please choose only one option.\n";
+        str err = "The options \'relative_errors\' and \'absolute_errors\' are contradictory with \'diff_uncertainties\'.\n"
+                  "Please choose either one of the former or the latter option.\n";
         CosmoBit_error().raise(LOCAL_INFO, err);
       }
 

@@ -125,6 +125,16 @@ namespace Gambit
       std::set<int> active_isotope_indices;
   };
 
+  inline std::ostream& operator << (std::ostream& os, const BBN_container& bbn)
+  {
+    std::set<str> isotopes = bbn.get_active_isotopes();
+    for(auto it=isotopes.begin(); it!=isotopes.end(); it++)
+    {
+      os << *it << ": " << bbn.get_BBN_abund(*it) << "   ";
+    }
+    return os;
+  }
+
   // Version dependent declarations of 'relicparam' and 'errorparam' start here
   namespace AlterBBN_2_2
   {
