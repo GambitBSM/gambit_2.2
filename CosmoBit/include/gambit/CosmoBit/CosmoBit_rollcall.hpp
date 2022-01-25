@@ -950,6 +950,7 @@ START_MODULE
     #define FUNCTION extract_helium_abundance
     START_FUNCTION(double)
     DEPENDENCY(BBN_abundances, BBN_container)
+    MODEL_CONDITIONAL_DEPENDENCY(BBN_abundances_photodissociation, BBN_container, DecayingDM_mixture)
     #undef FUNCTION
   #undef CAPABILITY
 

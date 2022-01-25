@@ -565,7 +565,11 @@ namespace Gambit
     /// Extract helium-4 abundance from BBN abundance container
     void extract_helium_abundance(double &result)
     {
-      result = Pipes::extract_helium_abundance::Dep::BBN_abundances->get_BBN_abund("He4");
+      using namespace Pipes::extract_helium_abundance;
+      if(ModelInUse("DecayingDM_mixture"))
+        result = Dep::BBN_abundances_photodissociation->get_BBN_abund("He4");
+      else
+        result = Dep::BBN_abundances->get_BBN_abund("He4");
     }
 
     /// Compute the overall log-likelihood from BBN
