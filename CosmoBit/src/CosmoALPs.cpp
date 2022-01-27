@@ -299,8 +299,8 @@ namespace Gambit
       double max_iter = runOptions->getValueOrDef<int>(10,"max_iter"); // maximum number of iterations before error message is thrown if result not converged
       size_t grid_size = runOptions->getValueOrDef<int>(3000,"grid_size"); // number of (logarithmic) grid points in t
 
-      double t0 = runOptions->getValueOrDef<double>(1e4,"t_initial"); // initial time in seconds
-      double tf0 = runOptions->getValueOrDef<double>(1e12,"t_final"); // final time in seconds (for 0th iteration)
+      double t0 = runOptions->getValueOrDef<double>(1e2,"t_initial"); // initial time in seconds
+      double tf0 = runOptions->getValueOrDef<double>(2e12,"t_final"); // final time in seconds (for 0th iteration)
 
       // Get values for r and dNur at BBN
       double rBBN = *Param["r_BBN"];
