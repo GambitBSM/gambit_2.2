@@ -344,7 +344,8 @@ namespace Gambit
         // Loop over all time steps in 't_grid' and update 'T_grid' accordingly
         for (size_t j = 0; j < grid_size; ++j)
         {
-          int status = gsl_odeiv2_driver_apply (d, &t, t_grid[j], T);
+          double tj = t_grid[j] >= t ? t_grid[j] : t;
+          int status = gsl_odeiv2_driver_apply (d, &t, tj, T);
           if (status != GSL_SUCCESS)
           {
             std::ostringstream err;
