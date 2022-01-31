@@ -45,7 +45,25 @@ index f1cdae9..6811c3c 100644
 diff --git a/acropolis/input.py b/acropolis/input.py
 --- a/acropolis/input.py	2021-11-04 16:04:57.857595504 +0100
 +++ b/acropolis/input.py	2021-11-04 16:05:15.393354618 +0100
-@@ -149,6 +149,8 @@ class InputInterface(object):
+@@ -100,11 +100,16 @@ class InputInterface(object):
+         y = self._sCosmoDataLog[:,yc]
+         N = self._sCosmoDataShp[0]
+ 
++        # Sort x and y in increasing order
++        o = np.argsort(x)
++        x = x[o]
++        y = y[o]
++
+         val_log = log10(val)
+         # Extract the index corresponding to
+         # the data entries above and below 'val'
+         ix = np.argmin( np.abs( x - val_log ) )
+-        if ix == N - 1:
++        if x[ix] >= val_log:
+             ix -= 1
+ 
+         m = (y[ix+1] - y[ix])/(x[ix+1] - x[ix])
+@@ -149,6 +154,8 @@ class InputInterface(object):
      def bbn_abundances_0(self):
          return self._sAbundData[:,0]
  
@@ -89,7 +107,7 @@ diff --git a/acropolis/input.py b/acropolis/input.py
          self._sLogBase = log(self._sBase)
  
          self._sFillValue = fill_value
-+ 
++
 +        x_grid = [x if x > 0 else sys.float_info.min for x in x_grid]
 +        y_grid = [y if y > 0 else sys.float_info.min for y in y_grid]
  
