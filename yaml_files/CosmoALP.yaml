@@ -41,10 +41,10 @@ Parameters:
 
   CosmoALP_gg_tau:
     tau:
-      range: [1e5, 1e13]
+      range: [1e4, 1e13]
       prior_type: log
     ma0:
-      range: [1e3, 1e8]
+      range: [1e3, 2e8]
       prior_type: log
     f0_thermal:
       range: [1e-12, 1e2]
@@ -99,7 +99,7 @@ Scanner:
     diver:
       plugin: diver
       like: LogLike
-      convthresh: 1e-7
+      convthresh: 1e-8
       verbosity: 2
       NP: 20000
       jDE: true
@@ -189,8 +189,7 @@ Rules:
   - capability: AlterBBN_Input
     options:
       failsafe: 3
-      #err: 0
-      err: -12
+      err: 0
 
   - capability: BBN_abundances
     options:
