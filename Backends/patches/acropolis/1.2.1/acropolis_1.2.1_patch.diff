@@ -59,7 +59,7 @@ diff --git a/acropolis/input.py b/acropolis/input.py
          # the data entries above and below 'val'
          ix = np.argmin( np.abs( x - val_log ) )
 -        if ix == N - 1:
-+        if x[ix] >= val_log:
++        if (x[ix] >= val_log) or (ix == N - 1):
              ix -= 1
  
          m = (y[ix+1] - y[ix])/(x[ix+1] - x[ix])
