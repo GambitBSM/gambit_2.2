@@ -15,6 +15,13 @@ Upgrade to latest version of pip (numpy will fail to install if you don't)
 python3 -m pip install --upgrade pip
 ```
 
+NB: You must use the system python3 (and pip3 in the steps below)! In case of doubt (if you have installed other python versions) check with 'which python3' and 'which pip3' what python3/pip3 points to, and use 
+```
+/full/path/to/the/system/python3
+/full/path/to/the/system/pip3
+```
+instead.
+
 Install homebrew
 ```
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
