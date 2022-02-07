@@ -241,6 +241,12 @@ namespace Gambit
       AP_DBUG( std::cout << "Rank "<<myRealRank<<": last point was from (ptID,rank) "<<lastPointID<<std::endl; )
       //AP_DBUG( std::cout << "Rank "<<this->getRank()<<": Note: nullpoint is (ptID,rank) "<<nullpoint<<std::endl; )
 
+      // Do not write invalid or suspicious points to buffer as this will require extending the dataset, which is not possible in ascii
+      if (functor_labels[0] == "Suspicious Point Code")
+        return;
+      if (functor_labels[0] == "Invalidation Code")
+        return;
+        
       if(lastPointID == nullpoint)
       {
         // No previous point; add current point
@@ -292,12 +298,6 @@ namespace Gambit
              << "   slot (rank,pointID): "<< rank <<", "<< pointID << endl;
          printer_error().raise(LOCAL_INFO, err.str());
       }
-
-      // Do not write invalid or suspicious points to buffer as this will require extending the dataset, which is not possible in ascii
-      if (functor_labels[0] == "Suspicious Point Code")
-        return;
-      if (functor_labels[0] == "Invalidation Code")
-        return;
  
       // Assign to buffer, adding keys if needed
       buffer[bkey].data[vID] = functor_data;
