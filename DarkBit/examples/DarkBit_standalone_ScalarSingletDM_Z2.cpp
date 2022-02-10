@@ -176,8 +176,12 @@ int main()
     RD_fraction_one.reset_and_calculate();
 
     // Set generic WIMP mass object
-    mwimp_generic.resolveDependency(&TH_ProcessCatalog_ScalarSingletDM_Z2);
-    mwimp_generic.resolveDependency(&DarkMatter_ID_ScalarSingletDM);
+    WIMP_properties.notifyOfModel("ScalarSingletDM_Z2");
+    WIMP_properties.resolveDependency(&DarkMatter_ID_ScalarSingletDM);
+    WIMP_properties.resolveDependency(&DarkMatterConj_ID_ScalarSingletDM);
+    WIMP_properties.resolveDependency(&createSpectrum);
+    WIMP_properties.reset_and_calculate();
+    mwimp_generic.resolveDependency(&WIMP_properties);
     mwimp_generic.reset_and_calculate();
 
     // Set generic annihilation rate in late universe (v->0 limit)
