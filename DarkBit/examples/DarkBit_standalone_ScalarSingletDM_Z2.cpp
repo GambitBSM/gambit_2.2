@@ -319,12 +319,16 @@ int main()
     Backends::DDCalc_2_2_0::Functown::DDCalc_Experiment.setStatus(2);
     Backends::DDCalc_2_2_0::Functown::DDCalc_LogLikelihood.setStatus(2);
 
+    // Calculate DD couplings for DDCalc
+    DDCalc_Couplings_WIMP_nucleon.resolveDependency(&DD_couplings_ScalarSingletDM_Z2);
+    DDCalc_Couplings_WIMP_nucleon.reset_and_calculate();
+
     DDCalc_2_2_0_init.resolveDependency(&ExtractLocalMaxwellianHalo);
     DDCalc_2_2_0_init.resolveDependency(&RD_fraction_one);
     DDCalc_2_2_0_init.resolveDependency(&mwimp_generic);
     // Choose one of the two below lines to determine where the couplings used in the likelihood
     // calculation come from
-    DDCalc_2_2_0_init.resolveDependency(&DD_couplings_ScalarSingletDM_Z2);
+    DDCalc_2_2_0_init.resolveDependency(&DDCalc_Couplings_WIMP_nucleon);
     //DDCalc_2_2_0_init.resolveDependency(&DD_couplings_MicrOmegas);
     DDCalc_2_2_0_init.reset_and_calculate();
 
