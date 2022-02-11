@@ -348,7 +348,7 @@ int main()
     // ---- Gamma-ray yields ----
 
     // Initialize tabulated gamma-ray yields
-    GA_SimYieldTable_DarkSUSY.resolveBackendReq(&Backends::DarkSUSY_generic_wimp_6_2_2::Functown::dsanyield_sim);
+    GA_SimYieldTable_DarkSUSY.resolveBackendReq(&Backends::DarkSUSY_generic_wimp_6_2_5::Functown::dsanyield_sim);
     GA_SimYieldTable_DarkSUSY.reset_and_calculate();
     Combine_SimYields.resolveDependency(&GA_SimYieldTable_DarkSUSY);
     // Here we need to establish the dependency chain from Combine_SimYields down to cascadeMC_gammaSpectra
