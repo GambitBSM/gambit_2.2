@@ -567,10 +567,10 @@ int main(int argc, char* argv[])
     LZ_Calc.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_CalcRates_simple);
     PandaX_2017_Calc.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_Experiment);
     PandaX_2017_Calc.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_CalcRates_simple);
-    PICO_60_2017_Calc.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_Experiment);
-    PICO_60_2017_Calc.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_CalcRates_simple);
-    XENON1T_2017_Calc.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_Experiment);
-    XENON1T_2017_Calc.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_CalcRates_simple);
+    PICO_60_2019_Calc.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_Experiment);
+    PICO_60_2019_Calc.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_CalcRates_simple);
+    XENON1T_2018_Calc.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_Experiment);
+    XENON1T_2018_Calc.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_CalcRates_simple);
 
     // Calculate direct detection likelihood for LZ, PandaX 2017, Xenon 1T and PICO-60
     LZ_GetLogLikelihood.resolveDependency(&LZ_Calc);
@@ -579,12 +579,12 @@ int main(int argc, char* argv[])
     PandaX_2017_GetLogLikelihood.resolveDependency(&PandaX_2017_Calc);
     PandaX_2017_GetLogLikelihood.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_Experiment);
     PandaX_2017_GetLogLikelihood.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_LogLikelihood);
-    XENON1T_2017_GetLogLikelihood.resolveDependency(&XENON1T_2017_Calc);
-    XENON1T_2017_GetLogLikelihood.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_Experiment);
-    XENON1T_2017_GetLogLikelihood.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_LogLikelihood);
-    PICO_60_2017_GetLogLikelihood.resolveDependency(&PICO_60_2017_Calc);
-    PICO_60_2017_GetLogLikelihood.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_Experiment);
-    PICO_60_2017_GetLogLikelihood.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_LogLikelihood);
+    XENON1T_2018_GetLogLikelihood.resolveDependency(&XENON1T_2018_Calc);
+    XENON1T_2018_GetLogLikelihood.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_Experiment);
+    XENON1T_2018_GetLogLikelihood.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_LogLikelihood);
+    PICO_60_2019_GetLogLikelihood.resolveDependency(&PICO_60_2019_Calc);
+    PICO_60_2019_GetLogLikelihood.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_Experiment);
+    PICO_60_2019_GetLogLikelihood.resolveBackendReq(&Backends::DDCalc_2_2_0::Functown::DDCalc_LogLikelihood);
 
     // Provide bin number in LZ
     LZ_GetBinSignal.resolveDependency(&LZ_Calc);
@@ -835,19 +835,20 @@ int main(int argc, char* argv[])
           DD_couplings_WIMP.setOption<double>("gpa", 0.);
           DD_couplings_WIMP.setOption<double>("gna", 0.);
           DD_couplings_WIMP.reset_and_calculate();
+          DDCalc_Couplings_WIMP_nucleon.reset_and_calculate();
 
           DDCalc_2_2_0_init.reset_and_calculate();
           LZ_Calc.reset_and_calculate();
           LZ_GetLogLikelihood.reset_and_calculate();
 
-          XENON1T_2017_Calc.reset_and_calculate();
-          XENON1T_2017_GetLogLikelihood.reset_and_calculate();
+          XENON1T_2018_Calc.reset_and_calculate();
+          XENON1T_2018_GetLogLikelihood.reset_and_calculate();
           PandaX_2017_Calc.reset_and_calculate();
           PandaX_2017_GetLogLikelihood.reset_and_calculate();
 
           lnL1 = LZ_GetLogLikelihood(0);
           lnL2 = PandaX_2017_GetLogLikelihood(0);
-          lnL3 = XENON1T_2017_GetLogLikelihood(0);
+          lnL3 = XENON1T_2018_GetLogLikelihood(0);
 
           // Set LocalHalo Model parameters to PICO-60 values
           Halo_primary_parameters->setValue("rho0", 0.3);
@@ -857,14 +858,14 @@ int main(int argc, char* argv[])
           ExtractLocalMaxwellianHalo.reset_and_calculate();
 
           DDCalc_2_2_0_init.reset_and_calculate();
-          PICO_60_2017_Calc.reset_and_calculate();
-          PICO_60_2017_GetLogLikelihood.reset_and_calculate();
-          lnL4 = PICO_60_2017_GetLogLikelihood(0);
+          PICO_60_2019_Calc.reset_and_calculate();
+          PICO_60_2019_GetLogLikelihood.reset_and_calculate();
+          lnL4 = PICO_60_2019_GetLogLikelihood(0);
 
           //std::cout << "LZ SI lnL = " << lnL1 << std::endl;
           //std::cout << "PandaX_2017 SI lnL = " << lnL2 << std::endl;
-          //std::cout << "XENON1T_2017 SI lnL = " << lnL3 << std::endl;
-          //std::cout << "PICO_60_2017 SI lnL = " << lnL4 << std::endl;
+          //std::cout << "XENON1T_2018 SI lnL = " << lnL3 << std::endl;
+          //std::cout << "PICO_60_2019 SI lnL = " << lnL4 << std::endl;
 
           DDCalc_2_2_0_init.reset_and_calculate();
           LZ_Calc.reset_and_calculate();
@@ -872,12 +873,12 @@ int main(int argc, char* argv[])
           LZ_GetBinSignal.reset_and_calculate();
           events = LZ_GetBinSignal(0);
           nbins = events.size();
-          std::cout << "Number of LZ bins: " << nbins << std::endl;
-          std::cout << "Predicted signal: ";
-          for (int ibin=0;ibin<=nbins-1;ibin++) {
-            std::cout << events[ibin] << " ";
-          }
-          std::cout << std::endl;
+          //std::cout << "Number of LZ bins: " << nbins << std::endl;
+          //std::cout << "Predicted signal: ";
+          //for (int ibin=0;ibin<=nbins-1;ibin++) {
+          //  std::cout << events[ibin] << " ";
+          //}
+          //std::cout << std::endl;
 
           lnL_array1[i][j] = lnL1;
           lnL_array2[i][j] = lnL2;
@@ -888,8 +889,8 @@ int main(int argc, char* argv[])
 
       dump_array_to_file("LZ_SI_table.dat", lnL_array1, m_list, s_list);
       dump_array_to_file("PandaX_2017_SI_table.dat", lnL_array2, m_list, s_list);
-      dump_array_to_file("XENON1T_2017_SI_table.dat", lnL_array3, m_list, s_list);
-      dump_array_to_file("PICO_60_2017_SI_table.dat", lnL_array4, m_list, s_list);
+      dump_array_to_file("XENON1T_2018_SI_table.dat", lnL_array3, m_list, s_list);
+      dump_array_to_file("PICO_60_2019_SI_table.dat", lnL_array4, m_list, s_list);
 
       s_list = daFunk::logspace(-42., -35., sBins);
       // Calculate array of sigma_SI and lnL values for LZ, PandaX, XENON1T and PICO-60
@@ -927,13 +928,13 @@ int main(int argc, char* argv[])
           DDCalc_2_2_0_init.reset_and_calculate();
           LZ_Calc.reset_and_calculate();
           LZ_GetLogLikelihood.reset_and_calculate();
-          XENON1T_2017_Calc.reset_and_calculate();
-          XENON1T_2017_GetLogLikelihood.reset_and_calculate();
+          XENON1T_2018_Calc.reset_and_calculate();
+          XENON1T_2018_GetLogLikelihood.reset_and_calculate();
           PandaX_2017_Calc.reset_and_calculate();
           PandaX_2017_GetLogLikelihood.reset_and_calculate();
           lnL1 = LZ_GetLogLikelihood(0);
           lnL2 = PandaX_2017_GetLogLikelihood(0);
-          lnL3 = XENON1T_2017_GetLogLikelihood(0);
+          lnL3 = XENON1T_2018_GetLogLikelihood(0);
 
           // Set LocalHalo Model parameters to PICO-60 values
           Halo_primary_parameters->setValue("rho0", 0.3);
@@ -943,14 +944,14 @@ int main(int argc, char* argv[])
           ExtractLocalMaxwellianHalo.reset_and_calculate();
 
           DDCalc_2_2_0_init.reset_and_calculate();
-          PICO_60_2017_Calc.reset_and_calculate();
-          PICO_60_2017_GetLogLikelihood.reset_and_calculate();
-          lnL4 = PICO_60_2017_GetLogLikelihood(0);
+          PICO_60_2019_Calc.reset_and_calculate();
+          PICO_60_2019_GetLogLikelihood.reset_and_calculate();
+          lnL4 = PICO_60_2019_GetLogLikelihood(0);
 
           //std::cout << "LZ SD lnL = " << lnL1 << std::endl;
           //std::cout << "PandaX_2017 SD lnL = " << lnL2 << std::endl;
-          //std::cout << "XENON1T_2017 SD lnL = " << lnL3 << std::endl;
-          //std::cout << "PICO_60_2017 SD lnL = " << lnL4 << std::endl;
+          //std::cout << "XENON1T_2018 SD lnL = " << lnL3 << std::endl;
+          //std::cout << "PICO_60_2019 SD lnL = " << lnL4 << std::endl;
 
           lnL_array1[i][j] = lnL1;
           lnL_array2[i][j] = lnL2;
@@ -961,8 +962,8 @@ int main(int argc, char* argv[])
 
       dump_array_to_file("LZ_SD_table.dat", lnL_array1, m_list, s_list);
       dump_array_to_file("PandaX_2017_SD_table.dat", lnL_array2, m_list, s_list);
-      dump_array_to_file("XENON1T_2017_SD_table.dat", lnL_array3, m_list, s_list);
-      dump_array_to_file("PICO_60_2017_SD_table.dat", lnL_array4, m_list, s_list);
+      dump_array_to_file("XENON1T_2018_SD_table.dat", lnL_array3, m_list, s_list);
+      dump_array_to_file("PICO_60_2019_SD_table.dat", lnL_array4, m_list, s_list);
 
       // Reset halo parameters to DarkBit defaults.
       Halo_primary_parameters->setValue("rho0", 0.4);
