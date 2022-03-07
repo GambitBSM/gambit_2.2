@@ -132,7 +132,7 @@ namespace Gambit
 
     /// Check the validity of a correlation matrix for AlterBBN likelihood calculations given in the YAML file, and use it to populate a correlation matrix object
     void populate_correlation_matrix(const std::map<std::string, int>& abund_map, std::vector<std::vector<double>>& corr,
-                                     std::vector<double>& err, bool has_errors, const Options& runOptions)
+                                     std::vector<double>& errors, bool has_errors, const Options& runOptions)
     {
       std::vector<str> isotope_basis = runOptions.getValue<std::vector<str> >("isotope_basis");
       unsigned int nisotopes = isotope_basis.size();
@@ -240,8 +240,8 @@ namespace Gambit
       {
         int ie  =  abund_map.at(*it1);
         int i = std::distance( isotope_basis.begin(), it1 );
-        // If errors are given, fill err with the respective values (-1.0 refers to no errors given).
-        if (has_errors) err.at(ie) = tmp_err.at(i);
+        // If errors are given, fill errors with the respective values (-1.0 refers to no errors given).
+        if (has_errors) errors.at(ie) = tmp_err.at(i);
         for (std::vector<str>::iterator it2 = isotope_basis.begin(); it2 != isotope_basis.end(); it2++)
         {
           int je = abund_map.at(*it2);
@@ -317,7 +317,7 @@ namespace Gambit
       }
 
       // Define the vectors to hold the customs errors (correlation matrix + relative (absolute) errors on the isotopes)
-      static std::vector<double> err(NNUC+1, -1.0);
+      static std::vector<double> errors(NNUC+1, -1.0);
       static std::vector<std::vector<double>> corr(NNUC+1, std::vector<double>(NNUC+1, 0.0));
 
       // Fill AlterBBN_input map with the parameters for the model in consideration
@@ -395,7 +395,7 @@ namespace Gambit
             }
           }
 
-          populate_correlation_matrix(abund_map, corr, err, has_errors, *runOptions);
+          populate_correlation_matrix(abund_map, corr, errors, has_errors, *runOptions);
         }
 
         // Here for a good time, not a long time
@@ -433,10 +433,12 @@ namespace Gambit
       std::vector<double> err_ratio(NNUC+1,0);
       if (use_custom_covariances) for (size_t ie=1; ie <= NNUC; ++ie)
       {
-        if (has_relative_errors && (err.at(ie) > 0.0))
-          err_ratio.at(ie) =  err.at(ie) * ratioH[ie];
-        else if (has_absolute_errors && (err.at(ie) > 0.0))
-          err_ratio.at(ie) =  err.at(ie);
+        if (has_relative_errors && (errors.at(ie) > 0.0))
+          err_ratio.at(ie) =  errors.at(ie) * ratioH[ie];
+        else if (has_absolute_errors && (errors.at(ie) > 0.0))
+          err_ratio.at(ie) =  errors.at(ie);
+        else if (use_diff_uncertainties)
+          err_ratio.at(ie) = std::max(std::abs(ratioH_upper[ie]-ratioH[ie]),std::abs(ratioH_lower[ie]-ratioH[ie]));
         else
           // get every diagonal element (row and line 0 are not filled)
           err_ratio.at(ie) = sqrt(cov_ratioH[ie*(NNUC+1)+ie]);
@@ -454,6 +456,7 @@ namespace Gambit
             result.set_BBN_covmat(ie, je, cov_ratioH[ie*(NNUC+1)+je]);
         }
       }
+
     }
 
     void BBN_abundances_photodissociation_decayingDM(BBN_container &result)
@@ -594,7 +597,8 @@ namespace Gambit
       // The measurement of the abundance for 3He is done for 3H/D, whereas the computed abundance is 3He/H, so convert it
       int He3 = abund_map.at("He3"), D = abund_map.at("D");
       double YD = BBN_res.get_BBN_abund("D"), YHe3 = BBN_res.get_BBN_abund("He3")/BBN_res.get_BBN_abund("D");
-      // If the abundance of deuterium is smaller than same arbitrary value, it is effectively zero, so no need to compute anything as the point will be invalidated anyway
+      
+      // If the abundance of deuterium is smaller than some arbitrary value, it is effectively zero, so no need to compute anything as the point will be invalidated anyway
       if(YD > 1.0e-20)
       {
         double old_covmat_He3_D = BBN_res.get_BBN_covmat(He3,D);

@@ -53,7 +53,7 @@
     {
       // Handle the special case 'p'
       Y0[1] = ratioH[1];
-      // Handle the secial case 'He4'
+      // Handle the special case 'He4'
       Y0[5] = ratioH[5]/4;
 
       // All other isotopes are normalised with respect to 'p'
@@ -67,10 +67,6 @@
       // Revert the decays of 'H3' and 'Be7'
       Y0[4] = Y0[4] - ratioH[3]*Y0[1]; // H3
       Y0[7] = Y0[7] - ratioH[8]*Y0[1]; // Be7
-
-      // Perform the neutron decay
-      Y0[1] = Y0[1] + Y0[0];           // p
-      Y0[0] = 0.;                      // n
     }
 
     // Reverse translation
@@ -93,29 +89,31 @@
 
     // Function to apply variable transformation to the transfer matrix
     // This is an approximation assuming one can linearize the transformation, so it should only be used for the covariance
-    void transform_transfer_matrix(std::vector<double> &ctf, pyArray_dbl &tf, double ratioH[], int NY)
+    void transform_transfer_matrix(std::vector<double> &ctf, pyArray_dbl &tf, double ratioH_pre[], double ratioH_post[], int NY)
     {
-      mat_dbl Jacobian =        {{ratioH[1], ratioH[0], 0., 0., 0., 0., 0., 0., 0.},
-                                 {0., 1., 0., 0., 0., 0., 0., 0., 0.},
-                                 {0., ratioH[2], ratioH[1], 0., 0., 0., 0., 0., 0.},
-                                 {0., ratioH[3], 0., ratioH[1], 0., 0., 0., 0., 0.},
-                                 {0., ratioH[4], 0., 0., ratioH[1], 0., 0., 0., 0.},
-                                 {0., 0., 0., 0., 0., 1., 0., 0., 0.},
-                                 {0., ratioH[6], 0., 0., 0., 0., ratioH[1], 0., 0.},
-                                 {0., ratioH[7], 0., 0., 0., 0., 0., ratioH[1], 0.},
-                                 {0., ratioH[8], 0., 0., 0., 0., 0., 0., ratioH[1]}};
-      mat_dbl InverseJacobian = {{1./ratioH[1], -ratioH[0]/ratioH[1], 0., 0., 0., 0., 0., 0., 0.},
-                                 {0., 1., 0., 0., 0., 0., 0., 0., 0.},
-                                 {0., -ratioH[2]/ratioH[1], 1./ratioH[1], 0., 0., 0., 0., 0., 0.},
-                                 {0., -ratioH[3]/ratioH[1], 0., 1./ratioH[1], 0., 0., 0., 0., 0.},
-                                 {0., -ratioH[4]/ratioH[1], 0., 0., 1./ratioH[1], 0., 0., 0., 0.},
-                                 {0., 0., 0., 0., 0., 1., 0., 0., 0.},
-                                 {0., -ratioH[6]/ratioH[1], 0., 0., 0., 0., 1./ratioH[1], 0., 0.},
-                                 {0., -ratioH[7]/ratioH[1], 0., 0., 0., 0., 0., 1./ratioH[1], 0.},
-                                 {0., -ratioH[8]/ratioH[1], 0., 0., 0., 0., 0., 0., 1./ratioH[1]}};
+      // First Jacobian corresponds to the transformation from ratioH -> abundance
+      mat_dbl FirstJacobian =  {{ratioH_pre[1], ratioH_pre[0], 0., 0., 0., 0., 0., 0., 0.},
+                                {0., 1., 0., 0., 0., 0., 0., 0., 0.},
+                                {0., ratioH_pre[2], ratioH_pre[1], 0., 0., 0., 0., 0., 0.},
+                                {0., ratioH_pre[3], 0., ratioH_pre[1], 0., 0., 0., 0., 0.},
+                                {0., ratioH_pre[4]-ratioH_pre[3], 0., -ratioH_pre[1], ratioH_pre[1], 0., 0., 0., 0.},
+                                {0., 0., 0., 0., 0., 1/4, 0., 0., 0.},
+                                {0., ratioH_pre[6], 0., 0., 0., 0., ratioH_pre[1], 0., 0.},
+                                {0., ratioH_pre[7]-ratioH_pre[8], 0., 0., 0., 0., 0., ratioH_pre[1], -ratioH_pre[1]},
+                                {0., ratioH_pre[8], 0., 0., 0., 0., 0., 0., ratioH_pre[1]}};
+      // Second Jacobian corresponds to the transformation from abundances -> ratioH
+      mat_dbl SecondJacobian = {{1./ratioH_post[1], -ratioH_post[0]/ratioH_post[1], 0., 0., 0., 0., 0., 0., 0.},
+                                {0., 1., 0., 0., 0., 0., 0., 0., 0.},
+                                {0., -ratioH_post[2]/ratioH_post[1], 1./ratioH_post[1], 0., 0., 0., 0., 0., 0.},
+                                {0., -ratioH_post[3]/ratioH_post[1], 0., 1./ratioH_post[1], 0., 0., 0., 0., 0.},
+                                {0., -ratioH_post[4]/ratioH_post[1], 0., 0., 1./ratioH_post[1], 0., 0., 0., 0.},
+                                {0., 0., 0., 0., 0., 4., 0., 0., 0.},
+                                {0., -ratioH_post[6]/ratioH_post[1], 0., 0., 0., 0., 1./ratioH_post[1], 0., 0.},
+                                {0., -ratioH_post[7]/ratioH_post[1], 0., 0., 0., 0., 0., 1./ratioH_post[1], 0.},
+                                {0., -ratioH_post[8]/ratioH_post[1], 0., 0., 0., 0., 0., 0., 1./ratioH_post[1]}};
 
       for(int i=0; i<NY; ++i) for(int j=0; j<NY; ++j) for(int k=0; k<NY; ++k) for(int l=0; l<NY; ++l)
-          ctf[i*NY+j] += Jacobian[i][k] * *(tf.data()+k*NY+l) * InverseJacobian[l][j];
+          ctf[i*NY+j] += SecondJacobian[i][k] * *(tf.data()+k*NY+l) * FirstJacobian[l][j];
  
     }
 
@@ -158,27 +156,22 @@
 
       // Pure abundances post acropolis
       double Y0_post[niso];
-
-      // Transform transfer matrix
-      std::vector<double> corrected_transfer_matrix(niso*niso,0.0);
-      transform_transfer_matrix(corrected_transfer_matrix, transfer_matrix, ratioH_pre, niso);
-
-      // Write the results into 'ratioH_post' and 'cov_ratioH_post'
       for (int i=0; i != niso; ++i)
       {
         Y0_post[i] = 0.0;
         for (int j=0; j < niso; ++j)
-        {
           *(Y0_post+i) += *(transfer_matrix.data()+i*niso+j) * *(Y0_pre.data()+j);
-          for (int k=0; k < niso; ++k) for (int l=0; l < niso; ++l)
-          {
-            *(cov_ratioH_post+i*niso+j) += corrected_transfer_matrix[i*niso+k] *  *(cov_ratioH_pre+k*niso+l) * corrected_transfer_matrix[j*niso+l];
-          }
-        }
       }
 
       // Transalte the results from pure abundances to ratioH
       Y0_to_ratioH(ratioH_post, Y0_post, niso);
+
+      // Transform transfer matrix for computation of covariance
+      std::vector<double> corrected_transfer_matrix(niso*niso,0.0);
+      transform_transfer_matrix(corrected_transfer_matrix, transfer_matrix, ratioH_pre, ratioH_post, niso);
+      for (int i=0; i != niso; ++i) for (int j=0; j < niso; ++j) for (int k=0; k < niso; ++k) for (int l=0; l < niso; ++l)
+        *(cov_ratioH_post+i*niso+j) += corrected_transfer_matrix[i*niso+k] *  *(cov_ratioH_pre+k*niso+l) * corrected_transfer_matrix[j*niso+l];
+
     }
 
   }
