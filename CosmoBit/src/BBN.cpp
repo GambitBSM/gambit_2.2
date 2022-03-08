@@ -457,6 +457,7 @@ namespace Gambit
         }
       }
 
+
     }
 
     void BBN_abundances_photodissociation_decayingDM(BBN_container &result)
@@ -611,7 +612,7 @@ namespace Gambit
             BBN_res.set_BBN_covmat(He3, i, BBN_res.get_BBN_covmat(i,He3));
           }
           else
-            BBN_res.set_BBN_covmat(He3, He3, (BBN_res.get_BBN_covmat(He3,He3) + YHe3*YHe3*BBN_res.get_BBN_covmat(D,D) - 2*YHe3*old_covmat_He3_D)/pow(YD,2));
+            BBN_res.set_BBN_covmat(He3, He3, (YHe3*YHe3)/(YD*YD) * (BBN_res.get_BBN_covmat(He3,He3)/pow(YHe3,2) + BBN_res.get_BBN_covmat(D,D)/pow(YD,2) - 2*old_covmat_He3_D/YD/YHe3));
         }
       }
       else

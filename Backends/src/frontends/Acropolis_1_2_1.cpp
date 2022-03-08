@@ -97,7 +97,7 @@
                                 {0., ratioH_pre[2], ratioH_pre[1], 0., 0., 0., 0., 0., 0.},
                                 {0., ratioH_pre[3], 0., ratioH_pre[1], 0., 0., 0., 0., 0.},
                                 {0., ratioH_pre[4]-ratioH_pre[3], 0., -ratioH_pre[1], ratioH_pre[1], 0., 0., 0., 0.},
-                                {0., 0., 0., 0., 0., 1/4, 0., 0., 0.},
+                                {0., 0., 0., 0., 0., 1./4, 0., 0., 0.},
                                 {0., ratioH_pre[6], 0., 0., 0., 0., ratioH_pre[1], 0., 0.},
                                 {0., ratioH_pre[7]-ratioH_pre[8], 0., 0., 0., 0., 0., ratioH_pre[1], -ratioH_pre[1]},
                                 {0., ratioH_pre[8], 0., 0., 0., 0., 0., 0., ratioH_pre[1]}};
@@ -111,6 +111,7 @@
                                 {0., -ratioH_post[6]/ratioH_post[1], 0., 0., 0., 0., 1./ratioH_post[1], 0., 0.},
                                 {0., -ratioH_post[7]/ratioH_post[1], 0., 0., 0., 0., 0., 1./ratioH_post[1], 0.},
                                 {0., -ratioH_post[8]/ratioH_post[1], 0., 0., 0., 0., 0., 0., 1./ratioH_post[1]}};
+
 
       for(int i=0; i<NY; ++i) for(int j=0; j<NY; ++j) for(int k=0; k<NY; ++k) for(int l=0; l<NY; ++l)
           ctf[i*NY+j] += SecondJacobian[i][k] * *(tf.data()+k*NY+l) * FirstJacobian[l][j];
