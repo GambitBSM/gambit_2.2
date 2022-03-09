@@ -438,7 +438,11 @@ namespace Gambit
         else if (has_absolute_errors && (errors.at(ie) > 0.0))
           err_ratio.at(ie) =  errors.at(ie);
         else if (use_diff_uncertainties)
+        {
           err_ratio.at(ie) = std::max(std::abs(ratioH_upper[ie]-ratioH[ie]),std::abs(ratioH_lower[ie]-ratioH[ie]));
+          // If the error is larger than the central value, take as error the central value
+          if(err_ratio.at(ie) > ratioH[ie]) err_ratio.at(ie) = ratioH[ie];
+        }
         else
           // get every diagonal element (row and line 0 are not filled)
           err_ratio.at(ie) = sqrt(cov_ratioH[ie*(NNUC+1)+ie]);
@@ -562,6 +566,8 @@ namespace Gambit
         {
           result.set_BBN_abund(i+1,triplet<double>(abundances_post[i], abundances_upper_post[i], abundances_lower_post[i]));
           result.set_BBN_covmat(i+1,i+1,pow(std::max(std::abs(abundances_upper_post[i]-abundances_post[i]),std::abs(abundances_lower_post[i]-abundances_post[i])),2));
+          // If the error is larger than the central value, take as error the central value
+          if(result.get_BBN_covmat(i+1,i+1) > abundances_post[i]) result.set_BBN_covmat(i+1,i+1,abundances_post[i]);
         }
       }
     }
