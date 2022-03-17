@@ -92,12 +92,12 @@ OPTIONAL:
     - Boost.Filesystem
     - Boost.System
  - Python modules:
-    - h5py (for use of the hdf5 printer)
     - Cython (required for using the classy backend)
     - scipy (required for using the MontePython or DarkAges backends)
     - numpy 1.12 or greater (required for using the classy or DarkAges backends)
     - dill (required for using the DarkAges backend)
     - pandas, numexpr (required for using the MontePython backend)
+    - h5py (required to use hdf5 utilities located in gambit/Printers/scripts)
 
 Memory requirements
 --
