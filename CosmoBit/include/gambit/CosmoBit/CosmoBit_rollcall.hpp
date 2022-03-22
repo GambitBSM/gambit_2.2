@@ -1051,7 +1051,8 @@ START_MODULE
 
   // --------------------
   // Modified gravity models - symmetron
-
+  // TODO: Temporarily disabled until project is ready
+/*
   // Obtain a value for phi(0) given mass and mu
   #define CAPABILITY phi0_interpolation
   START_CAPABILITY
@@ -1118,7 +1119,7 @@ START_MODULE
     ALLOW_MODELS(symmetron)
     #undef FUNCTION
   #undef CAPABILITY
-
+*/
 
 #undef REFERENCE
 #undef MODULE
