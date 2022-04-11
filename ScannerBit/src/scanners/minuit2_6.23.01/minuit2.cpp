@@ -186,7 +186,7 @@ scanner_plugin(minuit2, version(6, 23, 01))
 
     // select algorithm
 
-    ROOT::Minuit2::EMinimizerType kalgorithm;
+    ROOT::Minuit2::EMinimizerType kalgorithm{ROOT::Minuit2::kCombined};
     if (algorithm == "simplex")
     {
       kalgorithm = ROOT::Minuit2::kSimplex;
@@ -274,7 +274,11 @@ scanner_plugin(minuit2, version(6, 23, 01))
       v.push_back(best_fit_hypercube[i]);
     }
     auto best_fit_physical = model.transform(v);
-    std::cout << "best-fit physical = " << best_fit_physical << std::endl;
+    for (int i = 0; i < dim; i++)
+    {
+      std::cout << "best-fit physical " << i << " = "
+                << best_fit_physicali] << std::endl;
+    }
 
     // whether successful
     const int status = min->Status();
