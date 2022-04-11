@@ -619,6 +619,8 @@ if(NOT ditched_.${name}_${ver}_base)
     # Fix error due to C99 non-compliance
     set(MO_C_FLAGS "${BACKEND_C_FLAGS} -Wno-error=implicit-function-declaration")
     set(MO_CXX_FLAGS "${BACKEND_CXX_FLAGS} -Wno-error=implicit-function-declaration")
+  endif()
+  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
     # Find the path to libx11
     execute_process(COMMAND ${BREW} --prefix libx11 RESULT_VARIABLE BREW_RESULT_CODE OUTPUT_VARIABLE X11_INSTALL_DIR)
     if(NOT BREW_RESULT_CODE)
@@ -1557,6 +1559,8 @@ if(NOT ditched_${name}_${ver})
   if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
     # Fix error due to C99 non-compliance
     set(calchep_C_FLAGS "${calchep_C_FLAGS} -Wno-error=implicit-function-declaration")
+  endif()
+  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
     # Find the path to libx11
     execute_process(COMMAND ${BREW} --prefix libx11 RESULT_VARIABLE BREW_RESULT_CODE OUTPUT_VARIABLE X11_INSTALL_DIR)
     if(NOT BREW_RESULT_CODE)
