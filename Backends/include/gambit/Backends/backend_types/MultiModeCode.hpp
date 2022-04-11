@@ -28,7 +28,7 @@ namespace Gambit
 {
 
     // type definition for the multimodecode output.
-    typedef struct
+    typedef struct gambit_inflation_observables
     {
         bool check_ic_ok;
         double As;
