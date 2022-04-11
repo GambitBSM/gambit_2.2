@@ -273,11 +273,9 @@ scanner_plugin(minuit2, version(6, 23, 01))
     {
       v.push_back(best_fit_hypercube[i]);
     }
-    auto best_fit_physical = model.transform(v);
-    for (int i = 0; i < dim; i++)
+    for (auto par : model.transform(v))
     {
-      std::cout << "best-fit physical " << i << " = "
-                << best_fit_physicali] << std::endl;
+      std::cout << "best-fit physical " << par.first << " = " << par.second << std::endl;
     }
 
     // whether successful
