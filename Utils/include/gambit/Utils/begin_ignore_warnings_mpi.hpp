@@ -42,8 +42,10 @@
     #pragma clang diagnostic push 
     // Don't care if an old compiler version doesn't recognize all the pragmas
     #pragma clang diagnostic ignored "-Wpragmas"
-    // Turn off some warnings
-    #pragma clang diagnostic ignored "-Wcast-function-type"
+    // This only exists from clang 13.0
+    #if __clang__ > 13
+      #pragma clang diagnostic ignored "-Wcast-function-type"
+    #endif
   #endif
 
 #endif
