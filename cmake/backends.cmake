@@ -315,18 +315,42 @@ if(NOT ditched_${name}_${ver})
   set_as_default_version("backend" ${name} ${ver})
 endif()
 
+# # HepLike
+# set(name "heplike")
+# set(ver "1.1")
+# set(dl "https://github.com/KrakowHEPSoft/HEPLike/archive/V1.1.zip")
+# set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+# set(md5 "2e503a6da38ab440f38efd6e8a3a7c70")
+# set(HL_CXXFLAGS "${BACKEND_CXX_FLAGS} -I${yaml_INCLUDE_DIR}")
+# check_ditch_status(${name} ${ver} ${dir})
+# if(NOT ditched_${name}_${ver})
+#   ExternalProject_Add(${name}_${ver}
+#     DEPENDS heplikedata
+#     DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+#     SOURCE_DIR ${dir}
+#     BUILD_IN_SOURCE 1
+#     CMAKE_COMMAND ${CMAKE_COMMAND} ..
+#     CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_CXX_FLAGS=${HL_CXXFLAGS} -DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/cmake
+#     BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
+#     INSTALL_COMMAND ""
+#     )
+#   BOSS_backend_with_ROOT(${name} ${ver})
+#   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} distclean)
+#   set_as_default_version("backend" ${name} ${ver})
+# endif()
+
 # HepLike
 set(name "heplike")
 set(ver "1.1")
-set(dl "https://github.com/KrakowHEPSoft/HEPLike/archive/V1.1.zip")
+set(dl "null")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
-set(md5 "2e503a6da38ab440f38efd6e8a3a7c70")
 set(HL_CXXFLAGS "${BACKEND_CXX_FLAGS} -I${yaml_INCLUDE_DIR}")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
     DEPENDS heplikedata
-    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+    GIT_REPOSITORY https://github.com/KrakowHEPSoft/HEPLike.git
+    GIT_TAG origin/debug
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
     CMAKE_COMMAND ${CMAKE_COMMAND} ..
@@ -338,6 +362,7 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} distclean)
   set_as_default_version("backend" ${name} ${ver})
 endif()
+
 
 
 # SuperIso
