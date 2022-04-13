@@ -16,8 +16,8 @@
 Parameters:
 
   MSSM20atMGUT:
-    mHu2: 18562224.3921
-    mHd2: 18562224.3921
+    mHu2: 40000000  # 18562224.3921
+    mHd2: 40000000  # 18562224.3921
     mq2_12: 18562224.3921
     mq2_3: 18562224.3921
     ml2_12: 18562224.3921
@@ -28,14 +28,14 @@ Parameters:
     mu2_3: 18562224.3921
     me2_12: 18562224.3921
     me2_3: 18562224.3921
-    Ae_12: 503.246
-    Ae_3: 503.246
-    Ad_3: 503.246
-    Au_3: 503.246
-    M1: 8.52927
+    Ae_12: 0.0  # 503.246
+    Ae_3: 0.0  # 503.246
+    Ad_3: 0.0  # 503.246
+    Au_3: 0.0  # 503.246
+    M1: 1000.0  # 8.52927
     M2: 1184.43
     M3: 6508.9
-    SignMu: -1
+    SignMu: 1 # -1
     TanBeta: 35.2712
   StandardModel_SLHA2:
     CKM_A: 0.814
@@ -110,57 +110,62 @@ Scanner:
 
 ObsLikes:
 
-    # LHC likelihoods
-    - purpose:    LogLike
-      capability: LHC_Higgs_LogLike
+  # LHC likelihoods
+  - purpose:    LogLike
+    capability: LHC_Higgs_LogLike
 
-    # LEP likelihoods
-    - purpose:    LogLike
-      capability: LEP_Higgs_LogLike
+  # LEP likelihoods
+  - purpose:    LogLike
+    capability: LEP_Higgs_LogLike
 
 
-    # Flavour physics likelihoods
-   # - purpose:    LogLike
-   #   capability: B2KmumuBr_LogLikelihood_LHCb
+  # Flavour physics likelihoods
 
-   # - purpose:    LogLike
-   #   capability: B2mumu_LogLikelihood_LHCb
+  # Use these for debugging
 
-   # - purpose:    LogLike
-   #   capability: B2mumu_LogLikelihood_CMS
+  # - purpose:    LogLike
+  #   capability: RK_LogLikelihood
 
-   # - purpose:    LogLike
-   #   capability: B2mumu_LogLikelihood_Atlas
+  # - purpose:    LogLike
+  #   capability: RKstar_LogLikelihood_LHCb
 
-   # - purpose:    LogLike
-   #   capability: SL_LL
+  # - purpose:    LogLike
+  #   capability: B2KmumuBr_LogLikelihood_LHCb
 
-   # - purpose:    LogLike
-   #   capability: B2KstarmumuBr_LogLikelihood_LHCb
 
-   # - purpose:    LogLike
-   #   capability: B2KstarmumuAng_LogLikelihood_Atlas
+  - purpose:    LogLike
+    capability: B2mumu_LogLikelihood_LHCb
 
-   # - purpose:    LogLike
-   #   capability: B2KstarmumuAng_LogLikelihood_CMS
+  # - purpose:    LogLike
+  #   capability: B2mumu_LogLikelihood_CMS
 
-   # - purpose:    LogLike
-   #   capability: B2KstarmumuAng_LogLikelihood_Belle
+  # - purpose:    LogLike
+  #   capability: B2mumu_LogLikelihood_Atlas
 
-   # - purpose:    LogLike
-   #   capability: B2KstarmumuAng_LogLikelihood_LHCb_2020
 
-   # - purpose:    LogLike
-   #   capability: Bs2phimumuBr_LogLikelihood
+  # - purpose:    LogLike
+  #   capability: SL_LL
 
-   # - purpose:    LogLike
-   #   capability: b2sgamma_LogLikelihood
+  # - purpose:    LogLike
+  #   capability: B2KstarmumuBr_LogLikelihood_LHCb
 
-    - purpose:    LogLike
-      capability: RK_LogLikelihood
+  # - purpose:    LogLike
+  #   capability: B2KstarmumuAng_LogLikelihood_Atlas
 
-    - purpose:    LogLike
-      capability: RKstar_LogLikelihood_LHCb
+  # - purpose:    LogLike
+  #   capability: B2KstarmumuAng_LogLikelihood_CMS
+
+  # - purpose:    LogLike
+  #   capability: B2KstarmumuAng_LogLikelihood_Belle
+
+  # - purpose:    LogLike
+  #   capability: B2KstarmumuAng_LogLikelihood_LHCb_2020
+
+  # - purpose:    LogLike
+  #   capability: Bs2phimumuBr_LogLikelihood
+
+  # - purpose:    LogLike
+  #   capability: b2sgamma_LogLikelihood
 
 
     # Other observables
@@ -198,9 +203,9 @@ ObsLikes:
    # - purpose:    Observable
    #   capability: SLHA1_violation
 
-    - purpose:    Observable
-      capability: MSSM_spectrum
-      type:       map_str_dbl
+  - purpose:    Observable
+    capability: MSSM_spectrum
+    type:       map_str_dbl
 
     # Observables for invisible decays of Z and Higgs bosons
    # - purpose: Observable
@@ -217,8 +222,8 @@ ObsLikes:
 Rules:
 
   # Tell all functions that are able to dump SLHA files to do so.
-  #- options:
-  #    drop_SLHA_file: true
+  - options:
+      drop_SLHA_file: true
 
   # Globally permit maximal mixing between gauge and family eigenstates
   - options:
@@ -234,7 +239,8 @@ Rules:
   # Choose to get the spectrum from SpecBit proper, not an SLHA file.
   # Options set to match benchmark point specified in SpecBit/MSSM_benchmark_points/LesHouches.in.MSSM_1
   - capability: unimproved_MSSM_spectrum
-    function: get_MSSMatMGUT_spectrum_FlexibleEFTHiggs
+    # function: get_MSSMatMGUT_spectrum_FlexibleEFTHiggs
+    function: get_MSSMatMGUT_spectrum_FS
     options:
       precision_goal:        1.0e-4
       max_iterations:        0
