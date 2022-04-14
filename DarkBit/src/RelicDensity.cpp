@@ -274,10 +274,10 @@ namespace Gambit
                        BEreq::DS5particle_code("A0"),
                        BEreq::DS5particle_code("W+"),
                        BEreq::DS5particle_code("H+")};
-      int resmax=sizeof(reslist) / sizeof(reslist[0]);
+      //int resmax=sizeof(reslist) / sizeof(reslist[0]); (Unused)
       // the last 2 resonances in the list can only appear for coannihilations
-      if (result.coannihilatingParticles.size() == 1)
-        resmax -= 2;
+      //if (result.coannihilatingParticles.size() == 1) (Unused)
+      //  resmax -= 2; (Unused)
       // (Turns out resonances are never returned with DS5)
 
       // determine thresholds; lowest threshold = 2*WIMP rest mass  (unlike DS

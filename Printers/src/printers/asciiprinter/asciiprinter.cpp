@@ -63,7 +63,7 @@ namespace Gambit
       // Pass in reference to externally created ofstream "output"
       output.open(filename, std::ofstream::out | mode);
 
-      if( output.fail() | output.bad() )
+      if( output.fail() || output.bad() )
       {
          std::ostringstream ss;
          ss << "IO error while opening file for writing! Tried to open ofstream to file \""<<filename<<"\", but encountered error bit in the created ostream.";
