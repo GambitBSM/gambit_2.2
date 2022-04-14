@@ -1,6 +1,6 @@
 ##########################################################################
-## GAMBIT configuration for running a MultiNest scan of the CMSSM using
-## only ColliderBit likelihoods (LHC and LEP particle searches, LHC and LEP
+## GAMBIT configuration for running a few CMSSM points using only 
+## ColliderBit likelihoods (LHC and LEP particle searches, LHC and LEP
 ## Higgs data).
 ##
 ## SM nuisance parameters are fixed to default values, and no astrophysical
@@ -8,7 +8,8 @@
 ##########################################################################
 
 # NB: This example yaml file uses flexiblesusy, so make sure you have
-# built gambit with the correct " -DBUILD_FS_MODELS" option
+# built gambit with -DBUILD_FS_MODELS="CMSSM"
+
 
 Parameters:
 
@@ -75,29 +76,6 @@ Scanner:
 
 
 ObsLikes:
-
-    # Calculate SM quantities
-
-    - capability: lnL_t_mass
-      purpose:    LogLike
-
-    - capability: lnL_mbmb
-      purpose:    LogLike
-
-    - capability: lnL_alpha_em
-      purpose:    LogLike
-
-    - capability: lnL_alpha_s
-      purpose:    LogLike
-
-    - capability: lnL_W_mass
-      purpose:    LogLike
-
-    - capability: lnL_sinW2_eff
-      purpose:    LogLike
-
-    - capability: lnL_deltarho
-      purpose:    LogLike
 
     # Calculate the LHC likelihood
     - purpose:    LogLike
@@ -287,9 +265,16 @@ Rules:
     module: ColliderBit
 
   # Choose to get cross-sections from the Monte Carlo
-  - capability: CrossSection
-    function: getMCxsec
-    module: ColliderBit
+  - capability: TotalCrossSection
+    function: getEvGenCrossSection_as_base
+
+  # Just use unweighted cross-sections
+  - capability: EventWeighterFunction
+    function: setEventWeight_unity
+
+  # Choose to generate events with Pythia on the fly (rather than reading them in)
+  - capability: HardScatteringEvent
+    function: generateEventPythia
 
   # Choose ATLAS detector simulation and options.
   - capability: ATLASDetectorSim

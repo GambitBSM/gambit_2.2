@@ -2,15 +2,15 @@ name: Gambit CI
 
 on:
   push:
-    branches: [ master, gitlab-ci ]
+    branches: [ master, ci-* ]
   pull_request:
     branches: [ master ]
   schedule:
-    - cron:  '* * * * 1'
+    - cron:  '0 5 * * *'
 
 jobs:
   gambit_build:
-    runs-on: ubuntu-latest
+    runs-on: [docker, self-hosted]
     strategy:
       fail-fast: false
       matrix:
@@ -44,7 +44,7 @@ jobs:
         echo "export PYTHON_INCLUDE_DIR=$PYTHON_INCLUDE_DIR" >> buildenv.sh
         echo "export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH" >> buildenv.sh
         cat buildenv.sh
-        pip install pyyaml pybind11 h5py
+        pip install pyyaml pybind11 h5py scipy
     - name: Configure with cmake
       run: |
         cd BUILD/ && . buildenv.sh
@@ -52,16 +52,16 @@ jobs:
     - name: Build scanners
       run: |
         cd BUILD/ && . buildenv.sh
-        make -j$(nproc) scanners
+        make -j$(( ($(nproc)+1)/2 )) scanners
         cmake ..
     - name: Build Gambit
       run: |
         cd BUILD && . buildenv.sh
-        make -j$(nproc) gambit
+        make -j$(( ($(nproc)+1)/2 )) gambit
     - name: Build backends
       run: |
         cd BUILD && . buildenv.sh
-        make -j$(nproc) backends
+        make -j$(( ($(nproc)+1)/2 )) backends
     - name: CLI test
       run: |
         . BUILD/buildenv.sh

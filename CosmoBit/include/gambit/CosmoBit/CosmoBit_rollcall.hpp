@@ -21,6 +21,7 @@
 ///  \date 2017 Nov
 ///  \date 2018 Jan,Feb, Mar
 ///  \date 2019 Jan, Feb, June
+///  \date 2021 Mar
 ///
 ///  \author Janina Renk
 ///          (janina.renk@fysik.su.se)
@@ -59,6 +60,7 @@
 
 
 #define MODULE CosmoBit
+#define REFERENCE GAMBITCosmologyWorkgroup:2020htv
 START_MODULE
 
   /// get the energy injection efficiency tables
@@ -81,6 +83,46 @@ START_MODULE
     #define FUNCTION energy_injection_spectrum_DecayingDM_mixture
     START_FUNCTION(DarkAges::Energy_injection_spectrum)
     ALLOW_MODELS(DecayingDM_mixture)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY f_eff
+  START_CAPABILITY
+    // Calculate f_eff by convolution with weighting functions
+    #define FUNCTION f_eff_weighted
+    START_FUNCTION(double)
+    ALLOW_MODELS(AnnihilatingDM_general) // Weighting function only known for s-wave annihilation
+    DEPENDENCY(energy_injection_efficiency, DarkAges::Energy_injection_efficiency_table)
+    #undef FUNCTION
+
+    // Calculate f_eff by taking f_eff(z) at given z
+    #define FUNCTION f_eff_at_z
+    START_FUNCTION(double)
+    ALLOW_MODELS(AnnihilatingDM_general,DecayingDM_general)
+    DEPENDENCY(energy_injection_efficiency, DarkAges::Energy_injection_efficiency_table)
+    #undef FUNCTION
+
+    // Set f_eff to a constant that the user can choose
+    #define FUNCTION f_eff_constant
+    START_FUNCTION(double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY p_ann
+  START_CAPABILITY
+    #define FUNCTION p_ann
+    START_FUNCTION(double)
+    ALLOW_MODELS(AnnihilatingDM_general)
+    DEPENDENCY(f_eff, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  // Profiled likelihood on p_ann = f_eff * f^2 * <sv> / m
+  #define CAPABILITY lnL_p_ann
+  START_CAPABILITY
+    #define FUNCTION lnL_p_ann_P18_TTTEEE_lowE_lensing_BAO
+    START_FUNCTION(double)
+    DEPENDENCY(p_ann, double)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -205,10 +247,22 @@ START_MODULE
       DEPENDENCY(energy_injection_efficiency, DarkAges::Energy_injection_efficiency_table)
       #undef FUNCTION
 
+      #define FUNCTION set_classy_parameters_EnergyInjection_AnnihilatingDM_onSpot
+      START_FUNCTION(pybind11::dict)
+      ALLOW_MODELS(AnnihilatingDM_general)
+      DEPENDENCY(f_eff, double)
+      #undef FUNCTION
+
       #define FUNCTION set_classy_parameters_EnergyInjection_DecayingDM
       START_FUNCTION(pybind11::dict)
       ALLOW_MODELS(DecayingDM_general)
       DEPENDENCY(energy_injection_efficiency, DarkAges::Energy_injection_efficiency_table)
+      #undef FUNCTION
+
+      #define FUNCTION set_classy_parameters_EnergyInjection_DecayingDM_onSpot
+      START_FUNCTION(pybind11::dict)
+      ALLOW_MODELS(DecayingDM_general)
+      DEPENDENCY(f_eff, double)
       #undef FUNCTION
     #undef CAPABILITY
 
@@ -373,7 +427,6 @@ START_MODULE
     #define FUNCTION function_Planck_lowl_TT_2015_loglike
     START_FUNCTION(double)
     DEPENDENCY(lensed_Cl_TT,std::vector<double>)
-    DEPENDENCY(T_cmb,double)
     ALLOW_MODELS(cosmo_nuisance_Planck_TTTEEE,cosmo_nuisance_Planck_TT,cosmo_nuisance_Planck_lite)
     BACKEND_REQ(plc_loglike_lowl_TT_2015,(),double,(double*))
     #undef FUNCTION
@@ -384,7 +437,6 @@ START_MODULE
     DEPENDENCY(lensed_Cl_TE,std::vector<double>)
     DEPENDENCY(lensed_Cl_EE,std::vector<double>)
     DEPENDENCY(lensed_Cl_BB,std::vector<double>)
-    DEPENDENCY(T_cmb,double)
     ALLOW_MODELS(cosmo_nuisance_Planck_TTTEEE,cosmo_nuisance_Planck_TT,cosmo_nuisance_Planck_lite)
     BACKEND_REQ(plc_loglike_lowl_TEB_2015,(),double,(double*))
     #undef FUNCTION
@@ -392,7 +444,6 @@ START_MODULE
     #define FUNCTION function_Planck_lowl_TT_2018_loglike
     START_FUNCTION(double)
     DEPENDENCY(lensed_Cl_TT,std::vector<double>)
-    DEPENDENCY(T_cmb,double)
     ALLOW_MODELS(cosmo_nuisance_Planck_TTTEEE,cosmo_nuisance_Planck_TT,cosmo_nuisance_Planck_lite)
     BACKEND_REQ(plc_loglike_lowl_TT_2018,(),double,(double*))
     #undef FUNCTION
@@ -400,7 +451,6 @@ START_MODULE
     #define FUNCTION function_Planck_lowl_EE_2018_loglike
     START_FUNCTION(double)
     DEPENDENCY(lensed_Cl_EE,std::vector<double>)
-    DEPENDENCY(T_cmb,double)
     ALLOW_MODELS(cosmo_nuisance_Planck_TTTEEE,cosmo_nuisance_Planck_TT,cosmo_nuisance_Planck_lite)
     BACKEND_REQ(plc_loglike_lowl_EE_2018,(),double,(double*))
     #undef FUNCTION
@@ -409,7 +459,6 @@ START_MODULE
     START_FUNCTION(double)
     DEPENDENCY(lensed_Cl_TT,std::vector<double>)
     DEPENDENCY(lensed_Cl_EE,std::vector<double>)
-    DEPENDENCY(T_cmb,double)
     ALLOW_MODELS(cosmo_nuisance_Planck_TTTEEE,cosmo_nuisance_Planck_TT,cosmo_nuisance_Planck_lite)
     BACKEND_REQ(plc_loglike_lowl_TT_2018,(plc_tag),double,(double*))
     BACKEND_REQ(plc_loglike_lowl_EE_2018,(plc_tag),double,(double*))
@@ -427,7 +476,6 @@ START_MODULE
     #define FUNCTION function_Planck_highl_TT_2015_loglike
     START_FUNCTION(double)
     DEPENDENCY(lensed_Cl_TT,std::vector<double>)
-    DEPENDENCY(T_cmb,double)
     ALLOW_MODELS(cosmo_nuisance_Planck_TT)
     BACKEND_REQ(plc_loglike_highl_TT_2015,(),double,(double*))
     #undef FUNCTION
@@ -435,7 +483,6 @@ START_MODULE
     #define FUNCTION function_Planck_highl_TT_lite_2015_loglike
     START_FUNCTION(double)
     DEPENDENCY(lensed_Cl_TT,std::vector<double>)
-    DEPENDENCY(T_cmb,double)
     ALLOW_MODELS(cosmo_nuisance_Planck_lite)
     BACKEND_REQ(plc_loglike_highl_TT_lite_2015,(),double,(double*))
     #undef FUNCTION
@@ -445,7 +492,6 @@ START_MODULE
     DEPENDENCY(lensed_Cl_TT,std::vector<double>)
     DEPENDENCY(lensed_Cl_TE,std::vector<double>)
     DEPENDENCY(lensed_Cl_EE,std::vector<double>)
-    DEPENDENCY(T_cmb,double)
     ALLOW_MODELS(cosmo_nuisance_Planck_TTTEEE)
     BACKEND_REQ(plc_loglike_highl_TTTEEE_2015,(),double,(double*))
     #undef FUNCTION
@@ -455,7 +501,6 @@ START_MODULE
     DEPENDENCY(lensed_Cl_TT,std::vector<double>)
     DEPENDENCY(lensed_Cl_TE,std::vector<double>)
     DEPENDENCY(lensed_Cl_EE,std::vector<double>)
-    DEPENDENCY(T_cmb,double)
     ALLOW_MODELS(cosmo_nuisance_Planck_lite)
     BACKEND_REQ(plc_loglike_highl_TTTEEE_lite_2015,(),double,(double*))
     #undef FUNCTION
@@ -463,7 +508,6 @@ START_MODULE
     #define FUNCTION function_Planck_highl_TT_2018_loglike
     START_FUNCTION(double)
     DEPENDENCY(lensed_Cl_TT,std::vector<double>)
-    DEPENDENCY(T_cmb,double)
     ALLOW_MODELS(cosmo_nuisance_Planck_TT)
     BACKEND_REQ(plc_loglike_highl_TT_2018,(),double,(double*))
     #undef FUNCTION
@@ -471,7 +515,6 @@ START_MODULE
     #define FUNCTION function_Planck_highl_TT_lite_2018_loglike
     START_FUNCTION(double)
     DEPENDENCY(lensed_Cl_TT,std::vector<double>)
-    DEPENDENCY(T_cmb,double)
     ALLOW_MODELS(cosmo_nuisance_Planck_lite)
     BACKEND_REQ(plc_loglike_highl_TT_lite_2018,(),double,(double*))
     #undef FUNCTION
@@ -481,7 +524,6 @@ START_MODULE
     DEPENDENCY(lensed_Cl_TT,std::vector<double>)
     DEPENDENCY(lensed_Cl_TE,std::vector<double>)
     DEPENDENCY(lensed_Cl_EE,std::vector<double>)
-    DEPENDENCY(T_cmb,double)
     ALLOW_MODELS(cosmo_nuisance_Planck_TTTEEE)
     BACKEND_REQ(plc_loglike_highl_TTTEEE_2018,(),double,(double*))
     #undef FUNCTION
@@ -491,7 +533,6 @@ START_MODULE
     DEPENDENCY(lensed_Cl_TT,std::vector<double>)
     DEPENDENCY(lensed_Cl_TE,std::vector<double>)
     DEPENDENCY(lensed_Cl_EE,std::vector<double>)
-    DEPENDENCY(T_cmb,double)
     ALLOW_MODELS(cosmo_nuisance_Planck_lite)
     BACKEND_REQ(plc_loglike_highl_TTTEEE_lite_2018,(),double,(double*))
     #undef FUNCTION
@@ -507,7 +548,6 @@ START_MODULE
     DEPENDENCY(lensed_Cl_TE,std::vector<double>)
     DEPENDENCY(lensed_Cl_EE,std::vector<double>)
     DEPENDENCY(lensed_Cl_PhiPhi,std::vector<double>)
-    DEPENDENCY(T_cmb,double)
     ALLOW_MODELS(cosmo_nuisance_Planck_TTTEEE,cosmo_nuisance_Planck_TT,cosmo_nuisance_Planck_lite)
     BACKEND_REQ(plc_loglike_lensing_2015,(),double,(double*))
     #undef FUNCTION
@@ -518,7 +558,6 @@ START_MODULE
     DEPENDENCY(lensed_Cl_TE,std::vector<double>)
     DEPENDENCY(lensed_Cl_EE,std::vector<double>)
     DEPENDENCY(lensed_Cl_PhiPhi,std::vector<double>)
-    DEPENDENCY(T_cmb,double)
     ALLOW_MODELS(cosmo_nuisance_Planck_TTTEEE,cosmo_nuisance_Planck_TT,cosmo_nuisance_Planck_lite)
     BACKEND_REQ(plc_loglike_lensing_2018,(),double,(double*))
     #undef FUNCTION
@@ -835,5 +874,6 @@ START_MODULE
 
   #endif
 
+#undef REFERENCE
 #undef MODULE
 #endif /* defined __CosmoBit_rollcall_hpp__ */

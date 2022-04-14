@@ -6,7 +6,8 @@
 ##########################################################################
 
 # NB: This example yaml file uses flexiblesusy, so make sure you have
-# built gambit with the correct " -DBUILD_FS_MODELS" option
+# built gambit with -DBUILD_FS_MODELS="MSSM"
+
 
 Parameters:
 
@@ -148,7 +149,7 @@ Rules:
     function: all_decays
 
   - capability: lnL_gm2
-    function: lnL_gm2_chi2
+    function: lnL_gm2
     dependencies:
       - capability: muon_gm2
         function: GM2C_SUSY

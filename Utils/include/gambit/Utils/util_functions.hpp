@@ -69,8 +69,13 @@ namespace Gambit
     /// Return the path to the build-time scratch directory
     const str buildtime_scratch = GAMBIT_DIR "/scratch/build_time/";
 
-    /// Return the path the the run-specific scratch directory
+    /// Return the path to the run-specific scratch directory
+    /// Don't call this from a destructor, as the internal static str may have already been destroyed.
     EXPORT_SYMBOLS const str& runtime_scratch();
+
+    /// Construct the path to the run-specific scratch directory
+    /// This version is safe to call from a destructor.
+    EXPORT_SYMBOLS str construct_runtime_scratch(bool fail_on_mpi_uninitialised=true);
 
     /// Split a string into a vector of strings, using a delimiter,
     /// and removing any whitespace around the delimiter.
@@ -115,7 +120,10 @@ namespace Gambit
 
     /// Split string into vector of strings, using a delimiter string
     EXPORT_SYMBOLS std::vector<std::string> split(const std::string& input, const std::string& delimiter);
-
+    
+    /// Convert a whole string to lowercase
+    EXPORT_SYMBOLS std::string strtolower(const std::string& a);
+ 
     /************************************************************************/
     /* Comparator for case-insensitive comparison in STL assos. containers  */
     /************************************************************************/

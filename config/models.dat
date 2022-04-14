@@ -16,6 +16,34 @@
 #  appear here. The extent of this string is
 #  indicated by indentation.
 
+trivial_1d: |
+   Trivial 1d model for use with test-functions/artificial landscapes in ObjectivesBit.
+   The parameter is labeled x1.
+
+trivial_2d: |
+   Trivial 2d model for use with test-functions/artificial landscapes in ObjectivesBit.
+   The parameters are labeled x1, x2.
+
+trivial_3d: |
+   Trivial 3d model for use with test-functions/artificial landscapes in ObjectivesBit.
+   The parameters are labeled x1, x2, x3
+
+trivial_4d: |
+   Trivial 4d model for use with test-functions/artificial landscapes in ObjectivesBit.
+   The parameters are labeled x1, x2, x3, x4.
+
+trivial_5d: |
+   Trivial 5d model for use with test-functions/artificial landscapes in ObjectivesBit.
+   The parameters are labeled x1, x2, ..., x5.
+
+trivial_7d: |
+   Trivial 7d model for use with test-functions/artificial landscapes in ObjectivesBit.
+   The parameters are labeled x1, x2, ..., x7.
+
+trivial_10d: |
+   Trivial 10d model for use with test-functions/artificial landscapes in ObjectivesBit.
+   The parameters are labeled x1, x2, ..., x10.
+
 NormalDist: |
    A simple test model consisting of two parameters: the width and central value of a Gaussian distribution.
 
@@ -24,6 +52,9 @@ demo_CAP: |
 
 TestModel1D: |
    A one-dimensional test model, typically used for debugging simple prior transformations, or when a dummy model is required (as in the external model example in ColliderBit).
+
+demo_CAP: |
+   A test model for a demonstration of the use of ordinary module functions directly in a model namespace.
 
 MSSM63atQ: |
    The most general formulation of the CP-conserving MSSM, with C terms set to zero due to their usual irrelevance in (known) SUSY-breaking schemes. The parameters are:
@@ -479,6 +510,13 @@ nuclear_params_sigmas_sigmal: |
 
    The same as nuclear_params_fnq, but with the replacement of the six quark content matrix elements by the matrix element sigma0 and the strange quark content of the nucleon sigmas. See the GAMBIT core paper for details and definitions.
 
+nuclear_params_ChPT: |
+
+   Model of nuclear matrix elements relevant for chiral perturbation theory in the context of direct detection. This is primarily designed for the interface with DirectDM, and the naming of the parameters corresponds to the one given in 1708.02678.
+
+nuclear_params_ChPT_sigmapiN: |
+   Model of nuclear matrix elements relevant for chiral perturbation theory in the context of direct detection. This is a daughter model of nuclear_params_ChPT where sigma(u,d)(p,n) are calculated in terms of sigmapiN
+
 nuclear_params_neutron_lifetime : |
 
    Model for the neutron lifetime (parameter name neutron_lifetime [s]).
@@ -520,7 +558,8 @@ GeneralALP: |
    A general model for an axion-like particle with the possibility of having a temperature-dependent mass.
 
    gagg              - ALP-photon coupling [GeV^-1]
-   gaee              - ALP-electron couplings [dimensionless]
+   gaee              - ALP-electron coupling [dimensionless]
+   gaN               - ALP-nucleon coupling [dimensionless]
    fa                - ALP decay constant [GeV]
    ma0               - ALP mass (at zero temperature) [eV]
    Tchi              - Critical temperature below which the axion mass is constant [MeV]
@@ -529,11 +568,12 @@ GeneralALP: |
 
 QCDAxion: |
 
-   A convenient version of the GeneralALP model for QCD axion studies. Comes with several model-specific nuisance likelihoods and one additional nuisance parameter (Cagg). The differences are:
+   A convenient version of the GeneralALP model for QCD axion studies. Comes with several model-specific nuisance likelihoods and one additional nuisance parameter (CaggQCD). The differences are:
 
-   Cagg              - Contribution to the axion-photon coupling gagg from chiral Lagrangian [dimensionless]
+   CaggQCD           - Contribution to the axion-photon coupling gagg from chiral Lagrangian [dimensionless]
    EoverN            - Contribution to the axion-photon coupling gagg from the ratio of electromagnetic vs colour anomaly [dimensionless]
    Caee              - Re-parameterised axion-electron coupling gaee [dimensionless]
+   CaN               - Re-parameterised axion-nucleon coupling [dimensionless]
    LambdaChi         - Convenient re-parameterisation of the axion zero-temperature mass ma0 = LambdaChi^2/fa [MeV]
 
 KSVZAxion: |
@@ -552,6 +592,20 @@ ConstantMassALP: |
 
    A convenient version of the GeneralALP model for studies of ALPs with not explicitly temperature-dependent axion mass (beta=0, Tchi irrelevant).
 
+XENON1T_NuisanceParameters: |
+
+   Nuisance parameters for the XENON-1T experiment.
+
+   delta_eff         - Deviation from the quoted detector efficiency (delta_eff = 0 corresponds to no deviation)
+   delta_bkg         - Deviation from the quoted background model (delta_bkg = 0 corresponds to no deviation)
+   x_3H              - Tritium (^3H) abundance in the detector
+
+XENON1T_DM_NuisanceParameters: |
+
+   Additional nuisance parameters when considering the DM ALP hypothesis for the XENON-1T experiment.
+
+   eta              - Fraction of the local DM in axion-like particles
+
 RightHandedNeutrinos: |
    Type I Seesaw model with 3 right handed neutrinos. The parameters include the masses of the RHNs and the mixing angles in the Casas-Ibarra parametrisations.
 
@@ -560,6 +614,21 @@ RightHandedNeutrinos_diff: |
 
 StandardModel_mNudiff: |
    Daughter model of the StandardModel_SLHA2 where the masses of neutrinos have been substituted by mass differences and the absolute lightest neutrino mass.
+
+NREO_scalarDM: |
+   Non-relativistic effective operator model for scalar DM, coupling constants as defined in: https://arxiv.org/abs/1501.03729
+
+NREO_DiracDM: |
+   Non-relativistic effective operator model for Dirac DM, coupling constants as defined in: https://arxiv.org/abs/1501.03729
+
+NREO_MajoranaDM: |
+   Non-relativistic effective operator model for Majorana DM, coupling constants as defined in: https://arxiv.org/abs/1501.03729
+
+WIMP_sigmav: |
+   General A + Bv^2 parameterisation of WIMP self-annihilation to all SM two-body final states
+
+DMEFT: |
+   Effective field theory model of Dirac DM. The parameters of the model are the DM Mass, mchi, the new physics scale, Lambda, the MSbar running top mass, mtrunIN, and the dimensions I=5,6,7 Wilson coefficients, CIJ
 
 ############################
 # Cosmology related models #
@@ -814,7 +883,7 @@ cosmo_nuisance_ska1: |
    sigma_NL_ska      - non-linear dispersion scale of RSDs from Bull et al. (https://arxiv.org/abs/1405.1452).
 
 cosmo_nuisance_ska1_IM_band: |
-   Cosmological nuisance parameters for SKA1 21cm intensity mapping from Sprenger et al. (https://arxiv.org/abs/11801.08331). 
+   Cosmological nuisance parameters for SKA1 21cm intensity mapping from Sprenger et al. (https://arxiv.org/abs/11801.08331).
    Use this model with the MontePython likelihood 'ska1_IM_band1' or 'ska1_IM_band2'. To neglect the parameters Omega_HI0 and alpha_HI use the model 'cosmo_nuisance_ska1_IM_band_noHI'.
 
    sigma_NL_ska      - non-linear dispersion scale of RSDs from Bull et al. (https://arxiv.org/abs/1405.1452).
@@ -850,7 +919,7 @@ cosmo_nuisance_ska2_pk: |
                      => b(z) = c4 beta_0SKA/2 exp(c5 beta_SKA2 z)  (eq. 2.20)
 
 cosmo_nuisance_ska_lensing: |
-   Cosmological nuisance parameters for SKA1 & SKA2 cosmic shear from Sprenger et al. (https://arxiv.org/abs/11801.08331). Use this model with the MontePython likelihoods 'ska1_lensing' and 'ska2_lensing'. 
+   Cosmological nuisance parameters for SKA1 & SKA2 cosmic shear from Sprenger et al. (https://arxiv.org/abs/11801.08331). Use this model with the MontePython likelihoods 'ska1_lensing' and 'ska2_lensing'.
 
    epsilon_ska       - nuisance parameter accounting for a global uncorrelated
                        theoretical error in e.g. (non-)linear power spectrum, scale dependent bias,
@@ -998,3 +1067,27 @@ DecayingDM_electron: |
    lifetime    - lifetime of said DM candidate [in s]
    fraction    - fraction of how much the decaying DM component contributes to all DM.
 
+#
+# Simple SLHA-based models used for validation of ColliderBit analyses
+#
+
+ColliderBit_SLHA_scan_model: |
+
+   Dummy model for doing a ColliderBit-only scan based on replacing SLHA file entries.
+   See ColliderBit/examples/ColliderBit_SLHA_scan_model.yaml for an example yaml file
+   that uses this model.
+
+   m1                        - parameter that can replace a SLHA BLOCK MASS entry
+   m2                        - parameter that can replace a SLHA BLOCK MASS entry
+   br1                       - parameter that can replace a SLHA DECAY branching ratio entry
+   br2                       - parameter that can replace a SLHA DECAY branching ratio entry
+   cross_section_fb          - total cross-section [in fb]
+   cross_section_uncert_fb   - uncertainty on total cross-section [in fb]
+
+ColliderBit_SLHA_file_model: |
+
+   Dummy model for doing a ColliderBit-only scan over a set of SLHA files.
+   See ColliderBit/examples/ColliderBit_SLHA_file_model.yaml for an example 
+   yaml file that uses this model.
+
+   dummy    - a dummy parameter, not used for anything
