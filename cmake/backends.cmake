@@ -613,12 +613,12 @@ set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_.${name}_${ver}_base)
-  set(MO_C_FLAGS "${BACKEND_C_FLAGS}")
-  set(MO_CXX_FLAGS "${BACKEND_CXX_FLAGS}")
+  set(MO_C_FLAGS "${BACKEND_C_FLAGS} -fcommon")
+  set(MO_CXX_FLAGS "${BACKEND_CXX_FLAGS} -fcommon")
   if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
     # Fix error due to C99 non-compliance
-    set(MO_C_FLAGS "${BACKEND_C_FLAGS} -Wno-error=implicit-function-declaration")
-    set(MO_CXX_FLAGS "${BACKEND_CXX_FLAGS} -Wno-error=implicit-function-declaration")
+    set(MO_C_FLAGS "${MO_C_FLAGS} -Wno-error=implicit-function-declaration")
+    set(MO_CXX_FLAGS "${MO_CXX_FLAGS} -Wno-error=implicit-function-declaration")
   endif()
   if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
     # Find the path to libx11
@@ -635,7 +635,7 @@ if(NOT ditched_.${name}_${ver}_base)
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""
     BUILD_COMMAND sed ${dashi} -e "s|\$CC -o a\\.out test\\.c  1>/dev/null 2>/dev/null|#Fails with AppleClang: $CC -o a.out test.c  1>/dev/null 2>/dev/null|g" CalcHEP_src/getFlags
-          COMMAND make LX11=${MO_LX11} flags
+          COMMAND ${MAKE_SERIAL} LX11=${MO_LX11} flags
           COMMAND sed ${dashi} -e "s|FC =.*|FC = ${CMAKE_Fortran_COMPILER}|" CalcHEP_src/FlagsForMake
           COMMAND sed ${dashi} -e "s|CC =.*|CC = ${CMAKE_C_COMPILER}|" CalcHEP_src/FlagsForMake
           COMMAND sed ${dashi} -e "s|CXX =.*|CXX = ${CMAKE_CXX_COMPILER}|" CalcHEP_src/FlagsForMake
@@ -650,7 +650,7 @@ if(NOT ditched_.${name}_${ver}_base)
           COMMAND sed ${dashi} -e "s|CXXFLAGS=.*|CXXFLAGS=\"${MO_CXX_FLAGS}\"|" CalcHEP_src/FlagsForSh
           COMMAND sed ${dashi} -e "s|lFort=.*|lFort=|" CalcHEP_src/FlagsForSh
           COMMAND sed ${dashi} -e "s|@if(test -z \"`grep lX11 FlagsForMake|#@if(test -z \"`grep lX11 FlagsForMake|" CalcHEP_src/Makefile
-          COMMAND make CFLAGS=${MO_C_FLAGS}
+          COMMAND ${MAKE_SERIAL} CFLAGS=${MO_C_FLAGS}
     INSTALL_COMMAND ""
   )
   add_extra_targets("backend base (functional alone)" ${name} ${ver} ${dir} ${dl} "yes | clean")
@@ -1575,6 +1575,7 @@ if(NOT ditched_${name}_${ver})
     CONFIGURE_COMMAND ${CMAKE_COMMAND} -E copy ${patchdir}/main.c ${dir}/c_source/dynamicME/main.c
               COMMAND ${CMAKE_COMMAND} -E copy ${dir}/c_source/strfun/pdf_dummy.c ${dir}/c_source/num/pdf_dummy.c
     PATCH_COMMAND patch -p0 < ${patchdir}/patch_${name}_${ver}.dif
+    BUILD_COMMAND ${MAKE_SERIAL} flags
           COMMAND sed ${dashi} -e "s#GAMBITDIR#${PROJECT_SOURCE_DIR}#g" ${dir}/c_source/dynamicME/vp_dynam.c
           COMMAND sed ${dashi} -e "s|\$CC -o a\\.out test\\.c  1>/dev/null 2>/dev/null|#Fails with AppleClang: $CC -o a.out test.c  1>/dev/null 2>/dev/null|g" ${dir}/getFlags
           COMMAND LX11=${calchep_LX11} ${dir}/getFlags
@@ -1592,7 +1593,7 @@ if(NOT ditched_${name}_${ver})
           COMMAND sed ${dashi} -e "s|CXXFLAGS=.*|CXXFLAGS=\"${calchep_CXX_FLAGS}\"|" ${dir}/FlagsForSh
           COMMAND sed ${dashi} -e "s|lFort=.*|lFort=|" ${dir}/FlagsForSh
           COMMAND sed ${dashi} -e "s|@if(test -z \"`grep lX11 FlagsForMake|#@if(test -z \"`grep lX11 FlagsForMake|" ${dir}/Makefile
-    BUILD_COMMAND ${MAKE_SERIAL}
+          COMMAND ${MAKE_SERIAL}
     INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/Models/ ${dir}/models/
   )
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} "yes | clean")

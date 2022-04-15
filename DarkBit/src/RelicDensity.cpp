@@ -268,12 +268,12 @@ namespace Gambit
 
 
       // determine resonances for LSP annihilation
-      int reslist[] = {BEreq::DS5particle_code("Z0"),
-                       BEreq::DS5particle_code("h0_2"),
-                       BEreq::DS5particle_code("h0_1"),
-                       BEreq::DS5particle_code("A0"),
-                       BEreq::DS5particle_code("W+"),
-                       BEreq::DS5particle_code("H+")};
+      //int reslist[] = {BEreq::DS5particle_code("Z0"),
+      //                 BEreq::DS5particle_code("h0_2"),
+      //                 BEreq::DS5particle_code("h0_1"),
+      //                 BEreq::DS5particle_code("A0"),
+      //                 BEreq::DS5particle_code("W+"),
+      //                 BEreq::DS5particle_code("H+")}; (Unused)
       //int resmax=sizeof(reslist) / sizeof(reslist[0]); (Unused)
       // the last 2 resonances in the list can only appear for coannihilations
       //if (result.coannihilatingParticles.size() == 1) (Unused)
