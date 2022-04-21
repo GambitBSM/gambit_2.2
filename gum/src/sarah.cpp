@@ -1646,7 +1646,6 @@ namespace GUM
     }
     catch(std::exception &e)
     {
-      std::cout << "SARAH Error: " + std::string(e.what());
       error.raise("SARAH Error: " + std::string(e.what()));
     }
   }
