@@ -1522,7 +1522,8 @@ set(dl "https://github.com/DirectDM/directdm-py/archive/v2.2.0.tar.gz")
 set(md5 "c22d26ae7bec44bbfe1eb5f4306a23e0")
 set(lib "libdirectdm")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
-check_ditch_status(${name} ${ver} ${dir})
+set(ditch_if_absent "Python")
+check_ditch_status(${name} ${ver} ${dir} ${ditch_if_absent})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
     DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
