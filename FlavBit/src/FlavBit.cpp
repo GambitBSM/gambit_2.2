@@ -2866,14 +2866,14 @@ namespace Gambit
         first = false;
       }
       flav_prediction prediction = *Dep::prediction_B2KstareeAng_0p0008_0p257_LHCb;
-      if(flav_debug)
+      if (flav_debug)
+      {
+        std::cout<<"Have prediction"<<std::endl;
+        for (unsigned int i=0; i <obs_list.size(); i++)
         {
-          std::cout<<"Have prediction"<<std::endl;
-          for(int i=0; i <obs_list.size(); i++)
-            {
-              std::cout<<obs_list[i]<<std::endl;
-            }
+          std::cout<<obs_list[i]<<std::endl;
         }
+      }
 
       result = nDimGaussian.GetLogLikelihood(get_obs_theory(prediction, obs_list), get_obs_covariance(prediction, obs_list));
 
