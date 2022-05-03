@@ -265,7 +265,7 @@ MathTest_Gammafunc: |
    Test function for Mathematica backends for testing non-alphanumerical characters in function names.
 
 MathTest_deltabar: |
-   Test function for Mamthematica backends for tsting non-alphanumerical characters in variable names.
+   Test function for Mathematica backends for testing non-alphanumerical characters in variable names.
 
 a_cap: |
    Example function demonstrating the usage of capabilities within a model namespace.
@@ -279,6 +279,12 @@ large_print: |
 #-------------------------------------
 #  SpecBit
 #-------------------------------------
+
+#####  DMEFT  #####
+
+DMEFT_spectrum: |
+    The spectrum for the DMEFT model.
+
 
 #####  Scalar singlet Higgs-portal models  #####
 
@@ -392,8 +398,68 @@ RunMC: |
    Controls the parallelization and execution of the entire
    event loop of the collider simulation.
 
-CrossSection: |
-   Total cross-section used to scale Pythia event numbers.
+TotalCrossSection: |
+   Total collider cross-section used to scale the Pythia event numbers.
+
+TotalCrossSectionAsMap: |
+   Info on TotalCrossSection as a str-double map, for easy printing.
+
+TotalEvGenCrossSection: |
+   Total collider cross-section as calculated by Pythia.
+
+EventWeighterFunction: |
+   A function that can be used for collider event weighting, e.g.
+   for weighting events according to process-level cross-sections
+   provided via a ProcessCrossSectionsMap.
+
+ProcessCrossSectionsMap: |
+   A map between Pythia process codes and cross-sections.
+
+PIDPairCrossSectionsMap: |
+   A map between pairs of particle ID codes (PID pairs) and cross-sections.
+
+PIDPairCrossSectionsInfo: |
+   The PID pair cross-sections from PIDPairCrossSectionsMap as a str-dbl map,
+   for easy printing.
+
+ActiveProcessCodes: |
+   A list of Pythia process codes for all production processes activated in Pythia.
+
+ActivePIDPairs: |
+   A list of all the PID pairs related to the active Pythia process codes (ActiveProcessCodes).
+
+ActiveProcessCodeToPIDPairsMap: |
+   A map connecting Pythia process codes (for the active Pythia processes) to PID pairs
+
+CrossSectionConsistencyCheck: |
+   A consistency check that ensures that if each Pythia event is weighted by a
+   process-level cross-section from an external calculator, then the total cross-section
+   (TotalCrossSection) is taken from Pythia.
+
+SpectrumAndDecaysForPythia: |
+   What it says on the box: mass spectrum and decays for Pythia.
+
+SLHA1Spectrum: |
+   A SLHA1 spectrum.
+
+SLHA2Spectrum: |
+   A SLHA2 spectrum.
+
+SLHAFileElements: |
+   A map of selected SLHA file elements.
+
+SLHAFileNameAndContent: |
+   Name and content of a SLHA file.
+
+susy_spectrum_scan_guide: |
+   Invalid point check with advances mass cuts, to aid scans of SUSY models.
+
+LHC_LogLike_scan_guide: |
+   A dummy log-likelihood to force the scanner to explore a given range of
+   LHC_Combined_LogLike values. This is done by defining a Gaussian
+   (meta-)likelihood based on the original LHC_Combined_LogLike value.
+   Use the two YAML file options 'target_LHC_loglike' and 'width_LHC_loglike'
+   to control this Gaussian likelihood.
 
 LHCEventLoopInfo: |
    Info about the event loop.
@@ -423,66 +489,66 @@ LHC_LogLike_SR_labels: |
    LHC_Combined_LogLike and LHC_LogLike_per_analysis.
 
 HardScatteringSim: |
-   Provides a Pythia 8 instance within a container which is
-   ready to simulate collision events for a model chosen by ScannerBit.
+   Provides a Monte Carlo generator instance ready to simulate collision events.
 
 HardScatteringEvent: |
-   Uses the given HardScatteringSim to generate the next event
-   of the collider simulation chain.
+   Uses a HardScatteringSim to generate the next event of the collider simulation chain.
+
+CrossSection: |
+   Provides a total cross-section to be applied to collider analyses.
 
 ATLASDetectorSim: |
-   Provides a set functions within a container ready to apply ATLAS
-   smearing and reconstruction efficiencies to an event.
+   Provides a detector simulation of ATLAS.
 
 CMSDetectorSim: |
-   Provides a set functions within a container ready to apply CMS
-   smearing and reconstruction efficiencies to an event.
+   Provides a detector simulation of CMS.
 
 IdentityDetectorSim: |
    Provides a fake detector sim, which simply returns truth-level events.
 
 ATLASSmearedEvent: |
-   Uses the given SimpleSmearingSim to apply smearing and
-   reconstruction efficiencies upon the given HardScatteringEvent.
+   Uses an ATLASDetectorSim to smear a HardScatteringEvent.
 
 CMSSmearedEvent: |
-   Uses the given SimpleSmearingSim to apply smearing and
-   reconstruction efficiencies upon the given HardScatteringEvent.
+   Uses a CMSDetectorSim to smear a HardScatteringEvent.
 
 CopiedEvent: |
-   Uses the given SimpleSmearingSim to do absolutely nothing to
-   the given HardScatteringEvent.
+   Uses an IdentityDetectorSim to do absolutely nothing to a HardScatteringEvent.
 
 ATLASAnalysisContainer: |
-   Provides a container of ATLAS analyses to be used with the detector simulation
-   capability ATLASSmearedEvent. The container is ready to apply each analysis to
-   each event.
+   Provides a container of ATLAS analyses to be applied to an ATLASSmearedEvent.
 
 CMSAnalysisContainer: |
-   Provides a container of CMS analyses to be used with the detector simulation
-   capability CMSSmearedEvent. The container is ready to apply each analysis to
-   each event.
+   Provides a container of CMS analyses to be applied to an ATLASSmearedEvent.
 
 IdentityAnalysisContainer: |
-   Provides a list of “identity” analyses (no detector
-   smearing) within a container that is ready to apply
-   them to an event.
+   Provides a container of 'truth-level analyses' to be applied to a CopiedEvent.
 
 ATLASAnalysisNumbers: |
-   Uses the given ATLASAnalysisContainer to perform all its
-   analyses upon the given ATLASSmearedEvent.
+   Uses an ATLASAnalysisContainer to perform all its
+   analyses upon a given ATLASSmearedEvent.
 
 CMSAnalysisNumbers: |
-   Uses the given CMSAnalysisContainer to perform all its analyses
-   upon the given CMSSmearedEvent.
+   Uses a CMSAnalysisContainer to perform all its
+   analyses upon a given CMSSmearedEvent.
 
 IdentityAnalysisNumbers: |
-   Uses the given IdentityAnalysisContainer
-   to perform all its analyses upon the given
-   CopiedEvent.
+   Uses an IdentityAnalysisContainer to perform all its
+   analyses upon a given CopiedEvent.
 
 AllAnalysisNumbers: |
    Combined analysis numbers from all LHC analyses used in a scan.
+
+AllAnalysisNumbersUnmodified: |
+   A version of the AllAnalysisNumbers capability for use with ColliderBit analyses
+   based on interpolated yields. AllAnalysisNumbersUnmodified is the collection
+   of all analysis numbers before any subsequent modificiation, e.g. due to
+   EFT validity constraints.
+
+DMEFT_profiled_LHC_nuisance_params: |
+   Information on the result of profiling out the nuisance parameter 'a' in collider
+   signal predictions for the DMEFT model. This parameter is used to smoothly suppress
+   signal predictions for MET bins with MET > Lambda.
 
 ALEPH_Selectron_LLike: |
    Compares the cross section times branching ratio
@@ -1055,12 +1121,58 @@ LEP208_xsec_staurstaurbar: |
    The LEP pair production cross-section for sfermion
    eigenstates 'staur' and 'staurbar' at centre of mass energy 208 GeV.
 
-Pythia_EM_8_212_init: |
-   Initializes Pythia_EM 8.212.
-
 Pythia_8_212_init: |
-   Initializes Pythia 8.212.
+   Initializes the Pythia 8.212 MSSM backend.
 
+Prospino_2_1_init: |
+   Initializes the Prospino 2.1 backend.
+
+prospino_gb: |
+   Main function in the GAMBIT-patched version of Prospino.
+
+prospino_gb_init: |
+   Initialization function in the GAMBIT-patched version of Prospino.
+
+prospino_errorhandler_cptr: |
+   C function pointer in the GAMBIT-patched version of Prospino, connected
+   to GAMBIT for safe error handling.
+
+prospino_read_slha1_input: |
+   Prospino backend convenience function: reads SLHA1 input.
+
+prospino_run: |
+   Prospino backend convenience function: runs Prospino after reading
+   options from the YAML file.
+
+prospino_run_alloptions: |
+   Prospino backend convenience function: runs Prospino, with all options
+   provided directly as function arguments.
+
+salami_0_1_0_init: |
+   Initializes the salami 0.1.0 backend.
+
+salami_get_xsection: |
+   Salami backend function: return the cross-section for a given process,
+   identified by a PID pair.
+
+salami_import_slha_string: |
+   Salami backend function: import SLHA content as string.
+
+salami_set_parameters: |
+   Salami backend function: set parameters in salami.
+
+xsecBE_1_0_2_init: |
+   Initializes the xsec 1.0.2 backend.
+
+xsecBE_get_xsection: |
+   Xsec backend function: return the cross-section for a given process,
+   identified by a PID pair.
+
+xsecBE_import_slha_string: |
+   Xsec backend function: import SLHA content as string.
+
+xsecBE_set_parameters: |
+   Xsec backend function: set parameters in xsec.
 
 
 #-------------------------------------
@@ -1081,8 +1193,17 @@ get_DD_couplings: |
 DD_couplings_fermionic_HP: |
    Provides WIMP mass and couplings to nucleons for Higgs-Portal models with fermionic DM.
 
+WIMP_properties: |
+   Container for WIMP properties: mass, spin and self-conjugate
+
 mwimp: |
    DM mass in GeV.
+
+spinwimpx2: |
+   Spin of DM x2
+
+wimp_sc: |
+   Is the DM candidate self conjugate
 
 sigmav: |
    Thermally averaged annihilation cross section <sigma v>, for v=0, in cm^3 s^-1.
@@ -1102,6 +1223,9 @@ sigma_SD_n: |
 DarkMatter_ID: |
    Contains string ID to identify dark matter particle.
 
+DarkMatterConj_ID: |
+   Contains string ID to identify the conjugate to the dark matter particle.
+
 RD_spectrum: |
    Contains degrees of freedom and masses of all (co)-annihilating
    particles, as well as location of thresholds and resonances.
@@ -1111,7 +1235,7 @@ RD_spectrum_ordered: |
    ordered with increasing p_eff, and coannihilation thresholds
    included
 
-RD_eff_annrate_DSprep: |
+RD_eff_annrate_DS5prep: |
    Ensures that DarkSUSY (up to version 5) is correctly initialized
    for relic density calculations.
 
@@ -1973,14 +2097,44 @@ lnL_SI_nuclear_parameters: |
 lnL_SD_nuclear_parameters: |
    The log-likehood for the spin-dependent nuclear parameters.
 
-SimYieldTable: |
-   Table of simulated particle yields.
+lnL_nuclear_parameters_ChPT: |
+   Log Likelihood for the nuisance parameters ChPT in DirectDM 2.2.0
 
-GA_missingFinalStates: |
-   Final states that are not avaialable with tabulated spectra.
+FullSimYieldTable: |
+   Table of all simulated particle yields.
 
-GA_AnnYield: |
+GA_SimYieldTable: |
+   Table of simulated gamma-ray yields.
+
+electron_SimYieldTable: |
+   Table of simulated electron yields.
+
+positron_SimYieldTable: |
+   Table of simulated positron yields.
+
+antiproton_SimYieldTable: |
+   Table of simulated antiproton yields.
+
+antideuteron_SimYieldTable: |
+   Table of simulated antideuteron yields.
+
+GA_Yield: |
    Calculate the gamma-ray yield from the process catalogue.
+
+electron_Yield: |
+   Calculate the electron yield from the process catalogue.
+
+positron_Yield: |
+   Calculate the positron yield from the process catalogue.
+
+antiproton_Yield: |
+   Calculate the antiproton yield from the process catalogue.
+
+antideuteron_Yield: |
+   Calculate the antideuteron yield from the process catalogue.
+
+DM_process: |
+   Returns a string based on the nature of the DM process used for indirect detection (either annihilation or decay).
 
 dsanyield_sim: |
    Provides tabulated yields from DarkSUSY 6.
@@ -1994,11 +2148,25 @@ cascadeMC_DecayTable: |
 cascadeMC_gammaSpectra: |
    Gamma-ray spectrum from cascade decays.
 
+cascadeMC_electronSpectra: |
+   Electron spectrum from cascade decays.
+
+cascadeMC_positronSpectra: |
+   Positron spectrum from cascade decays.
+
+cascadeMC_antiprotonSpectra: |
+   Anti-proton spectrum from cascade decays.
+
+cascadeMC_antideuteronSpectra: |
+   Anti-deuteron spectrum from cascade decays.
+
 cascadeMC_LoopManagement: |
    Controls the loop for the cascade decay Monte Carlo simulation.
 
-cascadeMC_InitialState: |
-   The intial state for the cascade decay chain.
+cascadeMC_InitialStates: |
+   The set of initial states for the cascade decay chain, consisting of
+   those hard process final states for which one or more spectra (gammas,
+   positrons, pbars, etc) are not available already in tabulated form.
 
 cascadeMC_EventCount: |
    Event counter for cascade decays.
@@ -2135,11 +2303,17 @@ DarkSUSY_MSSM_6_1_1_init: |
 DarkSUSY_MSSM_6_2_2_init: |
    Initialises DarkSUSY 6.2.2 for the MSSM.
 
+DarkSUSY_MSSM_6_2_5_init: |
+   Initialises DarkSUSY 6.2.5 for the MSSM.
+
 DarkSUSY_generic_wimp_6_1_1_init: |
    Initialises DarkSUSY 6.1.1 for a generic WIMP.
 
 DarkSUSY_generic_wimp_6_2_2_init: |
    Initialises DarkSUSY 6.2.2 for a generic WIMP.
+
+DarkSUSY_generic_wimp_6_2_5_init: |
+   Initialises DarkSUSY 6.2.5 for a generic WIMP.
 
 DarkSUSY5_PointInit_LocalHalo: |
    Initialises Milky Way halo model parameters in DarkSUSY5
@@ -2147,11 +2321,27 @@ DarkSUSY5_PointInit_LocalHalo: |
 DarkSUSY_PointInit_LocalHalo: |
    Initialises Milky Way halo model parameters in DarkSUSY6+
 
-dump_GammaSpectrum: |
+dump_gammaSpectrum: |
    Dumps gamma-ray yield into ASCII table
+
+dump_electronSpectrum: |
+   Dumps electron yield into ASCII table
+
+dump_positronSpectrum: |
+   Dumps positron yield into ASCII table
+
+dump_antiprotonSpectrum: |
+   Dumps antiproton yield into ASCII table
+
+dump_antideuteronSpectrum: |
+   Dumps antideuteron yield into ASCII table
 
 UnitTest_DarkBit: |
    Prints various DarkBit results into YAML file.
+
+#-------------------------------
+# Direct Detection capabilities
+#-------------------------------
 
 DD_SetDetectorEmin: |
    Sets the minimum recoil energy relevant for a given direct detection experiment.
@@ -2173,6 +2363,15 @@ DDCalc_2_1_0_init: |
 
 DDCalc_2_2_0_init: |
    Initialises DDCalc 2.2.0.
+
+DDCalc_Couplings: |
+   Initialise DDCalc couplings from a given DM interaction basis.
+
+DD_nonrel_WCs: |
+   Non-relativistic Wilson coefficients
+
+DD_rel_WCs_flavscheme: |
+   Relativistic Wilson coefficients defined in the 5(or 4 or 3) flavscheme
 
 DD_Experiment: |
    The name of the DDcalc experiment corresponding to a specific experiment index.
@@ -2323,6 +2522,9 @@ SetWIMP_higgsportal: |
 
 SetWIMP_NREffectiveTheory: |
    Sets the WIMP parameters m, spin for a non-relativistic effective field theory.
+
+SetWIMP_NREFT_CPT: |
+   Sets the WIMP parameters m, spin for a non-relativistic effective field theory with corrections from CPT
 
 GetNRCoefficient: |
    Get the value of a given non-relativistic operator
@@ -2796,10 +2998,13 @@ momegas_print_channels: |
    Print the contributions to the relic density from all channels
 
 assignVal: |
-   Assigns a value to a model parameter in MicrOmegas.
+   Assigns a value to a model parameter in MicrOmegas and CalcHEP.
 
 vSigma: |
    The velocity averaged cross section calculated at a specified temperature.
+
+vSigma_freezeout: |
+   The velocity averaged cross section calculated at the temperature of thermal freezeout.
 
 oh2: |
    The dark matter relic density (Omega h^2).
@@ -2863,6 +3068,9 @@ vSigmaCh: |
 
 decay_rates: |
    Collect all the decay rates into a table.
+
+all_BFs: |
+  Returns branching fractions for the specified particles (as a map<str,double>)
 
 Z_decay_rates : |
    All decays of the Z gauge boson.
@@ -3070,6 +3278,9 @@ lnL_mbmb : |
 
 lnL_t_mass : |
    Log-likelihood of the top quark pole mass.
+
+lnL_mtrun : |
+   Log-likelihood of the MSbar running top mass.
 
 lnL_Z_mass : |
    Log-likelihood of the Z boson pole mass.
@@ -3383,18 +3594,6 @@ deltaMB_LL : |
 mb_1S : |
    The 1S bottom quark mass.
 
-SUSYPOPE_0_2_init: |
-   Initialize SUSYPOPE backend
-
-CalcObs_SUSYPOPE: |
-   Calculate precision observables using SUSYPOPE
-
-SetFlags_SUSYPOPE: |
-   Set internal flags for SUSYPOPE
-
-SetPara_SUSYPOPE: |
-   Set internal parameters for SUSYPOPE
-
 Init_param : |
    Initialiases the SuperIso parameter structure.
 
@@ -3472,6 +3671,7 @@ l2lll_lnL: |
 
 mu2e_lnL: |
    Log-likelihood for mu - e conversion in nucleii
+
 
 
 #-------------------------------------
@@ -3743,6 +3943,9 @@ supbar_r_decay_rates: |
 #  Model capabilities
 #-------------------------------------
 
+DMEFT_parameters: |
+   Parameters for the DMEFT model (see ./gambit DMEFT)
+
 Halo_Einasto_parameters: |
    Parameters of the Einasto halo profile (rho0, rhos, vrot, v0, vesc, rs, r_sun, alpha).
    See also ./gambit Halo_Einasto
@@ -3977,6 +4180,12 @@ nuclear_params_sigma0_sigmal_parameters: |
 nuclear_params_sigmas_sigmal_parameters: |
    Parameters for the model nuclear_params_sigmas_sigmal (see ./gambit nuclear_params_sigmas_sigmal)
 
+nuclear_params_ChPT_parameters: |
+   Parameters for the model nuclear_params_ChPT (see ./gambit nuclear_params_ChPT)
+
+nuclear_params_ChPT_sigmapiN_parameters: |
+   Parameters for the model nuclear_params_ChPT_sigmapiN (see ./gambit nuclear_params_ChPT_sigmapiN)
+
 nuclear_params_neutron_lifetime_parameters: |
    Model for the neutron lifetime.
    See ./gambit nuclear_params_neutron_lifetime for details.
@@ -3987,6 +4196,28 @@ RightHandedNeutrinos_parameters: |
 RightHandedNeutrinos_diff_parameters: |
    Parameters for the model RightHandedNeutrinos_diff (see ./gambit RightHandedNeutrinos_diff)
 
+ColliderBit_SLHA_file_model_parameters: |
+   Parameters for the ColliderBit dummy model ColliderBit_SLHA_file_model.
+   See ./gambit ColliderBit_SLHA_file_model_parameters for details.
+
+ColliderBit_SLHA_scan_model_parameters: |
+   Parameters for the ColliderBit dummy model ColliderBit_SLHA_scan_model.
+   See ./gambit ColliderBit_SLHA_scan_model_parameters for details.
+
+NREO_scalarDM_parameters: |
+   Parameters for the model Non-Relativistic Effective Operator model of scalar dark matter
+   See ./gambit NREO_scalarDM for details
+
+NREO_DiracDM_parameters: |
+   Parameters for the model Non-Relativistic Effective Operator model of Dirac dark matter
+   See ./gambit NREO_DiracDM for details
+
+NREO_MajoranaDM_parameters: |
+   Parameters for the model Non-Relativistic Effective Operator model of Majorana dark matter
+   See ./gambit NREO_MajoranaDM for details
+
+WIMP_sigmav_parameters: |
+   Parameters for the WIMP_sigmav (see ./gambit WIMP_sigmav)
 
 #-------------------------------------
 #  FeynHiggs capabilities
@@ -4086,28 +4317,36 @@ calculate_uncertainty_amu_2loop: |
 #----------------------------
 
 GeneralALP_parameters: |
-   Parameters of the GeneralALP model (gagg, gaee, fa, ma0, Tchi, beta, thetai).
+   Parameters of the GeneralALP model (gagg, gaee, gaN, fa, ma0, Tchi, beta, thetai).
    See also ./gambit GeneralALP
 
 QCDAxion_parameters: |
-   Parameters of the QCDAxion model (EoverN, CaggQCD, Caee, fa, LambdaChi, Tchi, beta, thetai).
+   Parameters of the QCDAxion model (EoverN, CaggQCD, Caee, CaN, fa, LambdaChi, Tchi, beta, thetai).
    See also ./gambit QCDAxion
 
 KSVZAxion_parameters: |
-   Parameters of the KSVZAxion model (EoverN, CaggQCD, fa, LambdaChi, Tchi, beta, thetai).
+   Parameters of the KSVZAxion model (EoverN, CaggQCD, CaN, fa, LambdaChi, Tchi, beta, thetai).
    See also ./gambit KSVZAxion
 
 DFSZAxion_I_parameters: |
-   Parameters of the DFSZAxion_I model (EoverN, CaggQCD, tanbeta, fa, LambdaChi, Tchi, beta, thetai).
+   Parameters of the DFSZAxion_I model (EoverN, CaggQCD, CaN, tanbeta, fa, LambdaChi, Tchi, beta, thetai).
    See also ./gambit DFSZAxion_I
 
 DFSZAxion_II_parameters: |
-   Parameters of the DFSZAxion_II model (EoverN, CaggQCD, tanbeta, fa, LambdaChi, Tchi, beta, thetai).
+   Parameters of the DFSZAxion_II model (EoverN, CaggQCD, CaN, tanbeta, fa, LambdaChi, Tchi, beta, thetai).
    See also ./gambit DFSZAxion_II
 
 ConstantMassALP_parameters: |
-   Parameters of the ConstantMassALP model (Cagg, Caee, fa, Lambda, thetai).
+   Parameters of the ConstantMassALP model (Cagg, Caee, CaN, fa, Lambda, thetai).
    See also ./gambit ConstantMassALP
+
+XENON1T_DM_NuisanceParameters_parameters: |
+   Parameters of the XENON1T_DM_NuisanceParameters model (delta_eff,delta_bkg,x_3H).
+   See also ./gambit XENON1T_DM_NuisanceParameters
+
+XENON1T_NuisanceParameters_parameters: |
+   Parameters of the XENON1T_NuisanceParameters model (eta).
+   See also ./gambit XENON1T_NuisanceParameters
 
 QCDAxion_ZeroTemperatureMass: |
    Nuisance likelihood for the QCD-related energy scale LambdaChi, which defines the low-energy QCD axion mass.
@@ -4186,6 +4425,15 @@ PhotonFluence_SN1987A_Decay: |
 
 lnL_HESS_GCMF: |
    LogLikelihood for H.E.S.S. constraints on axions (Galactic Centre magnetic field result).
+
+lnL_XENON1T_Anomaly: |
+   Likelihood function for the 2020 XENON-1T anomaly (solar ALP hypothesis) [arXiv:2006.10035].
+
+lnL_XENON1T_DM_Anomaly: |
+   Likelihood function for the 2020 XENON-1T anomaly (DM ALP hypothesis) [arXiv:2006.10035].
+
+lnL_XENON1T_Anomaly_NuisanceParameters: |
+    Likelihood function for experimental nuisance parameters (detector effciency and background level) the 2020 XENON-1T anomaly [arXiv:2006.10035].
 
 #------------------------------
 #  SUSYHD capabilities
@@ -4474,6 +4722,16 @@ DarkAges_1_2_0_init: |
 
 get_energy_injection_efficiency_table: |
    Get the energy injection efficiency table from the DarkAges frontend
+
+f_eff: |
+   Effective energy injection effeciency (constant used for on-the-spot approximation)
+
+p_ann: |
+   Annihilation rate (p_ann = f_eff * f^2 * <sv>/m)
+   Unit: cm^3 s^-1 GeV^-1
+
+lnL_p_ann: |
+   Profiled likelihood on p_ann
 
 #----------------------------
 #  CosmoBit Models
@@ -5200,8 +5458,8 @@ RHN_coupling_slide: |
 #  Capgen capabilities
 #-------------------------------------
 
-CaptnGeneral_1_0_init: |
-  Initialize Captn' general backend.
+CaptnGeneral_2_1_init: |
+  Initialize Captn' general 2.1 backend.
 
 captn_init: |
   Actually initialize Captn' general.
@@ -5211,3 +5469,282 @@ cap_sun_saturation: |
 
 cap_Sun_vnqn_isoscalar: |
   Compute v^n or q^n solar capture rate.
+
+captn_init_oper: |
+  Initalizes stuff specific to non-relativistic effective operator method
+
+captn_NREO: |
+  Computes capture rate using non-relativistic effective operator method
+
+captn_populate_array: |
+  Inserts the desired value for the constant picked by its indices
+
+c0_1_cap: |
+  The c^{0}_{1} coupling constant from arxiv 1501.03729
+
+c0_2_cap: |
+  The c^{0}_{2} coupling constant from arxiv 1501.03729
+
+c0_3_cap: |
+  The c^{0}_{3} coupling constant from arxiv 1501.03729
+
+c0_4_cap: |
+  The c^{0}_{4} coupling constant from arxiv 1501.03729
+
+c0_5_cap: |
+  The c^{0}_{5} coupling constant from arxiv 1501.03729
+
+c0_6_cap: |
+  The c^{0}_{6} coupling constant from arxiv 1501.03729
+
+c0_7_cap: |
+  The c^{0}_{7} coupling constant from arxiv 1501.03729
+
+c0_8_cap: |
+  The c^{0}_{8} coupling constant from arxiv 1501.03729
+
+c0_9_cap: |
+  The c^{0}_{9} coupling constant from arxiv 1501.03729
+
+c0_10_cap: |
+  The c^{0}_{10} coupling constant from arxiv 1501.03729
+
+c0_11_cap: |
+  The c^{0}_{11} coupling constant from arxiv 1501.03729
+
+c0_12_cap: |
+  The c^{0}_{12} coupling constant from arxiv 1501.03729
+
+c0_13_cap: |
+  The c^{0}_{13} coupling constant from arxiv 1501.03729
+
+c0_14_cap: |
+  The c^{0}_{14} coupling constant from arxiv 1501.03729
+
+c0_15_cap: |
+  The c^{0}_{15} coupling constant from arxiv 1501.03729
+
+c1_1_cap: |
+  The c^{1}_{1} coupling constant from arxiv 1501.03729
+
+c1_2_cap: |
+  The c^{1}_{2} coupling constant from arxiv 1501.03729
+
+c1_3_cap: |
+  The c^{1}_{3} coupling constant from arxiv 1501.03729
+
+c1_4_cap: |
+  The c^{1}_{4} coupling constant from arxiv 1501.03729
+
+c1_5_cap: |
+  The c^{1}_{5} coupling constant from arxiv 1501.03729
+
+c1_6_cap: |
+  The c^{1}_{6} coupling constant from arxiv 1501.03729
+
+c1_7_cap: |
+  The c^{1}_{7} coupling constant from arxiv 1501.03729
+
+c1_8_cap: |
+  The c^{1}_{8} coupling constant from arxiv 1501.03729
+
+c1_9_cap: |
+  The c^{1}_{9} coupling constant from arxiv 1501.03729
+
+c1_10_cap: |
+  The c^{1}_{10} coupling constant from arxiv 1501.03729
+
+c1_11_cap: |
+  The c^{1}_{11} coupling constant from arxiv 1501.03729
+
+c1_12_cap: |
+  The c^{1}_{12} coupling constant from arxiv 1501.03729
+
+c1_13_cap: |
+  The c^{1}_{13} coupling constant from arxiv 1501.03729
+
+c1_14_cap: |
+  The c^{1}_{14} coupling constant from arxiv 1501.03729
+
+c1_15_cap: |
+  The c^{1}_{15} coupling constant from arxiv 1501.03729
+
+jwimp: |
+  Spin of the Dark Matter particle created with map_to_cap() in NREO model.
+
+#-------------------------------------
+#  CalcHEP capabilities
+#-------------------------------------
+
+CalcHEP_3_6_27_init: |
+  Initialise CalcHEP backend.
+
+generate_decay_code: |
+  Generates the codelet for a 1->2 process in CalcHEP.
+
+generate_xsec_code: |
+  Generates the codelet for a 2->2 process in CalcHEP.
+
+Assign_Value: |
+  Assigns a numerical value to a given CalcHEP parameter (with error-checking).
+
+Assign_Widths: |
+  Passes the width from each BSM particle (+ top quark) in the model, from the DecayTable to CalcHEP.
+
+Assign_All_Values: |
+  Takes all parameters in a model as given by the vector of SpectrumParameters, and assigns them by value to the appropriate CalcHEP parameter names.
+
+CH_Decay_Width: |
+  Provides spin-averaged decay width for 2 body decay process in CM frame at tree-level.
+
+CH_Sigma_V: |
+  Computes annihilation cross-section for 2->2 process, DM+DMbar -> X + Y at tree level. Coannihilations not currently supported; we require the mass of both in states are equal.
+
+setModel: |
+  Set the model within CalcHEP.
+
+pdg2mass: |
+  Returns the name of the mass parameter within CalcHEP for a given PDG code.
+
+pdg2width: |
+  Returns the name of the width parameter within CalcHEP for a given PDG code.
+
+calcMainFunc: |
+  Calculates and updates all PUBLIC (model-dependent) parameters in CalcHEP.
+
+pMass: |
+  Obtains the value of the mass of a particle, for a given CalcHEP particle name.
+
+getMEcode: |
+  Generates shared object file computing matrix element - or points to if it already exists.
+
+passParameters: |
+  Exports numerical values of parameters to the dynamic CalcHEP matrix element code
+
+varNames: |
+  CalcHEP's internal list of variable names.
+
+#------------------------
+#  Rivet capabilites
+#-----------------------
+
+Rivet_3_0_0_init: |
+  Initialise Rivet backend
+
+
+#---------------------
+# DirecDM capabilities
+#---------------------
+
+DirectDM_2_2_0_init: |
+  Initialise the DirectDM backend
+
+get_NR_WCs_flav: |
+  Get Wilson Coefficients at 2 GeV in a quark flavour matching scheme.
+
+DirectDMNuisanceParameters: |
+  Extract the nuisance parameters for DirectDM as a map
+
+#--------------------------------
+#  Vacuum stability capabilities
+#--------------------------------
+
+VS_likelihood: |
+  Computes the likelihood associated with the stability of the scalar potential
+
+VS_results: |
+  Results from a Vevacious run in the format of a string to double map
+
+check_vacuum_stability: |
+  Computes the stability of a scalar potential with Vevacious
+
+compare_panic_vacua: |
+  Compares two vacua to check if they are the same
+
+panic_vacua: |
+  List of requested panic vacua
+
+tunnelling_strategy: |
+  List of requested tunnelling strategies
+
+vevacious_file_location: |
+    Sets the name and locations of the ini files for vevacious for each model, since they might not be just <MODELNAME>.vin, etc. Model dependent.
+
+init_vevacious: |
+    Initialize vevacious. Set potential runOptions for vevacious in the YAML file in the rules section for this capability. Model independent.
+
+vevacious_1_0_init: |
+    Initialization of vevacious 1.0 backend.
+
+pass_spectrum_to_vevacious: |
+    Adds all entries of the spectrum object (as SLHAea) that need to be passed to vevacious to an instance of type SpectrumEntriesForVevacious and returns this instance. The actual passing happens in the helper function exec_pass_spectrum_to_vevacious which gets executed every time before a vevacious call. Model dependent.
+
+#-------------------------------------
+#  ObjectivesBit capabilities
+#-------------------------------------
+
+gaussian: |
+  Multi-dimensional Gaussian centered at 0.5 with diagonal covariances of 0.1^2.
+
+rosenbrock: |
+  Multi-dimensional generalization of 2d Rosenbrock function. See https://en.wikipedia.org/wiki/Rosenbrock_function
+
+himmelblau: |
+  Two-dimensional Himmelblau function. See https://en.wikipedia.org/wiki/Himmelblau%27s_function
+
+mccormick: |
+  Two-dimensional McCormick function.
+
+ackley: |
+  Multi-dimensional Ackely function. See https://en.wikipedia.org/wiki/Ackley_function
+
+eggbox: |
+  Multi-dimensional eggbox function. Test problem 2 from https://arxiv.org/abs/1306.2144
+
+rastrigin: |
+  Multi-dimensional Rastrigin function. See https://en.wikipedia.org/wiki/Rastrigin_function
+
+beale: |
+  Two-dimensional Beale function.
+
+shells: |
+  Multi-dimensional Gausian shells. Test problem 1 from https://arxiv.org/abs/1306.2144
+
+styblinski_tang: |
+  Multi-dimensional Styblinski-Tang function.
+
+easom: |
+  Two-dimensional Easom function.
+
+tf1: |
+  Analytic function 1 from https://arxiv.org/abs/2101.04525
+
+tf2: |
+  Analytic function 2 from https://arxiv.org/abs/2101.04525
+
+tf3: |
+  Analytic function 3 from https://arxiv.org/abs/2101.04525
+
+tf4: |
+  Analytic function 4 from https://arxiv.org/abs/2101.04525
+
+trivial_1d_parameters: |
+  Model parameters for the trivial 1D model
+
+trivial_2d_parameters: |
+  Model parameters for the trivial 2D model
+
+trivial_3d_parameters: |
+  Model parameters for the trivial 3D model
+
+trivial_4d_parameters: |
+  Model parameters for the trivial 4D model
+
+trivial_5d_parameters: |
+  Model parameters for the trivial 5D model
+
+trivial_7d_parameters: |
+  Model parameters for the trivial 7D model
+
+trivial_10d_parameters: |
+  Model parameters for the trivial 10D model

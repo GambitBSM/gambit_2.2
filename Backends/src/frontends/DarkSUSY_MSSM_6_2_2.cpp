@@ -72,6 +72,8 @@ BE_INI_FUNCTION
     dsanyield_sim(mdm,egev,pdg,hel,yieldpdg,diff,istat);
     yieldpdg = -11; //positrons
     dsanyield_sim(mdm,egev,pdg,hel,yieldpdg,diff,istat);
+    yieldpdg = -1000010020; //anti-deuteron
+    dsanyield_sim(mdm,egev,pdg,hel,yieldpdg,diff,istat);
 
     scan_level = false;
   }
@@ -674,7 +676,6 @@ BE_NAMESPACE
   int init_diskless(const SLHAstruct &mySLHA, const DecayTable &myDecays)
   {
     using SLHAea::to;
-    const std::complex<double> imagi(0.0, 1.0);
     DS_PACODES_MSSM *DSpart = &(*pacodes_mssm);
 
     // Define required blocks and raise an error if a block is missing

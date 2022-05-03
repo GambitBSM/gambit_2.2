@@ -53,6 +53,7 @@
 #include "gambit/FlavBit/FlavBit_types.hpp"
 
 #define MODULE FlavBit
+#define REFERENCE GAMBITFlavourWorkgroup:2017dbx
 START_MODULE
 
   // Initialisation capability (fill the SuperIso structure)
@@ -1593,6 +1594,7 @@ START_MODULE
   #undef CAPABILITY
 
 
+#undef REFERENCE
 #undef MODULE
 
 

@@ -184,7 +184,7 @@ namespace Gambit
           }
         }
     }
-   
+
     /// Translate B->K*mumu covariances from theory to LHCb convention
     void Kstarmumu_Theory2Experiment_translation(flav_covariance_map& prediction)
     {
@@ -346,34 +346,28 @@ namespace Gambit
         switch(result.model)
         {
           case 1:
-          {
             if (spectrum["MINPAR"][1].is_data_line()) result.m0=SLHAea::to<double>(spectrum["MINPAR"][1][1]);
             if (spectrum["MINPAR"][2].is_data_line()) result.m12=SLHAea::to<double>(spectrum["MINPAR"][2][1]);
             if (spectrum["MINPAR"][4].is_data_line()) result.sign_mu=SLHAea::to<double>(spectrum["MINPAR"][4][1]);
             if (spectrum["MINPAR"][5].is_data_line()) result.A0=SLHAea::to<double>(spectrum["MINPAR"][5][1]);
             break;
-          }
+
           case 2:
-          {
             if (spectrum["MINPAR"][1].is_data_line()) result.Lambda=SLHAea::to<double>(spectrum["MINPAR"][1][1]);
             if (spectrum["MINPAR"][2].is_data_line()) result.Mmess=SLHAea::to<double>(spectrum["MINPAR"][2][1]);
             if (spectrum["MINPAR"][4].is_data_line()) result.sign_mu=SLHAea::to<double>(spectrum["MINPAR"][4][1]);
             if (spectrum["MINPAR"][5].is_data_line()) result.N5=SLHAea::to<double>(spectrum["MINPAR"][5][1]);
             if (spectrum["MINPAR"][6].is_data_line()) result.cgrav=SLHAea::to<double>(spectrum["MINPAR"][6][1]);
             break;
-          }
+
           case 3:
-          {
             if (spectrum["MINPAR"][1].is_data_line()) result.m32=SLHAea::to<double>(spectrum["MINPAR"][1][1]);
             if (spectrum["MINPAR"][2].is_data_line()) result.m0=SLHAea::to<double>(spectrum["MINPAR"][2][1]);
             if (spectrum["MINPAR"][4].is_data_line()) result.sign_mu=SLHAea::to<double>(spectrum["MINPAR"][4][1]);
             break;
-          }
+
           default:
-          {
             if (spectrum["MINPAR"][3].is_data_line()) result.tan_beta=SLHAea::to<double>(spectrum["MINPAR"][3][1]);
-            break;
-          }
         }
       }
 
@@ -885,7 +879,7 @@ namespace Gambit
 
       int nObservables = SI_obslist.size();
       if (flav_debug) std::cout<<"Observables: "<<std::endl;
-      
+
       char obsnames[nObservables][50];
       for(int iObservable = 0; iObservable < nObservables; iObservable++)
       {
@@ -922,7 +916,7 @@ namespace Gambit
 
       //Switch the observables to LHCb convention
       Kstarmumu_Theory2Experiment_translation(result.central_values);
-      Kstaree_Theory2Experiment_translation(result.central_values); 
+      Kstaree_Theory2Experiment_translation(result.central_values);
 
       // If we need to compute the covariance, either because we're doing it for every point or we haven't cached the SM value, do it.
       if (not useSMCovariance or not SMCovarianceCached)
@@ -986,7 +980,7 @@ namespace Gambit
 
         //Switch the covariances to LHCb convention
         Kstarmumu_Theory2Experiment_translation(result.covariance);
-        Kstaree_Theory2Experiment_translation(result.covariance); 
+        Kstaree_Theory2Experiment_translation(result.covariance);
 
         // Free memory  // We are not freeing the memory because we made the variable static. Just keeping this for reference on how to clean up the allocated memory in case of non-static caluclation of **corr.
         // for(int iObservable = 0; iObservable <= nNuisance; ++iObservable) {
@@ -1072,13 +1066,13 @@ namespace Gambit
 
     SI_SINGLE_PREDICTION_FUNCTION(B2taunu)
     SI_SINGLE_PREDICTION_FUNCTION(b2sgamma)
-    
+
     SI_SINGLE_PREDICTION_FUNCTION(B2Kstargamma)
     SI_SINGLE_PREDICTION_FUNCTION(BRBXsmumu_lowq2)
     SI_SINGLE_PREDICTION_FUNCTION(BRBXsmumu_highq2)
     SI_SINGLE_PREDICTION_FUNCTION(AFBBXsmumu_lowq2)
     SI_SINGLE_PREDICTION_FUNCTION(AFBBXsmumu_highq2)
-    
+
     SI_SINGLE_PREDICTION_FUNCTION_BINS(Bs2phimumuBr,_1_6)
     SI_SINGLE_PREDICTION_FUNCTION_BINS(Bs2phimumuBr,_15_19)
     SI_SINGLE_PREDICTION_FUNCTION_BINS(B2KstarmumuBr,_0p1_0p98)
@@ -1120,7 +1114,7 @@ namespace Gambit
     SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_6_8,_LHCb)
     SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_15_19,_LHCb)
     SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstareeAng,_0p0008_0p257,_LHCb)
-    
+
     #undef SI_PRED_HELPER_CALL
     #undef SI_SINGLE_PREDICTION_FUNCTION
     #undef SI_SINGLE_PREDICTION_FUNCTION_BINS
@@ -2730,7 +2724,7 @@ namespace Gambit
       using namespace Pipes::HEPLike_B2KstarellellAng_LogLikelihood_Belle;
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/Belle/RD/Bd2KstarEllEll_Angular/KEK-2016-54_q2_";
       static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
-      static std::vector<HepLike_default::HL_nDimBifurGaussian> nDimBifurGaussian = 
+      static std::vector<HepLike_default::HL_nDimBifurGaussian> nDimBifurGaussian =
       {
         HepLike_default::HL_nDimBifurGaussian(inputfile + "0.1_4.0.yaml"),
         HepLike_default::HL_nDimBifurGaussian(inputfile + "4.0_8.0.yaml"),
@@ -2750,7 +2744,7 @@ namespace Gambit
         first = false;
       }
 
-      std::vector<flav_prediction> prediction = 
+      std::vector<flav_prediction> prediction =
       {
         *Dep::prediction_B2KstarmumuAng_0p1_4_Belle,
         *Dep::prediction_B2KstarmumuAng_4_8_Belle,
@@ -2764,7 +2758,7 @@ namespace Gambit
         result += nDimBifurGaussian[i].GetLogLikelihood(get_obs_theory(prediction[i], obs_list), get_obs_covariance(prediction[i], obs_list));
       }
 
-      if (flav_debug) std::cout << "HEPLike_B2KstarellellAng_LogLikelihood_Belle result: " << result << std::endl;      
+      if (flav_debug) std::cout << "HEPLike_B2KstarellellAng_LogLikelihood_Belle result: " << result << std::endl;
     }
 
     /// HEPLike LogLikelihood B -> K* mu mu Angular (LHCb)
@@ -2882,7 +2876,7 @@ namespace Gambit
         }
 
       result = nDimGaussian.GetLogLikelihood(get_obs_theory(prediction, obs_list), get_obs_covariance(prediction, obs_list));
-      
+
       if (flav_debug) std::cout << "HEPLike_B2KstareeAng_Lowq_LogLikelihood result: " << result << std::endl;
     }
 
@@ -2930,7 +2924,7 @@ namespace Gambit
 
       if (flav_debug) std::cout << "HEPLike_Bu2KstarmumuAng_LogLikelihood_LHCb 2020 result: " << result << std::endl;
     }
-    
+
     /// HEPLike LogLikelihood B -> K* mu mu Br (LHCb)
     void HEPLike_B2KstarmumuBr_LogLikelihood_LHCb(double &result)
     {

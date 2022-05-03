@@ -268,16 +268,16 @@ namespace Gambit
 
 
       // determine resonances for LSP annihilation
-      int reslist[] = {BEreq::DS5particle_code("Z0"),
-                       BEreq::DS5particle_code("h0_2"),
-                       BEreq::DS5particle_code("h0_1"),
-                       BEreq::DS5particle_code("A0"),
-                       BEreq::DS5particle_code("W+"),
-                       BEreq::DS5particle_code("H+")};
-      int resmax=sizeof(reslist) / sizeof(reslist[0]);
+      //int reslist[] = {BEreq::DS5particle_code("Z0"),
+      //                 BEreq::DS5particle_code("h0_2"),
+      //                 BEreq::DS5particle_code("h0_1"),
+      //                 BEreq::DS5particle_code("A0"),
+      //                 BEreq::DS5particle_code("W+"),
+      //                 BEreq::DS5particle_code("H+")}; (Unused)
+      //int resmax=sizeof(reslist) / sizeof(reslist[0]); (Unused)
       // the last 2 resonances in the list can only appear for coannihilations
-      if (result.coannihilatingParticles.size() == 1)
-        resmax -= 2;
+      //if (result.coannihilatingParticles.size() == 1) (Unused)
+      //  resmax -= 2; (Unused)
       // (Turns out resonances are never returned with DS5)
 
       // determine thresholds; lowest threshold = 2*WIMP rest mass  (unlike DS
@@ -305,8 +305,9 @@ namespace Gambit
 
       // retrieve annihilation processes and DM properties
       std::string DMid= *Dep::DarkMatter_ID;
+      std::string DMbarid = *Dep::DarkMatterConj_ID;
       TH_Process annihilation =
-              (*Dep::TH_ProcessCatalog).getProcess(DMid, DMid);
+              (*Dep::TH_ProcessCatalog).getProcess(DMid, DMbarid);
       TH_ParticleProperty DMproperty =
               (*Dep::TH_ProcessCatalog).getParticleProperty(DMid);
 
@@ -413,16 +414,16 @@ namespace Gambit
     /*! \brief Some helper function to prepare evaluation of Weff from
      *         DarkSUSY 5.
      */
-    void RD_annrate_DS5prep_MSSM_func(int &result)
+    void RD_annrate_DS5prep_func(int &result)
     {
-      using namespace Pipes::RD_annrate_DS5prep_MSSM_func;
+      using namespace Pipes::RD_annrate_DS5prep_func;
 
       // Read out coannihilating particles from RDspectrum.
       RD_spectrum_type specres = *Dep::RD_spectrum;
 
       if ( specres.particle_index_type != "DarkSUSY" )
       {
-        invalid_point().raise("RD_annrate_DS5prep_MSSM_func is only optimized for use with "
+        invalid_point().raise("RD_annrate_DS5prep_func is only optimized for use with "
          "DarkSUSY5 and requires internal particle IDs. Try RD_annrate_DSprep_MSSM_func instead!");
       }
 
@@ -437,7 +438,7 @@ namespace Gambit
       }
 
       double tmp; int itmp;
-      for (int i=1; i<=myrdmgev.nco-1; i++) 
+      for (int i=1; i<=myrdmgev.nco-1; i++)
       {
         for (int j=i+1; j<=myrdmgev.nco; j++)
         {
@@ -455,13 +456,13 @@ namespace Gambit
           }
         }
       #ifdef DARKBIT_RD_DEBUG
-        std::cout << "DSprep_MSSM - co : "<< myrdmgev.kcoann(i) << " " <<
+        std::cout << "DS5prep - co : "<< myrdmgev.kcoann(i) << " " <<
             myrdmgev.mco(i) << " " << myrdmgev.mdof(i)
             << std::endl;
       #endif
       }
       #ifdef DARKBIT_RD_DEBUG
-        std::cout << "DSprep_MSSM - co : "<< myrdmgev.kcoann(myrdmgev.nco) << " " <<
+        std::cout << "DS5prep - co : "<< myrdmgev.kcoann(myrdmgev.nco) << " " <<
             myrdmgev.mco(myrdmgev.nco) << " " << myrdmgev.mdof(myrdmgev.nco)
             << std::endl;
       #endif
@@ -470,7 +471,7 @@ namespace Gambit
 
       result=1; // everything OK
 
-    } // function RD_annrate_DS5prep_MSSM_func
+    } // function RD_annrate_DS5prep_func
 
 
     /*! \brief Some helper function to prepare evaluation of Weff from
@@ -520,19 +521,31 @@ namespace Gambit
 
 
     /*! \brief Get Weff directly from initialized DarkSUSY.
-     * Note that this function does not (and should not) correct Weff for
+     * Note that these functions do not (and should not) correct Weff for
      * non-self-conjugate dark matter.
     */
     void RD_eff_annrate_DS_MSSM(double(*&result)(double&))
     {
       using namespace Pipes::RD_eff_annrate_DS_MSSM;
 
-      if ((BEreq::dsanwx.origin() == "DarkSUSY") || (BEreq::dsanwx.origin() == "DarkSUSY_MSSM"))
+      if (BEreq::dsanwx.origin() == "DarkSUSY_MSSM")
       {
         result=BEreq::dsanwx.pointer();
       }
       else DarkBit_error().raise(LOCAL_INFO, "Wrong DarkSUSY backend initialized?");
     } // function RD_eff_annrate_DS_MSSM
+
+    void RD_eff_annrate_DS5_MSSM(double(*&result)(double&))
+    {
+      using namespace Pipes::RD_eff_annrate_DS5_MSSM;
+
+      if (BEreq::dsanwx.origin() == "DarkSUSY")
+      {
+        result=BEreq::dsanwx.pointer();
+      }
+      else DarkBit_error().raise(LOCAL_INFO, "Wrong DarkSUSY backend initialized?");
+    } // function RD_eff_annrate_DS5_MSSM
+
 
 
     /*! \brief Infer Weff from process catalog.
@@ -544,7 +557,8 @@ namespace Gambit
         using namespace Pipes::RD_eff_annrate_from_ProcessCatalog;
 
         std::string DMid= *Dep::DarkMatter_ID;
-        TH_Process annProc = (*Dep::TH_ProcessCatalog).getProcess(DMid, DMid);
+        std::string DMbarid = *Dep::DarkMatterConj_ID;
+        TH_Process annProc = (*Dep::TH_ProcessCatalog).getProcess(DMid, DMbarid);
         double mDM = (*Dep::TH_ProcessCatalog).getParticleProperty(DMid).mass;
 
         auto Weff = daFunk::zero("peff");
@@ -798,7 +812,7 @@ namespace Gambit
         myrdmgev->mdof(i)=myRDspec.coannihilatingParticles[i-1].degreesOfFreedom;
         myrdmgev->kcoann(i)=myRDspec.coannihilatingParticles[i-1].index;
         #ifdef DARKBIT_RD_DEBUG
-          std::cout << "kcoann, mco, mdof: " << myrdmgev->kcoann(i) << "  " << myrdmgev->mco(i) 
+          std::cout << "kcoann, mco, mdof: " << myrdmgev->kcoann(i) << "  " << myrdmgev->mco(i)
                     << "  " << myrdmgev->mdof(i) << std::endl;
         #endif
       }
@@ -1072,6 +1086,24 @@ namespace Gambit
 
     }
 
+    /// Return the thermally averaged cross-section at T_freezeout
+    void vSigma_freezeout_MicrOmegas(double &result)
+    {
+      using namespace Pipes::vSigma_freezeout_MicrOmegas;
+
+      // Beps=1e-5 recommended, Beps=1 switches coannihilation off
+      double Beps = runOptions->getValueOrDef<double>(1e-5, "Beps");
+
+      // Xf = m_WIMP/T_freezeout
+      double Xf = *Dep::Xf;
+      double mwimp = *Dep::mwimp;
+
+      // Get sigma*v at T_freezeout [pb]
+      double sigmav = BEreq::vSigma(byVal(Xf/mwimp), byVal(Beps), byVal(1));
+
+      result = sigmav*1e-36*s2cm;
+    }
+
 
 
     //////////////////////////////////////////////////////////////////////////
@@ -1102,6 +1134,17 @@ namespace Gambit
       /// Option oh2_obs<double>: Set reference dark matter density (Oh2) for this module function (default 0.1188)
       double oh2_obs = runOptions->getValueOrDef<double>(0.1188, "oh2_obs");
       double oh2_theory = *Dep::RD_oh2;
+      result = oh2_theory/oh2_obs;
+      logger() << LogTags::debug << "Fraction of dark matter that the scanned model accounts for: " << result << EOM;
+    }
+
+    void RD_fraction_rescaled_LCDM(double &result)
+    {
+      using namespace Pipes::RD_fraction_rescaled_LCDM;
+
+      double oh2_obs = *Param["omega_b"];
+      double oh2_theory = *Dep::RD_oh2;
+
       result = oh2_theory/oh2_obs;
       logger() << LogTags::debug << "Fraction of dark matter that the scanned model accounts for: " << result << EOM;
     }

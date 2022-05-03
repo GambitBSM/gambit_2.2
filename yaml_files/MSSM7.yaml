@@ -436,11 +436,8 @@ Rules:
 
   # Choose to use the function RD_eff_annrate_DS_MSSM rather than RD_eff_annrate_from_ProcessCatalog
   - capability: RD_eff_annrate
+    # function: RD_eff_annrate_DS5_MSSM
     function: RD_eff_annrate_DS_MSSM
-  # ...and use the function RD_annrate_DSprep_MSSM_func to supply the dependency RD_eff_annrate_DSprep_MSSM
-  - capability: RD_eff_annrate_DSprep_MSSM
-    function: RD_annrate_DSprep_MSSM_func
-    #function: RD_annrate_DSprep_MSSM_func
   # ...and get the dependency RD_spectrum from RD_spectrum_MSSM
   - capability: RD_spectrum
     #function: RD_spectrum_SUSY_DS5
@@ -459,12 +456,19 @@ Rules:
   - capability: lnL_FermiLATdwarfs
     function:  lnL_FermiLATdwarfs_gamLike
 
-  # Choose to use DarkSUSY yield tables for indirect detection
-  - capability: SimYieldTable
-    #function: SimYieldTable_DS5
-    function: SimYieldTable_DarkSUSY
-    options:
-      allow_yield_extrapolation: true
+  # Choose to use DarkSUSY 6 yield tables for indirect detection
+  - capability: GA_SimYieldTable
+    function: GA_SimYieldTable_DarkSUSY
+  - capability: positron_SimYieldTable
+    function: positron_SimYieldTable_DarkSUSY
+  - capability: antiproton_SimYieldTable
+    function: antiproton_SimYieldTable_DarkSUSY
+  - capability: antideuteron_SimYieldTable
+    function: antideuteron_SimYieldTable_DarkSUSY
+
+  # The model is annihilating DM, not decaying
+  - capability: GA_Yield
+    function: GA_AnnYield_General
 
   # Use DarkSUSY or MicrOmegas for calculating direct detection couplings
   - capability: DD_couplings
@@ -473,7 +477,11 @@ Rules:
     options:
       loop: true
     #function: DD_couplings_MicrOmegas
-
+    
+  # Select WIMP-nucleon couplings for DDCalc 2.1.0 WIMP object
+  - capability: DDCalc_Couplings
+    function: DDCalc_Couplings_WIMP_nucleon
+    
   # Choose to get decays from DecayBit proper, not from an SLHA file.
   - capability: decay_rates
     function: all_decays
@@ -669,9 +677,16 @@ Rules:
     module: ColliderBit
 
   # Choose to get cross-sections from the Monte Carlo
-  - capability: CrossSection
-    function: getMCxsec
-    module: ColliderBit
+  - capability: TotalCrossSection
+    function: getEvGenCrossSection_as_base
+
+  # Just use unweighted cross-sections
+  - capability: EventWeighterFunction
+    function: setEventWeight_unity
+
+  # Choose to generate events with Pythia on the fly (rather than reading them in)
+  - capability: HardScatteringEvent
+    function: generateEventPythia
 
   # Choose ATLAS detector simulation and options.
   - capability: ATLASDetectorSim

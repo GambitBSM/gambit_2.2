@@ -18,13 +18,17 @@
 ///
 ///  *********************************************
 
-#ifndef __default_bossed_versions_hpp__
-#define __default_bossed_versions_hpp__
+#pragma once
 
 // Choose default versions here, using underscores instead of periods
+
 #define  Default_gm2calc 1_3_0
 #define  Default_Pythia 8_212
+<<<<<<< HEAD
 #define  Default_Pythia_EM 8_212
 #define  Default_HepLike 1_1
+=======
+#define  Default_vevacious 1_0
+>>>>>>> master
 
-#endif
+// Defaults added by GUM (do not remove this comment).
