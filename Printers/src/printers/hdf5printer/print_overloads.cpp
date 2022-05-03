@@ -36,7 +36,7 @@ namespace Gambit
 
     /// Templatable print functions
     #define PRINT(TYPE) _print(TYPE const& value, const std::string& label, const int vID, const uint rank, const ulong pID) \
-                        { template_print(value,label,vID,rank,pID); }
+       { template_print(value,label,vID,rank,pID); }
     void HDF5Printer::PRINT(int      )
     void HDF5Printer::PRINT(uint     )
     void HDF5Printer::PRINT(long     )
@@ -46,7 +46,7 @@ namespace Gambit
     #undef PRINT
 
     #define PRINTAS(INTYPE,OUTTYPE) _print(INTYPE const& value, const std::string& label, const int vID, const uint rank, const ulong pID) \
-                                    { template_print((OUTTYPE)value,label,vID,rank,pID); }
+    { template_print((OUTTYPE)value,label,vID,rank,pID); }
     void HDF5Printer::PRINTAS(longlong, long)
     void HDF5Printer::PRINTAS(ulonglong, ulong)
     #undef PRINTAS
@@ -67,10 +67,10 @@ namespace Gambit
       // Retrieve the buffer manager for buffers with the desired output type
       auto& buffer_manager = get_mybuffermanager<double>(pointID,mpirank);
 
-      #ifdef HDEBUG_MODE
-        std::cout<<"printing vector<double>: "<<label<<std::endl;
-        std::cout<<"pointID: "<<pointID<<", mpirank: "<<mpirank<<std::endl;
-      #endif
+#ifdef HDEBUG_MODE
+      std::cout<<"printing vector<double>: "<<label<<std::endl;
+      std::cout<<"pointID: "<<pointID<<", mpirank: "<<mpirank<<std::endl;
+#endif
 
       for(unsigned int i=0;i<value.size();i++)
       {
