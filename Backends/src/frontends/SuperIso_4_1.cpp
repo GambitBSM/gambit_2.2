@@ -32,7 +32,7 @@
 
 /// Number of observables the SuperIso returns for B0 -> K(*) mu mu and Bs -> phi mu mu
 #define Nobs_BKll 2
-#define Nobs_BKsll 30
+#define Nobs_BKsll 32
 #define Nobs_Bsphill 6
 
 
@@ -107,8 +107,39 @@ BE_NAMESPACE
 
     return results;
   }
+  Flav_KstarEE_obs BKstaree_CONV(const parameters *param, double Q2_min, double Q2_max)
+  {
+    check_model(param, LOCAL_INFO);
+    assert(std::abs(Q2_max-Q2_min)>0.01); // it's not safe to have such small bins => probably you are doing something wrong
+    std::complex<double> C0b[11],C1b[11],C2b[11],C0w[11],C1w[11],C2w[11],Cpb[11];
+    std::complex<double> CQ0b[3],CQ1b[3],CQpb[3];
+    double obs[Nobs_BKsll+1];
+    
+    Flav_KstarEE_obs results;
+    results.q2_min=Q2_min;
+    results.q2_max=Q2_max;
 
-  double BRBKmumu_CONV(const parameters *param, double Q2_min, double Q2_max)
+    double mu_W=2.*param->mass_W;
+    double mu_b=param->mass_b_pole;
+
+    CW_calculator(1,byVal(C0w),byVal(C1w),byVal(C2w),byVal(mu_W),param);
+    C_calculator_base1(byVal(C0w),byVal(C1w),byVal(C2w),byVal(mu_W),byVal(C0b),byVal(C1b),byVal(C2b),byVal(mu_b),param);
+    CQ_calculator(1,byVal(CQ0b),byVal(CQ1b),byVal(mu_W),byVal(mu_b),param);
+    Cprime_calculator(1,byVal(Cpb),byVal(CQpb),byVal(mu_W),byVal(mu_b),param);
+    modify_WC(param, C0b, CQ0b);
+
+    double BR = BRBKstarll(1,0,byVal(Q2_min), byVal(Q2_max), byVal(obs),byVal(C0b),byVal(C1b),byVal(C2b),byVal(CQ0b),byVal(CQ1b),byVal(Cpb),byVal(CQpb),param,byVal(mu_b));
+
+    results.FL=obs[2];
+    results.AT_Re=obs[31];
+    results.AT_Im=obs[32];
+    results.AT_2=obs[5];
+
+    return results;
+    
+                      
+  }
+    double BRBKmumu_CONV(const parameters *param, double Q2_min, double Q2_max)
   {
     check_model(param, LOCAL_INFO);
     assert(std::abs(Q2_max-Q2_min)>0.01); // it's not safe to have such small bins => probably you are doing something wrong
