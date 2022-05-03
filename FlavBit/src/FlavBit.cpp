@@ -76,8 +76,8 @@
 #include "gambit/cmake/cmake_variables.hpp"
 
 
-#define FLAVBIT_DEBUG
-#define FLAVBIT_DEBUG_LL
+//#define FLAVBIT_DEBUG
+//#define FLAVBIT_DEBUG_LL
 
 namespace YAML
 {
@@ -171,6 +171,7 @@ namespace Gambit
         }
       }
     }
+
     /// Translate B->K*mumu observables from theory to LHCb convention
     void Kstaree_Theory2Experiment_translation(flav_observable_map& prediction)
     {
@@ -183,9 +184,7 @@ namespace Gambit
           }
         }
     }
-  
-
-    
+   
     /// Translate B->K*mumu covariances from theory to LHCb convention
     void Kstarmumu_Theory2Experiment_translation(flav_covariance_map& prediction)
     {
@@ -218,6 +217,7 @@ namespace Gambit
         }
       }
     }
+
     /// Translate B->K*mumu covariances from theory to LHCb convention
     void Kstaree_Theory2Experiment_translation(flav_covariance_map& prediction)
     {
@@ -251,9 +251,6 @@ namespace Gambit
         }
     }
 
-    
-
-    
     /// Find the path to the latest installed version of the HepLike data
     str path_to_latest_heplike_data()
     {
@@ -926,6 +923,7 @@ namespace Gambit
       //Switch the observables to LHCb convention
       Kstarmumu_Theory2Experiment_translation(result.central_values);
       Kstaree_Theory2Experiment_translation(result.central_values); 
+
       // If we need to compute the covariance, either because we're doing it for every point or we haven't cached the SM value, do it.
       if (not useSMCovariance or not SMCovarianceCached)
       {
@@ -989,6 +987,7 @@ namespace Gambit
         //Switch the covariances to LHCb convention
         Kstarmumu_Theory2Experiment_translation(result.covariance);
         Kstaree_Theory2Experiment_translation(result.covariance); 
+
         // Free memory  // We are not freeing the memory because we made the variable static. Just keeping this for reference on how to clean up the allocated memory in case of non-static caluclation of **corr.
         // for(int iObservable = 0; iObservable <= nNuisance; ++iObservable) {
         //   free(corr[iObservable]);
@@ -1120,9 +1119,7 @@ namespace Gambit
     SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_4_6,_LHCb)
     SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_6_8,_LHCb)
     SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_15_19,_LHCb)
-
     SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstareeAng,_0p0008_0p257,_LHCb)
-    
     
     #undef SI_PRED_HELPER_CALL
     #undef SI_SINGLE_PREDICTION_FUNCTION
@@ -1146,9 +1143,9 @@ namespace Gambit
       int nObservables = obslist.size();
 
       char obsnames[nObservables][50];
-      for(int iObservable = 0; iObservable < nObservables; iObservable++) {
+      for(int iObservable = 0; iObservable < nObservables; iObservable++)
+      {
           strcpy(obsnames[iObservable], obslist[iObservable].c_str());
-          cout<<obslist[iObservable].c_str()<<endl;
       }
 
       double *res;
@@ -2726,13 +2723,15 @@ namespace Gambit
 
       if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_Belle result: " << result << std::endl;
     }
+
     /// HEPLike LogLikelihood B -> K* ell ell Angular (Belle)
     void HEPLike_B2KstarellellAng_LogLikelihood_Belle(double &result)
     {
       using namespace Pipes::HEPLike_B2KstarellellAng_LogLikelihood_Belle;
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/Belle/RD/Bd2KstarEllEll_Angular/KEK-2016-54_q2_";
       static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
-      static std::vector<HepLike_default::HL_nDimBifurGaussian> nDimBifurGaussian = {
+      static std::vector<HepLike_default::HL_nDimBifurGaussian> nDimBifurGaussian = 
+      {
         HepLike_default::HL_nDimBifurGaussian(inputfile + "0.1_4.0.yaml"),
         HepLike_default::HL_nDimBifurGaussian(inputfile + "4.0_8.0.yaml"),
         HepLike_default::HL_nDimBifurGaussian(inputfile + "10.09_12.9.yaml"),
@@ -2741,17 +2740,18 @@ namespace Gambit
 
       static bool first = true;
       if (first)
+      {
+        for (unsigned int i = 0; i < nDimBifurGaussian.size(); i++)
         {
-          for (unsigned int i = 0; i < nDimBifurGaussian.size(); i++)
-            {
-              if (flav_debug) std::cout << "Debug: Reading HepLike data file: " << i << endl;
-              nDimBifurGaussian[i].Read();
-            }
-          update_obs_list(obs_list, nDimBifurGaussian[0].GetObservables());
-          first = false;
+          if (flav_debug) std::cout << "Debug: Reading HepLike data file: " << i << endl;
+          nDimBifurGaussian[i].Read();
         }
+        update_obs_list(obs_list, nDimBifurGaussian[0].GetObservables());
+        first = false;
+      }
 
-      std::vector<flav_prediction> prediction = {
+      std::vector<flav_prediction> prediction = 
+      {
         *Dep::prediction_B2KstarmumuAng_0p1_4_Belle,
         *Dep::prediction_B2KstarmumuAng_4_8_Belle,
         *Dep::prediction_B2KstarmumuAng_10p9_12p9_Belle,
@@ -2760,14 +2760,13 @@ namespace Gambit
 
       result = 0;
       for (unsigned int i = 0; i < nDimBifurGaussian.size(); i++)
-        {
-          result += nDimBifurGaussian[i].GetLogLikelihood(get_obs_theory(prediction[i], obs_list), get_obs_covariance(prediction[i], obs_list));
-        }
+      {
+        result += nDimBifurGaussian[i].GetLogLikelihood(get_obs_theory(prediction[i], obs_list), get_obs_covariance(prediction[i], obs_list));
+      }
 
-      if (flav_debug) std::cout << "HEPLike_B2KstarellellAng_LogLikelihood_Belle result: " << result << std::endl;
-      
-
+      if (flav_debug) std::cout << "HEPLike_B2KstarellellAng_LogLikelihood_Belle result: " << result << std::endl;      
     }
+
     /// HEPLike LogLikelihood B -> K* mu mu Angular (LHCb)
     void HEPLike_B2KstarmumuAng_LogLikelihood_LHCb(double &result)
     {
@@ -2858,19 +2857,6 @@ namespace Gambit
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
      /// HEPLike LogLikelihood B -> K* e e Angular low q2 (LHCb)
     void HEPLike_B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020(double &result)
     {
@@ -2899,10 +2885,6 @@ namespace Gambit
       
       if (flav_debug) std::cout << "HEPLike_B2KstareeAng_Lowq_LogLikelihood result: " << result << std::endl;
     }
-
-
-
-    
 
     /// HEPLike LogLikelihood Bu -> K*+ mu mu Angular (LHCb)
     void HEPLike_Bu2KstarmumuAng_LogLikelihood_LHCb_2020(double &result)
@@ -2948,7 +2930,6 @@ namespace Gambit
 
       if (flav_debug) std::cout << "HEPLike_Bu2KstarmumuAng_LogLikelihood_LHCb 2020 result: " << result << std::endl;
     }
-    
     
     /// HEPLike LogLikelihood B -> K* mu mu Br (LHCb)
     void HEPLike_B2KstarmumuBr_LogLikelihood_LHCb(double &result)
