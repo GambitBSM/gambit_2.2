@@ -50,6 +50,7 @@ set(scanner_download "${PROJECT_SOURCE_DIR}/ScannerBit/downloaded")
 # Safer download function than what is in cmake (avoid buggy libcurl vs https issue)
 set(DL_BACKEND "${PROJECT_SOURCE_DIR}/cmake/scripts/safe_dl.sh" "${backend_download}" "${CMAKE_COMMAND}" "${CMAKE_DOWNLOAD_FLAGS}")
 set(DL_SCANNER "${PROJECT_SOURCE_DIR}/cmake/scripts/safe_dl.sh" "${scanner_download}" "${CMAKE_COMMAND}" "${CMAKE_DOWNLOAD_FLAGS}")
+set(DL_CONTRIB "${PROJECT_SOURCE_DIR}/cmake/scripts/safe_dl.sh" "${CMAKE_BUILD_DIR}" "${CMAKE_COMMAND}" "${CMAKE_DOWNLOAD_FLAGS}")
 
 # Define the module location switch differently depending on compiler
 if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
@@ -83,6 +84,7 @@ add_custom_target(nuke-pippi COMMAND ${CMAKE_COMMAND} -E remove -f ${rmstring}-d
                              COMMAND ${CMAKE_COMMAND} -E remove_directory ${dir} || true)
 add_dependencies(nuke-all nuke-pippi)
 set_target_properties(get-pippi PROPERTIES EXCLUDE_FROM_ALL 1)
+
 
 # Macro to clear the build stamp manually for an external project
 macro(enable_auto_rebuild package)
@@ -183,6 +185,8 @@ function(check_ditch_status name version dir)
     elseif ((arg STREQUAL "yoda") AND EXCLUDE_YODA)
       set (itch "${itch}" "${name}_${version}")
     elseif ((arg STREQUAL "sqlite3") AND NOT SQLITE3_FOUND)
+      set (itch "${itch}" "${name}_${version}")
+    elseif ((arg STREQUAL "x11") AND NOT X11_FOUND)
       set (itch "${itch}" "${name}_${version}")
     endif()
   endforeach()
@@ -327,11 +331,12 @@ macro(inform_of_missing_modules name ver missing_with_commas)
   )
 endmacro()
 
-if(EXISTS "${PROJECT_SOURCE_DIR}/Backends/")
-  include(cmake/backends.cmake)
-endif()
+# Bring in the actual backends and scanners
 if(EXISTS "${PROJECT_SOURCE_DIR}/ScannerBit/")
   include(cmake/scanners.cmake)
+endif()
+if(EXISTS "${PROJECT_SOURCE_DIR}/Backends/")
+  include(cmake/backends.cmake)
 endif()
 
 # Print outcomes of BOSSing efforts

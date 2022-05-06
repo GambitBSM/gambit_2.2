@@ -17,6 +17,10 @@
 #          (p.scott@imperial.ac.uk)
 #  \date 2014 Nov, Dec
 #
+# \author Tomas Gonzalo
+#         (tomas.gonzalo@monash.edu)
+# \dae 2019 June
+#
 #************************************************
 
 include(ExternalProject)
@@ -131,17 +135,21 @@ if(NOT EXCLUDE_RESTFRAMES)
   include_directories(${RESTFRAMES_INCLUDE})
   set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH};${dir}/lib")
   set(RESTFRAMES_CONFIG_LDFLAGS "-L${CMAKE_BINARY_DIR}/contrib -Wl,-rpath,${CMAKE_BINARY_DIR}/contrib")
+  # OpenMP flags don't play nicely with clang and RestFrames' antiquated libtoolized build system.
+  string(REGEX REPLACE "-Xclang -fopenmp" "" RESTFRAMES_C_FLAGS "${BACKEND_C_FLAGS}")
+  string(REGEX REPLACE "-Xclang -fopenmp" "" RESTFRAMES_CXX_FLAGS "${BACKEND_CXX_FLAGS}")
   if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    set(RESTFRAMES_CONFIG_LIBS "-lgambit_preload")
+    set(RESTFRAMES_CONFIG_LIBS "${CMAKE_SHARED_LINKER_FLAGS} -lgambit_preload")
   else()
-    set(RESTFRAMES_CONFIG_LIBS "-Wl,--no-as-needed -lgambit_preload")
+    set(RESTFRAMES_CONFIG_LIBS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-as-needed -lgambit_preload")
   endif()
   ExternalProject_Add(${name}
     DOWNLOAD_COMMAND git clone https://github.com/crogan/RestFrames ${dir}
              COMMAND ${CMAKE_COMMAND} -E chdir ${dir} git checkout -q v${ver}
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND ./configure -prefix=${dir} CC=${CMAKE_C_COMPILER} CFLAGS=${BACKEND_C_FLAGS} CPP=${RESTFRAMES_CPP} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${BACKEND_CXX_FLAGS} CXXCPP=${RESTFRAMES_CXXCPP} LDFLAGS=${RESTFRAMES_CONFIG_LDFLAGS} LIBS=${RESTFRAMES_CONFIG_LIBS}
+    CONFIGURE_COMMAND ./configure -prefix=${dir} CC=${CMAKE_C_COMPILER} CFLAGS=${RESTFRAMES_C_FLAGS} CPP=${RESTFRAMES_CPP} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${RESTFRAMES_CXX_FLAGS} CXXCPP=${RESTFRAMES_CXXCPP} LDFLAGS=${RESTFRAMES_CONFIG_LDFLAGS} LIBS=${RESTFRAMES_CONFIG_LIBS}
+              COMMAND sed ${dashi} -e "s|.(ROOTAUXCXXFLAGS) .(ROOTCXXFLAGS)||" src/Makefile
     BUILD_COMMAND ${MAKE_PARALLEL}
     INSTALL_COMMAND ${MAKE_PARALLEL} install
     )
@@ -153,6 +161,10 @@ if(NOT EXCLUDE_RESTFRAMES)
   add_contrib_clean_and_nuke(${name} ${dir} distclean)
 endif()
 
+#contrib/LHEF
+set(LHEF_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/contrib/LHEF")
+include_directories("${LHEF_INCLUDE_DIR}")
+
 #contrib/HepMC3; include only if ColliderBit is in use and WITH_HEPMC=ON.
 option(WITH_HEPMC "Compile with HepMC enabled" OFF)
 if(NOT WITH_HEPMC)
@@ -163,44 +175,62 @@ elseif(NOT ";${GAMBIT_BITS};" MATCHES ";ColliderBit;")
 endif()
 
 set(name "hepmc")
-set(ver "3.1.1")
-set(dir "${PROJECT_SOURCE_DIR}/contrib/HepMC3-${ver}")
+set(ver "3.2.5")
+set(HEPMC_PATH "${PROJECT_SOURCE_DIR}/contrib/HepMC3-${ver}")
 if(WITH_HEPMC)
   message("-- HepMC-dependent functions in ColliderBit will be activated.")
   message("   HepMC v${ver} will be downloaded and installed when building GAMBIT.")
   message("   ColliderBit Solo (CBS) will be activated.")
-  if(EXCLUDE_ROOT)
-    set(HEPMC3_ROOTIO FALSE)
+  if(EXISTS "${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/backend_types/Pythia_8_212/abstract_GAMBIT_hepmc_writer.h")
+    message("   Pythia can now drop HepMC files.")
   else()
-    set(HEPMC3_ROOTIO TRUE)
+    message("${BoldRed}   Pythia has already been compiled without HepMC so the main gambit build will fail. Please nuke Pythia before compiling gambit.${ColourReset}")
+  endif()
+  message("   Backends depending on HepMC will be enabled.")
+  if(NOT ROOT_FOUND)
+    message("   No ROOT found, ROOT-IO in HepMC will be deactivated.")
+    set(HEPMC3_ROOTIO OFF)
+  else()
+    set(HEPMC3_ROOTIO ON)
   endif()
   set(EXCLUDE_HEPMC FALSE)
 else()
   message("   HepMC-dependent functions in ColliderBit will be deactivated.")
   message("   ColliderBit Solo (CBS) will be deactivated.")
-  nuke_ditched_contrib_content(${name} ${dir})
+  message("   Pythia will not drop HepMC files.")
+  message("   Backends depending on HepMC (e.g. Rivet) will be disabled.")
+  nuke_ditched_contrib_content(${name} ${HEPMC_PATH})
   set(EXCLUDE_HEPMC TRUE)
 endif()
 
 if(NOT EXCLUDE_HEPMC)
-  set(lib "HepMC3_static")
-  set(md5 "a9cfc6e95eff5c13a0a5a9311ad75aa7")
+  set(lib "HepMC3")
+  set(md5 "d3079a7ffcc926b34c5ad2868ed6d8f0")
   set(dl "https://hepmc.web.cern.ch/hepmc/releases/HepMC3-${ver}.tar.gz")
-  set(build_dir "${PROJECT_BINARY_DIR}/${name}-prefix/src/${name}-build")
-  include_directories("${dir}/include")
-  set(HEPMC_LDFLAGS "-L${build_dir} -l${lib}")
-  set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH};${dir}/lib")
+  include_directories("${HEPMC_PATH}/local/include")
+
+  set(HEPMC_LDFLAGS "-L${HEPMC_PATH}/local/lib -l${lib}")
+  set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH};${HEPMC_PATH}/local/lib")
+  set(HEPMC_CXX_FLAGS "${BACKEND_CXX_FLAGS}")
+
+  # Silence some compiler warnings coming from HepMC
+  set_compiler_warning("no-unused-parameter" HEPMC_CXX_FLAGS)
+  set_compiler_warning("no-deprecated-copy" HEPMC_CXX_FLAGS)
+  set_compiler_warning("no-sign-compare" HEPMC_CXX_FLAGS)
+
   ExternalProject_Add(${name}
-    DOWNLOAD_COMMAND ${DL_CONTRIB} ${dl} ${md5} ${dir} ${name} ${ver}
-    SOURCE_DIR ${dir}
+    DOWNLOAD_COMMAND ${DL_CONTRIB} ${dl} ${md5} ${HEPMC_PATH} ${name} ${ver}
+    SOURCE_DIR ${HEPMC_PATH}
     CMAKE_COMMAND ${CMAKE_COMMAND} ..
-    CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_CXX_FLAGS=${BACKEND_CXX_FLAGS} -DHEPMC3_ENABLE_ROOTIO=${HEPMC3_ROOTIO}
-    BUILD_COMMAND ${MAKE_PARALLEL}
-    INSTALL_COMMAND ""
+    CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_CXX_FLAGS=${HEPMC_CXX_FLAGS} -DHEPMC3_ENABLE_ROOTIO=${HEPMC3_ROOTIO} -DCMAKE_INSTALL_PREFIX=${HEPMC_PATH}/local -DCMAKE_INSTALL_LIBDIR=${HEPMC_PATH}/local/lib -DHEPMC3_ENABLE_PYTHON=OFF -DHEPMC3_ENABLE_SEARCH=OFF -DHEPMC3_BUILD_STATIC_LIBS=OFF
+    BUILD_COMMAND ${MAKE_PARALLEL} ${lib}
+    INSTALL_COMMAND ${CMAKE_INSTALL_COMMAND}
     )
+
   # Add clean-hepmc and nuke-hepmc
-  add_contrib_clean_and_nuke(${name} ${dir} clean)
+  add_contrib_clean_and_nuke(${name} ${HEPMC_PATH} clean)
 endif()
+
 
 #contrib/fjcore-3.2.0
 set(fjcore_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/contrib/fjcore-3.2.0")
@@ -211,6 +241,15 @@ add_gambit_library(fjcore OPTION OBJECT
                           SOURCES ${PROJECT_SOURCE_DIR}/contrib/fjcore-3.2.0/fjcore.cc
                           HEADERS ${PROJECT_SOURCE_DIR}/contrib/fjcore-3.2.0/fjcore.hh)
 set(GAMBIT_BASIC_COMMON_OBJECTS "${GAMBIT_BASIC_COMMON_OBJECTS}" $<TARGET_OBJECTS:fjcore>)
+
+#contrib/multimin
+set(multimin_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/contrib/multimin/include")
+include_directories("${multimin_INCLUDE_DIR}")
+add_gambit_library(multimin OPTION OBJECT
+                          SOURCES ${PROJECT_SOURCE_DIR}/contrib/multimin/src/multimin.cpp
+                          HEADERS ${PROJECT_SOURCE_DIR}/contrib/multimin/include/multimin/multimin.hpp)
+set(GAMBIT_BASIC_COMMON_OBJECTS "${GAMBIT_BASIC_COMMON_OBJECTS}" $<TARGET_OBJECTS:multimin>)
+
 
 #contrib/MassSpectra; include only if SpecBit is in use and if
 #BUILD_FS_MODELS is set to something other than "" or "None" or "none"
@@ -231,7 +270,22 @@ if(";${GAMBIT_BITS};" MATCHES ";SpecBit;")
 
   # Determine compiler libraries needed by flexiblesusy.
   if(CMAKE_Fortran_COMPILER MATCHES "gfortran*")
-    set(flexiblesusy_compilerlibs "-lgfortran -lm")
+    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
+      find_library(GFORTRAN_LIBRARY NAMES gfortran)
+      if(GFORTRAN_LIBRARY STREQUAL "GFORTRAN_LIBRARY-NOTFOUND")
+        execute_process(COMMAND "${CMAKE_Fortran_COMPILER}" "-v" ERROR_VARIABLE GFORTRAN_V_OUTPUT)
+        string(REGEX MATCH "--libdir=[^\t\n ]+" GFORTRAN_LIB_DIR_STR "${GFORTRAN_V_OUTPUT}")
+        string(REGEX REPLACE "--libdir=([^\t\n ]+)" "\\1" GFORTRAN_LIB_DIR_STR "${GFORTRAN_LIB_DIR_STR}")
+        find_library(GFORTRAN_LIBRARY NAMES gfortran PATHS "${GFORTRAN_LIB_DIR_STR}")
+        if(GFORTRAN_LIBRARY STREQUAL "GFORTRAN_LIBRARY-NOTFOUND")
+          message(FATAL_ERROR "Could not find libgfortran.")
+        endif()
+      endif()
+      message(STATUS "Found libgfortran at ${GFORTRAN_LIBRARY}.")
+      set(flexiblesusy_compilerlibs "${GFORTRAN_LIBRARY} -lm")
+    else()
+      set(flexiblesusy_compilerlibs "-lgfortran -lm")
+    endif()
   elseif(CMAKE_Fortran_COMPILER MATCHES "g77" OR CMAKE_Fortran_COMPILER MATCHES "f77")
     set(flexiblesusy_compilerlibs "-lg2c -lm")
   elseif(CMAKE_Fortran_COMPILER MATCHES "ifort")
@@ -241,6 +295,7 @@ if(";${GAMBIT_BITS};" MATCHES ";SpecBit;")
 
   # Silence the deprecated-declarations warnings coming from Eigen3
   set_compiler_warning("no-deprecated-declarations" FS_CXX_FLAGS)
+  set_compiler_warning("no-deprecated-copy" FS_CXX_FLAGS)
 
   # Silence the mass of compiler warnings coming from FlexibleSUSY
   set_compiler_warning("no-unused-parameter" FS_CXX_FLAGS)
@@ -253,7 +308,7 @@ if(";${GAMBIT_BITS};" MATCHES ";SpecBit;")
   set_compiler_warning("no-unneeded-internal-declaration" FS_CXX_FLAGS)
 
   # Construct the command to create the shared library
-  set(FS_SO_LINK_COMMAND "${CMAKE_CXX_COMPILER} ${CMAKE_SHARED_LINKER_FLAGS} -shared -o")
+  set(FS_SO_LINK_COMMAND "${CMAKE_CXX_COMPILER} ${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS} -o")
 
   # FlexibleSUSY configure options
   set(FS_OPTIONS ${FS_OPTIONS}
@@ -271,6 +326,7 @@ if(";${GAMBIT_BITS};" MATCHES ";SpecBit;")
        --enable-shared-libs
        --with-shared-lib-ext=.so
        --with-shared-lib-cmd=${FS_SO_LINK_COMMAND}
+       --with-gsl-config=${GSL_CONFIG_EXECUTABLE}
       #--enable-verbose flag causes verbose output at runtime as well. Maybe set it dynamically somehow in future.
      )
 

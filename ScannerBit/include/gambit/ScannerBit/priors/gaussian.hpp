@@ -59,8 +59,8 @@ namespace Gambit
       // Constructor defined in gaussian.cpp
       Gaussian(const std::vector<std::string>&, const Options&);
 
-      // Transformation from unit interval to the Gaussian
-      void transform(const std::vector <double> &unitpars, std::unordered_map<std::string, double> &outputMap) const
+      /** @brief Transformation from unit interval to the Gaussian */
+      void transform(const std::vector <double> &unitpars, std::unordered_map<std::string, double> &outputMap) const override
       {
         std::vector<double> vec(unitpars.size());
 
@@ -80,7 +80,28 @@ namespace Gambit
         }
       }
 
-      double operator()(const std::vector<double> &vec) const
+      std::vector<double> inverse_transform(const std::unordered_map<std::string, double> &physical) const override
+      {
+        // subtract mean
+        std::vector<double> central;
+        for (int i = 0, n = this->size(); i < n; i++)
+        {
+          central.push_back(physical.at(param_names[i]) - mu[i]);
+        }
+
+        // invert rotation by Cholesky matrix
+        std::vector<double> rotated = col.invElMult(central);
+
+        // now diagonal; invert Gaussian CDF
+        std::vector<double> u;
+        for (const auto& v : rotated)
+        {
+          u.push_back(0.5 * (boost::math::erf(v / M_SQRT2) + 1.));
+        }
+        return u;
+      }
+
+      double operator()(const std::vector<double> &vec) const override
       {
         static double norm = 0.5 * std::log(2. * M_PI * std::pow(col.DetSqrt(), 2));
         return -0.5 * col.Square(vec, mu) - norm;

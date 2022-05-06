@@ -120,12 +120,62 @@ set(md5 "c47a4b58e1ce5b98eec3b7d79ec7284f")
 set(dl "https://github.com/PolyChord/PolyChordLite/archive/${ver}.tar.gz")
 set(dir "${PROJECT_SOURCE_DIR}/ScannerBit/installed/${name}/${ver}")
 set(pcSO_LINK "${CMAKE_Fortran_COMPILER} ${OpenMP_Fortran_FLAGS} ${CMAKE_Fortran_MPI_SO_LINK_FLAGS} ${CMAKE_CXX_MPI_SO_LINK_FLAGS}")
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
-  string(REGEX REPLACE "(-lstdc\\+\\+)" "-lc++" pcSO_LINK "${pcSO_LINK}")
-  string(REGEX MATCH "(-lc\\+\\+)" LINKED_OK "${pcSO_LINK}")
-  if (NOT LINKED_OK)
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
+  string(REGEX REPLACE "(-lstdc\\+\\+)" "" pcSO_LINK "${pcSO_LINK}")
   set(pcSO_LINK "${pcSO_LINK} -lc++")
-  endif()
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  string(REGEX REPLACE "(-lc\\+\\+)" "" pcSO_LINK "${pcSO_LINK}")
+  set(pcSO_LINK "${pcSO_LINK} -lstdc++")
+endif()
+if(MPI_Fortran_FOUND)
+  set(pcFFLAGS "${BACKEND_Fortran_FLAGS_PLUS_MPI}")
+else()
+  set(pcFFLAGS "${BACKEND_Fortran_FLAGS}")
+endif()
+if(MPI_CXX_FOUND)
+  set(pcCXXFLAGS "${BACKEND_CXX_FLAGS_PLUS_MPI}")
+else()
+  set(pcCXXFLAGS "${BACKEND_CXX_FLAGS}")
+endif()
+if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
+  set(pcFFLAGS "${pcFFLAGS} -heap-arrays -assume noold_maxminloc ")
+  set(pcCOMPILER_TYPE "intel")
+else()
+  set(pcFFLAGS "${pcFFLAGS} -fno-stack-arrays")
+  set(pcCOMPILER_TYPE "gnu")
+endif()
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set(pcCXXFLAGS "${pcCXXFLAGS} -Wl,-undefined,dynamic_lookup")
+  set(pcFFLAGS "${pcFFLAGS} -Wl,-undefined,dynamic_lookup")
+  set(pcSO_LINK "${pcSO_LINK} -lstdc++")
+endif()
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+    DOWNLOAD_COMMAND ${DL_SCANNER} ${dl} ${md5} ${dir} ${name} ${ver}
+    SOURCE_DIR ${dir}
+    BUILD_IN_SOURCE 1
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ${MAKE_PARALLEL} ${lib}.so FC=${CMAKE_Fortran_COMPILER} FFLAGS=${pcFFLAGS} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${pcCXXFLAGS} LD=${pcSO_LINK} COMPILER_TYPE=${pcCOMPILER_TYPE}
+    INSTALL_COMMAND ""
+  )
+  add_extra_targets("scanner" ${name} ${ver} ${dir} ${dl} clean)
+endif()
+
+# PolyChord
+set(name "polychord")
+set(ver "1.18.2")
+set(lib "libchord")
+set(md5 "66eca0d1fbcc87091e8079515810b421")
+set(dl "https://github.com/PolyChord/PolyChordLite/archive/${ver}.tar.gz")
+set(dir "${PROJECT_SOURCE_DIR}/ScannerBit/installed/${name}/${ver}")
+set(pcSO_LINK "${CMAKE_Fortran_COMPILER} ${OpenMP_Fortran_FLAGS} ${CMAKE_Fortran_MPI_SO_LINK_FLAGS} ${CMAKE_CXX_MPI_SO_LINK_FLAGS}")
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
+  string(REGEX REPLACE "(-lstdc\\+\\+)" "" pcSO_LINK "${pcSO_LINK}")
+  set(pcSO_LINK "${pcSO_LINK} -lc++")
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  string(REGEX REPLACE "(-lc\\+\\+)" "" pcSO_LINK "${pcSO_LINK}")
+  set(pcSO_LINK "${pcSO_LINK} -lstdc++")
 endif()
 if(MPI_Fortran_FOUND)
   set(pcFFLAGS "${BACKEND_Fortran_FLAGS_PLUS_MPI}")
@@ -150,7 +200,7 @@ if(NOT ditched_${name}_${ver})
     DOWNLOAD_COMMAND ${DL_SCANNER} ${dl} ${md5} ${dir} ${name} ${ver}
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND ""
+    CONFIGURE_COMMAND sed ${dashi} -e "s#-lc#-lstdc#g" Makefile_gnu
     BUILD_COMMAND ${MAKE_PARALLEL} ${lib}.so FC=${CMAKE_Fortran_COMPILER} FFLAGS=${pcFFLAGS} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${pcCXXFLAGS} LD=${pcSO_LINK} COMPILER_TYPE=${pcCOMPILER_TYPE}
     INSTALL_COMMAND ""
   )
@@ -171,7 +221,7 @@ set(dl "${baseurl}${endurl}")
 set(dl2 "${baseurl}${gateurl}")
 set(login_data "password=${CCPForge_p1}${CCPForge_p2}${CCPForge_p3}&username=${CCPForge_user}&redirect=${endurl}")
 set(dir "${PROJECT_SOURCE_DIR}/ScannerBit/installed/${name}/${ver}")
-set(mnSO_LINK "${CMAKE_Fortran_COMPILER} -shared ${OpenMP_Fortran_FLAGS} ${CMAKE_Fortran_MPI_SO_LINK_FLAGS}")
+set(mnSO_LINK "${CMAKE_Fortran_COMPILER} ${CMAKE_SHARED_LIBRARY_CREATE_Fortran_FLAGS} ${OpenMP_Fortran_FLAGS} ${CMAKE_Fortran_MPI_SO_LINK_FLAGS}")
 if (NOT LAPACK_STATIC)
   set(mnLAPACK "${LAPACK_LINKLIBS}")
 endif()
@@ -209,7 +259,7 @@ set(lib "libnest3")
 set(md5 "ebaf960c348592a1b6e3a50b3794c357")
 set(dl "https://github.com/farhanferoz/MultiNest/archive/4b3709c6d659adbd62c85e3e95ff7eeb6e6617af.tar.gz")
 set(dir "${PROJECT_SOURCE_DIR}/ScannerBit/installed/${name}/${ver}")
-set(mnSO_LINK "${CMAKE_Fortran_COMPILER} -shared ${OpenMP_Fortran_FLAGS} ${CMAKE_Fortran_MPI_SO_LINK_FLAGS}")
+set(mnSO_LINK "${CMAKE_Fortran_COMPILER} ${CMAKE_SHARED_LIBRARY_CREATE_Fortran_FLAGS} ${OpenMP_Fortran_FLAGS} ${CMAKE_Fortran_MPI_SO_LINK_FLAGS}")
 if (NOT LAPACK_STATIC)
   set(mnLAPACK "${LAPACK_LINKLIBS}")
 endif()
@@ -246,14 +296,15 @@ endif()
 set(name "great")
 set(ver "1.0.0")
 set(lib "libgreat")
-set(dl "null")
+set(dl "https://gitlab.in2p3.fr/derome/GreAT/-/archive/master/GreAT-master.tar.gz")
+set(md5 "a0b6aeb4c6307f8ba980f69bb797a093")
 set(dir "${PROJECT_SOURCE_DIR}/ScannerBit/installed/${name}/${ver}")
 set(patch "${PROJECT_SOURCE_DIR}/ScannerBit/patches/${name}/${ver}/patch_${name}_${ver}.dif")
 set(build_dir "${PROJECT_BINARY_DIR}/${name}_${ver}-prefix/src/${name}_${ver}-build")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
-    GIT_REPOSITORY https://gitlab.in2p3.fr/derome/GreAT.git
+    DOWNLOAD_COMMAND ${DL_SCANNER} ${dl} ${md5} ${dir} ${name} ${ver}
     SOURCE_DIR ${dir}
     PATCH_COMMAND patch -p1 < ${patch}
     CMAKE_COMMAND ${CMAKE_COMMAND} ..
@@ -266,5 +317,32 @@ if(NOT ditched_${name}_${ver})
   set_as_default_version("scanner" ${name} ${ver})
 endif()
 
+# minuit2
+# omp possible in principle but disabled in gambit, as only likelihood uses omp
+set(name "minuit2")
+set(ver "6.23.01")
+set(lib "libminuit2")
+set(md5 "862cc44a3defa0674e6b5a9960ed6f89")
+set(dl "https://github.com/GooFit/Minuit2/archive/v6-23-01.tar.gz")
+set(dir "${PROJECT_SOURCE_DIR}/ScannerBit/installed/${name}/${ver}")
+# We need to disable MPI for Minuit2 on MacOS as the build system fails to find the proper headers
+set(minuit2_MPI "${MPI_CXX_FOUND}")
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set(minuit2_MPI "OFF")
+endif()
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+    DOWNLOAD_COMMAND ${DL_SCANNER} ${dl} ${md5} ${dir} ${name} ${ver}
+    SOURCE_DIR ${dir}
+    BUILD_IN_SOURCE 1
+    CMAKE_COMMAND ${CMAKE_COMMAND} ..
+    CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DBUILD_SHARED_LIBS=1 -Dminuit2_mpi=${minuit2_MPI} -Dminuit2_openmp=0 -Dminuit2_omp=0
+    BUILD_COMMAND ${MAKE_PARALLEL}
+    INSTALL_COMMAND ""
+  )
+  add_extra_targets("scanner" ${name} ${ver} ${dir} ${dl} clean)
+  set_as_default_version("scanner" ${name} ${ver})
+endif()
 
 # All other scanners are implemented natively in ScannerBit.

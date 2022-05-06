@@ -59,7 +59,7 @@ namespace Gambit {
       Cauchy(const std::vector<std::string>& param, const Options& options);
 
       /** @brief Transformation from unit interval to the Cauchy */
-      void transform(const std::vector<double>& unitpars, std::unordered_map<std::string, double>& outputMap) const
+      void transform(const std::vector<double>& unitpars, std::unordered_map<std::string, double>& outputMap) const override
       {
         std::vector<double> vec(unitpars.size());
 
@@ -79,7 +79,28 @@ namespace Gambit {
         }
       }
 
-      double operator()(const std::vector<double>& vec) const
+      std::vector<double> inverse_transform(const std::unordered_map<std::string, double> &physical) const override
+      {
+        // subtract location
+        std::vector<double> central;
+        for (int i = 0, n = this->size(); i < n; i++)
+        {
+          central.push_back(physical.at(param_names[i]) - location[i]);
+        }
+
+        // invert rotation by Cholesky matrix
+        std::vector<double> rotated = col.invElMult(central);
+
+        // now diagonal; invert Cauchy CDF
+        std::vector<double> u;
+        for (const auto& v : rotated)
+        {
+          u.push_back(std::atan(v) / M_PI + 0.5);
+        }
+        return u;
+      }
+
+      double operator()(const std::vector<double>& vec) const override
       {
         static double norm = std::log(M_PI * col.DetSqrt());
         return -std::log1p(col.Square(vec, location)) - norm;

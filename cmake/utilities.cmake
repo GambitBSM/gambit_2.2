@@ -23,12 +23,17 @@
 #  \date 2016 Jan
 #
 #  \author Tomas Gonzalo
-#          (t.e.gonzalo@fys.uio.no)
+#          (gonzalo@physik.rwth-aachen.de)
 #  \date 2016 Sep
+#  \date 2021 Mar
 #
 #  \author Will Handley
 #          (wh260@cam.ac.uk)
 #  \date 2018 Dec
+#
+#  \author Christopher Chang
+#          (christopher.chang@uqconnect.edu.au)
+#  \date 2021 Feb
 #
 #************************************************
 
@@ -66,6 +71,13 @@ function(check_result result command)
   if(NOT ${result} STREQUAL "0")
     message(FATAL_ERROR "${BoldRed}Cmake failed because a GAMBIT python script failed.  Culprit: ${command}${ColourReset}")
   endif()
+endfunction()
+
+# Execute script to prevent printing problems with standalones
+function(add_elements_extras target)
+  set(ELEMENTS_EXTRAS_SCRIPT ${PROJECT_SOURCE_DIR}/Elements/scripts/elements_extras.py)
+  add_custom_target(${target} COMMAND ${PYTHON_EXECUTABLE} ${ELEMENTS_EXTRAS_SCRIPT} ${target}
+                            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 endfunction()
 
 #Check if a string starts with a give substring
@@ -142,13 +154,15 @@ macro(add_external_clean package dir dl target)
   set(rmstring2 "${CMAKE_BINARY_DIR}/${package}-prefix/src/${package}-build")
   string(REPLACE "." "_" safe_package ${package})
   set(reset_file "${CMAKE_BINARY_DIR}/BOSS_reset_info/reset_info.${safe_package}.boss")
+  set(patch_file "${package}-prefix/${safe_package}.dif")
   add_custom_target(clean-${package} COMMAND ${CMAKE_COMMAND} -E remove -f ${rmstring1}-BOSS ${rmstring1}-configure ${rmstring1}-build ${rmstring1}-install ${rmstring1}-done
                                      COMMAND [ -e ${dir} ] && cd ${dir} && ([ -e makefile ] || [ -e Makefile ] && (${target})) || true
                                      COMMAND [ -e ${reset_file} ] && ${PYTHON_EXECUTABLE} ${BOSS_dir}/boss.py -r ${reset_file} || true)
   add_custom_target(nuke-${package} DEPENDS clean-${package}
                                     COMMAND ${CMAKE_COMMAND} -E remove -f ${rmstring1}-download ${rmstring1}-download-failed ${rmstring1}-mkdir ${rmstring1}-patch ${rmstring1}-update ${rmstring1}-gitclone-lastrun.txt ${dl} || true
                                     COMMAND ${CMAKE_COMMAND} -E remove_directory ${dir} || true
-                                    COMMAND ${CMAKE_COMMAND} -E remove_directory ${rmstring2} || true)
+                                    COMMAND ${CMAKE_COMMAND} -E remove_directory ${rmstring2} || true
+                                    COMMAND [ -e ${patch_file} ] &&  patch -d/ -fsR -p0 < ${patch_file} && rm ${patch_file}|| true)
 endmacro()
 
 # Macro to write some shell commands to clean an external chained code.  Adds clean-[package] and nuke-[package]
@@ -201,6 +215,7 @@ function(add_gambit_library libraryname)
   add_dependencies(${libraryname} printer_harvest)
   add_dependencies(${libraryname} module_harvest)
   add_dependencies(${libraryname} yaml-cpp)
+  add_dependencies(${libraryname} elements_extras)
 
   if(${CMAKE_VERSION} VERSION_GREATER 2.8.10)
     foreach (dir ${GAMBIT_INCDIRS})
@@ -322,6 +337,9 @@ function(add_gambit_executable executablename LIBRARIES)
         set_target_properties(${executablename} PROPERTIES LINK_FLAGS ${MPI_Fortran_LINK_FLAGS})
     endif()
   endif()
+  if (OpenMP_omp_LIBRARY)
+    set(LIBRARIES ${LIBRARIES} ${OpenMP_omp_LIBRARY})
+  endif()
   if (LIBDL_FOUND)
     set(LIBRARIES ${LIBRARIES} ${LIBDL_LIBRARY})
   endif()
@@ -370,10 +388,17 @@ set(STANDALONE_FACILITATOR ${PROJECT_SOURCE_DIR}/Elements/scripts/standalone_fac
 
 # Function to add a standalone executable
 function(add_standalone executablename)
-  cmake_parse_arguments(ARG "" "" "SOURCES;HEADERS;LIBRARIES;MODULES" ${ARGN})
+  cmake_parse_arguments(ARG "" "" "SOURCES;HEADERS;LIBRARIES;MODULES;DEPENDENCIES" ${ARGN})
+
+  # Assume that the standalone is to be included, unless we discover otherwise.
+  set(standalone_permitted 1)
+
+  # Exclude standalones that need HepMC if it has been excluded.
+  if (EXCLUDE_HEPMC AND (";${ARG_DEPENDENCIES};" MATCHES ";hepmc;"))
+    set(standalone_permitted 0)
+  endif()
 
   # Iterate over modules, checking if the neccessary ones are present, and adding them to the target objects if so.
-  set(standalone_permitted 1)
   foreach(module ${ARG_MODULES})
     if(standalone_permitted AND EXISTS "${PROJECT_SOURCE_DIR}/${module}/" AND (";${GAMBIT_BITS};" MATCHES ";${module};"))
       if(COMMA_SEPARATED_MODULES)
@@ -386,6 +411,9 @@ function(add_standalone executablename)
       endif()
       if(module STREQUAL "SpecBit")
         set(USES_SPECBIT TRUE)
+        # Temporarily add the printers module whenever SpecBit is present to avoid linking problems
+        set(COMMA_SEPARATED_MODULES "${COMMA_SEPARATED_MODULES},Printers")
+        set(STANDALONE_OBJECTS ${STANDALONE_OBJECTS} $<TARGET_OBJECTS:Printers>)
       endif()
       if(module STREQUAL "ColliderBit")
         set(USES_COLLIDERBIT TRUE)
@@ -438,6 +466,16 @@ function(add_standalone executablename)
                                   ${STANDALONE_OBJECTS}
                                   ${GAMBIT_ALL_COMMON_OBJECTS}
                           HEADERS ${ARG_HEADERS})
+
+    # Add the elements_extras target
+    add_elements_extras(${executablename}_elements_extras)
+    add_dependencies(${executablename}_elements_extras elements_extras)
+    add_dependencies(${executablename} ${executablename}_elements_extras)
+
+    # Add each of the declared dependencies
+    foreach(dep ${ARG_DEPENDENCIES})
+      add_dependencies(${executablename} ${dep})
+    endforeach()
 
     # Add each of the declared dependencies
     foreach(dep ${ARG_DEPENDENCIES})
@@ -602,13 +640,22 @@ set(BOSS_dir "${PROJECT_SOURCE_DIR}/Backends/scripts/BOSS")
 set(needs_BOSSing "")
 set(needs_BOSSing_failed "")
 
-macro(BOSS_backend name backend_version)
+macro(BOSS_backend name backend_version ${ARGN})
 
   # Replace "." by "_" in the backend version number
   string(REPLACE "." "_" backend_version_safe ${backend_version})
 
+  # Check if there is a suffix
+  set(extra_args ${ARGN})
+  list(LENGTH extra_args n_extra_args)
+  if (${n_extra_args} GREATER 0)
+    set(suffix "_${ARGN}")
+  else()
+    set(suffix "")
+  endif()
+
   # Construct path to the config file expected by BOSS
-  set(config_file_path "${BOSS_dir}/configs/${name}_${backend_version_safe}.py")
+  set(config_file_path "${BOSS_dir}/configs/${name}_${backend_version_safe}${suffix}.py")
 
   # Only add BOSS step to the build process if the config file exists
   if(NOT EXISTS ${config_file_path})
@@ -639,19 +686,14 @@ macro(BOSS_backend name backend_version)
     elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
       set(BOSS_castxml_cc "")
     endif()
-    if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-      set(castxml_dl "https://data.kitware.com/api/v1/file/57b5de9f8d777f10f2696378/download")
-      set(castxml_dl_filename "castxml-macosx.tar.gz")
-    else()
-      set(castxml_dl "https://data.kitware.com/api/v1/file/57b5dea08d777f10f2696379/download")
-      set(castxml_dl_filename "castxml-linux.tar.gz")
-    endif()
     ExternalProject_Add_Step(${name}_${ver} BOSS
-      # Check for castxml binaries and download if they do not exist
-      COMMAND ${PROJECT_SOURCE_DIR}/cmake/scripts/download_castxml_binaries.sh ${BOSS_dir} ${CMAKE_COMMAND} ${CMAKE_DOWNLOAD_FLAGS} ${castxml_dl} ${castxml_dl_filename}
       # Run BOSS
-      COMMAND ${PYTHON_EXECUTABLE} ${BOSS_dir}/boss.py ${BOSS_castxml_cc} ${BOSS_includes_Boost} ${BOSS_includes_Eigen3} ${BOSS_includes_GSL} ${name}_${backend_version_safe}
+      COMMAND ${PYTHON_EXECUTABLE} ${BOSS_dir}/boss.py --no-instructions ${BOSS_castxml_cc} ${BOSS_includes_Boost} ${BOSS_includes_Eigen3} ${BOSS_includes_GSL} ${name}_${backend_version_safe}${suffix}
+      # Make a dif of the existing files in Backends/include and those generated by BOSS
+      COMMAND diff -rupN ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/backend_types/${name_in_frontend}_${backend_version_safe} BOSS_output/${name_in_frontend}_${backend_version_safe}/for_gambit/backend_types/${name_in_frontend}_${backend_version_safe} > ${name}_${backend_version}-prefix/${name}_${backend_version_safe}.dif || true
+      COMMAND diff -rupN ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/frontends/${name_in_frontend}_${backend_version_safe}.hpp BOSS_output/${name_in_frontend}_${backend_version_safe}/frontends/${name_in_frontend}_${backend_version_safe}.hpp >> ${name}_${backend_version}-prefix/${name}_${backend_version_safe}.dif || true
       # Copy BOSS-generated files to correct folders within Backends/include
+      COMMAND ${CMAKE_COMMAND} -E remove_directory ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/backend_types/${name_in_frontend}_${backend_version_safe} || true
       COMMAND cp -r BOSS_output/${name_in_frontend}_${backend_version_safe}/for_gambit/backend_types/${name_in_frontend}_${backend_version_safe} ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/backend_types/
       COMMAND cp BOSS_output/${name_in_frontend}_${backend_version_safe}/frontends/${name_in_frontend}_${backend_version_safe}.hpp ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/frontends/${name_in_frontend}_${backend_version_safe}.hpp
       DEPENDEES patch

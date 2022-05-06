@@ -16,6 +16,34 @@
 #  appear here. The extent of this string is
 #  indicated by indentation.
 
+trivial_1d: |
+   Trivial 1d model for use with test-functions/artificial landscapes in ObjectivesBit.
+   The parameter is labeled x1.
+
+trivial_2d: |
+   Trivial 2d model for use with test-functions/artificial landscapes in ObjectivesBit.
+   The parameters are labeled x1, x2.
+
+trivial_3d: |
+   Trivial 3d model for use with test-functions/artificial landscapes in ObjectivesBit.
+   The parameters are labeled x1, x2, x3
+
+trivial_4d: |
+   Trivial 4d model for use with test-functions/artificial landscapes in ObjectivesBit.
+   The parameters are labeled x1, x2, x3, x4.
+
+trivial_5d: |
+   Trivial 5d model for use with test-functions/artificial landscapes in ObjectivesBit.
+   The parameters are labeled x1, x2, ..., x5.
+
+trivial_7d: |
+   Trivial 7d model for use with test-functions/artificial landscapes in ObjectivesBit.
+   The parameters are labeled x1, x2, ..., x7.
+
+trivial_10d: |
+   Trivial 10d model for use with test-functions/artificial landscapes in ObjectivesBit.
+   The parameters are labeled x1, x2, ..., x10.
+
 NormalDist: |
    A simple test model consisting of two parameters: the width and central value of a Gaussian distribution.
 
@@ -24,6 +52,9 @@ demo_CAP: |
 
 TestModel1D: |
    A one-dimensional test model, typically used for debugging simple prior transformations, or when a dummy model is required (as in the external model example in ColliderBit).
+
+demo_CAP: |
+   A test model for a demonstration of the use of ordinary module functions directly in a model namespace.
 
 MSSM63atQ: |
    The most general formulation of the CP-conserving MSSM, with C terms set to zero due to their usual irrelevance in (known) SUSY-breaking schemes. The parameters are:
@@ -479,6 +510,13 @@ nuclear_params_sigmas_sigmal: |
 
    The same as nuclear_params_fnq, but with the replacement of the six quark content matrix elements by the matrix element sigma0 and the strange quark content of the nucleon sigmas. See the GAMBIT core paper for details and definitions.
 
+nuclear_params_ChPT: |
+
+   Model of nuclear matrix elements relevant for chiral perturbation theory in the context of direct detection. This is primarily designed for the interface with DirectDM, and the naming of the parameters corresponds to the one given in 1708.02678.
+
+nuclear_params_ChPT_sigmapiN: |
+   Model of nuclear matrix elements relevant for chiral perturbation theory in the context of direct detection. This is a daughter model of nuclear_params_ChPT where sigma(u,d)(p,n) are calculated in terms of sigmapiN
+
 nuclear_params_neutron_lifetime : |
 
    Model for the neutron lifetime (parameter name neutron_lifetime [s]).
@@ -576,6 +614,21 @@ RightHandedNeutrinos_diff: |
 
 StandardModel_mNudiff: |
    Daughter model of the StandardModel_SLHA2 where the masses of neutrinos have been substituted by mass differences and the absolute lightest neutrino mass.
+
+NREO_scalarDM: |
+   Non-relativistic effective operator model for scalar DM, coupling constants as defined in: https://arxiv.org/abs/1501.03729
+
+NREO_DiracDM: |
+   Non-relativistic effective operator model for Dirac DM, coupling constants as defined in: https://arxiv.org/abs/1501.03729
+
+NREO_MajoranaDM: |
+   Non-relativistic effective operator model for Majorana DM, coupling constants as defined in: https://arxiv.org/abs/1501.03729
+
+WIMP_sigmav: |
+   General A + Bv^2 parameterisation of WIMP self-annihilation to all SM two-body final states
+
+DMEFT: |
+   Effective field theory model of Dirac DM. The parameters of the model are the DM Mass, mchi, the new physics scale, Lambda, the MSbar running top mass, mtrunIN, and the dimensions I=5,6,7 Wilson coefficients, CIJ
 
 ############################
 # Cosmology related models #
@@ -1013,3 +1066,28 @@ DecayingDM_electron: |
    mass        - mass of the dark matter candidate [in GeV]
    lifetime    - lifetime of said DM candidate [in s]
    fraction    - fraction of how much the decaying DM component contributes to all DM.
+
+#
+# Simple SLHA-based models used for validation of ColliderBit analyses
+#
+
+ColliderBit_SLHA_scan_model: |
+
+   Dummy model for doing a ColliderBit-only scan based on replacing SLHA file entries.
+   See ColliderBit/examples/ColliderBit_SLHA_scan_model.yaml for an example yaml file
+   that uses this model.
+
+   m1                        - parameter that can replace a SLHA BLOCK MASS entry
+   m2                        - parameter that can replace a SLHA BLOCK MASS entry
+   br1                       - parameter that can replace a SLHA DECAY branching ratio entry
+   br2                       - parameter that can replace a SLHA DECAY branching ratio entry
+   cross_section_fb          - total cross-section [in fb]
+   cross_section_uncert_fb   - uncertainty on total cross-section [in fb]
+
+ColliderBit_SLHA_file_model: |
+
+   Dummy model for doing a ColliderBit-only scan over a set of SLHA files.
+   See ColliderBit/examples/ColliderBit_SLHA_file_model.yaml for an example 
+   yaml file that uses this model.
+
+   dummy    - a dummy parameter, not used for anything
