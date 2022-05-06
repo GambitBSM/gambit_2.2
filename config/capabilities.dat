@@ -5284,11 +5284,11 @@ nucl_err: |
 BBN_LogLike: |
    Computes likelihood for BBN data.
 
-BBN_abundances: |
-   Fills BBN_container with theoretically expected element abundances and covariance matrix from BBN.
+primordial_abundances_BBN: |
+   Computes primordial abundances, their uncertainties and covariance matrix after BBN, using AlterBBN.
 
-BBN_abundances_photodissociation: |
-   Computes primordial abundances, uncertainties and their covariance matrix from BBN, taking the effect of photodissociation into account.
+primordial_abundances: |
+   Computes primordial abundances, their uncertainties and covariance matrix today, including the effect of photodisintegration using Acropolis, if relevant.
 
 Helium_abundance: |
     Compute predicted Helium mass fraction, Yp, and theoretical error from BBN. First vector entry mean, second standard deviation.
