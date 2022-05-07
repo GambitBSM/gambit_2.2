@@ -55,7 +55,7 @@ For a more complete list of cmake variables, take a look in the file `CMakeCache
 # If working from a virtual environment, cmake will automatically set this as
 # the executable in the environment's directory. It may, however, have trouble
 # finding the system Python library and include directory of the same version, so
-# setting DPYTHON_LIBRARY and DPYTHON_INCLUDE_DIR manually is encouraged.
+# setting PYTHON_LIBRARY and PYTHON_INCLUDE_DIR manually is encouraged.
 -DPYTHON_EXECUTABLE=/usr/bin/python3
 
 # Set the Python include directory: PYTHON_INCLUDE_DIR
