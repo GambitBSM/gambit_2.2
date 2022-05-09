@@ -464,10 +464,9 @@ namespace Gambit
     }
 
     // Dummy function to return the primordial abundances unchanged from BBN
-    // This is the case in vanilla LCDM
-    void primordial_abundances_LCDM(BBN_container &result)
+    void primordial_abundances_no_photodissociation(BBN_container &result)
     {
-      using namespace Pipes::primordial_abundances_LCDM;
+      using namespace Pipes::primordial_abundances_no_photodissociation;
       result = *Dep::primordial_abundances_BBN;
     }
 

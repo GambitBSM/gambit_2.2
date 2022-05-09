@@ -936,9 +936,8 @@ START_MODULE
   #define CAPABILITY primordial_abundances
   START_CAPABILITY
 
-    #define FUNCTION primordial_abundances_LCDM
+    #define FUNCTION primordial_abundances_no_photodissociation
     START_FUNCTION(BBN_container)
-    ALLOW_MODELS(LCDM, LCDM_theta, LCDM_zreio)
     DEPENDENCY(primordial_abundances_BBN, BBN_container)
     #undef FUNCTION
 
