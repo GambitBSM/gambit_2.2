@@ -722,24 +722,6 @@ START_MODULE
    #undef FUNCTION
   #undef CAPABILITY
 
-
-  // Observable: BR(B -> Xs gamma)
-  #define CAPABILITY bsgamma
-  START_CAPABILITY
-
-    #define FUNCTION SI_bsgamma
-    START_FUNCTION(double)
-    DEPENDENCY(SuperIso_modelinfo, parameters)
-    BACKEND_REQ(bsgamma_CONV, (libsuperiso), double,(const parameters*, double))
-    BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-    #undef FUNCTION
-
-    #define FUNCTION FH_bsgamma
-    START_FUNCTION(double)
-    DEPENDENCY(FH_FlavourObs, fh_FlavourObs)
-    #undef FUNCTION
-  #undef CAPABILITY
-
   #define CAPABILITY prediction_RK_LHCb_1p1_6
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction_RK_LHCb_1p1_6
