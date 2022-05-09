@@ -24,6 +24,7 @@
 #define BACKENDLANG CC
 #define VERSION 4.1
 #define SAFE_VERSION 4_1
+#define REFERENCE Mahmoudi:2007vz,Mahmoudi:2008tp,Mahmoudi:2009zz
 
 LOAD_LIBRARY
 
