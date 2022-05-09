@@ -80,6 +80,7 @@
 #  \author Jihyun Bhom
 #          (jihyun.bhom@ifj.edu.pl)
 #  \date 2019 July
+
 #  \author Janina Renk
 #          (janina.renk@fysik.su.se)
 #  \data 2018 Jun
@@ -486,8 +487,8 @@ if(NOT ditched_${name}_${ver})
     INSTALL_COMMAND ""
     )
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
-  set_as_default_version("backend" ${name} ${ver})
-
+  #Experimental. Currently requires pip3 to be installed, but that is not checked for by cmake.
+  #set_as_default_version("backend" ${name} ${ver})
 endif()
 
 
@@ -1065,7 +1066,6 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} distclean)
 endif()
 
-# Nulike
 set(name "nulike")
 set(ver "1.0.9")
 set(lib "libnulike")
@@ -1397,6 +1397,7 @@ if(NOT ditched_${name}_${ver})
   set_as_default_version("backend" ${name} ${ver})
 endif()
 
+
 # gm2calc
 set(name "gm2calc")
 set(ver "1.2.0")
@@ -1458,6 +1459,7 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
 endif()
 
+
 # phc
 set(name "phc")
 set(ver "2.4.58")
@@ -1485,6 +1487,7 @@ if(NOT ditched_${name}_${ver})
   set_as_default_version("backend" ${name} ${ver})
 endif()
 
+
 # hom4ps
 set(name "hom4ps")
 set(ver "2.0")
@@ -1510,8 +1513,8 @@ if(NOT ditched_${name}_${ver})
           )
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean) # FIGURE THIS OUT
   set_as_default_version("backend" ${name} ${ver})
-
 endif()
+
 
 # Vevacious
 set(name "vevacious")
@@ -1557,6 +1560,7 @@ if(NOT ditched_${name}_${ver})
   BOSS_backend(${name} ${ver})
 endif()
 
+
 # SUSYHD
 set(name "susyhd")
 set(ver "1.0.2")
@@ -1579,6 +1583,7 @@ if(NOT ditched_${name}_${ver})
   set_as_default_version("backend" ${name} ${ver})
 endif()
 
+
 # DirectDM
 set(name "directdm")
 set(ver "2.2.0")
@@ -1600,6 +1605,7 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
   set_as_default_version("backend" ${name} ${ver})
 endif()
+
 
 # CalcHEP
 set(name "calchep")
@@ -1665,6 +1671,7 @@ if(NOT ditched_${name}_${ver})
   set_as_default_version("backend" ${name} ${ver})
 endif()
 
+
 # Yoda
 set(name "yoda")
 set(ver "1.7.7")
@@ -1688,6 +1695,7 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
   #set_as_default_version("backend" ${name} ${ver})
 endif()
+
 
 # cfitsio
 set(name "cfitsio")
