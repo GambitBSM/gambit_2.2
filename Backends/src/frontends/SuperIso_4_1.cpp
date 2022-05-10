@@ -107,6 +107,8 @@ BE_NAMESPACE
 
     return results;
   }
+
+  /// B0 -> K*0 ee observables
   Flav_KstarEE_obs BKstaree_CONV(const parameters *param, double Q2_min, double Q2_max)
   {
     check_model(param, LOCAL_INFO);
@@ -114,7 +116,7 @@ BE_NAMESPACE
     std::complex<double> C0b[11],C1b[11],C2b[11],C0w[11],C1w[11],C2w[11],Cpb[11];
     std::complex<double> CQ0b[3],CQ1b[3],CQpb[3];
     double obs[Nobs_BKsll+1];
-    
+
     Flav_KstarEE_obs results;
     results.q2_min=Q2_min;
     results.q2_max=Q2_max;
@@ -128,7 +130,7 @@ BE_NAMESPACE
     Cprime_calculator(1,byVal(Cpb),byVal(CQpb),byVal(mu_W),byVal(mu_b),param);
     modify_WC(param, C0b, CQ0b);
 
-    double BR = BRBKstarll(1,0,byVal(Q2_min), byVal(Q2_max), byVal(obs),byVal(C0b),byVal(C1b),byVal(C2b),byVal(CQ0b),byVal(CQ1b),byVal(Cpb),byVal(CQpb),param,byVal(mu_b));
+    results.BR = BRBKstarll(1,0,byVal(Q2_min), byVal(Q2_max), byVal(obs),byVal(C0b),byVal(C1b),byVal(C2b),byVal(CQ0b),byVal(CQ1b),byVal(Cpb),byVal(CQpb),param,byVal(mu_b));
 
     results.FL=obs[2];
     results.AT_Re=obs[31];
@@ -136,25 +138,21 @@ BE_NAMESPACE
     results.AT_2=obs[5];
 
     return results;
-    
-                      
   }
-    double BRBKmumu_CONV(const parameters *param, double Q2_min, double Q2_max)
+
+  double BRBKmumu_CONV(const parameters *param, double Q2_min, double Q2_max)
   {
     check_model(param, LOCAL_INFO);
     assert(std::abs(Q2_max-Q2_min)>0.01); // it's not safe to have such small bins => probably you are doing something wrong
 
-    std::complex<double> C0b[11],C1b[11],C2b[11],C0w[11],C1w[11],C2w[11],Cpb[11];
+    std::complex<double> C0b[11],C1b[11],C2b[11],Cpb[11];
     std::complex<double> CQ0b[3],CQ1b[3],CQpb[3];
     double obs[3];
-    Flav_KstarMuMu_obs results;
-    results.q2_min=Q2_min;
-    results.q2_max=Q2_max;
-
-    double mu_W=2.*param->mass_W;
     double mu_b=param->mass_b_pole;
 
-    double BR=BRBKll(2,0,byVal(Q2_min), byVal(Q2_max), byVal(obs),byVal(C0b),byVal(C1b),byVal(C2b),byVal(CQ0b),byVal(CQ1b),byVal(Cpb),byVal(CQpb), param, byVal(mu_b));        
+    backend_error().raise(LOCAL_INFO, "FIXME BRBKmumu_CONV is incomplete; WCs not computed");
+
+    double BR=BRBKll(2,0,byVal(Q2_min), byVal(Q2_max), byVal(obs),byVal(C0b),byVal(C1b),byVal(C2b),byVal(CQ0b),byVal(CQ1b),byVal(Cpb),byVal(CQpb), param, byVal(mu_b));
 
     return BR;
   }
@@ -188,7 +186,7 @@ BE_NAMESPACE
 
     return BRBKstarll(2,0,byVal(Q2_min), byVal(Q2_max), byVal(obs),byVal(C0b),byVal(C1b),byVal(C2b),byVal(CQ0b),byVal(CQ1b),byVal(Cpb),byVal(CQpb),param,byVal(mu_b))/BRBKstarll(1,0,byVal(Q2_min), byVal(Q2_max), byVal(obs),byVal(C0be),byVal(C1be),byVal(C2be),byVal(CQ0be),byVal(CQ1be),byVal(Cpbe),byVal(CQpbe),param,byVal(mu_b));
   }
-  
+
   /// RK observable
   double RK_CONV(const parameters *param, double Q2_min, double Q2_max)
   {
@@ -218,7 +216,7 @@ BE_NAMESPACE
 
     return BRBKll(2,1,byVal(Q2_min), byVal(Q2_max), byVal(obs),byVal(C0b),byVal(C1b),byVal(C2b),byVal(CQ0b),byVal(CQ1b),byVal(Cpb),byVal(CQpb),param,byVal(mu_b))/BRBKll(1,1,byVal(Q2_min), byVal(Q2_max), byVal(obs),byVal(C0be),byVal(C1be),byVal(C2be),byVal(CQ0be),byVal(CQ1be),byVal(Cpbe),byVal(CQpbe),param,byVal(mu_b));
   }
-  
+
   /// Branching fraction of B -> X_s gamma
   double bsgamma_CONV(const parameters *param, double E_t)
   {
