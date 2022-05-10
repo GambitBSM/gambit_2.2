@@ -108,7 +108,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set(castxml_dl_filename "castxml-macosx.tar.gz")
   endif()
 else()
-  set(castxml_dl "https://data.kitware.com/api/v1/file/622961384acac99f42134a8a/download")
+  set(castxml_dl "https://data.kitware.com/api/v1/file/5e8b740d2660cbefba944189/download")
   set(castxml_dl_filename "castxml-linux.tar.gz")
 endif()
 ExternalProject_Add(${name}
