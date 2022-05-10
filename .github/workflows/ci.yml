@@ -49,6 +49,10 @@ jobs:
       run: |
         cd BUILD/ && . buildenv.sh
         cmake .. -D WITH_ROOT=ON -D WITH_RESTFRAMES=ON -D WITH_HEPMC=ON -D BUILD_FS_MODELS="CMSSM;MSSM;MDM" -D WITH_MPI=OFF
+    - name: Build HepLike
+      run: |
+        cd BUILD && . buildenv.sh
+        make -j$(( ($(nproc)+1)/2 )) heplike
     - name: Build scanners
       run: |
         cd BUILD/ && . buildenv.sh
