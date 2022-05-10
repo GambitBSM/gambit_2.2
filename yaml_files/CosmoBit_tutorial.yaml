@@ -463,7 +463,7 @@ Rules:
   # In certain scenarios (like a decaying paricle), the primordial abundances will be affected through photodisintegration effects.
   - capability: primordial_abundances
     # -- If photodisintegration is not possible or should not be considered choose ..
-    function: primordial_abundances_no_photodissociation
+    function: primordial_abundances
     # -- If photodisintegration applies, the respective function for the model must be chosen
     #    and options for the photodisintegration code (Acropolis) may be passed.
     #    [So far, only DecayingDM_mixture and its related models are supported]

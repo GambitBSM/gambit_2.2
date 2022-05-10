@@ -464,9 +464,9 @@ namespace Gambit
     }
 
     // Dummy function to return the primordial abundances unchanged from BBN
-    void primordial_abundances_no_photodissociation(BBN_container &result)
+    void primordial_abundances(BBN_container &result)
     {
-      using namespace Pipes::primordial_abundances_no_photodissociation;
+      using namespace Pipes::primordial_abundances;
       result = *Dep::primordial_abundances_BBN;
     }
 

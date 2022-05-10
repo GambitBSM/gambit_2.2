@@ -936,7 +936,7 @@ START_MODULE
   #define CAPABILITY primordial_abundances
   START_CAPABILITY
 
-    #define FUNCTION primordial_abundances_no_photodissociation
+    #define FUNCTION primordial_abundances
     START_FUNCTION(BBN_container)
     DEPENDENCY(primordial_abundances_BBN, BBN_container)
     #undef FUNCTION
