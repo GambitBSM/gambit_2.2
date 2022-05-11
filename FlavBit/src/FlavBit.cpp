@@ -1049,8 +1049,8 @@ namespace Gambit
     void CAT(SuperIso_prediction_,name)(flav_prediction& result)         \
     {                                                                    \
       using namespace CAT(Pipes::SuperIso_prediction_,name);             \
-      static const std::vector<str> FB_obslist = runOptions->            \
-       getValue<std::vector<str>>("obs_list");                           \
+      static const std::vector<str> FB_obslist =                         \
+       Downstream::subcaps->getNames();                                  \
       THE_REST("")                                                       \
     }                                                                    \
 
@@ -1059,8 +1059,8 @@ namespace Gambit
      result)                                                             \
     {                                                                    \
       using namespace CAT_4(Pipes::SuperIso_prediction_,name,bins,exp);  \
-      static const std::vector<str> FB_obslist = runOptions->            \
-       getValue<std::vector<str>>("obs_list");                           \
+      static const std::vector<str> FB_obslist =                         \
+       Downstream::subcaps->getNames();                                  \
       THE_REST(#bins)                                                    \
     }                                                                    \
 
@@ -2526,7 +2526,7 @@ namespace Gambit
     {
       using namespace Pipes::HEPLike_B2mumu_LogLikelihood_CMS;
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/CMS/RD/B2MuMu/CMS-PAS-BPH-16-004.yaml";
-      static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
+      static std::vector<str> obs_list = Downstream::subcaps->getNames();
       static HepLike_default::HL_nDimLikelihood nDimLikelihood(inputfile);
       static bool first = true;
 
@@ -2550,7 +2550,7 @@ namespace Gambit
     {
       using namespace Pipes::HEPLike_B2mumu_LogLikelihood_Atlas;
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/ATLAS/RD/B2MuMu/CERN-EP-2018-291.yaml";
-      static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
+      static std::vector<str> obs_list = Downstream::subcaps->getNames();
       static HepLike_default::HL_nDimLikelihood nDimLikelihood(inputfile);
 
       static bool first = true;
@@ -2573,7 +2573,7 @@ namespace Gambit
     {
       using namespace Pipes::HEPLike_B2mumu_LogLikelihood_LHCb;
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/B2MuMu/CERN-EP-2017-100.yaml";
-      static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
+      static std::vector<str> obs_list = Downstream::subcaps->getNames();
       static HepLike_default::HL_nDimLikelihood nDimLikelihood(inputfile);
 
       static bool first = true;
@@ -2596,7 +2596,7 @@ namespace Gambit
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_Atlas;
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/ATLAS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-161_q2_";
-      static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
+      static std::vector<str> obs_list = Downstream::subcaps->getNames();
       static std::vector<HepLike_default::HL_nDimGaussian> nDimGaussian = {
         HepLike_default::HL_nDimGaussian(inputfile + "0.1_2.0.yaml"),
         HepLike_default::HL_nDimGaussian(inputfile + "2.0_4.0.yaml"),
@@ -2634,7 +2634,7 @@ namespace Gambit
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_CMS;
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_";
-      static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
+      static std::vector<str> obs_list = Downstream::subcaps->getNames();
       static std::vector<HepLike_default::HL_nDimBifurGaussian> nDimBifurGaussian = {
         HepLike_default::HL_nDimBifurGaussian(inputfile+"1.0_2.0.yaml"),
         HepLike_default::HL_nDimBifurGaussian(inputfile+"2.0_4.3.yaml"),
@@ -2682,7 +2682,7 @@ namespace Gambit
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_Belle;
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/Belle/RD/Bd2KstarMuMu_Angular/KEK-2016-54_q2_";
-      static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
+      static std::vector<str> obs_list = Downstream::subcaps->getNames();
       static std::vector<HepLike_default::HL_nDimBifurGaussian> nDimBifurGaussian = {
         HepLike_default::HL_nDimBifurGaussian(inputfile + "0.1_4.0.yaml"),
         HepLike_default::HL_nDimBifurGaussian(inputfile + "4.0_8.0.yaml"),
@@ -2723,7 +2723,7 @@ namespace Gambit
     {
       using namespace Pipes::HEPLike_B2KstarellellAng_LogLikelihood_Belle;
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/Belle/RD/Bd2KstarEllEll_Angular/KEK-2016-54_q2_";
-      static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
+      static std::vector<str> obs_list = Downstream::subcaps->getNames();
       static std::vector<HepLike_default::HL_nDimBifurGaussian> nDimBifurGaussian =
       {
         HepLike_default::HL_nDimBifurGaussian(inputfile + "0.1_4.0.yaml"),
@@ -2766,7 +2766,7 @@ namespace Gambit
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_LHCb;
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_";
-      static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
+      static std::vector<str> obs_list = Downstream::subcaps->getNames();
       static std::vector<HepLike_default::HL_nDimBifurGaussian> nDimBifurGaussian = {
         HepLike_default::HL_nDimBifurGaussian(inputfile + "0.1_0.98.yaml"),
         HepLike_default::HL_nDimBifurGaussian(inputfile + "1.1_2.5.yaml"),
@@ -2810,7 +2810,7 @@ namespace Gambit
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_LHCb_2020;
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/CERN-EP-2020-027_q2_";
-      static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
+      static std::vector<str> obs_list = Downstream::subcaps->getNames();
       static std::vector<HepLike_default::HL_nDimGaussian> nDimGaussian = {
         HepLike_default::HL_nDimGaussian(inputfile + "0.1_0.98.yaml"),
         HepLike_default::HL_nDimGaussian(inputfile + "1.1_2.5.yaml"),
@@ -2856,7 +2856,7 @@ namespace Gambit
     {
       using namespace Pipes::HEPLike_B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020;
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarEE_Angular/CERN-EP-2020-176.yaml";
-      static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
+      static std::vector<str> obs_list = Downstream::subcaps->getNames();
       static HepLike_default::HL_nDimGaussian nDimGaussian(inputfile);
       static bool first = true;
       if (first)
@@ -2885,7 +2885,7 @@ namespace Gambit
     {
       using namespace Pipes::HEPLike_Bu2KstarmumuAng_LogLikelihood_LHCb_2020;
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/Bu2KstarMuMu_Angular/CERN-EP-2020-239_q2_";
-      static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
+      static std::vector<str> obs_list = Downstream::subcaps->getNames();
       static std::vector<HepLike_default::HL_nDimGaussian> nDimGaussian = {
         HepLike_default::HL_nDimGaussian(inputfile + "0.1_0.98.yaml"),
         HepLike_default::HL_nDimGaussian(inputfile + "1.1_2.5.yaml"),
@@ -2907,7 +2907,8 @@ namespace Gambit
           first = false;
         }
 
-      std::vector<flav_prediction> prediction = {
+      std::vector<flav_prediction> prediction =
+      {
         *Dep::prediction_B2KstarmumuAng_0p1_0p98_LHCb,
         *Dep::prediction_B2KstarmumuAng_1p1_2p5_LHCb,
         *Dep::prediction_B2KstarmumuAng_2p5_4_LHCb,
@@ -2918,9 +2919,10 @@ namespace Gambit
 
       result = 0;
       for (unsigned int i = 0; i < nDimGaussian.size(); i++)
-        {
-          result += nDimGaussian[i].GetLogLikelihood(get_obs_theory(prediction[i], obs_list), get_obs_covariance(prediction[i], obs_list));
-        }
+      {
+        result += nDimGaussian[i].GetLogLikelihood(get_obs_theory(prediction[i], obs_list),
+         get_obs_covariance(prediction[i], obs_list));
+      }
 
       if (flav_debug) std::cout << "HEPLike_Bu2KstarmumuAng_LogLikelihood_LHCb 2020 result: " << result << std::endl;
     }
