@@ -98,7 +98,7 @@ ObsLikes:
   #- purpose:    RDRDstarTest
   #  capability: RDRDstar_LogLikelihood
 
-  - purpose:   LogLike
+  - purpose:    LogLike
     capability: b2sgamma_LogLikelihood
 
   - purpose:    LogLike
