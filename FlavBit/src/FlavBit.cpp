@@ -140,61 +140,57 @@ namespace Gambit
     nuiscorr arr[ncorrnuis];
     const nuiscorr (&corrnuis)[ncorrnuis] = nuiscorr_help(arr, YAML::LoadFile(GAMBIT_DIR "/FlavBit/data/SM_nuisance_correlations.yaml")["correlation_matrix"].as<std::vector<nuiscorr>>());
 
-    // printing function
+    /// Print function for FlavBit predictions
     void print(flav_prediction prediction , vector<std::string > names)
     {
       for(unsigned i=0; i<names.size(); i++)
-        {
-          cout<<names[i]<<": "<<prediction.central_values[names[i]]<<endl;
-        }
+      {
+        cout<<names[i]<<": "<<prediction.central_values[names[i]]<<endl;
+      }
       cout<<"Covariance:"<<endl;
       for( unsigned i=0; i<names.size(); i++)
+      {
+        stringstream row;
+        for( unsigned j=0; j<names.size(); j++)
         {
-          stringstream row;
-          for( unsigned j=0; j<names.size(); j++)
-            {
-              row<<(prediction.covariance)[names[i]]  [names[j]]<<" ";
-            }
-          cout<<row.str()<<endl;
+          row<<(prediction.covariance)[names[i]]  [names[j]]<<" ";
         }
+        cout<<row.str()<<endl;
+      }
     }
 
-    /// Translate B->K*mumu observables from theory to LHCb convention
-    void Kstarmumu_Theory2Experiment_translation(flav_observable_map& prediction)
+    /// Translate B->K*ll observables from theory to LHCb convention
+    void Kstarll_Theory2Experiment_translation(flav_observable_map& prediction, int generation)
     {
-      vector<std::string > names={"S4", "S7", "S9"};
+      // Only works for ll = ee and ll = mumu
+      if (generation < 1 or generation > 2)
+       FlavBit_error().raise(LOCAL_INFO, "Kstarll_Theory2Experiment_translation called with generation not 1 or 2");
+      const vector<std::string> all_names[2] = {{"AT_Im"} , {"S4", "S7", "S9"}};
+      const vector<std::string>& names = all_names[generation-1];
       for (unsigned i=0; i < names.size(); i++)
       {
-        auto search = prediction.find( names[i]);
-        if (search != prediction.end()) {
+        auto search = prediction.find(names[i]);
+        if (search != prediction.end())
+        {
           prediction[names[i]]=(-1.)*prediction[names[i]];
         }
       }
     }
 
-    /// Translate B->K*mumu observables from theory to LHCb convention
-    void Kstaree_Theory2Experiment_translation(flav_observable_map& prediction)
+    /// Translate B->K*ll covariances from theory to LHCb convention
+    void Kstarll_Theory2Experiment_translation(flav_covariance_map& prediction, int generation)
     {
-      vector<std::string > names={"AT_Im"};
-      for (unsigned i=0; i < names.size(); i++)
-        {
-          auto search = prediction.find( names[i]);
-          if (search != prediction.end()) {
-            prediction[names[i]]=(-1.)*prediction[names[i]];
-          }
-        }
-    }
+      // Only works for ll = ee and ll = mumu
+      if (generation < 1 or generation > 2)
+       FlavBit_error().raise(LOCAL_INFO, "Kstarll_Theory2Experiment_translation called with generation not 1 or 2");
 
-    /// Translate B->K*mumu covariances from theory to LHCb convention
-    void Kstarmumu_Theory2Experiment_translation(flav_covariance_map& prediction)
-    {
-      vector<std::string > names={"S4", "S7", "S9"};
-      vector<std::string > names_exist;
+      const vector<std::string> names[2] = {{"AT_Im"} , {"S4", "S7", "S9"}};
+      vector<std::string> names_exist;
 
-      for (unsigned i=0; i < names.size(); i++)
+      for (unsigned i=0; i < names[generation-1].size(); i++)
       {
-        auto search_i = prediction.find(names[i]);
-        if (search_i != prediction.end()) names_exist.push_back(names[i]);
+        auto search_i = prediction.find(names[generation-1][i]);
+        if (search_i != prediction.end()) names_exist.push_back(names[generation-1][i]);
       }
       //changing the rows:
       for (unsigned i=0; i <  names_exist.size(); i++)
@@ -216,39 +212,6 @@ namespace Gambit
           prediction[name_columns][name1]=(-1)*prediction[name_columns][name1];
         }
       }
-    }
-
-    /// Translate B->K*mumu covariances from theory to LHCb convention
-    void Kstaree_Theory2Experiment_translation(flav_covariance_map& prediction)
-    {
-      vector<std::string > names={"AT_Im"};
-      vector<std::string > names_exist;
-
-      for (unsigned i=0; i < names.size(); i++)
-        {
-          auto search_i = prediction.find(names[i]);
-          if (search_i != prediction.end()) names_exist.push_back(names[i]);
-        }
-      //changing the rows:
-      for (unsigned i=0; i <  names_exist.size(); i++)
-        {
-          string name1=names_exist[i];
-          std::map<const std::string, double> row=prediction[name1];
-          for (std::map<const std::string, double>::iterator it=row.begin(); it !=row.end(); it++)
-            {
-              prediction[name1][it->first]=(-1.)*prediction[name1][it->first];
-            }
-        }
-      // changing the columns:
-      for (flav_covariance_map::iterator it=prediction.begin(); it !=prediction.end(); it++)
-        {
-          string name_columns=it->first;
-          for (unsigned i=0; i <  names_exist.size(); i++)
-            {
-              string name1=names_exist[i];
-              prediction[name_columns][name1]=(-1)*prediction[name_columns][name1];
-            }
-        }
     }
 
     /// Find the path to the latest installed version of the HepLike data
@@ -688,50 +651,47 @@ namespace Gambit
         result.deltaCQ[1]=result.deltaCQ[3]=result.deltaCQ[5]=std::complex<double>(result.Re_DeltaCQ1, result.Im_DeltaCQ1);
         result.deltaCQ[2]=result.deltaCQ[4]=result.deltaCQ[6]=std::complex<double>(result.Re_DeltaCQ2, result.Im_DeltaCQ2);
       }
+
       if (ModelInUse("WC_LR"))
-        {
-          result.SM = 1;
+      {
+        result.SM = 1;
 
-          result.Re_DeltaC7  = *Param["Re_DeltaC7"];
-          result.Im_DeltaC7  = *Param["Im_DeltaC7"];
-          result.Re_DeltaC9  = *Param["Re_DeltaC9"];
-          result.Im_DeltaC9  = *Param["Im_DeltaC9"];
-          result.Re_DeltaC10 = *Param["Re_DeltaC10"];
-          result.Im_DeltaC10 = *Param["Im_DeltaC10"];
-          result.Re_DeltaCQ1 = *Param["Re_DeltaCQ1"];
-          result.Im_DeltaCQ1 = *Param["Im_DeltaCQ1"];
-          result.Re_DeltaCQ2 = *Param["Re_DeltaCQ2"];
-          result.Im_DeltaCQ2 = *Param["Im_DeltaCQ2"];
+        result.Re_DeltaC7  = *Param["Re_DeltaC7"];
+        result.Im_DeltaC7  = *Param["Im_DeltaC7"];
+        result.Re_DeltaC9  = *Param["Re_DeltaC9"];
+        result.Im_DeltaC9  = *Param["Im_DeltaC9"];
+        result.Re_DeltaC10 = *Param["Re_DeltaC10"];
+        result.Im_DeltaC10 = *Param["Im_DeltaC10"];
+        result.Re_DeltaCQ1 = *Param["Re_DeltaCQ1"];
+        result.Im_DeltaCQ1 = *Param["Im_DeltaCQ1"];
+        result.Re_DeltaCQ2 = *Param["Re_DeltaCQ2"];
+        result.Im_DeltaCQ2 = *Param["Im_DeltaCQ2"];
 
-          result.Re_DeltaC7_Prime  = *Param["Re_DeltaC7_Prime"];
-          result.Im_DeltaC7_Prime  = *Param["Im_DeltaC7_Prime"];
-          result.Re_DeltaC9_Prime  = *Param["Re_DeltaC9_Prime"];
-          result.Im_DeltaC9_Prime  = *Param["Im_DeltaC9_Prime"];
-          result.Re_DeltaC10_Prime = *Param["Re_DeltaC10_Prime"];
-          result.Im_DeltaC10_Prime = *Param["Im_DeltaC10_Prime"];
-          result.Re_DeltaCQ1_Prime = *Param["Re_DeltaCQ1_Prime"];
-          result.Im_DeltaCQ1_Prime = *Param["Im_DeltaCQ1_Prime"];
-          result.Re_DeltaCQ2_Prime = *Param["Re_DeltaCQ2_Prime"];
-          result.Im_DeltaCQ2_Prime = *Param["Im_DeltaCQ2_Prime"];
-          // left handed:
-          result.deltaC[7]=result.deltaC[17]=result.deltaC[27]=std::complex<double>(result.Re_DeltaC7, result.Im_DeltaC7);
-          result.deltaC[9]=result.deltaC[19]=result.deltaC[29]=std::complex<double>(result.Re_DeltaC9, result.Im_DeltaC9);
-          result.deltaC[10]=result.deltaC[20]=result.deltaC[30]=std::complex<double>(result.Re_DeltaC10, result.Im_DeltaC10);
+        result.Re_DeltaC7_Prime  = *Param["Re_DeltaC7_Prime"];
+        result.Im_DeltaC7_Prime  = *Param["Im_DeltaC7_Prime"];
+        result.Re_DeltaC9_Prime  = *Param["Re_DeltaC9_Prime"];
+        result.Im_DeltaC9_Prime  = *Param["Im_DeltaC9_Prime"];
+        result.Re_DeltaC10_Prime = *Param["Re_DeltaC10_Prime"];
+        result.Im_DeltaC10_Prime = *Param["Im_DeltaC10_Prime"];
+        result.Re_DeltaCQ1_Prime = *Param["Re_DeltaCQ1_Prime"];
+        result.Im_DeltaCQ1_Prime = *Param["Im_DeltaCQ1_Prime"];
+        result.Re_DeltaCQ2_Prime = *Param["Re_DeltaCQ2_Prime"];
+        result.Im_DeltaCQ2_Prime = *Param["Im_DeltaCQ2_Prime"];
 
-          result.deltaCQ[1]=result.deltaCQ[3]=result.deltaCQ[5]=std::complex<double>(result.Re_DeltaCQ1, result.Im_DeltaCQ1);
-          result.deltaCQ[2]=result.deltaCQ[4]=result.deltaCQ[6]=std::complex<double>(result.Re_DeltaCQ2, result.Im_DeltaCQ2);
+        // left handed:
+        result.deltaC[7]=result.deltaC[17]=result.deltaC[27]=std::complex<double>(result.Re_DeltaC7, result.Im_DeltaC7);
+        result.deltaC[9]=result.deltaC[19]=result.deltaC[29]=std::complex<double>(result.Re_DeltaC9, result.Im_DeltaC9);
+        result.deltaC[10]=result.deltaC[20]=result.deltaC[30]=std::complex<double>(result.Re_DeltaC10, result.Im_DeltaC10);
+        result.deltaCQ[1]=result.deltaCQ[3]=result.deltaCQ[5]=std::complex<double>(result.Re_DeltaCQ1, result.Im_DeltaCQ1);
+        result.deltaCQ[2]=result.deltaCQ[4]=result.deltaCQ[6]=std::complex<double>(result.Re_DeltaCQ2, result.Im_DeltaCQ2);
 
-          // right handed:
-          result.deltaCp[7]=result.deltaCp[17]=result.deltaCp[27]=std::complex<double>(result.Re_DeltaC7_Prime, result.Im_DeltaC7_Prime);
-          result.deltaCp[9]=result.deltaCp[19]=result.deltaCp[29]=std::complex<double>(result.Re_DeltaC9_Prime, result.Im_DeltaC9_Prime);
-          result.deltaCp[10]=result.deltaCp[20]=result.deltaCp[30]=std::complex<double>(result.Re_DeltaC10_Prime, result.Im_DeltaC10_Prime);
-
-
-
-          result.deltaCQp[1]=result.deltaCQp[3]=result.deltaCQp[5]=std::complex<double>(result.Re_DeltaCQ1_Prime, result.Im_DeltaCQ1_Prime);
-          result.deltaCQp[2]=result.deltaCQp[4]=result.deltaCQp[6]=std::complex<double>(result.Re_DeltaCQ2_Prime, result.Im_DeltaCQ2_Prime);
-
-        }
+        // right handed:
+        result.deltaCp[7]=result.deltaCp[17]=result.deltaCp[27]=std::complex<double>(result.Re_DeltaC7_Prime, result.Im_DeltaC7_Prime);
+        result.deltaCp[9]=result.deltaCp[19]=result.deltaCp[29]=std::complex<double>(result.Re_DeltaC9_Prime, result.Im_DeltaC9_Prime);
+        result.deltaCp[10]=result.deltaCp[20]=result.deltaCp[30]=std::complex<double>(result.Re_DeltaC10_Prime, result.Im_DeltaC10_Prime);
+        result.deltaCQp[1]=result.deltaCQp[3]=result.deltaCQp[5]=std::complex<double>(result.Re_DeltaCQ1_Prime, result.Im_DeltaCQ1_Prime);
+        result.deltaCQp[2]=result.deltaCQp[4]=result.deltaCQp[6]=std::complex<double>(result.Re_DeltaCQ2_Prime, result.Im_DeltaCQ2_Prime);
+      }
 
       else if (ModelInUse("WC_LUV"))
       {
@@ -787,13 +747,11 @@ namespace Gambit
         result.deltaCQ[3]=std::complex<double>(result.Re_DeltaCQ1_e, result.Im_DeltaCQ1_e);
         result.deltaCQ[4]=std::complex<double>(result.Re_DeltaCQ2_e, result.Im_DeltaCQ2_e);
 
-
         result.deltaC[27]=std::complex<double>(result.Re_DeltaC7_tau, result.Im_DeltaC7_tau);
         result.deltaC[29]=std::complex<double>(result.Re_DeltaC9_tau, result.Im_DeltaC9_tau);
         result.deltaC[30]=std::complex<double>(result.Re_DeltaC10_tau, result.Im_DeltaC10_tau);
         result.deltaCQ[5]=std::complex<double>(result.Re_DeltaCQ1_tau, result.Im_DeltaCQ1_tau);
         result.deltaCQ[6]=std::complex<double>(result.Re_DeltaCQ2_tau, result.Im_DeltaCQ2_tau);
-
       }
 
       if (flav_debug) cout<<"Finished SI_fill"<<endl;
@@ -915,8 +873,8 @@ namespace Gambit
       }
 
       //Switch the observables to LHCb convention
-      Kstarmumu_Theory2Experiment_translation(result.central_values);
-      Kstaree_Theory2Experiment_translation(result.central_values);
+      Kstarll_Theory2Experiment_translation(result.central_values, 1);
+      Kstarll_Theory2Experiment_translation(result.central_values, 2);
 
       // If we need to compute the covariance, either because we're doing it for every point or we haven't cached the SM value, do it.
       if (not useSMCovariance or not SMCovarianceCached)
@@ -979,14 +937,15 @@ namespace Gambit
         }
 
         //Switch the covariances to LHCb convention
-        Kstarmumu_Theory2Experiment_translation(result.covariance);
-        Kstaree_Theory2Experiment_translation(result.covariance);
+        Kstarll_Theory2Experiment_translation(result.covariance, 1);
+        Kstarll_Theory2Experiment_translation(result.covariance, 2);
 
-        // Free memory  // We are not freeing the memory because we made the variable static. Just keeping this for reference on how to clean up the allocated memory in case of non-static caluclation of **corr.
-        // for(int iObservable = 0; iObservable <= nNuisance; ++iObservable) {
-        //   free(corr[iObservable]);
-        // }
-        // free(corr);
+        // We are not freeing the memory because we made the variable static.
+        // Just keeping this for reference on how to clean up the allocated
+        // memory in case of non-static calculation of **corr.
+        // Free memory
+        //for(int iObservable = 0; iObservable <= nNuisance; ++iObservable) free(corr[iObservable]);
+        //free(corr);
       }
 
       if (flav_debug)
