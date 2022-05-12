@@ -1010,6 +1010,8 @@ namespace Gambit
       using namespace CAT(Pipes::SuperIso_prediction_,name);             \
       static const std::vector<str> FB_obslist =                         \
        Downstream::subcaps->getNames();                                  \
+      if (FB_obslist.empty()) FlavBit_error().raise(LOCAL_INFO,          \
+       "Missing subcapabilities for SuperIso_prediction_"#name".");      \
       THE_REST("")                                                       \
     }                                                                    \
 
@@ -1020,6 +1022,8 @@ namespace Gambit
       using namespace CAT_4(Pipes::SuperIso_prediction_,name,bins,exp);  \
       static const std::vector<str> FB_obslist =                         \
        Downstream::subcaps->getNames();                                  \
+      if (FB_obslist.empty()) FlavBit_error().raise(LOCAL_INFO,          \
+       "Missing subcapabilities for SuperIso_prediction_"#name".");      \
       THE_REST(#bins)                                                    \
     }                                                                    \
 
@@ -1080,50 +1084,6 @@ namespace Gambit
     #undef SI_MULTI_PREDICTION_FUNCTION
     #undef SI_MULTI_PREDICTION_FUNCTION_BINS
 
-
-    /// NEW! Compute values of list of observables
-    void SI_compute_obs_list(flav_observable_map& result)  // TO BE MODIFIED
-    {
-      using namespace Pipes::SI_compute_obs_list;
-      if (flav_debug) cout<<"Starting SI_compute_obs_list"<<endl;
-
-      const parameters& param = *Dep::SuperIso_modelinfo;
-
-      const nuisance& nuislist = *Dep::SuperIso_nuisance;
-      const std::vector<std::string>& obslist = runOptions->getValue<std::vector<std::string>>("SuperIso_obs_list");
-
-      // --- Needed for SuperIso backend
-      int nObservables = obslist.size();
-
-      char obsnames[nObservables][50];
-      for(int iObservable = 0; iObservable < nObservables; iObservable++)
-      {
-          strcpy(obsnames[iObservable], obslist[iObservable].c_str());
-      }
-
-      double *res;
-      // Reserve memory
-      res = (double *) calloc(nObservables, sizeof(double));
-      // --- Needed for SuperIso backend
-
-      BEreq::get_predictions_nuisance((char**)obsnames, &nObservables, &res, &param, &nuislist);
-
-      for(int iObservable = 0; iObservable < nObservables; ++iObservable) {
-          result[obslist[iObservable]] = res[iObservable];
-      }
-
-      // Free memory
-      free(res);
-      if (flav_debug) {
-          for(int iObservable = 0; iObservable < nObservables; ++iObservable) {
-              printf("%s=%.4e\n", obsnames[iObservable], result[obslist[iObservable]]);
-          }
-      }
-
-      if (flav_debug) {
-          cout<<"Finished SI_compute_obs_list"<<endl;
-      }
-    }
 
     /// Br B->tau nu_tau decays
     void SI_Btaunu(double &result)
@@ -2489,6 +2449,8 @@ namespace Gambit
       static HepLike_default::HL_nDimLikelihood nDimLikelihood(inputfile);
       static bool first = true;
 
+      if (obs_list.empty()) FlavBit_error().raise(LOCAL_INFO, "No subcapabilities specified!");
+
       if (first)
       {
         if (flav_debug) std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
@@ -2512,6 +2474,8 @@ namespace Gambit
       static std::vector<str> obs_list = Downstream::subcaps->getNames();
       static HepLike_default::HL_nDimLikelihood nDimLikelihood(inputfile);
 
+      if (obs_list.empty()) FlavBit_error().raise(LOCAL_INFO, "No subcapabilities specified!");
+
       static bool first = true;
       if (first)
       {
@@ -2534,6 +2498,8 @@ namespace Gambit
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/B2MuMu/CERN-EP-2017-100.yaml";
       static std::vector<str> obs_list = Downstream::subcaps->getNames();
       static HepLike_default::HL_nDimLikelihood nDimLikelihood(inputfile);
+
+      if (obs_list.empty()) FlavBit_error().raise(LOCAL_INFO, "No subcapabilities specified!");
 
       static bool first = true;
       if (first)
@@ -2561,6 +2527,8 @@ namespace Gambit
         HepLike_default::HL_nDimGaussian(inputfile + "2.0_4.0.yaml"),
         HepLike_default::HL_nDimGaussian(inputfile + "4.0_8.0.yaml"),
       };
+
+      if (obs_list.empty()) FlavBit_error().raise(LOCAL_INFO, "No subcapabilities specified!");
 
       static bool first = true;
       if (first)
@@ -2603,6 +2571,8 @@ namespace Gambit
         HepLike_default::HL_nDimBifurGaussian(inputfile+"14.18_16.0.yaml"),
         HepLike_default::HL_nDimBifurGaussian(inputfile+"16.0_19.0.yaml")
       };
+
+      if (obs_list.empty()) FlavBit_error().raise(LOCAL_INFO, "No subcapabilities specified!");
 
       static bool first = true;
       if (first)
@@ -2649,6 +2619,8 @@ namespace Gambit
         HepLike_default::HL_nDimBifurGaussian(inputfile + "14.18_19.0.yaml"),
       };
 
+      if (obs_list.empty()) FlavBit_error().raise(LOCAL_INFO, "No subcapabilities specified!");
+
       static bool first = true;
       if (first)
       {
@@ -2691,6 +2663,8 @@ namespace Gambit
         HepLike_default::HL_nDimBifurGaussian(inputfile + "10.09_12.9.yaml"),
         HepLike_default::HL_nDimBifurGaussian(inputfile + "14.18_19.0.yaml"),
       };
+
+      if (obs_list.empty()) FlavBit_error().raise(LOCAL_INFO, "No subcapabilities specified!");
 
       static bool first = true;
       if (first)
@@ -2736,6 +2710,8 @@ namespace Gambit
         HepLike_default::HL_nDimBifurGaussian(inputfile + "15.0_19.yaml"),
       };
 
+      if (obs_list.empty()) FlavBit_error().raise(LOCAL_INFO, "No subcapabilities specified!");
+
       static bool first = true;
       if (first)
       {
@@ -2780,6 +2756,8 @@ namespace Gambit
         HepLike_default::HL_nDimGaussian(inputfile + "15.0_19.0.yaml"),
       };
 
+      if (obs_list.empty()) FlavBit_error().raise(LOCAL_INFO, "No subcapabilities specified!");
+
       static bool first = true;
       if (first)
       {
@@ -2817,6 +2795,7 @@ namespace Gambit
       using namespace Pipes::HEPLike_B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020;
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarEE_Angular/CERN-EP-2020-176.yaml";
       static std::vector<str> obs_list = Downstream::subcaps->getNames();
+      if (obs_list.empty()) FlavBit_error().raise(LOCAL_INFO, "No subcapabilities specified!");
       static HepLike_default::HL_nDimGaussian nDimGaussian(inputfile);
       static bool first = true;
       if (first)
@@ -2846,6 +2825,7 @@ namespace Gambit
       using namespace Pipes::HEPLike_Bu2KstarmumuAng_LogLikelihood_LHCb_2020;
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/Bu2KstarMuMu_Angular/CERN-EP-2020-239_q2_";
       static std::vector<str> obs_list = Downstream::subcaps->getNames();
+      if (obs_list.empty()) FlavBit_error().raise(LOCAL_INFO, "No subcapabilities specified!");
       static std::vector<HepLike_default::HL_nDimGaussian> nDimGaussian = {
         HepLike_default::HL_nDimGaussian(inputfile + "0.1_0.98.yaml"),
         HepLike_default::HL_nDimGaussian(inputfile + "1.1_2.5.yaml"),

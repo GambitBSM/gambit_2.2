@@ -86,18 +86,6 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  // Compute values of observable list
-  #define CAPABILITY SuperIso_obs_values
-  START_CAPABILITY
-    #define FUNCTION SI_compute_obs_list
-    START_FUNCTION(flav_observable_map)
-    DEPENDENCY(SuperIso_modelinfo, parameters)
-    DEPENDENCY(SuperIso_nuisance, nuisance)
-    BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
-    BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-    #undef FUNCTION
-  #undef CAPABILITY
-
   #define CAPABILITY prediction_B2mumu
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction_B2mumu
