@@ -2429,7 +2429,7 @@ namespace Gambit
       static bool first = true;
       if (first)
       {
-        std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
+        if (flav_debug) std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
         nDimGaussian.Read();
         first = false;
       }
@@ -2661,7 +2661,8 @@ namespace Gambit
         first = false;
       }
 
-      std::vector<flav_prediction> prediction = {
+      std::vector<flav_prediction> prediction =
+      {
         *Dep::prediction_B2KstarmumuAng_0p1_4_Belle,
         *Dep::prediction_B2KstarmumuAng_4_8_Belle,
         *Dep::prediction_B2KstarmumuAng_10p9_12p9_Belle,
@@ -2820,7 +2821,7 @@ namespace Gambit
       static bool first = true;
       if (first)
       {
-        std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
+        if (flav_debug) std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
         nDimGaussian.Read();
         first = false;
       }

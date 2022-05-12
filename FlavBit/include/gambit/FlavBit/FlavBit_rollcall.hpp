@@ -1443,7 +1443,7 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-/// HEPLike LogLikelihood B -> K* mu mu Angular
+  /// HEPLike LogLikelihood B -> K* l l Angular
   #define CAPABILITY B2KstarellellAng_LogLikelihood_Belle
   START_CAPABILITY
     #define FUNCTION HEPLike_B2KstarellellAng_LogLikelihood_Belle
@@ -1455,8 +1455,6 @@ START_MODULE
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
-
-
 
   /// HEPLike LogLikelihood B -> K* mu mu Angular
   #define CAPABILITY B2KstarmumuAng_LogLikelihood_LHCb
@@ -1488,6 +1486,7 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  /// HEPLike LogLikelihood B_u -> K* mu mu Angular
   #define CAPABILITY Bu2KstarmumuAng_LogLikelihood_LHCb_2020
   START_CAPABILITY
     #define FUNCTION HEPLike_Bu2KstarmumuAng_LogLikelihood_LHCb_2020

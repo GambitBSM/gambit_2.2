@@ -41,13 +41,13 @@ Parameters:
 
   WC:
     Re_DeltaC7:
-      range: [-0.5, 0.5]
+      range: [-0.2, 0.2]
     Im_DeltaC7:  0
     Re_DeltaC9:
-       range: [-3, 3]
+       range: [-2, 1]
     Im_DeltaC9:  0
     Re_DeltaC10:
-       range: [-3, 3]
+       range: [-1.5, 1.5]
     Im_DeltaC10: 0
     Re_DeltaCQ1: 0
     Im_DeltaCQ1: 0
@@ -102,6 +102,9 @@ ObsLikes:
     capability: b2sgamma_LogLikelihood
 
   - purpose:    LogLike
+    capability: B2Kstargamma_LogLikelihood
+
+  - purpose:    LogLike
     capability: B2mumu_LogLikelihood_Atlas
     sub_capabilities: [BRuntag_Bsmumu, BR_Bdmumu]
 
@@ -122,12 +125,23 @@ ObsLikes:
     sub_capabilities: [P1, P5prime]
 
   - purpose:    LogLike
-    capability: B2KstarmumuAng_LogLikelihood_Belle
+    capability: B2KstarellellAng_LogLikelihood_Belle
     sub_capabilities: [P4prime, P5prime]
 
   - purpose:    LogLike
-    capability: B2KstarmumuAng_LogLikelihood_LHCb
+    capability: B2KstarmumuAng_LogLikelihood_LHCb_2020
     sub_capabilities: [FL, AFB, S3, S4, S5, S7, S8, S9]
+
+  - purpose:    LogLike
+    capability: Bu2KstarmumuAng_LogLikelihood_LHCb_2020
+    sub_capabilities: [FL, AFB, S3, S4, S5, S7, S8, S9]
+
+  - purpose:    LogLike
+    capability: B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020
+    sub_capabilities: [FLee, AT_Re, AT_2, AT_Im]
+
+  - purpose:    LogLike
+    capability: B2KstarmumuBr_LogLikelihood_LHCb
 
   - purpose:    LogLike
     capability: Bs2phimumuBr_LogLikelihood
