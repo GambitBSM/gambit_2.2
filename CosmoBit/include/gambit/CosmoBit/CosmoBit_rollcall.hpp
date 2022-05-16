@@ -950,7 +950,7 @@ START_MODULE
     ALLOW_MODEL_COMBINATION(cosmo,decay)
     DEPENDENCY(primordial_abundances_BBN, BBN_container)
     BACKEND_REQ(set_input_params, (), void, (bool,int,int,double))
-    BACKEND_REQ(abundance_photodissociation_decay, (), void, (double*,double*,double*,double*,double,double,double,double,double,int))
+    BACKEND_REQ(abundance_photodisintegration_decay, (), void, (double*,double*,double*,double*,double,double,double,double,double,int))
     #undef FUNCTION
   #undef CAPABILITY
 

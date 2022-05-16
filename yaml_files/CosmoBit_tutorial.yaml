@@ -470,9 +470,9 @@ Rules:
     #function: primordial_abundances_decayingDM
     #options:
     #  verbose: false
-    #  NE_pd: 30
-    #  NT_pd: 10
-    #  eps: 1e-1
+    #  NE_pd:   30    ## default:  150, fast:   75, aggresive:   30
+    #  NT_pd:   10    ## default:   50, fast:   25, aggresive:   10
+    #  eps:     1e-1  ## default: 1e-3, fast: 1e-2, aggresive: 1e-1
 
   # Set path to file containing measured values of light element abundances to use for
   # Likelihood calculation (assumes root directory is gambit/CosmoBit/data/BBN)
