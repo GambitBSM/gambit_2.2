@@ -184,7 +184,8 @@ BE_NAMESPACE
     Cprime_calculator(1,byVal(Cpbe),byVal(CQpbe),byVal(mu_W),byVal(mu_b),param);
     modify_WC(param, C0be, CQ0be);
 
-    return BRBKstarll(2,0,byVal(Q2_min), byVal(Q2_max), byVal(obs),byVal(C0b),byVal(C1b),byVal(C2b),byVal(CQ0b),byVal(CQ1b),byVal(Cpb),byVal(CQpb),param,byVal(mu_b))/BRBKstarll(1,0,byVal(Q2_min), byVal(Q2_max), byVal(obs),byVal(C0be),byVal(C1be),byVal(C2be),byVal(CQ0be),byVal(CQ1be),byVal(Cpbe),byVal(CQpbe),param,byVal(mu_b));
+    return BRBKstarll(2,0,byVal(Q2_min), byVal(Q2_max), byVal(obs),byVal(C0b),byVal(C1b),byVal(C2b),byVal(CQ0b),byVal(CQ1b),byVal(Cpb),byVal(CQpb),param,byVal(mu_b))/
+    BRBKstarll(1,0,byVal(Q2_min), byVal(Q2_max), byVal(obs),byVal(C0be),byVal(C1be),byVal(C2be),byVal(CQ0be),byVal(CQ1be),byVal(Cpbe),byVal(CQpbe),param,byVal(mu_b));
   }
 
   /// RK observable
@@ -214,11 +215,12 @@ BE_NAMESPACE
     Cprime_calculator(1,byVal(Cpbe),byVal(CQpbe),byVal(mu_W),byVal(mu_b),param);
     modify_WC(param, C0be, CQ0be);
 
-    return BRBKll(2,1,byVal(Q2_min), byVal(Q2_max), byVal(obs),byVal(C0b),byVal(C1b),byVal(C2b),byVal(CQ0b),byVal(CQ1b),byVal(Cpb),byVal(CQpb),param,byVal(mu_b))/BRBKll(1,1,byVal(Q2_min), byVal(Q2_max), byVal(obs),byVal(C0be),byVal(C1be),byVal(C2be),byVal(CQ0be),byVal(CQ1be),byVal(Cpbe),byVal(CQpbe),param,byVal(mu_b));
+    return BRBKll(2,1,byVal(Q2_min), byVal(Q2_max), byVal(obs),byVal(C0b),byVal(C1b),byVal(C2b),byVal(CQ0b),byVal(CQ1b),byVal(Cpb),byVal(CQpb),param,byVal(mu_b))/
+    BRBKll(1,1,byVal(Q2_min), byVal(Q2_max), byVal(obs),byVal(C0be),byVal(C1be),byVal(C2be),byVal(CQ0be),byVal(CQ1be),byVal(Cpbe),byVal(CQpbe),param,byVal(mu_b));
   }
 
   /// Branching fraction of B -> X_s gamma
-  double bsgamma(const parameters *param, double E_t)
+  double modified_bsgamma(const parameters *param, double E_t)
   {
     check_model(param, LOCAL_INFO);
 
@@ -254,7 +256,7 @@ BE_NAMESPACE
   }
 
   /// CP-averaged branching fraction of B0_s -> l+ l-
-  double Bsll_untag(const parameters *param, int flav)
+  double modified_Bsll_untag(const parameters *param, int flav)
   {
     if (flav < 1 || flav > 3) backend_error().raise(LOCAL_INFO, "Unrecognised flavour!");
     check_model(param, LOCAL_INFO);
@@ -274,7 +276,7 @@ BE_NAMESPACE
   }
 
   /// Branching fraction of B0 -> l+ l-
-  double Bll(const parameters *param, int flav)
+  double modified_Bll(const parameters *param, int flav)
   {
     if (flav < 1 || flav > 3) backend_error().raise(LOCAL_INFO, "Unrecognised flavour!");
     check_model(param, LOCAL_INFO);
@@ -419,7 +421,7 @@ BE_NAMESPACE
     return A_BXsll_highq2(3,byVal(C0b),byVal(C1b),byVal(C2b),byVal(CQ0b),byVal(CQ1b),byVal(Cpb),byVal(CQpb),param,byVal(mu_b));
   }
 
-  double delta0(const parameters *param)
+  double modified_delta0(const parameters *param)
   {
     check_model(param, LOCAL_INFO);
 
@@ -439,7 +441,7 @@ BE_NAMESPACE
     return delta0(byVal(C0b),byVal(C0spec),byVal(C1b),byVal(C1spec),byVal(Cpb),param,byVal(mu_b),byVal(mu_spec),byVal(lambda_h));
   }
 
-  double AI_BKstarmumu(const parameters *param)
+  double modified_AI_BKstarmumu(const parameters *param)
   {
     check_model(param, LOCAL_INFO);
 
@@ -454,7 +456,7 @@ BE_NAMESPACE
     return AI_BKstarmumu(1.,6.,byVal(C0b),byVal(C1b),byVal(C2b),param,byVal(mu_b));
   }
 
-  double AI_BKstarmumu_zero(const parameters *param)
+  double modified_AI_BKstarmumu_zero(const parameters *param)
   {
     check_model(param, LOCAL_INFO);
 

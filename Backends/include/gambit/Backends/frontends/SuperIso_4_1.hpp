@@ -94,9 +94,6 @@ BE_CONV_FUNCTION(BKstarmumu, Flav_KstarMuMu_obs, (const parameters*, double, dou
 BE_CONV_FUNCTION(BRBKmumu, double, (const parameters*, double, double), "BRBKmumu", (MSSM63atQ, MSSM63atMGUT, WC))
 BE_CONV_FUNCTION(RKstar, double, (const parameters*, double, double), "RKstar_CONV", (MSSM63atQ, MSSM63atMGUT, WC))
 BE_CONV_FUNCTION(RK, double, (const parameters*, double, double), "RK", (MSSM63atQ, MSSM63atMGUT, WC))
-BE_CONV_FUNCTION(bsgamma, double, (const parameters*, double), "bsgamma", (MSSM63atQ, MSSM63atMGUT, WC))
-BE_CONV_FUNCTION(Bsll_untag, double, (const parameters*, int), "Bsll_untag", (MSSM63atQ, MSSM63atMGUT, WC))
-BE_CONV_FUNCTION(Bll, double, (const parameters*, int), "Bll", (MSSM63atQ, MSSM63atMGUT, WC))
 BE_CONV_FUNCTION(BRBXsmumu_lowq2, double, (const parameters*), "BRBXsmumu_lowq2",(MSSM63atQ, MSSM63atMGUT, WC))
 BE_CONV_FUNCTION(BRBXsmumu_highq2, double, (const parameters*), "BRBXsmumu_highq2",(MSSM63atQ, MSSM63atMGUT, WC))
 BE_CONV_FUNCTION(A_BXsmumu_lowq2, double, (const parameters*), "A_BXsmumu_lowq2",(MSSM63atQ, MSSM63atMGUT, WC))
@@ -104,8 +101,12 @@ BE_CONV_FUNCTION(A_BXsmumu_highq2, double, (const parameters*), "A_BXsmumu_highq
 BE_CONV_FUNCTION(A_BXsmumu_zero, double, (const parameters*), "A_BXsmumu_zero",(MSSM63atQ, MSSM63atMGUT, WC))
 BE_CONV_FUNCTION(BRBXstautau_highq2, double, (const parameters*), "BRBXstautau_highq2", (MSSM63atQ, MSSM63atMGUT, WC))
 BE_CONV_FUNCTION(A_BXstautau_highq2, double, (const parameters*), "A_BXstautau_highq2", (MSSM63atQ, MSSM63atMGUT, WC))
-BE_CONV_FUNCTION(AI_BKstarmumu, double, (const parameters*), "AI_BKstarmumu", (MSSM63atQ, MSSM63atMGUT, WC))
-BE_CONV_FUNCTION(AI_BKstarmumu_zero, double, (const parameters*), "AI_BKstarmumu_zero", (MSSM63atQ, MSSM63atMGUT, WC))
+BE_CONV_FUNCTION(modified_bsgamma, double, (const parameters*, double), "bsgamma", (MSSM63atQ, MSSM63atMGUT, WC))
+BE_CONV_FUNCTION(modified_Bsll_untag, double, (const parameters*, int), "modified_Bsll_untag", (MSSM63atQ, MSSM63atMGUT, WC))
+BE_CONV_FUNCTION(modified_Bll, double, (const parameters*, int), "modified_Bll", (MSSM63atQ, MSSM63atMGUT, WC))
+BE_CONV_FUNCTION(modified_AI_BKstarmumu, double, (const parameters*), "modified_AI_BKstarmumu", (MSSM63atQ, MSSM63atMGUT, WC))
+BE_CONV_FUNCTION(modified_AI_BKstarmumu_zero, double, (const parameters*), "modified_AI_BKstarmumu_zero", (MSSM63atQ, MSSM63atMGUT, WC))
+BE_CONV_FUNCTION(modified_delta0, double, (const parameters*), "modified_delta0", (MSSM63atQ, MSSM63atMGUT, WC))
 
 // Undefine macros to avoid conflict with other backends
 #include "gambit/Backends/backend_undefs.hpp"
