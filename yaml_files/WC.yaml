@@ -94,9 +94,6 @@ Scanner:
 
 
 ObsLikes:
-  # FIXME: How are the observables called inside superiso?
-  #- purpose:    RDRDstarTest
-  #  capability: RDRDstar_LogLikelihood
 
   - purpose:    LogLike
     capability: b2sgamma_LogLikelihood
@@ -148,12 +145,6 @@ ObsLikes:
 
   - purpose:    LogLike
     capability: B2KmumuBr_LogLikelihood_LHCb
-
-#  - purpose:    RKTest
-#    capability: RK_LogLikelihood
-
-#  - purpose:    RKstarTest
-#    capability: RKstar_LogLikelihood_LHCb
 
 Rules:
 
