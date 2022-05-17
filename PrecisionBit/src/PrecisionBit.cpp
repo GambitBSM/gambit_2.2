@@ -134,7 +134,7 @@ namespace Gambit
         if (not nans.empty()) PrecisionBit_error().raise(LOCAL_INFO, nans+"returned as NaN from FeynHiggs!");
       #endif
 
-      fh_PrecisionObs PrecisionObs;
+      fh_PrecisionObs_container PrecisionObs;
       PrecisionObs.gmu2 = gm2;
       PrecisionObs.deltaRho = Deltarho;
       PrecisionObs.MW_MSSM = MWMSSM;
@@ -156,7 +156,7 @@ namespace Gambit
     void FeynHiggs_precision_edm_hg  (double &result) { result = Pipes::FeynHiggs_precision_edm_hg::Dep::Precision->edm_Hg;     }
     void FeynHiggs_precision_gm2(triplet<double> &result)
     {
-      result.central = Pipes::FeynHiggs_precision_gm2::Dep::FeynHiggs_Precision->gmu2;
+      result.central = Pipes::FeynHiggs_precision_gm2::Dep::Precision->gmu2;
       result.upper = std::max(std::abs(result.central)*0.3, 6e-10); //Based on hep-ph/0609168v1 eqs 84 & 85
       result.lower = result.upper;
     }
