@@ -72,7 +72,7 @@ BE_NAMESPACE
   }
 
   /// B0 -> K*0 mu mu observables
-  Flav_KstarMuMu_obs BKstarmumu_CONV(const parameters *param, double Q2_min, double Q2_max)
+  Flav_KstarMuMu_obs BKstarmumu(const parameters *param, double Q2_min, double Q2_max)
   {
     check_model(param, LOCAL_INFO);
     assert(std::abs(Q2_max-Q2_min)>0.01); // it's not safe to have such small bins => probably you are doing something wrong
@@ -109,7 +109,7 @@ BE_NAMESPACE
   }
 
   /// B0 -> K*0 ee observables
-  Flav_KstarEE_obs BKstaree_CONV(const parameters *param, double Q2_min, double Q2_max)
+  Flav_KstarEE_obs BKstaree(const parameters *param, double Q2_min, double Q2_max)
   {
     check_model(param, LOCAL_INFO);
     assert(std::abs(Q2_max-Q2_min)>0.01); // it's not safe to have such small bins => probably you are doing something wrong
@@ -140,7 +140,7 @@ BE_NAMESPACE
     return results;
   }
 
-  double BRBKmumu_CONV(const parameters *param, double Q2_min, double Q2_max)
+  double BRBKmumu(const parameters *param, double Q2_min, double Q2_max)
   {
     check_model(param, LOCAL_INFO);
     assert(std::abs(Q2_max-Q2_min)>0.01); // it's not safe to have such small bins => probably you are doing something wrong
@@ -150,7 +150,7 @@ BE_NAMESPACE
     double obs[3];
     double mu_b=param->mass_b_pole;
 
-    backend_error().raise(LOCAL_INFO, "FIXME BRBKmumu_CONV is incomplete; WCs not computed");
+    backend_error().raise(LOCAL_INFO, "FIXME BRBKmumu is incomplete; WCs not computed");
 
     double BR=BRBKll(2,0,byVal(Q2_min), byVal(Q2_max), byVal(obs),byVal(C0b),byVal(C1b),byVal(C2b),byVal(CQ0b),byVal(CQ1b),byVal(Cpb),byVal(CQpb), param, byVal(mu_b));
 
@@ -158,7 +158,7 @@ BE_NAMESPACE
   }
 
   /// RK* observables
-  double RKstar_CONV(const parameters *param, double Q2_min, double Q2_max)
+  double RKstar(const parameters *param, double Q2_min, double Q2_max)
   {
     check_model(param, LOCAL_INFO);
     assert(std::abs(Q2_max-Q2_min)>0.01); // it's not safe to have such small bins => probably you are doing something wrong
@@ -188,7 +188,7 @@ BE_NAMESPACE
   }
 
   /// RK observable
-  double RK_CONV(const parameters *param, double Q2_min, double Q2_max)
+  double RK(const parameters *param, double Q2_min, double Q2_max)
   {
     check_model(param, LOCAL_INFO);
     assert(std::abs(Q2_max-Q2_min)>0.01); // it's not safe to have such small bins => probably you are doing something wrong
@@ -218,7 +218,7 @@ BE_NAMESPACE
   }
 
   /// Branching fraction of B -> X_s gamma
-  double bsgamma_CONV(const parameters *param, double E_t)
+  double bsgamma(const parameters *param, double E_t)
   {
     check_model(param, LOCAL_INFO);
 
@@ -254,7 +254,7 @@ BE_NAMESPACE
   }
 
   /// CP-averaged branching fraction of B0_s -> l+ l-
-  double Bsll_untag_CONV(const parameters *param, int flav)
+  double Bsll_untag(const parameters *param, int flav)
   {
     if (flav < 1 || flav > 3) backend_error().raise(LOCAL_INFO, "Unrecognised flavour!");
     check_model(param, LOCAL_INFO);
@@ -274,7 +274,7 @@ BE_NAMESPACE
   }
 
   /// Branching fraction of B0 -> l+ l-
-  double Bll_CONV(const parameters *param, int flav)
+  double Bll(const parameters *param, int flav)
   {
     if (flav < 1 || flav > 3) backend_error().raise(LOCAL_INFO, "Unrecognised flavour!");
     check_model(param, LOCAL_INFO);
@@ -293,7 +293,7 @@ BE_NAMESPACE
     return Bll(byVal(flav),(C0b),byVal(C1b),byVal(C2b),byVal(CQ0b),byVal(CQ1b),byVal(Cpb),byVal(CQpb),param,byVal(mu_b));
   }
 
-  double BRBXsmumu_lowq2_CONV(const parameters *param)
+  double BRBXsmumu_lowq2(const parameters *param)
   {
     check_model(param, LOCAL_INFO);
 
@@ -311,7 +311,7 @@ BE_NAMESPACE
     return BRBXsll_lowq2(2,byVal(C0b),byVal(C1b),byVal(C2b),byVal(CQ0b),byVal(CQ1b),byVal(Cpb),byVal(CQpb),param,byVal(mu_b));
   }
 
-  double BRBXsmumu_highq2_CONV(const parameters *param)
+  double BRBXsmumu_highq2(const parameters *param)
   {
     check_model(param, LOCAL_INFO);
 
@@ -329,7 +329,7 @@ BE_NAMESPACE
     return BRBXsll_highq2(2,byVal(C0b),byVal(C1b),byVal(C2b),byVal(CQ0b),byVal(CQ1b),byVal(Cpb),byVal(CQpb),param,byVal(mu_b));
   }
 
-  double A_BXsmumu_lowq2_CONV(const parameters *param)
+  double A_BXsmumu_lowq2(const parameters *param)
   {
     check_model(param, LOCAL_INFO);
 
@@ -347,7 +347,7 @@ BE_NAMESPACE
     return A_BXsll_lowq2(2,byVal(C0b),byVal(C1b),byVal(C2b),byVal(CQ0b),byVal(CQ1b),byVal(Cpb),byVal(CQpb),param,byVal(mu_b));
   }
 
-  double A_BXsmumu_highq2_CONV(const parameters *param)
+  double A_BXsmumu_highq2(const parameters *param)
   {
     check_model(param, LOCAL_INFO);
 
@@ -365,7 +365,7 @@ BE_NAMESPACE
     return A_BXsll_highq2(2,byVal(C0b),byVal(C1b),byVal(C2b),byVal(CQ0b),byVal(CQ1b),byVal(Cpb),byVal(CQpb),param,byVal(mu_b));
   }
 
-  double A_BXsmumu_zero_CONV(const parameters *param)
+  double A_BXsmumu_zero(const parameters *param)
   {
     check_model(param, LOCAL_INFO);
 
@@ -383,7 +383,7 @@ BE_NAMESPACE
     return A_BXsll_zero(2,byVal(C0b),byVal(C1b),byVal(C2b),byVal(CQ0b),byVal(CQ1b),byVal(Cpb),byVal(CQpb),param,byVal(mu_b));
   }
 
-  double BRBXstautau_highq2_CONV(const parameters *param)
+  double BRBXstautau_highq2(const parameters *param)
   {
     check_model(param, LOCAL_INFO);
 
@@ -401,7 +401,7 @@ BE_NAMESPACE
     return BRBXsll_highq2(3,byVal(C0b),byVal(C1b),byVal(C2b),byVal(CQ0b),byVal(CQ1b),byVal(Cpb),byVal(CQpb),param,byVal(mu_b));
   }
 
-  double A_BXstautau_highq2_CONV(const parameters *param)
+  double A_BXstautau_highq2(const parameters *param)
   {
     check_model(param, LOCAL_INFO);
 
@@ -419,7 +419,7 @@ BE_NAMESPACE
     return A_BXsll_highq2(3,byVal(C0b),byVal(C1b),byVal(C2b),byVal(CQ0b),byVal(CQ1b),byVal(Cpb),byVal(CQpb),param,byVal(mu_b));
   }
 
-  double delta0_CONV(const parameters *param)
+  double delta0(const parameters *param)
   {
     check_model(param, LOCAL_INFO);
 
@@ -439,7 +439,7 @@ BE_NAMESPACE
     return delta0(byVal(C0b),byVal(C0spec),byVal(C1b),byVal(C1spec),byVal(Cpb),param,byVal(mu_b),byVal(mu_spec),byVal(lambda_h));
   }
 
-  double SI_AI_BKstarmumu_CONV(const parameters *param)
+  double AI_BKstarmumu(const parameters *param)
   {
     check_model(param, LOCAL_INFO);
 
@@ -454,7 +454,7 @@ BE_NAMESPACE
     return AI_BKstarmumu(1.,6.,byVal(C0b),byVal(C1b),byVal(C2b),param,byVal(mu_b));
   }
 
-  double SI_AI_BKstarmumu_zero_CONV(const parameters *param)
+  double AI_BKstarmumu_zero(const parameters *param)
   {
     check_model(param, LOCAL_INFO);
 

@@ -340,8 +340,8 @@ Rules:
     function: gm2_SM_ee
 
   # Use SM theory covariance matrix for every point
-  - capability: SuperIso_theory_covariance
-    function: SI_theory_covariance_SM
+  - capability: flav_theory_covariance
+    function: SuperIso_theory_covariance_SM
 
   # Use SuperIso instead of FeynHiggs for b->sgamma
   - capability: prediction_b2sgamma
@@ -469,11 +469,11 @@ Rules:
     options:
       loop: true
     #function: DD_couplings_MicrOmegas
-    
+
   # Select WIMP-nucleon couplings for DDCalc 2.1.0 WIMP object
   - capability: DDCalc_Couplings
     function: DDCalc_Couplings_WIMP_nucleon
-    
+
   # Choose to get decays from DecayBit proper, not from an SLHA file.
   - capability: decay_rates
     function: all_decays
@@ -524,21 +524,21 @@ Rules:
   #- capability: FH_Couplings_output
   #  backends:
   #  - {backend: FeynHiggs, version: 2.11.3}
-  #- capability: FH_Precision
+  #- capability: Precision
   #  backends:
   #  - {backend: FeynHiggs, version: 2.11.3}
   # The following two rules only have an impact when using make_MSSM_precision_spectrum_H_W
   #- capability: prec_HiggsMasses
   #  backends:
   #  - {backend: FeynHiggs, version: 2.11.3}
-  #- capability: FH_MSSMMasses
+  #- capability: MSSMMasses
   #  backends:
   #  - {backend: FeynHiggs, version: 2.11.3}
 
   # Choose to get the precision value of the SM-like Higgs mass from FeynHiggs or SUSYHD
   - capability: prec_mh
-    function: FH_HiggsMass
-    #function: SHD_HiggsMass
+    function: FeynHiggs_HiggsMass
+    #function: SUSYHD_HiggsMass
 
   # Choose to use functions that get Higgs decays from SUSY-HIT, and t decays from DecayBit native implementation (instead of FeynHiggs)
   - capability: Reference_SM_Higgs_decay_rates
@@ -561,7 +561,7 @@ Rules:
   # Choose where to get the Higgs couplings from
   - capability: Higgs_Couplings
     function: MSSM_higgs_couplings_pwid
-    #function: MSSM_higgs_couplings_FH
+    #function: MSSM_higgs_couplings_FeynHiggs
 
   # Experimental values to be used in nuclear parameter likelihoods (all values in MeV)
   - capability: lnL_SI_nuclear_parameters

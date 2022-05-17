@@ -224,9 +224,9 @@ namespace Gambit
     }
 
     /// Fill SuperIso model info structure
-    void SI_fill(parameters &result)
+    void SuperIso_fill(parameters &result)
     {
-      using namespace Pipes::SI_fill;
+      using namespace Pipes::SuperIso_fill;
       using namespace std;
 
       SLHAstruct spectrum;
@@ -754,14 +754,14 @@ namespace Gambit
         result.deltaCQ[6]=std::complex<double>(result.Re_DeltaCQ2_tau, result.Im_DeltaCQ2_tau);
       }
 
-      if (flav_debug) cout<<"Finished SI_fill"<<endl;
+      if (flav_debug) cout<<"Finished SuperIso_fill"<<endl;
     }
 
     /// Fill SuperIso nuisance structure
-    void SI_nuisance_fill(nuisance &nuislist)
+    void SuperIso_nuisance_fill(nuisance &nuislist)
     {
-      using namespace Pipes::SI_nuisance_fill;
-      if (flav_debug) cout<<"Starting SI_nuisance_fill"<<endl;
+      using namespace Pipes::SuperIso_nuisance_fill;
+      if (flav_debug) cout<<"Starting SuperIso_nuisance_fill"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
 
@@ -771,7 +771,7 @@ namespace Gambit
       /* Here the nuisance parameters which should not be used for the correlation calculation have to be given a zero standard deviation.
          E.g. nuislist.mass_b.dev=0.; */
 
-      if (flav_debug) cout<<"Finished SI_nuisance_fill"<<endl;
+      if (flav_debug) cout<<"Finished SuperIso_nuisance_fill"<<endl;
     }
 
     /// Reorder a FlavBit observables list to match ordering expected by HEPLike
@@ -1086,66 +1086,66 @@ namespace Gambit
 
 
     /// Br B->tau nu_tau decays
-    void SI_Btaunu(double &result)
+    void SuperIso_prediction_Btaunu(double &result)
     {
-      using namespace Pipes::SI_Btaunu;
-      if (flav_debug) cout<<"Starting SI_Btaunu"<<endl;
+      using namespace Pipes::SuperIso_prediction_Btaunu;
+      if (flav_debug) cout<<"Starting SuperIso_prediction_Btaunu"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
       result = BEreq::Btaunu(&param);
 
       if (flav_debug) printf("BR(B->tau nu)=%.3e\n",result);
-      if (flav_debug) cout<<"Finished SI_Btaunu"<<endl;
+      if (flav_debug) cout<<"Finished SuperIso_prediction_Btaunu"<<endl;
     }
 
 
     /// Br B->D_s tau nu
-    void SI_Dstaunu(double &result)
+    void SuperIso_prediction_Dstaunu(double &result)
     {
-      using namespace Pipes::SI_Dstaunu;
-      if (flav_debug) cout<<"Starting SI_Dstaunu"<<endl;
+      using namespace Pipes::SuperIso_prediction_Dstaunu;
+      if (flav_debug) cout<<"Starting SuperIso_prediction_Dstaunu"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
       result = BEreq::Dstaunu(&param);
 
       if (flav_debug) printf("BR(Ds->tau nu)=%.3e\n",result);
-      if (flav_debug) cout<<"Finished SI_Dstaunu"<<endl;
+      if (flav_debug) cout<<"Finished SuperIso_prediction_Dstaunu"<<endl;
     }
 
 
     /// Br B->D_s mu nu
-    void SI_Dsmunu(double &result)
+    void SuperIso_prediction_Dsmunu(double &result)
     {
-      using namespace Pipes::SI_Dsmunu;
-      if (flav_debug) cout<<"Starting SI_Dsmunu"<<endl;
+      using namespace Pipes::SuperIso_prediction_Dsmunu;
+      if (flav_debug) cout<<"Starting SuperIso_prediction_Dsmunu"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
       result = BEreq::Dsmunu(&param);
 
       if (flav_debug) printf("BR(Ds->mu nu)=%.3e\n",result);
-      if (flav_debug) cout<<"Finished SI_Dsmunu"<<endl;
+      if (flav_debug) cout<<"Finished SuperIso_prediction_Dsmunu"<<endl;
     }
 
 
     /// Br D -> mu nu
-    void SI_Dmunu(double &result)
+    void SuperIso_prediction_Dmunu(double &result)
     {
-      using namespace Pipes::SI_Dmunu;
-      if (flav_debug) cout<<"Starting SI_Dmunu"<<endl;
+      using namespace Pipes::SuperIso_prediction_Dmunu;
+      if (flav_debug) cout<<"Starting SuperIso_prediction_Dmunu"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
       result = BEreq::Dmunu(&param);
 
       if (flav_debug) printf("BR(D->mu nu)=%.3e\n",result);
-      if (flav_debug) cout<<"Finished SI_Dmunu"<<endl;
+      if (flav_debug) cout<<"Finished SuperIso_prediction_Dmunu"<<endl;
     }
 
 
     /// Br B -> D tau nu
-    void SI_BDtaunu(double &result)
+    void SuperIso_prediction_BDtaunu(double &result)
     {
-      using namespace Pipes::SI_BDtaunu;
-      if (flav_debug) cout<<"Starting SI_BDtaunu"<<endl;
+      using namespace Pipes::SuperIso_prediction_BDtaunu;
+      if (flav_debug) cout<<"Starting SuperIso_prediction_BDtaunu"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
       if (param.model < 0) FlavBit_error().raise(LOCAL_INFO, "Unsupported model.");
@@ -1159,15 +1159,15 @@ namespace Gambit
       result=BEreq::BRBDlnu(byVal(gen_tau_D), byVal( charge_tau_D), byVal(q2_min_tau_D), byVal(q2_max_tau_D), byVal(obs_tau_D), &param);
 
       if (flav_debug) printf("BR(B-> D tau nu )=%.3e\n",result);
-      if (flav_debug) cout<<"Finished SI_BDtaunu"<<endl;
+      if (flav_debug) cout<<"Finished SuperIso_prediction_BDtaunu"<<endl;
     }
 
 
     /// Br B -> D mu nu
-    void SI_BDmunu(double &result)
+    void SuperIso_prediction_BDmunu(double &result)
     {
-      using namespace Pipes::SI_BDmunu;
-      if (flav_debug) cout<<"Starting SI_BDmunu"<<endl;
+      using namespace Pipes::SuperIso_prediction_BDmunu;
+      if (flav_debug) cout<<"Starting SuperIso_prediction_BDmunu"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
       if (param.model < 0) FlavBit_error().raise(LOCAL_INFO, "Unsupported model.");
@@ -1181,15 +1181,15 @@ namespace Gambit
       result= BEreq::BRBDlnu(byVal(gen_mu_D), byVal( charge_mu_D), byVal(q2_min_mu_D), byVal(q2_max_mu_D), byVal(obs_mu_D), &param);
 
       if (flav_debug) printf("BR(B->D mu nu)=%.3e\n",result);
-      if (flav_debug) cout<<"Finished SI_BDmunu"<<endl;
+      if (flav_debug) cout<<"Finished SuperIso_prediction_BDmunu"<<endl;
     }
 
 
     /// Br B -> D* tau nu
-    void SI_BDstartaunu(double &result)
+    void SuperIso_prediction_BDstartaunu(double &result)
     {
-      using namespace Pipes::SI_BDstartaunu;
-      if (flav_debug) cout<<"Starting SI_BDstartaunu"<<endl;
+      using namespace Pipes::SuperIso_prediction_BDstartaunu;
+      if (flav_debug) cout<<"Starting SuperIso_prediction_BDstartaunu"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
       if (param.model < 0) FlavBit_error().raise(LOCAL_INFO, "Unsupported model.");
@@ -1203,15 +1203,15 @@ namespace Gambit
       result= BEreq::BRBDstarlnu(byVal(gen_tau_Dstar), byVal( charge_tau_Dstar), byVal(q2_min_tau_Dstar), byVal(q2_max_tau_Dstar), byVal(obs_tau_Dstar), &param);
 
       if (flav_debug) printf("BR(B->Dstar tau nu)=%.3e\n",result);
-      if (flav_debug) cout<<"Finished SI_BDstartaunu"<<endl;
+      if (flav_debug) cout<<"Finished SuperIso_prediction_BDstartaunu"<<endl;
     }
 
 
     /// Br B -> D* mu nu
-    void SI_BDstarmunu(double &result)
+    void SuperIso_prediction_BDstarmunu(double &result)
     {
-      using namespace Pipes::SI_BDstarmunu;
-      if (flav_debug) cout<<"Starting SI_BDstarmunu"<<endl;
+      using namespace Pipes::SuperIso_prediction_BDstarmunu;
+      if (flav_debug) cout<<"Starting SuperIso_prediction_BDstarmunu"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
       if (param.model < 0) FlavBit_error().raise(LOCAL_INFO, "Unsupported model.");
@@ -1225,175 +1225,119 @@ namespace Gambit
       result=BEreq::BRBDstarlnu(byVal(gen_mu_Dstar), byVal( charge_mu_Dstar), byVal(q2_min_mu_Dstar), byVal(q2_max_mu_Dstar), byVal(obs_mu_Dstar), &param);
 
       if (flav_debug) printf("BR(B->Dstar mu nu)=%.3e\n",result);
-      if (flav_debug) cout<<"Finished SI_BDstarmunu"<<endl;
+      if (flav_debug) cout<<"Finished SuperIso_prediction_BDstarmunu"<<endl;
     }
 
 
     ///  B-> D tau nu / B-> D e nu decays
-    void SI_RD(double &result)
+    void SuperIso_prediction_RD(double &result)
     {
-      using namespace Pipes::SI_RD;
-      if (flav_debug) cout<<"Starting SI_RD"<<endl;
+      using namespace Pipes::SuperIso_prediction_RD;
+      if (flav_debug) cout<<"Starting SuperIso_prediction_RD"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
       result = BEreq::BDtaunu_BDenu(&param);
 
       if (flav_debug) printf("BR(B->D tau nu)/BR(B->D e nu)=%.3e\n",result);
-      if (flav_debug) cout<<"Finished SI_RD"<<endl;
+      if (flav_debug) cout<<"Finished SuperIso_prediction_RD"<<endl;
     }
 
 
     ///  B->D* tau nu / B-> D* e nu decays
-    void SI_RDstar(double &result)
+    void SuperIso_prediction_RDstar(double &result)
     {
-      using namespace Pipes::SI_RDstar;
-      if (flav_debug) cout<<"Starting SI_RDstart"<<endl;
+      using namespace Pipes::SuperIso_prediction_RDstar;
+      if (flav_debug) cout<<"Starting SuperIso_prediction_RDstart"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
       result = BEreq::BDstartaunu_BDstarenu(&param);
 
       if (flav_debug) printf("BR(B->D* tau nu)/BR(B->D* e nu)=%.3e\n",result);
-      if (flav_debug) cout<<"Finished SI_RD*"<<endl;
+      if (flav_debug) cout<<"Finished SuperIso_prediction_RD*"<<endl;
     }
 
 
     /// B->K mu nu / B-> pi mu nu
-    void SI_Rmu(double &result)
+    void SuperIso_prediction_Rmu(double &result)
     {
-      using namespace Pipes::SI_Rmu;
-      if (flav_debug) cout<<"Starting SI_Rmu"<<endl;
+      using namespace Pipes::SuperIso_prediction_Rmu;
+      if (flav_debug) cout<<"Starting SuperIso_prediction_Rmu"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
       result = BEreq::Kmunu_pimunu(&param);
 
       if (flav_debug) printf("R_mu=BR(K->mu nu)/BR(pi->mu nu)=%.3e\n",result);
-      if (flav_debug) cout<<"Finished SI_Rmu"<<endl;
+      if (flav_debug) cout<<"Finished SuperIso_prediction_Rmu"<<endl;
     }
 
 
     /// 2-to-3-body decay ratio for semileptonic K and pi decays
-    void SI_Rmu23(double &result)
+    void SuperIso_prediction_Rmu23(double &result)
     {
-      using namespace Pipes::SI_Rmu23;
-      if (flav_debug) cout<<"Starting SI_Rmu23"<<endl;
+      using namespace Pipes::SuperIso_prediction_Rmu23;
+      if (flav_debug) cout<<"Starting SuperIso_prediction_Rmu23"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
       result = BEreq::Rmu23(&param);
 
       if (flav_debug) printf("Rmu23=%.3e\n",result);
-      if (flav_debug) cout<<"Finished SI_Rmu23"<<endl;
+      if (flav_debug) cout<<"Finished SuperIso_prediction_Rmu23"<<endl;
     }
 
 
     /// Delta_0 (CP-averaged isospin asymmetry of B -> K* gamma)
-    void SI_delta0(double &result)
+    void SuperIso_prediction_delta0(double &result)
     {
-      using namespace Pipes::SI_delta0;
-      if (flav_debug) cout<<"Starting SI_delta0"<<endl;
+      using namespace Pipes::SuperIso_prediction_delta0;
+      if (flav_debug) cout<<"Starting SuperIso_prediction_delta0"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
-      result=BEreq::delta0_CONV(&param);
+      result=BEreq::delta0(&param);
 
       if (flav_debug) printf("Delta0(B->K* gamma)=%.3e\n",result);
-      if (flav_debug) cout<<"Finished SI_delta0"<<endl;
-    }
-
-
-    /// Inclusive branching fraction B -> X_s mu mu at low q^2
-    void SI_BRBXsmumu_lowq2(double &result)
-    {
-      using namespace Pipes::SI_BRBXsmumu_lowq2;
-      if (flav_debug) cout<<"Starting SI_BRBXsmumu_lowq2"<<endl;
-
-      parameters const& param = *Dep::SuperIso_modelinfo;
-      result=BEreq::BRBXsmumu_lowq2_CONV(&param);
-
-      if (flav_debug) printf("BR(B->Xs mu mu)_lowq2=%.3e\n",result);
-      if (flav_debug) cout<<"Finished SI_BRBXsmumu_lowq2"<<endl;
-    }
-
-
-    /// Inclusive branching fraction B -> X_s mu mu at high q^2
-    void SI_BRBXsmumu_highq2(double &result)
-    {
-      using namespace Pipes::SI_BRBXsmumu_highq2;
-      if (flav_debug) cout<<"Starting SI_BRBXsmumu_highq2"<<endl;
-
-      parameters const& param = *Dep::SuperIso_modelinfo;
-      result=BEreq::BRBXsmumu_highq2_CONV(&param);
-
-      if (flav_debug) printf("BR(B->Xs mu mu)_highq2=%.3e\n",result);
-      if (flav_debug) cout<<"Finished SI_BRBXsmumu_highq2"<<endl;
-    }
-
-
-    /// Forward-backward asymmetry of B -> X_s mu mu at low q^2
-    void SI_A_BXsmumu_lowq2(double &result)
-    {
-      using namespace Pipes::SI_A_BXsmumu_lowq2;
-      if (flav_debug) cout<<"Starting SI_A_BXsmumu_lowq2"<<endl;
-
-      parameters const& param = *Dep::SuperIso_modelinfo;
-      result=BEreq::A_BXsmumu_lowq2_CONV(&param);
-
-      if (flav_debug) printf("AFB(B->Xs mu mu)_lowq2=%.3e\n",result);
-      if (flav_debug) cout<<"Finished SI_A_BXsmumu_lowq2"<<endl;
-    }
-
-
-    /// Forward-backward asymmetry of B -> X_s mu mu at high q^2
-    void SI_A_BXsmumu_highq2(double &result)
-    {
-      using namespace Pipes::SI_A_BXsmumu_highq2;
-      if (flav_debug) cout<<"Starting SI_A_BXsmumu_highq2"<<endl;
-
-      parameters const& param = *Dep::SuperIso_modelinfo;
-      result=BEreq::A_BXsmumu_highq2_CONV(&param);
-
-      if (flav_debug) printf("AFB(B->Xs mu mu)_highq2=%.3e\n",result);
-      if (flav_debug) cout<<"Finished SI_A_BXsmumu_highq2"<<endl;
+      if (flav_debug) cout<<"Finished SuperIso_prediction_delta0"<<endl;
     }
 
 
     /// Zero crossing of the forward-backward asymmetry of B -> X_s mu mu
-    void SI_A_BXsmumu_zero(double &result)
+    void SuperIso_prediction_A_BXsmumu_zero(double &result)
     {
-      using namespace Pipes::SI_A_BXsmumu_zero;
-      if (flav_debug) cout<<"Starting SI_A_BXsmumu_zero"<<endl;
+      using namespace Pipes::SuperIso_prediction_A_BXsmumu_zero;
+      if (flav_debug) cout<<"Starting SuperIso_prediction_A_BXsmumu_zero"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
-      result=BEreq::A_BXsmumu_zero_CONV(&param);
+      result=BEreq::A_BXsmumu_zero(&param);
 
       if (flav_debug) printf("AFB(B->Xs mu mu)_zero=%.3e\n",result);
-      if (flav_debug) cout<<"Finished SI_A_BXsmumu_zero"<<endl;
+      if (flav_debug) cout<<"Finished SuperIso_prediction_A_BXsmumu_zero"<<endl;
     }
 
 
     /// Inclusive branching fraction B -> X_s tau tau at high q^2
-    void SI_BRBXstautau_highq2(double &result)
+    void SuperIso_prediction_BRBXstautau_highq2(double &result)
     {
-      using namespace Pipes::SI_BRBXstautau_highq2;
-      if (flav_debug) cout<<"Starting SI_BRBXstautau_highq2"<<endl;
+      using namespace Pipes::SuperIso_prediction_BRBXstautau_highq2;
+      if (flav_debug) cout<<"Starting SuperIso_prediction_BRBXstautau_highq2"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
-      result=BEreq::BRBXstautau_highq2_CONV(&param);
+      result=BEreq::BRBXstautau_highq2(&param);
 
       if (flav_debug) printf("BR(B->Xs tau tau)_highq2=%.3e\n",result);
-      if (flav_debug) cout<<"Finished SI_BRBXstautau_highq2"<<endl;
+      if (flav_debug) cout<<"Finished SuperIso_prediction_BRBXstautau_highq2"<<endl;
     }
 
 
     /// Forward-backward asymmetry of B -> X_s tau tau at high q^2
-    void SI_A_BXstautau_highq2(double &result)
+    void SuperIso_prediction_A_BXstautau_highq2(double &result)
     {
-      using namespace Pipes::SI_A_BXstautau_highq2;
-      if (flav_debug) cout<<"Starting SI_A_BXstautau_highq2"<<endl;
+      using namespace Pipes::SuperIso_prediction_A_BXstautau_highq2;
+      if (flav_debug) cout<<"Starting SuperIso_prediction_A_BXstautau_highq2"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
-      result=BEreq::A_BXstautau_highq2_CONV(&param);
+      result=BEreq::A_BXstautau_highq2(&param);
 
       if (flav_debug) printf("AFB(B->Xs tau tau)_highq2=%.3e\n",result);
-      if (flav_debug) cout<<"Finished SI_A_BXstautau_highq2"<<endl;
+      if (flav_debug) cout<<"Finished SuperIso_prediction_A_BXstautau_highq2"<<endl;
     }
 
     // RK* for RHN, using same approximations as RK, low q^2
@@ -1504,40 +1448,40 @@ namespace Gambit
     }
 
     /// Isospin asymmetry of B-> K* mu mu
-    void SI_AI_BKstarmumu(double &result)
+    void SuperIso_prediction_AI_BKstarmumu(double &result)
     {
-      using namespace Pipes::SI_AI_BKstarmumu;
-      if (flav_debug) cout<<"Starting SI_AI_BKstarmumu"<<endl;
+      using namespace Pipes::SuperIso_prediction_AI_BKstarmumu;
+      if (flav_debug) cout<<"Starting SuperIso_prediction_AI_BKstarmumu"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
-      result=BEreq::SI_AI_BKstarmumu_CONV(&param);
+      result=BEreq::AI_BKstarmumu(&param);
 
       if (flav_debug) printf("A_I(B->K* mu mu)_lowq2=%.3e\n",result);
-      if (flav_debug) cout<<"Finished SI_AI_BKstarmumu"<<endl;
+      if (flav_debug) cout<<"Finished SuperIso_prediction_AI_BKstarmumu"<<endl;
     }
 
 
     /// Zero crossing of isospin asymmetry of B-> K* mu mu
-    void SI_AI_BKstarmumu_zero(double &result)
+    void SuperIso_prediction_AI_BKstarmumu_zero(double &result)
     {
-      using namespace Pipes::SI_AI_BKstarmumu_zero;
+      using namespace Pipes::SuperIso_prediction_AI_BKstarmumu_zero;
 
-      if (flav_debug) cout<<"Starting SI_AI_BKstarmumu_zero"<<endl;
+      if (flav_debug) cout<<"Starting SuperIso_prediction_AI_BKstarmumu_zero"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
-      result=BEreq::SI_AI_BKstarmumu_zero_CONV(&param);
+      result=BEreq::AI_BKstarmumu_zero(&param);
 
       if (flav_debug) printf("A_I(B->K* mu mu)_zero=%.3e\n",result);
-      if (flav_debug) cout<<"Finished SI_AI_BKstarmumu_zero"<<endl;
+      if (flav_debug) cout<<"Finished SuperIso_prediction_AI_BKstarmumu_zero"<<endl;
     }
 
 
     /// Flavour observables from FeynHiggs: B_s mass asymmetry, Br B_s -> mu mu, Br B -> X_s gamma
-    void FH_FlavourObs(fh_FlavourObs &result)
+    void FeynHiggs_FlavourObs(fh_FlavourObs_container &result)
     {
-      using namespace Pipes::FH_FlavourObs;
+      using namespace Pipes::FeynHiggs_FlavourObs;
 
-      if (flav_debug) cout<<"Starting FH_FlavourObs"<<endl;
+      if (flav_debug) cout<<"Starting FeynHiggs_FlavourObs"<<endl;
 
       fh_real bsgMSSM;     // B -> Xs gamma in MSSM
       fh_real bsgSM;       // B -> Xs gamma in SM
@@ -1551,7 +1495,7 @@ namespace Gambit
            deltaMsMSSM, deltaMsSM,
            bsmumuMSSM, bsmumuSM);
 
-      fh_FlavourObs FlavourObs;
+      fh_FlavourObs_container FlavourObs;
       FlavourObs.Bsg_MSSM = bsgMSSM;
       FlavourObs.Bsg_SM = bsgSM;
       FlavourObs.deltaMs_MSSM = deltaMsMSSM;
@@ -1560,7 +1504,7 @@ namespace Gambit
       FlavourObs.Bsmumu_SM = bsmumuSM;
 
       result = FlavourObs;
-      if (flav_debug) cout<<"Finished FH_FlavourObs"<<endl;
+      if (flav_debug) cout<<"Finished FeynHiggs_FlavourObs"<<endl;
     }
 
 
@@ -1568,15 +1512,15 @@ namespace Gambit
     ///@{
     void FeynHiggs_prediction_bsgamma(double &result)
     {
-      result = Pipes::FeynHiggs_prediction_bsgamma::Dep::FH_FlavourObs->Bsg_MSSM;
+      result = Pipes::FeynHiggs_prediction_bsgamma::Dep::FlavourObs->Bsg_MSSM;
     }
     void FeynHiggs_prediction_Bsmumu (double &result)
     {
-      result = Pipes::FeynHiggs_prediction_Bsmumu::Dep::FH_FlavourObs->Bsmumu_MSSM;
+      result = Pipes::FeynHiggs_prediction_Bsmumu::Dep::FlavourObs->Bsmumu_MSSM;
     }
     void FeynHiggs_prediction_DeltaMs(double &result)
     {
-      result = Pipes::FeynHiggs_prediction_DeltaMs::Dep::FH_FlavourObs->deltaMs_MSSM;
+      result = Pipes::FeynHiggs_prediction_DeltaMs::Dep::FlavourObs->deltaMs_MSSM;
     }
     ///@}
 
@@ -2376,7 +2320,7 @@ namespace Gambit
       using namespace Pipes::Flavio_test;
       if (flav_debug) cout<<"Starting Flavio_test"<<endl;
 
-      result=BEreq::sm_prediction_CONV("BR(Bs->mumu)");
+      result=BEreq::sm_prediction("BR(Bs->mumu)");
       std::cout<<"Flavio result: "<<result<<std::endl;
     }
 

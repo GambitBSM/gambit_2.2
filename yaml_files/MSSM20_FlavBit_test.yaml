@@ -10,7 +10,7 @@
 #   make higgsbounds
 #   make higgssignals
 #
-#   make 
+#   make
 #
 
 Parameters:
@@ -274,8 +274,8 @@ Rules:
 
   # # Choose to get the precision value of the SM-like Higgs mass from FeynHiggs or SUSYHD
   # - capability: prec_mh
-  #   function: FH_HiggsMass
-  #   #function: SHD_HiggsMass
+  #   function: FeynHiggs_HiggsMass
+  #   #function: SUSYHD_HiggsMass
 
   # Choose to use functions that get Higgs decays from SUSY-HIT, and t decays from DecayBit native implementation (instead of FeynHiggs)
   - capability: Reference_SM_Higgs_decay_rates
@@ -298,7 +298,7 @@ Rules:
   # Choose where to get the Higgs couplings from
   - capability: Higgs_Couplings
     function: MSSM_higgs_couplings_pwid
-    #function: MSSM_higgs_couplings_FH
+    #function: MSSM_higgs_couplings_FeynHiggs
 
 
   # Use SuperIso instead of FeynHiggs for b->sgamma

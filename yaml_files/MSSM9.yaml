@@ -334,8 +334,8 @@ Rules:
     function: gm2_SM_ee
 
   # Use SM theory covariance matrix for every point
-  - capability: SuperIso_theory_covariance
-    function: SI_theory_covariance_SM
+  - capability: flav_theory_covariance
+    function: SuperIso_theory_covariance_SM
 
   # Use SuperIso instead of FeynHiggs for b->sgamma
   - capability: prediction_b2sgamma
