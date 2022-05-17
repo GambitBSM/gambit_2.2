@@ -440,34 +440,6 @@ namespace Gambit
   double Q;
   };
 
-  /// This class holds all the B0 -> K*0 mumu observables
-  struct Flav_KstarMuMu_obs
-  {
-    double BR;
-    double AFB;
-    double FL;
-    double S3;
-    double S4;
-    double S5;
-    double S7;
-    double S8;
-    double S9;
-    double q2_min;
-    double q2_max;
-  };
-
-  /// This class holds all the B0 -> K*0 ee observables
-  struct Flav_KstarEE_obs
-  {
-    double BR;
-    double FL;
-    double AT_Re;
-    double AT_2;
-    double AT_Im;
-    double q2_min;
-    double q2_max;
-  };
-
 }
 
 #endif /* defined __SuperIso_types_hpp__ */

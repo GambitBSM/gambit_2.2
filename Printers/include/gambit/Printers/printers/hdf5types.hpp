@@ -50,7 +50,6 @@
 
 #define HDF5_BACKEND_TYPES             \
   (DM_nucleon_couplings)               \
-  (Flav_KstarMuMu_obs)                 \
   (FlavBit::flav_prediction)           \
   (BBN_container)                      \
 

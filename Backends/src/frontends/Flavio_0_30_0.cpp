@@ -28,12 +28,11 @@ END_BE_INI_FUNCTION
 // Convenience functions (definitions)
 BE_NAMESPACE
 {
-  double sm_prediction_CONV(std::string a)
+  double modified_sm_prediction(std::string a)
   {
-    double result=sm_prediction(a);
+    double result = sm_prediction(a);
     return result;
-
   }
-  
+
 }
-END_BE_NAMESPACE  
+END_BE_NAMESPACE

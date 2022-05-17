@@ -64,7 +64,7 @@ namespace Gambit
 
     // Module functions
 
-    void FyenHiggs_PrecisionObs(fh_PrecisionObs_container &result)
+    void FeynHiggs_PrecisionObs(fh_PrecisionObs_container &result)
     {
       using namespace Pipes::FeynHiggs_PrecisionObs;
 

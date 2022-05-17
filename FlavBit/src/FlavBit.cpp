@@ -1292,7 +1292,7 @@ namespace Gambit
       if (flav_debug) cout<<"Starting SuperIso_prediction_delta0"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
-      result=BEreq::delta0(&param);
+      result=BEreq::modified_delta0(&param);
 
       if (flav_debug) printf("Delta0(B->K* gamma)=%.3e\n",result);
       if (flav_debug) cout<<"Finished SuperIso_prediction_delta0"<<endl;
@@ -1454,7 +1454,7 @@ namespace Gambit
       if (flav_debug) cout<<"Starting SuperIso_prediction_AI_BKstarmumu"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
-      result=BEreq::AI_BKstarmumu(&param);
+      result=BEreq::modified_AI_BKstarmumu(&param);
 
       if (flav_debug) printf("A_I(B->K* mu mu)_lowq2=%.3e\n",result);
       if (flav_debug) cout<<"Finished SuperIso_prediction_AI_BKstarmumu"<<endl;
@@ -1469,7 +1469,7 @@ namespace Gambit
       if (flav_debug) cout<<"Starting SuperIso_prediction_AI_BKstarmumu_zero"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
-      result=BEreq::AI_BKstarmumu_zero(&param);
+      result=BEreq::modified_AI_BKstarmumu_zero(&param);
 
       if (flav_debug) printf("A_I(B->K* mu mu)_zero=%.3e\n",result);
       if (flav_debug) cout<<"Finished SuperIso_prediction_AI_BKstarmumu_zero"<<endl;
@@ -2408,7 +2408,6 @@ namespace Gambit
 
       if (flav_debug) std::cout << "HEPLike_B2mumu_LogLikelihood_CMS result: " << result << std::endl;
     }
-
 
     /// HEPLike LogLikelihood B -> ll (ATLAS)
     void HEPLike_B2mumu_LogLikelihood_Atlas(double &result)

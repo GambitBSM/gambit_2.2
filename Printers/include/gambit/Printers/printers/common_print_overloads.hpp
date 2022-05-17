@@ -144,25 +144,6 @@ namespace Gambit
         printer._print(m, label, vID, mpirank, pointID);
       }
 
-      /// K*->mumu angular observables print overload
-      template<typename P>
-      void _common_print(P& printer, Flav_KstarMuMu_obs const& value, const std::string& label, const int vID, const unsigned int mpirank, const unsigned long pointID)
-      {
-        std::map<std::string, double> m;
-        std::ostringstream bins;
-        bins << value.q2_min << "_" << value.q2_max;
-        m["BR_"+bins.str()] = value.BR;
-        m["AFB_"+bins.str()] = value.AFB;
-        m["FL_"+bins.str()] = value.FL;
-        m["S3_"+bins.str()] = value.S3;
-        m["S4_"+bins.str()] = value.S4;
-        m["S5_"+bins.str()] = value.S5;
-        m["S7_"+bins.str()] = value.S7;
-        m["S8_"+bins.str()] = value.S8;
-        m["S9_"+bins.str()] = value.S9;
-        printer._print(m, label, vID, mpirank, pointID);
-      }
-
       /// FlavBit generic prediction print overload
       template<typename P>
       void _common_print(P& printer, FlavBit::flav_prediction const& value, const std::string& label, const int vID, const unsigned int mpirank, const unsigned long pointID)

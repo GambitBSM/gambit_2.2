@@ -31,7 +31,6 @@
   (map_intpair_dbl)                   \
   (triplet<double>)                   \
   (DM_nucleon_couplings)              \
-  (Flav_KstarMuMu_obs)                \
   (FlavBit::flav_prediction)          \
   (BBN_container)
 

@@ -28,7 +28,7 @@ LOAD_LIBRARY
 
 BE_FUNCTION(sm_prediction, double, (std::string), "sm_prediction", "sm_prediction")
 
-BE_CONV_FUNCTION(sm_prediction_CONV, double, (std::string), "sm_prediction_CONV", "sm_prediction_CONV")
+BE_CONV_FUNCTION(modified_sm_prediction, double, (std::string), "modified_sm_prediction")
 
 // Undefine macros to avoid conflict with other backends
 #include "gambit/Backends/backend_undefs.hpp"

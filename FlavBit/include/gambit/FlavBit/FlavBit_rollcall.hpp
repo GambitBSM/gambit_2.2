@@ -890,7 +890,7 @@ START_MODULE
     #define FUNCTION SuperIso_prediction_delta0
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_modelinfo, parameters)
-    BACKEND_REQ(delta0, (libsuperiso),  double, (const parameters*))
+    BACKEND_REQ(modified_delta0, (libsuperiso),  double, (const parameters*))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
     #undef FUNCTION
   #undef CAPABILITY
@@ -934,7 +934,7 @@ START_MODULE
     #define FUNCTION SuperIso_prediction_AI_BKstarmumu
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_modelinfo, parameters)
-    BACKEND_REQ(AI_BKstarmumu, (libsuperiso),  double, (const parameters*))
+    BACKEND_REQ(modified_AI_BKstarmumu, (libsuperiso),  double, (const parameters*))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
     #undef FUNCTION
   #undef CAPABILITY
@@ -945,7 +945,7 @@ START_MODULE
     #define FUNCTION SuperIso_prediction_AI_BKstarmumu_zero
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_modelinfo, parameters)
-    BACKEND_REQ(AI_BKstarmumu_zero, (libsuperiso),  double, (const parameters*))
+    BACKEND_REQ(modified_AI_BKstarmumu_zero, (libsuperiso),  double, (const parameters*))
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -961,7 +961,7 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
- // Observable: RK* in q^2 bin from 1.1 GeV^2 to 6 GeV^2
+  // Observable: RK* in q^2 bin from 1.1 GeV^2 to 6 GeV^2
   #define CAPABILITY RKstar_11_60
   START_CAPABILITY
     // Function to calculate RK* for RHN
@@ -973,7 +973,7 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
- // Observable: RK in q^2 bin from 1 GeV^2 to 6 GeV^2
+  // Observable: RK in q^2 bin from 1 GeV^2 to 6 GeV^2
   #define CAPABILITY RK
   START_CAPABILITY
     // Function to calculate RK for RHN
