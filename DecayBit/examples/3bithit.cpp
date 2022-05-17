@@ -134,6 +134,7 @@ int main()
 
     stop_1_decays.resolveBackendReq(&Backends::SUSY_HIT_1_5::Functown::sd_stop2body);
     stop_1_decays.resolveBackendReq(&Backends::SUSY_HIT_1_5::Functown::sd_stop3body);
+    stop_1_decays.resolveBackendReq(&Backends::SUSY_HIT_1_5::Functown::sd_stop4body);
     stop_1_decays.resolveBackendReq(&Backends::SUSY_HIT_1_5::Functown::sd_stoploop);
     stop_1_decays.resolveBackendReq(&Backends::SUSY_HIT_1_5::Functown::sd_stopwidth);
 
