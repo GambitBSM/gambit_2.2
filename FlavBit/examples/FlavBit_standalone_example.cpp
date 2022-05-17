@@ -111,7 +111,7 @@ int main(int argc, char** argv)
     // Notify all module functions that care of the model being scanned.
     createSpectrum.notifyOfModel("MSSM30atQ");
     relabelSpectrum.notifyOfModel("MSSM30atQ");
-    SI_fill.notifyOfModel("MSSM30atQ");
+    SuperIso_fill.notifyOfModel("MSSM30atQ");
 
     // Arrange the spectrum chain
     relabelSpectrum.resolveDependency(&createSpectrum);
@@ -123,12 +123,12 @@ int main(int argc, char** argv)
     deltaMB_likelihood.resolveDependency(&FeynHiggs_prediction_DeltaMs);
 
     // FeynHiggs_prediction_DeltaMs depends on:
-    //    - FH_FlavourObs
-    FeynHiggs_prediction_DeltaMs.resolveDependency(&FH_FlavourObs);
+    //    - FeynHiggs_FlavourObs
+    FeynHiggs_prediction_DeltaMs.resolveDependency(&FeynHiggs_FlavourObs);
 
-    // FH_FlavourObs has only one backend requirement:
+    // FeynHiggs_FlavourObs has only one backend requirement:
     //    - FHFlavour
-    FH_FlavourObs.resolveBackendReq(&Backends::FeynHiggs_2_11_3::Functown::FHFlavour);
+    FeynHiggs_FlavourObs.resolveBackendReq(&Backends::FeynHiggs_2_11_3::Functown::FHFlavour);
 
     // The FeynHiggs initialisation function depends on:
     //    - unimproved_MSSM_spectrum
@@ -143,7 +143,7 @@ int main(int argc, char** argv)
     HEPLike_B2KstarmumuAng_LogLikelihood_LHCb_2020.resolveDependency(&SuperIso_prediction_B2KstarmumuAng_6_8_LHCb);
     HEPLike_B2KstarmumuAng_LogLikelihood_LHCb_2020.resolveDependency(&SuperIso_prediction_B2KstarmumuAng_15_19_LHCb);
 
-    //SI_fill needs:
+    //SuperIso_fill needs:
     //   - BEreq Init_param
     //   - BEreq slha_adjust
     //   - BEreq mcmc_from_pole
@@ -151,60 +151,60 @@ int main(int argc, char** argv)
     //   - MSSM_spectrum (or SM_spectrum)
     //   - W_plus_decay_rates
     //   - Z_decay_rates
-    SI_fill.resolveDependency(&relabelSpectrum);
-    SI_fill.resolveDependency(&GammaZ);
-    SI_fill.resolveDependency(&GammaW);
-    SI_fill.resolveBackendReq(&Backends::SuperIso_4_1::Functown::Init_param);
-    SI_fill.resolveBackendReq(&Backends::SuperIso_4_1::Functown::slha_adjust);
-    SI_fill.resolveBackendReq(&Backends::SuperIso_4_1::Functown::mcmc_from_pole);
-    SI_fill.resolveBackendReq(&Backends::SuperIso_4_1::Functown::mb_1S);
+    SuperIso_fill.resolveDependency(&relabelSpectrum);
+    SuperIso_fill.resolveDependency(&GammaZ);
+    SuperIso_fill.resolveDependency(&GammaW);
+    SuperIso_fill.resolveBackendReq(&Backends::SuperIso_4_1::Functown::Init_param);
+    SuperIso_fill.resolveBackendReq(&Backends::SuperIso_4_1::Functown::slha_adjust);
+    SuperIso_fill.resolveBackendReq(&Backends::SuperIso_4_1::Functown::mcmc_from_pole);
+    SuperIso_fill.resolveBackendReq(&Backends::SuperIso_4_1::Functown::mb_1S);
 
-    //SI_nuisance_fill needs:
+    //SuperIso_nuisance_fill needs:
     //    - BEreq set_nuisance
     //    - BEreq set_nuisance_value_from_param
-    //    - SI_fill
-    SI_nuisance_fill.resolveDependency(&SI_fill);
-    SI_nuisance_fill.resolveBackendReq(&Backends::SuperIso_4_1::Functown::set_nuisance);
-    SI_nuisance_fill.resolveBackendReq(&Backends::SuperIso_4_1::Functown::set_nuisance_value_from_param);
+    //    - SuperIso_fill
+    SuperIso_nuisance_fill.resolveDependency(&SuperIso_fill);
+    SuperIso_nuisance_fill.resolveBackendReq(&Backends::SuperIso_4_1::Functown::set_nuisance);
+    SuperIso_nuisance_fill.resolveBackendReq(&Backends::SuperIso_4_1::Functown::set_nuisance_value_from_param);
 
     // Now resolve dependencies of the BKstar mu mu measurements
-    SuperIso_prediction_B2KstarmumuAng_0p1_0p98_LHCb.resolveDependency(&SI_fill);
-    SuperIso_prediction_B2KstarmumuAng_0p1_0p98_LHCb.resolveDependency(&SI_nuisance_fill);
+    SuperIso_prediction_B2KstarmumuAng_0p1_0p98_LHCb.resolveDependency(&SuperIso_fill);
+    SuperIso_prediction_B2KstarmumuAng_0p1_0p98_LHCb.resolveDependency(&SuperIso_nuisance_fill);
     SuperIso_prediction_B2KstarmumuAng_0p1_0p98_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_predictions_nuisance);
     SuperIso_prediction_B2KstarmumuAng_0p1_0p98_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::observables);
     SuperIso_prediction_B2KstarmumuAng_0p1_0p98_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::convert_correlation);
     SuperIso_prediction_B2KstarmumuAng_0p1_0p98_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_th_covariance_nuisance);
 
-    SuperIso_prediction_B2KstarmumuAng_1p1_2p5_LHCb.resolveDependency(&SI_fill);
-    SuperIso_prediction_B2KstarmumuAng_1p1_2p5_LHCb.resolveDependency(&SI_nuisance_fill);
+    SuperIso_prediction_B2KstarmumuAng_1p1_2p5_LHCb.resolveDependency(&SuperIso_fill);
+    SuperIso_prediction_B2KstarmumuAng_1p1_2p5_LHCb.resolveDependency(&SuperIso_nuisance_fill);
     SuperIso_prediction_B2KstarmumuAng_1p1_2p5_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_predictions_nuisance);
     SuperIso_prediction_B2KstarmumuAng_1p1_2p5_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::observables);
     SuperIso_prediction_B2KstarmumuAng_1p1_2p5_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::convert_correlation);
     SuperIso_prediction_B2KstarmumuAng_1p1_2p5_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_th_covariance_nuisance);
 
-    SuperIso_prediction_B2KstarmumuAng_2p5_4_LHCb.resolveDependency(&SI_fill);
-    SuperIso_prediction_B2KstarmumuAng_2p5_4_LHCb.resolveDependency(&SI_nuisance_fill);
+    SuperIso_prediction_B2KstarmumuAng_2p5_4_LHCb.resolveDependency(&SuperIso_fill);
+    SuperIso_prediction_B2KstarmumuAng_2p5_4_LHCb.resolveDependency(&SuperIso_nuisance_fill);
     SuperIso_prediction_B2KstarmumuAng_2p5_4_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_predictions_nuisance);
     SuperIso_prediction_B2KstarmumuAng_2p5_4_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::observables);
     SuperIso_prediction_B2KstarmumuAng_2p5_4_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::convert_correlation);
     SuperIso_prediction_B2KstarmumuAng_2p5_4_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_th_covariance_nuisance);
 
-    SuperIso_prediction_B2KstarmumuAng_4_6_LHCb.resolveDependency(&SI_fill);
-    SuperIso_prediction_B2KstarmumuAng_4_6_LHCb.resolveDependency(&SI_nuisance_fill);
+    SuperIso_prediction_B2KstarmumuAng_4_6_LHCb.resolveDependency(&SuperIso_fill);
+    SuperIso_prediction_B2KstarmumuAng_4_6_LHCb.resolveDependency(&SuperIso_nuisance_fill);
     SuperIso_prediction_B2KstarmumuAng_4_6_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_predictions_nuisance);
     SuperIso_prediction_B2KstarmumuAng_4_6_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::observables);
     SuperIso_prediction_B2KstarmumuAng_4_6_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::convert_correlation);
     SuperIso_prediction_B2KstarmumuAng_4_6_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_th_covariance_nuisance);
 
-    SuperIso_prediction_B2KstarmumuAng_6_8_LHCb.resolveDependency(&SI_fill);
-    SuperIso_prediction_B2KstarmumuAng_6_8_LHCb.resolveDependency(&SI_nuisance_fill);
+    SuperIso_prediction_B2KstarmumuAng_6_8_LHCb.resolveDependency(&SuperIso_fill);
+    SuperIso_prediction_B2KstarmumuAng_6_8_LHCb.resolveDependency(&SuperIso_nuisance_fill);
     SuperIso_prediction_B2KstarmumuAng_6_8_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_predictions_nuisance);
     SuperIso_prediction_B2KstarmumuAng_6_8_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::observables);
     SuperIso_prediction_B2KstarmumuAng_6_8_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::convert_correlation);
     SuperIso_prediction_B2KstarmumuAng_6_8_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_th_covariance_nuisance);
 
-    SuperIso_prediction_B2KstarmumuAng_15_19_LHCb.resolveDependency(&SI_fill);
-    SuperIso_prediction_B2KstarmumuAng_15_19_LHCb.resolveDependency(&SI_nuisance_fill);
+    SuperIso_prediction_B2KstarmumuAng_15_19_LHCb.resolveDependency(&SuperIso_fill);
+    SuperIso_prediction_B2KstarmumuAng_15_19_LHCb.resolveDependency(&SuperIso_nuisance_fill);
     SuperIso_prediction_B2KstarmumuAng_15_19_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_predictions_nuisance);
     SuperIso_prediction_B2KstarmumuAng_15_19_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::observables);
     SuperIso_prediction_B2KstarmumuAng_15_19_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::convert_correlation);
@@ -215,8 +215,8 @@ int main(int argc, char** argv)
     HEPLike_B2mumu_LogLikelihood_LHCb.resolveDependency(&SuperIso_prediction_B2mumu);
 
     // Resolve dependencies of SuperIso_prediction_B2mumu
-    SuperIso_prediction_B2mumu.resolveDependency(&SI_fill);
-    SuperIso_prediction_B2mumu.resolveDependency(&SI_nuisance_fill);
+    SuperIso_prediction_B2mumu.resolveDependency(&SuperIso_fill);
+    SuperIso_prediction_B2mumu.resolveDependency(&SuperIso_nuisance_fill);
     SuperIso_prediction_B2mumu.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_predictions_nuisance);
     SuperIso_prediction_B2mumu.resolveBackendReq(&Backends::SuperIso_4_1::Functown::observables);
     SuperIso_prediction_B2mumu.resolveBackendReq(&Backends::SuperIso_4_1::Functown::convert_correlation);
@@ -237,55 +237,55 @@ int main(int argc, char** argv)
     // - Dstaunu
     // - Dsmunu
     // - Dmunu
-    SL_measurements.resolveDependency(&SI_RD);
-    SL_measurements.resolveDependency(&SI_RDstar);
-    SL_measurements.resolveDependency(&SI_BDmunu);
-    SL_measurements.resolveDependency(&SI_BDstarmunu);
-    SL_measurements.resolveDependency(&SI_Btaunu);
-    SL_measurements.resolveDependency(&SI_Dsmunu);
-    SL_measurements.resolveDependency(&SI_Dstaunu);
-    SL_measurements.resolveDependency(&SI_Dmunu);
+    SL_measurements.resolveDependency(&SuperIso_prediction_RD);
+    SL_measurements.resolveDependency(&SuperIso_prediction_RDstar);
+    SL_measurements.resolveDependency(&SuperIso_prediction_BDmunu);
+    SL_measurements.resolveDependency(&SuperIso_prediction_BDstarmunu);
+    SL_measurements.resolveDependency(&SuperIso_prediction_Btaunu);
+    SL_measurements.resolveDependency(&SuperIso_prediction_Dsmunu);
+    SL_measurements.resolveDependency(&SuperIso_prediction_Dstaunu);
+    SL_measurements.resolveDependency(&SuperIso_prediction_Dmunu);
 
     // Resolve all of the individual dependencies and backend reqs
     // These are:
-    // - SI_fill
+    // - SuperIso_fill
     // BE Req: BDtaunu, etc
-    SI_Btaunu.resolveDependency(&SI_fill);
-    SI_Btaunu.resolveBackendReq(&Backends::SuperIso_4_1::Functown::Btaunu);
-    SI_BDtaunu.resolveDependency(&SI_fill);
-    SI_BDtaunu.resolveBackendReq(&Backends::SuperIso_4_1::Functown::BRBDlnu);
-    SI_RD.resolveDependency(&SI_fill);
-    SI_RD.resolveBackendReq(&Backends::SuperIso_4_1::Functown::BDtaunu_BDenu);
-    SI_RDstar.resolveDependency(&SI_fill);
-    SI_RDstar.resolveBackendReq(&Backends::SuperIso_4_1::Functown::BDstartaunu_BDstarenu);
-    SI_Dstaunu.resolveDependency(&SI_fill);
-    SI_Dstaunu.resolveBackendReq(&Backends::SuperIso_4_1::Functown::Dstaunu);
-    SI_Dsmunu.resolveDependency(&SI_fill);
-    SI_Dsmunu.resolveBackendReq(&Backends::SuperIso_4_1::Functown::Dsmunu);
-    SI_Dmunu.resolveDependency(&SI_fill);
-    SI_Dmunu.resolveBackendReq(&Backends::SuperIso_4_1::Functown::Dmunu);
+    SuperIso_prediction_Btaunu.resolveDependency(&SuperIso_fill);
+    SuperIso_prediction_Btaunu.resolveBackendReq(&Backends::SuperIso_4_1::Functown::Btaunu);
+    SuperIso_prediction_BDtaunu.resolveDependency(&SuperIso_fill);
+    SuperIso_prediction_BDtaunu.resolveBackendReq(&Backends::SuperIso_4_1::Functown::BRBDlnu);
+    SuperIso_prediction_RD.resolveDependency(&SuperIso_fill);
+    SuperIso_prediction_RD.resolveBackendReq(&Backends::SuperIso_4_1::Functown::BDtaunu_BDenu);
+    SuperIso_prediction_RDstar.resolveDependency(&SuperIso_fill);
+    SuperIso_prediction_RDstar.resolveBackendReq(&Backends::SuperIso_4_1::Functown::BDstartaunu_BDstarenu);
+    SuperIso_prediction_Dstaunu.resolveDependency(&SuperIso_fill);
+    SuperIso_prediction_Dstaunu.resolveBackendReq(&Backends::SuperIso_4_1::Functown::Dstaunu);
+    SuperIso_prediction_Dsmunu.resolveDependency(&SuperIso_fill);
+    SuperIso_prediction_Dsmunu.resolveBackendReq(&Backends::SuperIso_4_1::Functown::Dsmunu);
+    SuperIso_prediction_Dmunu.resolveDependency(&SuperIso_fill);
+    SuperIso_prediction_Dmunu.resolveBackendReq(&Backends::SuperIso_4_1::Functown::Dmunu);
 
     // Now resolve dependencies for the b->sgamma likelihoods
     HEPLike_b2sgamma_LogLikelihood.resolveDependency(&SuperIso_prediction_b2sgamma);
 
     // Resolve dependencies and backend requirements of SuperIso_prediction_b2sgamma:
-    SuperIso_prediction_b2sgamma.resolveDependency(&SI_fill);
-    SuperIso_prediction_b2sgamma.resolveDependency(&SI_nuisance_fill);
+    SuperIso_prediction_b2sgamma.resolveDependency(&SuperIso_fill);
+    SuperIso_prediction_b2sgamma.resolveDependency(&SuperIso_nuisance_fill);
     SuperIso_prediction_b2sgamma.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_predictions_nuisance);
     SuperIso_prediction_b2sgamma.resolveBackendReq(&Backends::SuperIso_4_1::Functown::observables);
     SuperIso_prediction_b2sgamma.resolveBackendReq(&Backends::SuperIso_4_1::Functown::convert_correlation);
     SuperIso_prediction_b2sgamma.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_th_covariance_nuisance);
 
     // Double-check which backend requirements have been filled with what
-    std::cout << std::endl << "My function SI_fill has had its backend requirement on Init_param filled by:" << std::endl;
-    std::cout << FlavBit::Pipes::SI_fill::BEreq::Init_param.origin() << "::";
-    std::cout << FlavBit::Pipes::SI_fill::BEreq::Init_param.name() << std::endl;
-    std::cout << std::endl << "My function SI_fill has had its backend requirement on slha_adjust filled by:" << std::endl;
-    std::cout << FlavBit::Pipes::SI_fill::BEreq::slha_adjust.origin() << "::";
-    std::cout << FlavBit::Pipes::SI_fill::BEreq::slha_adjust.name() << std::endl;
+    std::cout << std::endl << "My function SuperIso_fill has had its backend requirement on Init_param filled by:" << std::endl;
+    std::cout << FlavBit::Pipes::SuperIso_fill::BEreq::Init_param.origin() << "::";
+    std::cout << FlavBit::Pipes::SuperIso_fill::BEreq::Init_param.name() << std::endl;
+    std::cout << std::endl << "My function SuperIso_fill has had its backend requirement on slha_adjust filled by:" << std::endl;
+    std::cout << FlavBit::Pipes::SuperIso_fill::BEreq::slha_adjust.origin() << "::";
+    std::cout << FlavBit::Pipes::SuperIso_fill::BEreq::slha_adjust.name() << std::endl;
 
     // Double-check which backend requirements have been filled with what
-    std::cout << std::endl << "My function SuperIso_prediction_B2mumu  has had its backend requirement on Bll_CONV filled by:" << std::endl;
+    std::cout << std::endl << "My function SuperIso_prediction_B2mumu  has had its backend requirements filled by:" << std::endl;
     std::cout << FlavBit::Pipes::SuperIso_prediction_B2mumu::BEreq::get_predictions_nuisance.origin() << "::";
     std::cout << FlavBit::Pipes::SuperIso_prediction_B2mumu::BEreq::get_predictions_nuisance.name() << std::endl;
     std::cout << FlavBit::Pipes::SuperIso_prediction_B2mumu::BEreq::observables.origin() << "::";
@@ -296,9 +296,9 @@ int main(int argc, char** argv)
     std::cout << FlavBit::Pipes::SuperIso_prediction_B2mumu::BEreq::get_th_covariance_nuisance.name() << std::endl;
 
     // Double-check which dependencies have been filled with whatever (not every combination is shown)
-    std::cout << std::endl << "My function SI_fill has had its dependency on MSSM_spectrum filled by:" << endl;
-    std::cout << FlavBit::Pipes::SI_fill::Dep::MSSM_spectrum.origin() << "::";
-    std::cout << FlavBit::Pipes::SI_fill::Dep::MSSM_spectrum.name() << std::endl;
+    std::cout << std::endl << "My function SuperIso_fill has had its dependency on MSSM_spectrum filled by:" << endl;
+    std::cout << FlavBit::Pipes::SuperIso_fill::Dep::MSSM_spectrum.origin() << "::";
+    std::cout << FlavBit::Pipes::SuperIso_fill::Dep::MSSM_spectrum.name() << std::endl;
 
     std::cout << std::endl << "My function HEPLike_B2KstarmumuAng_LogLikelihood_LHCb_2020 has had its dependency on BKstarmumu_11_25 filled by:" << endl;
     std::cout << FlavBit::Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_LHCb_2020::Dep::prediction_B2KstarmumuAng_0p1_0p98_LHCb.origin() << "::";
@@ -332,11 +332,11 @@ int main(int argc, char** argv)
     FeynHiggs_2_11_3_init.reset_and_calculate();
 
     // Now call the module functions in an appropriate order
-    SI_fill.reset_and_calculate();
-    SI_nuisance_fill.reset_and_calculate();
+    SuperIso_fill.reset_and_calculate();
+    SuperIso_nuisance_fill.reset_and_calculate();
 
     // Calculate the B meson mass asymmetry likelihood
-    FH_FlavourObs.reset_and_calculate();
+    FeynHiggs_FlavourObs.reset_and_calculate();
     FeynHiggs_prediction_DeltaMs.reset_and_calculate();
     deltaMB_likelihood.reset_and_calculate();
     loglike = deltaMB_likelihood(0);
@@ -360,13 +360,13 @@ int main(int argc, char** argv)
     std::cout << "Leptonic penguin B decays (B->X_s ll) joint log-likelihood from 2020 LHCb results: " << loglike << std::endl;
 
     // Calculate the semi-leptonic (SL) likelihood
-    SI_Btaunu.reset_and_calculate();
-    SI_BDtaunu.reset_and_calculate();
-    SI_RD.reset_and_calculate();
-    SI_RDstar.reset_and_calculate();
-    SI_Dstaunu.reset_and_calculate();
-    SI_Dsmunu.reset_and_calculate();
-    SI_Dmunu.reset_and_calculate();
+    SuperIso_prediction_Btaunu.reset_and_calculate();
+    SuperIso_prediction_BDtaunu.reset_and_calculate();
+    SuperIso_prediction_RD.reset_and_calculate();
+    SuperIso_prediction_RDstar.reset_and_calculate();
+    SuperIso_prediction_Dstaunu.reset_and_calculate();
+    SuperIso_prediction_Dsmunu.reset_and_calculate();
+    SuperIso_prediction_Dmunu.reset_and_calculate();
     SL_measurements.reset_and_calculate();
     SL_likelihood.reset_and_calculate();
     loglike = SL_likelihood(0);
