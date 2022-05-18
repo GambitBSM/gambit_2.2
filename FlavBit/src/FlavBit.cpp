@@ -754,8 +754,6 @@ namespace Gambit
         result.deltaCQ[6]=std::complex<double>(result.Re_DeltaCQ2_tau, result.Im_DeltaCQ2_tau);
       }
 
-      if (result.model < 0) FlavBit_error().raise(LOCAL_INFO, "Unsupported model.");
-
       if (flav_debug) cout<<"Finished SuperIso_fill"<<endl;
     }
 
@@ -1150,6 +1148,7 @@ namespace Gambit
       if (flav_debug) cout<<"Starting SuperIso_prediction_BDtaunu"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
+      if (param.model < 0) FlavBit_error().raise(LOCAL_INFO, "Unsupported model.");
 
       double q2_min_tau_D  = 3.16; // 1.776**2
       double q2_max_tau_D  = 11.6;   // (5.28-1.869)**2
@@ -1171,6 +1170,7 @@ namespace Gambit
       if (flav_debug) cout<<"Starting SuperIso_prediction_BDmunu"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
+      if (param.model < 0) FlavBit_error().raise(LOCAL_INFO, "Unsupported model.");
 
       double q2_min_mu_D=  0.012; // 0.105*0.105
       double q2_max_mu_D=  11.6;   // (5.28-1.869)**2
@@ -1192,6 +1192,7 @@ namespace Gambit
       if (flav_debug) cout<<"Starting SuperIso_prediction_BDstartaunu"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
+      if (param.model < 0) FlavBit_error().raise(LOCAL_INFO, "Unsupported model.");
 
       double q2_min_tau_Dstar = 3.16; // 1.776**2
       double q2_max_tau_Dstar = 10.67;   //(5.279-2.01027)*(5.279-2.01027);
@@ -1213,6 +1214,7 @@ namespace Gambit
       if (flav_debug) cout<<"Starting SuperIso_prediction_BDstarmunu"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
+      if (param.model < 0) FlavBit_error().raise(LOCAL_INFO, "Unsupported model.");
 
       double q2_min_mu_Dstar = 0.012; // 0.105*0.105
       double q2_max_mu_Dstar = 10.67;   //(5.279-2.01027)*(5.279-2.01027);
