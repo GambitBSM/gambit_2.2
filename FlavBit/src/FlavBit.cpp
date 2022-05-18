@@ -1197,7 +1197,7 @@ namespace Gambit
       double q2_max_tau_Dstar = 10.67;   //(5.279-2.01027)*(5.279-2.01027);
       int gen_tau_Dstar        =3;
       int charge_tau_Dstar     =1;// D* is the charged version
-      double obs_tau_Dstar[3];
+      double obs_tau_Dstar[4];
 
       result= BEreq::BRBDstarlnu(byVal(gen_tau_Dstar), byVal( charge_tau_Dstar), byVal(q2_min_tau_Dstar), byVal(q2_max_tau_Dstar), byVal(obs_tau_Dstar), &param);
 
@@ -1218,7 +1218,7 @@ namespace Gambit
       double q2_max_mu_Dstar = 10.67;   //(5.279-2.01027)*(5.279-2.01027);
       int gen_mu_Dstar        =2;
       int charge_mu_Dstar     =1;// D* is the charged version
-      double obs_mu_Dstar[3];
+      double obs_mu_Dstar[4];
 
       result=BEreq::BRBDstarlnu(byVal(gen_mu_Dstar), byVal( charge_mu_Dstar), byVal(q2_min_mu_Dstar), byVal(q2_max_mu_Dstar), byVal(obs_mu_Dstar), &param);
 
