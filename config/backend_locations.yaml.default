@@ -10,6 +10,9 @@
 # absolute, those beginning with a period will
 # be interpreted as relative to the GAMBIT dir.
 
+Acropolis:
+  1.2.1:       ./Backends/installed/acropolis/1.2.1/acropolis
+
 AlterBBN:
   2.2:         ./Backends/installed/alterbbn/2.2/libbbn.so
 
@@ -21,6 +24,7 @@ classy:
   2.6.3:       ./Backends/installed/classy/2.6.3/lib/classy_2_6_3.py
   2.9.3:       ./Backends/installed/classy/2.9.3/lib/classy_2_9_3.py
   2.9.4:       ./Backends/installed/classy/2.9.4/lib/classy_2_9_4.py
+  3.1.0:       ./Backends/installed/classy/3.1.0/lib/classy_3_1_0.py
 
   exo_2.7.2:   ./Backends/installed/classy/exo_2.7.2/lib/classy_exo_2_7_2.py
 
@@ -89,6 +93,7 @@ gm2calc:
 
 MontePythonLike:
   3.3.0:       ./Backends/installed/montepythonlike/3.3.0/montepython/MontePythonLike_3_3_0.py
+  3.5.0:       ./Backends/installed/montepythonlike/3.5.0/montepython/MontePythonLike_3_5_0.py
 
 MicrOmegas_MSSM:
   3.6.9.2:     ./Backends/installed/micromegas/3.6.9.2/MSSM/libmicromegas.so

@@ -2569,6 +2569,21 @@ nulike_1_0_9_init: |
 nubounds:
   Counts, likelihoods and p-values from neutrino telescope searches for dark matter annihilation in the Sun.
 
+lnL_Xray_Integral_SPI_sterile_nu: |
+  Bound on decaying dark matter subcomponent into \gamma\gamma based on Integral SPI data.
+  Recasted from bound on sterile neutrinos (c.f. https://arxiv.org/abs/0706.4084)
+
+lnL_Xray_M31_sterile_nu: |
+  Bound on decaying dark matter subcomponent into \gamma\gamma based on M31 data.
+  Recasted from bound on sterile neutrinos (c.f. https://arxiv.org/abs/1311.0282)
+
+lnL_Xray_NuSTAR_sterile_nu: |
+  Bound on decaying dark matter subcomponent into \gamma\gamma based on NuSTAR data.
+  Recasted from bound on sterile neutrinos (c.f. https://arxiv.org/abs/1609.00667)
+
+lnL_Xray_WISPy: |
+  Bound on decaying dark matter as presented in fig. 3 of https://arxiv.org/abs/1201.5902
+
 Example_lnL_B: |
   Example log likelihood in ExampleBit B.
 
@@ -2577,6 +2592,45 @@ lnlike_marg_poisson_gaussian_error: |
 
 lnlike_marg_poisson_lognormal_error: |
   log of the convolution of a poisson and log-normal distributions.
+
+DM_initial_density: |
+  Energy density of a given DM candidate in the infinite past [eV/cm^3].
+
+DM_decay_rate_2_photons: |
+  Decay rate of a given DM candidate into two photons [s].
+
+lnL_INTEGRAL: |
+  Computes the log-likelihood for the INTEGRAL X-ray experiment. Returns the value of the log-likelihood at the most constraining energy bin (i.e. the energy bin minimizing the log-likelihood). This choice is made because we don't have the correlations between different energy bins.
+
+lnL_HEAO: |
+  Computes the log-likelihood for the HEAO-1 A2 X-ray experiment. Returns the value of the log-likelihood at the most constraining energy bin (i.e. the energy bin minimizing the log-likelihood). This choice is made because we don't have the correlations between different energy bins.
+
+solar_DM_luminosity: |
+  Computes the luminosity in eV/s of DM particles produced inside the Sun (for a given DM model).
+
+lnL_solar_luminosity: |
+  Log-likelihood from the photon solar luminosity. L_DM < L_ph where L_DM is the DM luminosity produced by the Sun and L_ph is the photon luminosity (conservative bound).
+
+solar_neutrino_flux_Be7: |
+  Computes the predicted solar Be7 neutrino flux in the presence of DM production.
+
+solar_neutrino_flux_B8: |
+  Computes the predicted solar B8 neutrino flux in the presence of DM production.
+
+lnL_solar_neutrino_Be7: |
+  Log-likelihood from the measurement of the Be7 neutrino flux from the Sun.
+
+lnL_solar_neutrino_B8: |
+  Log-likelihood from the measurement of the B8 neutrino flux from the Sun.
+
+ISL_Yukawa: |
+  Returns the two parameters describing a modification of the gravitational Inverse-Square Law (ISL) by the addition of an extra Yukawa potential. V(r) = -G*m/r^2*alpha*exp(-r/lambda), where lambda is the range of the new interaction and alpha its amplitude.
+
+lnL_ShortRangeForces_Sushkov2011: |
+  Log-likelihood from the short range forces experiment from Sushkov et al. 2011 arXiv::1108.2547.
+
+Higgs_Nucleon_coupling_fN: |
+  fN parameter from the Higgs-Nucleon coupling. The complete coupling constant is given by fN*mN/vev. Returns a Higgs_Nucleon_coupling_fN object, which is a simple structure containing the value of fN for protons and neutrons.
 
 #-------------------------------------
 #  HiggsBounds capabilities
@@ -4348,6 +4402,9 @@ StandardModel_SLHA2_parameters: |
 StandardModel_mNudiff_parameters: |
    Parameters for the model StandardModel_mNudiff (see ./gambit StandardModel_mNudiff)
 
+SuperRenormHP_parameters: |
+   Parameters for the model SuperRenormHP (see ./gambit SuperRenormHP)
+
 TestModel1D_parameters: |
    Parameters for the model TestModel1D (see ./gambit TestModel1D)
 
@@ -4523,6 +4580,18 @@ calculate_uncertainty_amu_2loop: |
 #----------------------------
 #  Axion-related capabilities
 #----------------------------
+
+CosmoALP_parameters: |
+   Parameters of the CosmoALP model (Cagg, fa, ma0, thetai, f0_thermal, T_R).
+   See ./gambit CosmoALP
+
+CosmoALP_gg_tau_parameters: |
+   Parameters of the CosmoALP_gg_tau model (tau, fa, ma0, Tchi, beta thetai, f0_thermal, T_R).
+   See ./gambit CosmoALP_gg_tau
+
+GeneralCosmoALP_parameters: |
+   Parameters of the GeneralCosmoALP model (gagg, gaee, gaN, fa, ma0, Tchi, beta, thetai, f0_thermal, T_R).
+   See ./gambit GeneralCosmoALP
 
 GeneralALP_parameters: |
    Parameters of the GeneralALP model (gagg, gaee, gaN, fa, ma0, Tchi, beta, thetai).
@@ -4827,8 +4896,17 @@ class_get_Dl: |
 class_get_Hz: |
     Returns Hubble parameter at given z.
 
+class_get_tz: |
+    Returns time since big bang at given z, as computed by CLASS in Mpc (assuming c=1)
+
 class_get_rs: |
     Returns comoving sound horizon at baryon drag.
+
+class_get_tau_reio: |
+    Returns optical depth at reionisation.
+
+class_get_z_reio: |
+    Returns redshift of reionisation.
 
 class_get_scale_independent_growth_factor: |
     Return the scale invariant growth factor D(a) for CDM perturbations
@@ -4907,6 +4985,9 @@ MP_experiment_names: |
 MontePythonLike_3_3_0_init: |
   Initialise MontePython backend v3.3.0.
 
+MontePythonLike_3_5_0_init: |
+  Initialise MontePython backend v3.5.0.
+
 MP_objects: |
    Creates an object containing the montethon ~Data and Likelihood objects, deining which experiments are in use in the process.
 
@@ -4930,16 +5011,6 @@ DarkAges_1_2_0_init: |
 
 get_energy_injection_efficiency_table: |
    Get the energy injection efficiency table from the DarkAges frontend
-
-f_eff: |
-   Effective energy injection effeciency (constant used for on-the-spot approximation)
-
-p_ann: |
-   Annihilation rate (p_ann = f_eff * f^2 * <sv>/m)
-   Unit: cm^3 s^-1 GeV^-1
-
-lnL_p_ann: |
-   Profiled likelihood on p_ann
 
 #----------------------------
 #  CosmoBit Models
@@ -4985,11 +5056,21 @@ LCDM_theta_parameters: |
    Standard (4+1)-parameter LCDM model (no neutrinos, no inflation), using 100*theta_s instead of H0.
    See ./gambit LCDM_theta for more details.
 
+LCDM_zreio_parameters: |
+   Standard (4+1)-parameter LCDM model (no neutrinos, no inflation), using z_reio instead of tau_reio.
+   See ./gambit LCDM_zreio for more details.
+
 etaBBN_rBBN_rCMB_dNurBBN_dNurCMB_parameters: |
    Model to be scanned in addition to LCDM as an extension: allowing for non-standard values of the baryon-to-photon ratio at BBN, non-standard values of the temperature ratio between photon and neutrinos at BBN and CMB release, as well as additional ultra-relativistic species present during BBN or at CMB release. See ./gambit etaBBN_rBBN_rCMB_dNurBBN_dNurCMB for more details.
 
 etaBBN_parameters: |
    Child model of etaBBN_rBBN_rCMB_dNurBBN_dNurCMB with only etaBBN as free parameter. See ./gambit etaBBN for more details.
+
+etaBBN_rBBN_dNurBBN_parameters: |
+   Child model of etaBBN_rBBN_rCMB_dNurBBN_dNurCMB. See ./gambit etaBBN_rBBN_dNurBBN for more details.
+
+rBBN_dNurBBN_parameters: |
+   Child model of etaBBN_rBBN_dNurBBN. See ./gambit rBBN_dNurBBN for more details.
 
 rBBN_rCMB_dNurBBN_dNurCMB_parameters: |
    Child model of etaBBN_rBBN_rCMB_dNurBBN_dNurCMB. See ./gambit rBBN_rCMB_dNurBBN_dNurCMB for more details.
@@ -5041,6 +5122,9 @@ cosmo_nuisance_Pantheon_parameters: |
 
 cosmo_nuisance_acbar_parameters: |
    Cosmological nuisance parameters for acbar. See ./gambit cosmo_nuisance_acbar for more details.
+
+cosmo_nuisance_BK15_parameters: |
+   Cosmological nuisance parameters for Keck Array/BICEP. See ./gambit cosmo_nuisance_BK15 for more details.
 
 cosmo_nuisance_BK14_parameters: |
    Cosmological nuisance parameters for Keck Array/BICEP. See ./gambit cosmo_nuisance_BK14 for more details.
@@ -5096,6 +5180,9 @@ cosmo_nuisance_Planck_TT_parameters: |
 cosmo_nuisance_Planck_lite_parameters: |
   See model parameters in config/models.dat
 
+cosmo_nuisance_SpectralDistortions_parameters: |
+      Cosmological nuisance parameters for spectral distortions, i.e. FIRAS, PIXIE and PRISM. See ./gambit cosmo_nuisance_SpectralDistortions for more details.
+
 cosmo_nuisance_dummy_parameters: |
    Dummy model for cosmological nuisance parameters that can be used by new MontePython likelihoods. This model has 10 parameters, more can be added anytime to Models/include/gambit/Models/models/CosmoNuisanceModels.hpp.
    See ./gambit cosmo_nuisance_dummy for more details.
@@ -5109,6 +5196,9 @@ T_cmb: |
 
 T_ncdm: |
    Returns the neutrino temperature in units of Tcmb.
+
+omega_cdm: |
+    Returns the cold DM density.
 
 n0_g: |
    Returns the number density of photons today, n_0^gamma, in cm^-3.
@@ -5137,8 +5227,17 @@ Omega0_ncdm: |
 Omega0_b: |
    Returns the total baryon content today, Omega_b.
 
+H_at_z: |
+   Returns functor that calculates the Hubble rate at given redshift z [km/s/Mpc].
+
 H0: |
    The Hubble rate today [km/s/Mpc].
+
+time_at_z: |
+   Returns functor that calculates the time since big bang at given redshift z [s]
+
+age_universe: |
+   Age of the universe [s].
 
 helium_abundance: |
    The He4 abundance.
@@ -5163,6 +5262,12 @@ S8_cosmo: |
 
 rs_drag: |
    Returns the comoving sound horizon at baryon drag.
+
+tau_reio: |
+    Returns optical depth at reionisation.
+
+z_reio: |
+    Returns redshift of reionisation.
 
 unlensed_Cl_TT: |
    Returns the unlensed dimensionless CMB temperature-temperature anisotro spectrum.
@@ -5193,6 +5298,24 @@ lensed_Cl_TE: |
 
 lensed_Cl_PhiPhi: |
    Returns the lensed dimensionless CMB lensing potential.
+
+Neff_evolution: |
+   Set or compute non-standard values of dNeff and r (T_nu/T_nu_SM) at CMB release.
+
+eta_ratio: |
+   Set or compute the ratio of the values of the baryon-to-photon ratio at BBN and today.
+
+external_dNeff_etaBBN: |
+   Compute dNeff @CMB and etaBBN for non-standard models. E.g. needed for the CosmoALP model.
+
+minimum_abundance: |
+   Compute minimal Freeze-in abundance of axion-like particles, produced via Primakoff processes.
+
+minimum_fraction: |
+   Compute the fraction of the minimal freeze-in abundance of axion-like particles, produced via Primakoff processes, to the total abundance of dark matter
+
+total_DM_abundance: |
+    Compute the total abundance of axion-like particles, produced either by misalignment or freeze-in.
 
 Neff: |
    Returns the effective number of neutrino species.
@@ -5233,6 +5356,9 @@ classy_2_9_3_init: |
 
 classy_2_9_4_init: |
   Initialise CLASS 2.9.4 run through the classy python wrapper.
+
+classy_3_1_0_init: |
+  Initialise CLASS 3.1.0 run through the classy python wrapper.
 
 classy_exo_2_7_2_init: |
   Initialise ExoCLASS 2.7.2 run through the classy python wrapper.
@@ -5275,12 +5401,48 @@ Planck_nuisance_prior_loglike: |
 Planck_sz_prior_loglike: |
    Provides priors on the tSZ and kSZ amplitudes. The correlation is unconstrained by Planck. Uses prior based on SPT and ACT data, cf. Eq. (32) of Aghanim et al. 2015 (arXiv 1507.02704).
 
+DM_mass: |
+    Dark matter mass (in GeV).
+
+DM_fraction: |
+    fraction of the abundance of the dark matter candidate in question
+    (mostly a decaying component) contributing to the total DM abundance.
+
+lifetime: |
+    lifetime of the decaying dark matter component (in s).
+
 energy_injection_spectrum: |
     Spectrum of electrons/positrons and photons injected by
     the decay or annihilation of a DM particle with a certain mass.
 
 energy_injection_efficiency: |
    Gets the energy injection efficiency table from the darkages frontend.
+
+f_eff: |
+   Effective energy injection efficiency (constant used for on-the-spot approximation)
+
+p_ann: |
+   Annihilation rate (p_ann = f_eff * f^2 * <sv>/m)
+   Unit: cm^3 s^-1 GeV^-1
+
+lnL_p_ann: |
+   Profiled likelihood on p_ann
+
+gagg: |
+   ALP-photon coupling.
+
+# -----------
+# ACROPOLIS
+# -----------
+
+Acropolis_1_2_1_init: |
+    Initialise ACROPOLIS (v1.2.1)
+
+set_input_params: |
+    Sets the input parametes for Acropolis.
+
+abundance_photodisintegration_decay: |
+    Computes the abundances of primordial elements after photodisintegration by a decaying particle.
 
 # -----------
 # AlterBBN
@@ -5304,8 +5466,14 @@ Init_cosmomodel: |
 get_NNUC: |
     Return global AlterBBN parameter NNUC (# computed element abundances).
 
+call_nucl: |
+    Backend convenience function to set all inputs for call to AlterBBN's nucl_err function to calculation BBN abundances.
+
 call_nucl_err: |
     Backend convenience function to set all inputs for call to AlterBBN's nucl_err function to calculation BBN abundances + errors.
+
+nucl: |
+    AlterBBN function that computes element abundances during BBN.
 
 nucl_err: |
     AlterBBN function that computes element abundances and their covariance during BBN.
@@ -5313,8 +5481,11 @@ nucl_err: |
 BBN_LogLike: |
    Computes likelihood for BBN data.
 
-BBN_abundances: |
-   Fills BBN_container with theoretically expected element abundances and covariance matrix from BBN.
+primordial_abundances_BBN: |
+   Computes primordial abundances, their uncertainties and covariance matrix after BBN, using AlterBBN.
+
+primordial_abundances: |
+   Computes primordial abundances, their uncertainties and covariance matrix today, including the effect of photodisintegration using Acropolis, if relevant.
 
 Helium_abundance: |
     Compute predicted Helium mass fraction, Yp, and theoretical error from BBN. First vector entry mean, second standard deviation.

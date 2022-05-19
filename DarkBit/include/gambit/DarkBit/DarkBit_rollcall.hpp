@@ -75,21 +75,27 @@
 ///  \date 2018 Jan, Mar, Apr
 ///  \date 2019 Mar, Apr, Jun
 ///
-///  \author Anders Kvellestad
-///          (anders.kvellestad@fys.uio.no)
-///  \date 2020 Feb
+/// \author Patrick Stöcker
+///         (stoecker@physik.rwth-aachen.de)
+/// \date 2019 Sep
+/// \date 2021 Jan, Sep
 ///
-///  \author Jonathan Cornell
-///          (jonathancornell@weber.edu)
-///  \date 2013 - 2020
+/// \author Anders Kvellestad
+///         (anders.kvellestad@fys.uio.no)
+/// \date 2020 Feb
 ///
-///  \author Patrick Stoecker
-///          (stoecker@physik.rwth-aachen.de)
-///  \date 2021 Mar
+/// \author Jonathan Cornell
+///         (jonathancornell@weber.edu)
+/// \date 2013 - 2020
 ///
-///  \author Tomas Gonzalo
-///          (gonzalo@physik.rwth-aachen.de)
-///  \date 2021 Sep
+/// \author Tomas Gonzalo
+///         (gonzalo@physik.rwth-aachen.de)
+/// \date 2021 Sep
+///
+/// \author Iñigo Saez Casares
+///          (inigo.saez_casares@ens-paris-saclay.fr)
+/// \date 2019 - 2020
+/// \date 2021 April, May
 ///
 ///  *********************************************
 
@@ -287,10 +293,19 @@ START_MODULE
     /// Routine for computing axion energy density today from vacuum misalignment, assuming no axion decays.
     #define FUNCTION RD_oh2_Axions
       START_FUNCTION(double)
-        ALLOW_MODEL(GeneralALP)
+        ALLOW_MODEL(GeneralCosmoALP)
         DEPENDENCY(AxionOscillationTemperature, double)
         DEPENDENCY(T_cmb, double)
     #undef FUNCTION
+
+// TODO: Temporarily disabled until project is ready
+/*
+    #define FUNCTION RD_oh2_SuperRenormHP
+      START_FUNCTION(double)
+        DEPENDENCY(DM_relic_density, double)
+        ALLOW_MODEL(SuperRenormHP)
+    #undef FUNCTION
+*/
   #undef CAPABILITY
 
 
@@ -370,7 +385,7 @@ START_MODULE
     #undef FUNCTION
    #define FUNCTION RD_fraction_rescaled_LCDM
       START_FUNCTION(double)
-      ALLOW_MODELS(LCDM, LCDM_theta)
+      ALLOW_MODELS(LCDM, LCDM_theta, LCDM_zreio)
       DEPENDENCY(RD_oh2, double)
     #undef FUNCTION
   #undef CAPABILITY
@@ -852,6 +867,16 @@ START_MODULE
       START_FUNCTION(int)
       DEPENDENCY(antiproton_Yield, daFunk::Funk)
     #undef FUNCTION
+
+// TODO: Temporarily disabled until project is ready
+/*
+    #define FUNCTION TH_ProcessCatalog_SuperRenormHP
+      START_FUNCTION(TH_ProcessCatalog)
+      DEPENDENCY(decay_rates, DecayTable)
+      DEPENDENCY(SuperRenormHP_spectrum, Spectrum)
+      ALLOW_MODEL(SuperRenormHP)
+    #undef FUNCTION
+*/
   #undef CAPABILITY
 
 
@@ -895,6 +920,45 @@ START_MODULE
       BACKEND_REQ(set_halo_profile, (gamLike), void, (int, const std::vector<double> &, const std::vector<double> &, double))
     #undef FUNCTION
   #undef CAPABILITY
+
+// TODO: Temporarily disabled until project is ready
+/*
+  #define CAPABILITY lnL_Xray_WISPy
+  START_CAPABILITY
+    #define FUNCTION compute_lnL_Xray_WISPy
+    START_FUNCTION(double)
+    DEPENDENCY(age_universe, double)
+    ALLOW_MODEL(DecayingDM_mixture)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_Xray_Integral_SPI_sterile_nu
+  START_CAPABILITY
+    #define FUNCTION compute_lnL_Xray_Integral_SPI_sterile_nu
+    START_FUNCTION(double)
+    DEPENDENCY(age_universe, double)
+    ALLOW_MODEL(DecayingDM_mixture)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_Xray_M31_sterile_nu
+  START_CAPABILITY
+    #define FUNCTION compute_lnL_Xray_M31_sterile_nu
+    START_FUNCTION(double)
+    DEPENDENCY(age_universe, double)
+    ALLOW_MODEL(DecayingDM_mixture)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_Xray_NuSTAR_sterile_nu
+  START_CAPABILITY
+    #define FUNCTION compute_lnL_Xray_NuSTAR_sterile_nu
+    START_FUNCTION(double)
+    DEPENDENCY(age_universe, double)
+    ALLOW_MODEL(DecayingDM_mixture)
+    #undef FUNCTION
+  #undef CAPABILITY
+*/
 
   #define CAPABILITY lnL_FermiLATdwarfs
   START_CAPABILITY
@@ -1858,6 +1922,10 @@ START_MODULE
     #define FUNCTION DarkMatter_ID_ScalarSingletDM
     START_FUNCTION(std::string)
     ALLOW_MODELS(ScalarSingletDM_Z2, ScalarSingletDM_Z2_running, ScalarSingletDM_Z3, ScalarSingletDM_Z3_running)
+// TODO: Temporarily disabled until project is ready
+/*
+    ALLOW_MODEL(SuperRenormHP)
+*/
     #undef FUNCTION
     #define FUNCTION DarkMatter_ID_VectorSingletDM
     START_FUNCTION(std::string)
@@ -1956,7 +2024,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_ALPS1_signal_vac
     START_FUNCTION(double)
-    ALLOW_MODEL(GeneralALP)
+    ALLOW_MODEL(GeneralCosmoALP)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1964,7 +2032,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_ALPS1_signal_gas
     START_FUNCTION(double)
-    ALLOW_MODEL(GeneralALP)
+    ALLOW_MODEL(GeneralCosmoALP)
   #undef FUNCTION
   #undef CAPABILITY
 
@@ -1972,7 +2040,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_ALPS1
     START_FUNCTION(double)
-    ALLOW_MODEL(GeneralALP)
+    ALLOW_MODEL(GeneralCosmoALP)
     DEPENDENCY(ALPS1_signal_vac, double)
     DEPENDENCY(ALPS1_signal_gas, double)
     #undef FUNCTION
@@ -1982,7 +2050,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_CAST2007_signal_vac
     START_FUNCTION(std::vector<double>)
-    ALLOW_MODEL(GeneralALP)
+    ALLOW_MODEL(GeneralCosmoALP)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1990,7 +2058,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_CAST2017_signal_vac
     START_FUNCTION(std::vector<std::vector<double>>)
-    ALLOW_MODEL(GeneralALP)
+    ALLOW_MODEL(GeneralCosmoALP)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1998,7 +2066,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_CAST2007
     START_FUNCTION(double)
-    ALLOW_MODEL(GeneralALP)
+    ALLOW_MODEL(GeneralCosmoALP)
     DEPENDENCY(CAST2007_signal_vac, std::vector<double>)
     #undef FUNCTION
   #undef CAPABILITY
@@ -2007,7 +2075,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_CAST2017
     START_FUNCTION(double)
-    ALLOW_MODEL(GeneralALP)
+    ALLOW_MODEL(GeneralCosmoALP)
     DEPENDENCY(CAST2017_signal_vac, std::vector<std::vector<double>>)
     #undef FUNCTION
   #undef CAPABILITY
@@ -2062,7 +2130,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_RParameter
     START_FUNCTION(double)
-    ALLOW_MODEL(GeneralALP)
+    ALLOW_MODEL(GeneralCosmoALP)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -2070,7 +2138,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_RParameter
     START_FUNCTION(double)
-    ALLOW_MODEL(GeneralALP)
+    ALLOW_MODEL(GeneralCosmoALP)
     DEPENDENCY(RParameter, double)
     #undef FUNCTION
   #undef CAPABILITY
@@ -2079,7 +2147,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_WDVar_G117B15A
     START_FUNCTION(double)
-    ALLOW_MODEL(GeneralALP)
+    ALLOW_MODEL(GeneralCosmoALP)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -2087,7 +2155,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_WDVar_R548
     START_FUNCTION(double)
-    ALLOW_MODEL(GeneralALP)
+    ALLOW_MODEL(GeneralCosmoALP)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -2095,7 +2163,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_WDVar_PG1351489
     START_FUNCTION(double)
-    ALLOW_MODEL(GeneralALP)
+    ALLOW_MODEL(GeneralCosmoALP)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -2103,7 +2171,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_WDVar_L192
     START_FUNCTION(double)
-    ALLOW_MODEL(GeneralALP)
+    ALLOW_MODEL(GeneralCosmoALP)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -2111,8 +2179,9 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_SN1987A
     START_FUNCTION(double)
-    ALLOW_MODEL(GeneralALP)
+    ALLOW_MODEL(GeneralCosmoALP)
     DEPENDENCY(PhotonFluence_SN1987A_Conversion, double)
+    DEPENDENCY(PhotonFluence_SN1987A_Decay, double)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -2120,7 +2189,15 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_PhotonFluence_SN1987A_Conversion
     START_FUNCTION(double)
-    ALLOW_MODEL(GeneralALP)
+    ALLOW_MODEL(GeneralCosmoALP)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY PhotonFluence_SN1987A_Decay
+  START_CAPABILITY
+    #define FUNCTION calc_PhotonFluence_SN1987A_Decay
+    START_FUNCTION(double)
+    ALLOW_MODEL(GeneralCosmoALP)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -2128,7 +2205,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_HESS_GCMF
     START_FUNCTION(double)
-    ALLOW_MODEL(GeneralALP)
+    ALLOW_MODEL(GeneralCosmoALP)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -2136,7 +2213,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_XENON1T_Anomaly
     START_FUNCTION(double)
-    ALLOW_JOINT_MODEL(GeneralALP,XENON1T_NuisanceParameters)
+    ALLOW_JOINT_MODEL(GeneralCosmoALP,XENON1T_NuisanceParameters)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -2152,7 +2229,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_XENON1T_DM_Anomaly
     START_FUNCTION(double)
-    ALLOW_JOINT_MODEL(GeneralALP,XENON1T_NuisanceParameters,XENON1T_DM_NuisanceParameters)
+    ALLOW_JOINT_MODEL(GeneralCosmoALP,XENON1T_NuisanceParameters,XENON1T_DM_NuisanceParameters)
     DEPENDENCY(LocalHalo, LocalMaxwellianHalo)
     #undef FUNCTION
   #undef CAPABILITY
@@ -2161,9 +2238,216 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_AxionOscillationTemperature
     START_FUNCTION(double)
-    ALLOW_MODEL(GeneralALP)
+    ALLOW_MODEL(GeneralCosmoALP)
     #undef FUNCTION
   #undef CAPABILITY
 
+  // Super Renormalizable Higgs Portal DM relative observables and likelihoods -----------------
+
+// TODO: Temporarily disabled until project is ready
+/*
+
+  #define CAPABILITY DM_relic_density
+  START_CAPABILITY
+    #define FUNCTION SuperRenormHP_relic_density
+    START_FUNCTION(double)
+    ALLOW_MODEL(SuperRenormHP)
+    ALLOW_MODEL(SuperRenormHP_relic_density_param)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY DM_width
+  START_CAPABILITY
+    #define FUNCTION SuperRenormHP_width
+    START_FUNCTION(double)
+    DEPENDENCY(DarkMatter_ID, std::string)
+    DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY DM_lifetime
+  START_CAPABILITY
+    #define FUNCTION SuperRenormHP_lifetime
+    START_FUNCTION(double)
+    DEPENDENCY(DM_width, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY DecDM_branching_el
+  START_CAPABILITY
+    #define FUNCTION DecDM_branching_el
+    START_FUNCTION(double)
+    DEPENDENCY(DarkMatter_ID, std::string)
+    DEPENDENCY(DM_width, double)
+    DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY DecDM_branching_ph
+  START_CAPABILITY
+    #define FUNCTION DecDM_branching_ph
+    START_FUNCTION(double)
+    DEPENDENCY(DarkMatter_ID, std::string)
+    DEPENDENCY(DM_width, double)
+    DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY J_factor_INTEGRAL_CO
+  START_CAPABILITY
+    #define FUNCTION get_J_factor_INTEGRAL_CO
+    START_FUNCTION(double)
+    DEPENDENCY(GalacticHalo, GalacticHaloProperties)
+    BACKEND_REQ(los_integral, (), void, (std::vector<double>, std::vector<double>, double, std::vector<double> &, std::vector<double> &))
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_INTEGRAL_CO
+  START_CAPABILITY
+    #define FUNCTION calc_lnL_INTEGRAL_CO
+    START_FUNCTION(double)
+    ALLOW_MODEL(DecayingDM_mixture)
+    DEPENDENCY(age_universe, double)
+    DEPENDENCY(J_factor_INTEGRAL_CO, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY J_factor_INTEGRAL_ang_b
+  START_CAPABILITY
+    #define FUNCTION get_J_factor_INTEGRAL_ang_b
+    START_FUNCTION(std::vector<double>)
+    DEPENDENCY(GalacticHalo, GalacticHaloProperties)
+    BACKEND_REQ(los_integral, (), void, (std::vector<double>, std::vector<double>, double, std::vector<double> &, std::vector<double> &))
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_INTEGRAL_ang_b
+  START_CAPABILITY
+    #define FUNCTION calc_lnL_INTEGRAL_ang_b
+    START_FUNCTION(double)
+    ALLOW_MODEL(DecayingDM_mixture)
+    DEPENDENCY(age_universe, double)
+    DEPENDENCY(J_factor_INTEGRAL_ang_b, std::vector<double>)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY J_factor_INTEGRAL_ang_l
+  START_CAPABILITY
+    #define FUNCTION get_J_factor_INTEGRAL_ang_l
+    START_FUNCTION(std::vector<double>)
+    DEPENDENCY(GalacticHalo, GalacticHaloProperties)
+    BACKEND_REQ(los_integral, (), void, (std::vector<double>, std::vector<double>, double, std::vector<double> &, std::vector<double> &))
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_INTEGRAL_ang_l
+  START_CAPABILITY
+    #define FUNCTION calc_lnL_INTEGRAL_ang_l
+    START_FUNCTION(double)
+    ALLOW_MODEL(DecayingDM_mixture)
+    DEPENDENCY(age_universe, double)
+    DEPENDENCY(J_factor_INTEGRAL_ang_l, std::vector<double>)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY J_factor_HEAO
+  START_CAPABILITY
+    #define FUNCTION get_J_factor_HEAO
+    START_FUNCTION(double)
+    DEPENDENCY(GalacticHalo, GalacticHaloProperties)
+    BACKEND_REQ(los_integral, (), void, (std::vector<double>, std::vector<double>, double, std::vector<double> &, std::vector<double> &))
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_HEAO
+  START_CAPABILITY
+    #define FUNCTION calc_lnL_HEAO
+    START_FUNCTION(double)
+    DEPENDENCY(time_at_z, daFunk::Funk)
+    DEPENDENCY(H_at_z, daFunk::Funk)
+    DEPENDENCY(age_universe, double)
+    DEPENDENCY(Omega0_cdm, double)
+    ALLOW_MODEL(DecayingDM_mixture)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY solar_DM_luminosity
+  START_CAPABILITY
+    #define FUNCTION SuperRenormHP_solar_luminosity
+    START_FUNCTION(double)
+    ALLOW_MODEL(SuperRenormHP)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_solar_luminosity
+  START_CAPABILITY
+    #define FUNCTION calc_lnL_solar_luminosity
+    START_FUNCTION(double)
+    DEPENDENCY(solar_DM_luminosity, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY solar_neutrino_flux_B8
+  START_CAPABILITY
+    #define FUNCTION SuperRenormHP_solar_neutrino_flux_B8
+    START_FUNCTION(double)
+    ALLOW_MODEL(SuperRenormHP_solar_neutrino)
+    DEPENDENCY(solar_DM_luminosity, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY solar_neutrino_flux_Be7
+  START_CAPABILITY
+    #define FUNCTION SuperRenormHP_solar_neutrino_flux_Be7
+    START_FUNCTION(double)
+    ALLOW_MODEL(SuperRenormHP_solar_neutrino)
+    DEPENDENCY(solar_DM_luminosity, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_solar_neutrino_B8
+  START_CAPABILITY
+    #define FUNCTION calc_lnL_solar_neutrino_B8
+    START_FUNCTION(double)
+    DEPENDENCY(solar_neutrino_flux_B8, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_solar_neutrino_Be7
+  START_CAPABILITY
+    #define FUNCTION calc_lnL_solar_neutrino_Be7
+    START_FUNCTION(double)
+    DEPENDENCY(solar_neutrino_flux_Be7, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_ShortRangeForces_Sushkov2011
+  START_CAPABILITY
+    #define FUNCTION calc_lnL_ShortRangeForces_Sushkov2011
+    START_FUNCTION(double)
+    DEPENDENCY(New_Force_Sushkov2011, daFunk::Funk)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY get_Higgs_Nucleon_coupling_fN
+  START_CAPABILITY
+    #define FUNCTION func_Higgs_Nucleon_coupling_fN
+    START_FUNCTION(Higgs_Nucleon_coupling_fN)
+    ALLOW_MODEL(nuclear_params_sigmas_sigmal)
+    DEPENDENCY(SM_spectrum, Spectrum)
+    #undef FUNCTION
+  #undef CAPABILITY
+*/
+
+// TODO: Temporarily disabled until project is ready
+/*
+  #define CAPABILITY New_Force_Sushkov2011
+  START_CAPABILITY
+    #define FUNCTION New_Force_Sushkov2011_SuperRenormHP
+    START_FUNCTION(daFunk::Funk)
+    ALLOW_MODELS(ModifiedGravityYukawa, symmetron)
+    #undef FUNCTION
+  #undef CAPABILITY
+*/
 #undef REFERENCE
 #undef MODULE

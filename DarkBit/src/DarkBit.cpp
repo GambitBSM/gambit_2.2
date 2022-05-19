@@ -241,8 +241,56 @@ namespace Gambit
       result.vrot = vrot;
     }
 
+    //////////////////////////////////////////////////////////////////////////
+    //
+    //                        Decaying dark matter
+    //
+    //////////////////////////////////////////////////////////////////////////
 
+// TODO: Temporarily disabled until project is ready
+/*
+    /// Module function providing the branching ratio of the decay S -> e-_1 e+_1
+    void DecDM_branching_el(double &result)
+    {
+      using namespace Pipes::DecDM_branching_el;
 
+      result = 0.0;
+      std::string DM_ID = *Dep::DarkMatter_ID;
+
+      // Check whether the process catalog has the decay prosses
+      if (Dep::TH_ProcessCatalog->find(DM_ID) != NULL)
+      {
+        const TH_Channel* dec_channel = (*Dep::TH_ProcessCatalog).getProcess(DM_ID).find({"e-_1", "e+_1"});
+        if (dec_channel != NULL)
+        {
+          double total_width = *Dep::DM_width;
+          double partial_width = dec_channel->genRate->bind()->eval();
+          result = partial_width / total_width;
+        }
+      }
+    }
+
+    /// Module function providing the branching ratio of the decay S -> gamma gamma
+    void DecDM_branching_ph(double &result)
+    {
+      using namespace Pipes::DecDM_branching_ph;
+
+      result = 0.0;
+      std::string DM_ID = *Dep::DarkMatter_ID;
+
+      // Check whether the process catalog has the decay prosses
+      if (Dep::TH_ProcessCatalog->find(DM_ID) != NULL)
+      {
+        const TH_Channel* dec_channel = (*Dep::TH_ProcessCatalog).getProcess(DM_ID).find({"gamma", "gamma"});
+        if (dec_channel != NULL)
+        {
+          double total_width = *Dep::DM_width;
+          double partial_width = dec_channel->genRate->bind()->eval();
+          result = partial_width / total_width;
+        }
+      }
+    }
+*/
     //////////////////////////////////////////////////////////////////////////
     //
     //                          DarkBit Unit Test
