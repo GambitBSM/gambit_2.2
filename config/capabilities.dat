@@ -3724,7 +3724,7 @@ B2taunu_LogLikelihood: |
 Bs2phimumuBr_LogLikelihood: |
    Log-likelihood for branching fraction of B_s-> phi mu mu
 
-HepLike_1_1_init: |
+HepLike_1_2_init: |
    Initialise HepLike
 
 RDRDstar_LogLikelihood: |
