@@ -1263,17 +1263,6 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  // Observable: Test Flavio
-  #define CAPABILITY Flavio_test
-  START_CAPABILITY
-    #define FUNCTION Flavio_test
-    START_FUNCTION(double)
-    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT, WC)
-    BACKEND_REQ(sm_prediction, (needs_flavio), double, (std::string) )
-    BACKEND_OPTION( (Flavio, 0.30.0), (needs_flavio) )
-    #undef FUNCTION
-  #undef CAPABILITY
-
   /// HEPLike LogLikelihood B -> tau nu
   #define CAPABILITY B2taunu_LogLikelihood
   START_CAPABILITY

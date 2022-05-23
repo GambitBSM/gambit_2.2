@@ -3406,7 +3406,7 @@ lnL_deltarho : |
 
 
 #-------------------------------------
-#  FlavBit, SuperIso, HepLike and Flavio capabilities
+#  FlavBit, SuperIso and HepLike capabilities
 #-------------------------------------
 
 AI_BKstarmumu : |
@@ -3723,12 +3723,6 @@ B2taunu_LogLikelihood: |
 
 Bs2phimumuBr_LogLikelihood: |
    Log-likelihood for branching fraction of B_s-> phi mu mu
-
-Flavio_0_30_0_init: |
-   Initialise Flavio backend
-
-Flavio_test: |
-   Test function for Flavio backend
 
 HepLike_1_1_init: |
    Initialise HepLike
