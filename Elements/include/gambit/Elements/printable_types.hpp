@@ -30,8 +30,8 @@
   (map_const_str_map_const_str_dbl)   \
   (map_intpair_dbl)                   \
   (triplet<double>)                   \
+  (flav_prediction)                   \
   (DM_nucleon_couplings)              \
-  (FlavBit::flav_prediction)          \
   (BBN_container)
 
 // Types that can be retrieved from Gambit printer output (if printer plugin is properly equipped)

@@ -42,6 +42,7 @@
   (ModelParameters)                    \
   (triplet<double>)                    \
   (map_intpair_dbl)                    \
+  (flav_prediction)                    \
 
 #define HDF5_RETRIEVABLE_TYPES \
   HDF5_TYPES \
@@ -50,7 +51,6 @@
 
 #define HDF5_BACKEND_TYPES             \
   (DM_nucleon_couplings)               \
-  (FlavBit::flav_prediction)           \
   (BBN_container)                      \
 
 #endif
