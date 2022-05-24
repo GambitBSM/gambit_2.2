@@ -1050,9 +1050,10 @@ namespace Gambit
     SI_SINGLE_PREDICTION_FUNCTION_BINS(B2KmumuBr,_14p18_16)
     SI_SINGLE_PREDICTION_FUNCTION_BINS(B2KmumuBr,_16_18)
     SI_SINGLE_PREDICTION_FUNCTION_BINS(B2KmumuBr,_18_22)
-    SI_SINGLE_PREDICTION_FUNCTION_BINS(RK_LHCb,_1p1_6)
-    SI_SINGLE_PREDICTION_FUNCTION_BINS(RKstar_LHCb,_0p045_1p1)
-    SI_SINGLE_PREDICTION_FUNCTION_BINS(RKstar_LHCb,_1p1_6)
+    // TODO: these should be re-activated once RK and RKstar can be extracted from a future version of SuperIso using the check_nameobs function.
+    //SI_SINGLE_PREDICTION_FUNCTION_BINS(RK_LHCb,_1p1_6)
+    //SI_SINGLE_PREDICTION_FUNCTION_BINS(RKstar_LHCb,_0p045_1p1)
+    //SI_SINGLE_PREDICTION_FUNCTION_BINS(RKstar_LHCb,_1p1_6)
 
     // The sub-capabilities that may be received from likelihood functions in order to feed them valid observables are listed
     // below. In principle though, these functions will accept as sub-capabilities *any* recognised SuperIso observable names.
