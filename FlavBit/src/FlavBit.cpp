@@ -1054,29 +1054,32 @@ namespace Gambit
     SI_SINGLE_PREDICTION_FUNCTION_BINS(RKstar_LHCb,_0p045_1p1)
     SI_SINGLE_PREDICTION_FUNCTION_BINS(RKstar_LHCb,_1p1_6)
 
-    SI_MULTI_PREDICTION_FUNCTION(B2mumu)
-    SI_MULTI_PREDICTION_FUNCTION(RDRDstar)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_0p1_2,_Atlas)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_2_4,_Atlas)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_4_8,_Atlas)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_1_2,_CMS)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_2_4p3,_CMS)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_4p3_6,_CMS)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_6_8p68,_CMS)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_10p09_12p86,_CMS)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_14p18_16,_CMS)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_16_19,_CMS)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_0p1_4,_Belle)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_4_8,_Belle)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_10p9_12p9,_Belle)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_14p18_19,_Belle)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_0p1_0p98,_LHCb)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_1p1_2p5,_LHCb)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_2p5_4,_LHCb)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_4_6,_LHCb)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_6_8,_LHCb)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_15_19,_LHCb)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstareeAng,_0p0008_0p257,_LHCb)
+    // The sub-capabilities that may be received from likelihood functions in order to feed them valid observables are listed
+    // below. In principle though, these functions will accept as sub-capabilities *any* recognised SuperIso observable names.
+    // The recognised observable names can be found in the check_nameobs function in src/chi2.c in SuperIso.
+    SI_MULTI_PREDICTION_FUNCTION(B2mumu)                                // Typical subcaps: BRuntag_Bsmumu, BR_Bdmumu
+    //SI_MULTI_PREDICTION_FUNCTION(RDRDstar)                            // TODO: Typical subcaps: RD, RDstar
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_0p1_2,_Atlas)     // Typical subcaps: FL, S3, S4, S5, S7, S8
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_2_4,_Atlas)       // Typical subcaps: FL, S3, S4, S5, S7, S8
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_4_8,_Atlas)       // Typical subcaps: FL, S3, S4, S5, S7, S8
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_1_2,_CMS)         // Typical subcaps: P1, P5prime
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_2_4p3,_CMS)       // Typical subcaps: P1, P5prime
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_4p3_6,_CMS)       // Typical subcaps: P1, P5prime
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_6_8p68,_CMS)      // Typical subcaps: P1, P5prime
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_10p09_12p86,_CMS) // Typical subcaps: P1, P5prime
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_14p18_16,_CMS)    // Typical subcaps: P1, P5prime
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_16_19,_CMS)       // Typical subcaps: P1, P5prime
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_0p1_4,_Belle)     // Typical subcaps: P4prime, P5prime
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_4_8,_Belle)       // Typical subcaps: P4prime, P5prime
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_10p9_12p9,_Belle) // Typical subcaps: P4prime, P5prime
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_14p18_19,_Belle)  // Typical subcaps: P4prime, P5prime
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_0p1_0p98,_LHCb)   // Typical subcaps: FL, AFB, S3, S4, S5, S7, S8, S9
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_1p1_2p5,_LHCb)    // Typical subcaps: FL, AFB, S3, S4, S5, S7, S8, S9
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_2p5_4,_LHCb)      // Typical subcaps: FL, AFB, S3, S4, S5, S7, S8, S9
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_4_6,_LHCb)        // Typical subcaps: FL, AFB, S3, S4, S5, S7, S8, S9
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_6_8,_LHCb)        // Typical subcaps: FL, AFB, S3, S4, S5, S7, S8, S9
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_15_19,_LHCb)      // Typical subcaps: FL, AFB, S3, S4, S5, S7, S8, S9
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstareeAng,_0p0008_0p257,_LHCb) // Typical subcaps: FLee, AT_Re, AT_2, AT_Im
 
     #undef SI_PRED_HELPER_CALL
     #undef SI_SINGLE_PREDICTION_FUNCTION
@@ -1247,7 +1250,7 @@ namespace Gambit
     void SuperIso_prediction_RDstar(double &result)
     {
       using namespace Pipes::SuperIso_prediction_RDstar;
-      if (flav_debug) cout<<"Starting SuperIso_prediction_RDstart"<<endl;
+      if (flav_debug) cout<<"Starting SuperIso_prediction_RDstar"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
       result = BEreq::BDstartaunu_BDstarenu(&param);
@@ -2315,6 +2318,9 @@ namespace Gambit
     }
 
     /// HEPLike LogLikelihood RD RDstar
+    // TODO: Recognised sub-capabilities:
+    //    RD
+    //    RDstar
     void HEPLike_RDRDstar_LogLikelihood(double& result)
     {
       using namespace Pipes::HEPLike_RDRDstar_LogLikelihood;
@@ -2327,20 +2333,17 @@ namespace Gambit
         nDimGaussian.Read();
         first = false;
       }
-      const std::vector<double> theory{*Dep::RD, *Dep::RDstar};
-      result = nDimGaussian.GetLogLikelihood(theory /* , theory_covariance */);
+
       // TODO: SuperIso is not ready to give correlations for these observables. So currently we fall back to the old way.
       //       Below code is for future reference.
-      // static const std::vector<std::string> observables{
-      //   "RD",
-      //   "RDstar"
-      // };
-
+      // static std::vector<str> obs_list = Downstream::subcaps->getNames();
       // flav_prediction prediction = *Dep::prediction_RDRDstar;
       // flav_observable_map theory = prediction.central_values;
       // flav_covariance_map theory_covariance = prediction.covariance;
 
-      // result = nDimGaussian.GetLogLikelihood(get_obs_theory(observables), get_obs_covariance(observables));
+      // result = nDimGaussian.GetLogLikelihood(get_obs_theory(prediction, obs_list), get_obs_covariance(prediction, obs_list));
+      const std::vector<double> theory{*Dep::RD, *Dep::RDstar};
+      result = nDimGaussian.GetLogLikelihood(theory /* , theory_covariance */);
       if (flav_debug) std::cout << "HEPLike_RDRDstar_LogLikelihood result: " << result << std::endl;
     }
 
@@ -2375,6 +2378,9 @@ namespace Gambit
     HEPLIKE_GAUSSIAN_1D_LIKELIHOOD(B2taunu, "/data/PDG/Semileptonic/B2TauNu.yaml")
 
     /// HEPLike LogLikelihood B -> ll (CMS)
+    /// Recognised sub-capabilities:
+    ///    BRuntag_Bsmumu
+    ///    BR_Bdmumu
     void HEPLike_B2mumu_LogLikelihood_CMS(double &result)
     {
       using namespace Pipes::HEPLike_B2mumu_LogLikelihood_CMS;
@@ -2400,6 +2406,9 @@ namespace Gambit
     }
 
     /// HEPLike LogLikelihood B -> ll (ATLAS)
+    /// Recognised sub-capabilities:
+    ///    BRuntag_Bsmumu
+    ///    BR_Bdmumu
     void HEPLike_B2mumu_LogLikelihood_Atlas(double &result)
     {
       using namespace Pipes::HEPLike_B2mumu_LogLikelihood_Atlas;
@@ -2425,6 +2434,9 @@ namespace Gambit
     }
 
     /// HEPLike LogLikelihood B -> ll (LHCb)
+    /// Recognised sub-capabilities:
+    ///    BRuntag_Bsmumu
+    ///    BR_Bdmumu
     void HEPLike_B2mumu_LogLikelihood_LHCb(double &result)
     {
       using namespace Pipes::HEPLike_B2mumu_LogLikelihood_LHCb;
@@ -2450,6 +2462,13 @@ namespace Gambit
     }
 
     /// HEPLike LogLikelihood B -> K* mu mu Angluar (ATLAS)
+    /// Recognised sub-capabilities:
+    ///   FL
+    ///   S3
+    ///   S4
+    ///   S5
+    ///   S7
+    ///   S8
     void HEPLike_B2KstarmumuAng_LogLikelihood_Atlas(double &result)
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_Atlas;
@@ -2490,6 +2509,9 @@ namespace Gambit
     }
 
     /// HEPLike LogLikelihood B -> K* mu mu Angular (CMS)
+    /// Recognised sub-capabilities:
+    ///   P1
+    ///   P5prime
     void HEPLike_B2KstarmumuAng_LogLikelihood_CMS(double &result)
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_CMS;
@@ -2540,6 +2562,9 @@ namespace Gambit
 
 
     /// HEPLike LogLikelihood B -> K* mu mu Angular (Belle)
+    /// Recognised sub-capabilities:
+    ///   P4prime
+    ///   P5prime
     void HEPLike_B2KstarmumuAng_LogLikelihood_Belle(double &result)
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_Belle;
@@ -2584,6 +2609,9 @@ namespace Gambit
     }
 
     /// HEPLike LogLikelihood B -> K* ell ell Angular (Belle)
+    /// Recognised sub-capabilities:
+    ///   P4prime
+    ///   P5prime
     void HEPLike_B2KstarellellAng_LogLikelihood_Belle(double &result)
     {
       using namespace Pipes::HEPLike_B2KstarellellAng_LogLikelihood_Belle;
@@ -2629,6 +2657,15 @@ namespace Gambit
     }
 
     /// HEPLike LogLikelihood B -> K* mu mu Angular (LHCb)
+    /// Recognised sub-capabilities:
+    ///   FL
+    ///   AFB
+    ///   S3
+    ///   S4
+    ///   S5
+    ///   S7
+    ///   S8
+    ///   S9
     void HEPLike_B2KstarmumuAng_LogLikelihood_LHCb(double &result)
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_LHCb;
@@ -2674,7 +2711,17 @@ namespace Gambit
 
       if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_LHCb result: " << result << std::endl;
     }
- /// HEPLike LogLikelihood B -> K* mu mu Angular (LHCb)
+
+    /// HEPLike LogLikelihood B -> K* mu mu Angular (LHCb)
+    /// Recognised sub-capabilities:
+    ///   FL
+    ///   AFB
+    ///   S3
+    ///   S4
+    ///   S5
+    ///   S7
+    ///   S8
+    ///   S9
     void HEPLike_B2KstarmumuAng_LogLikelihood_LHCb_2020(double &result)
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_LHCb_2020;
@@ -2721,8 +2768,12 @@ namespace Gambit
       if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_LHCb 2020 result: " << result << std::endl;
     }
 
-
-     /// HEPLike LogLikelihood B -> K* e e Angular low q2 (LHCb)
+    /// HEPLike LogLikelihood B -> K* e e Angular low q2 (LHCb)
+    /// Recognised sub-capabilities:
+    ///   FLee
+    ///   AT_Re
+    ///   AT_2
+    ///   AT_Im
     void HEPLike_B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020(double &result)
     {
       using namespace Pipes::HEPLike_B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020;
@@ -2753,6 +2804,15 @@ namespace Gambit
     }
 
     /// HEPLike LogLikelihood Bu -> K*+ mu mu Angular (LHCb)
+    /// Recognised sub-capabilities:
+    ///   FL
+    ///   AFB
+    ///   S3
+    ///   S4
+    ///   S5
+    ///   S7
+    ///   S8
+    ///   S9
     void HEPLike_Bu2KstarmumuAng_LogLikelihood_LHCb_2020(double &result)
     {
       using namespace Pipes::HEPLike_Bu2KstarmumuAng_LogLikelihood_LHCb_2020;
