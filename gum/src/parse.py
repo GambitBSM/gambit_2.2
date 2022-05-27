@@ -281,7 +281,7 @@ def fill_gum_object(data):
                         "# <--- Desired PDG code here.\n"))
 
     # FeynRules restriction files
-    restrictions = None
+    restriction_str = None
     if 'restrictions' in math and mathpackage == 'feynrules':
         restrictions = math['restrictions']
         
