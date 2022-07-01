@@ -1,0 +1,251 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classasymm__mt2__lester__bisect" kind="class" language="C++" prot="public">
+    <compoundname>asymm_mt2_lester_bisect</compoundname>
+      <sectiondef kind="public-static-attrib">
+      <memberdef kind="variable" id="classasymm__mt2__lester__bisect_1a0686f7e583fcb2c86ab5638837b1f318" prot="public" static="yes" mutable="no">
+        <type>const int</type>
+        <definition>const int asymm_mt2_lester_bisect::MT2_ERROR</definition>
+        <argsstring></argsstring>
+        <name>MT2_ERROR</name>
+        <qualifiedname>asymm_mt2_lester_bisect::MT2_ERROR</qualifiedname>
+        <initializer>=-1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="298" column="20" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="298" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="classasymm__mt2__lester__bisect_1a13110c1f7824a39e18c2ee9ecea5909e" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double asymm_mt2_lester_bisect::get_mT2</definition>
+        <argsstring>(const double mVis1, const double pxVis1, const double pyVis1, const double mVis2, const double pxVis2, const double pyVis2, const double pxMiss, const double pyMiss, const double mInvis1, const double mInvis2, const double desiredPrecisionOnMT2=0, const bool useDeciSectionsInitially=true)</argsstring>
+        <name>get_mT2</name>
+        <qualifiedname>asymm_mt2_lester_bisect::get_mT2</qualifiedname>
+        <param>
+          <type>const double</type>
+          <declname>mVis1</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>pxVis1</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>pyVis1</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>mVis2</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>pxVis2</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>pyVis2</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>pxMiss</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>pyMiss</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>mInvis1</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>mInvis2</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>desiredPrecisionOnMT2</declname>
+          <defval>0</defval>
+        </param>
+        <param>
+          <type>const bool</type>
+          <declname>useDeciSectionsInitially</declname>
+          <defval>true</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="300" column="17" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="300" bodyend="320"/>
+      </memberdef>
+      <memberdef kind="function" id="classasymm__mt2__lester__bisect_1a01fd3fe6227bf51b1c589e150670d849" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void asymm_mt2_lester_bisect::disableCopyrightMessage</definition>
+        <argsstring>(const bool printIfFirst=false)</argsstring>
+        <name>disableCopyrightMessage</name>
+        <qualifiedname>asymm_mt2_lester_bisect::disableCopyrightMessage</qualifiedname>
+        <param>
+          <type>const bool</type>
+          <declname>printIfFirst</declname>
+          <defval>false</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="322" column="15" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="322" bodyend="348"/>
+      </memberdef>
+      <memberdef kind="function" id="classasymm__mt2__lester__bisect_1a6a5aa8b70f0ee049609a07890bdff1e9" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double asymm_mt2_lester_bisect::get_mT2_Sq</definition>
+        <argsstring>(const double mVis1, const double pxVis1, const double pyVis1, const double mVis2, const double pxVis2, const double pyVis2, const double pxMiss, const double pyMiss, const double mInvis1, const double mInvis2, const double desiredPrecisionOnMT2=0, const bool useDeciSectionsInitially=true)</argsstring>
+        <name>get_mT2_Sq</name>
+        <qualifiedname>asymm_mt2_lester_bisect::get_mT2_Sq</qualifiedname>
+        <param>
+          <type>const double</type>
+          <declname>mVis1</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>pxVis1</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>pyVis1</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>mVis2</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>pxVis2</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>pyVis2</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>pxMiss</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>pyMiss</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>mInvis1</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>mInvis2</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>desiredPrecisionOnMT2</declname>
+          <defval>0</defval>
+        </param>
+        <param>
+          <type>const bool</type>
+          <declname>useDeciSectionsInitially</declname>
+          <defval>true</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="350" column="17" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="350" bodyend="496"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="classasymm__mt2__lester__bisect_1a631eac97e711e16871759f870e7daad4" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double asymm_mt2_lester_bisect::lestermax</definition>
+        <argsstring>(const double x, const double y)</argsstring>
+        <name>lestermax</name>
+        <qualifiedname>asymm_mt2_lester_bisect::lestermax</qualifiedname>
+        <param>
+          <type>const double</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>y</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="498" column="17" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="498" bodyend="500"/>
+      </memberdef>
+      <memberdef kind="function" id="classasymm__mt2__lester__bisect_1a23867622f857c697120eddb5a04e22c1" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>const <ref refid="structLester_1_1EllipseParams" kindref="compound">Lester::EllipseParams</ref></type>
+        <definition>static const Lester::EllipseParams asymm_mt2_lester_bisect::helper</definition>
+        <argsstring>(const double mSq, const double mtSq, const double tx, const double ty, const double mqSq, const double pxmiss, const double pymiss)</argsstring>
+        <name>helper</name>
+        <qualifiedname>asymm_mt2_lester_bisect::helper</qualifiedname>
+        <param>
+          <type>const double</type>
+          <declname>mSq</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>mtSq</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>tx</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>ty</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>mqSq</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>pxmiss</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>pymiss</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="501" column="38" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="501" bodyend="532"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="295" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="295" bodyend="533"/>
+    <listofallmembers>
+      <member refid="classasymm__mt2__lester__bisect_1a01fd3fe6227bf51b1c589e150670d849" prot="public" virt="non-virtual"><scope>asymm_mt2_lester_bisect</scope><name>disableCopyrightMessage</name></member>
+      <member refid="classasymm__mt2__lester__bisect_1a13110c1f7824a39e18c2ee9ecea5909e" prot="public" virt="non-virtual"><scope>asymm_mt2_lester_bisect</scope><name>get_mT2</name></member>
+      <member refid="classasymm__mt2__lester__bisect_1a6a5aa8b70f0ee049609a07890bdff1e9" prot="public" virt="non-virtual"><scope>asymm_mt2_lester_bisect</scope><name>get_mT2_Sq</name></member>
+      <member refid="classasymm__mt2__lester__bisect_1a23867622f857c697120eddb5a04e22c1" prot="private" virt="non-virtual"><scope>asymm_mt2_lester_bisect</scope><name>helper</name></member>
+      <member refid="classasymm__mt2__lester__bisect_1a631eac97e711e16871759f870e7daad4" prot="private" virt="non-virtual"><scope>asymm_mt2_lester_bisect</scope><name>lestermax</name></member>
+      <member refid="classasymm__mt2__lester__bisect_1a0686f7e583fcb2c86ab5638837b1f318" prot="public" virt="non-virtual"><scope>asymm_mt2_lester_bisect</scope><name>MT2_ERROR</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

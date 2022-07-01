@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="structGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_1_1ptJetComparison" kind="struct" language="C++" prot="private">
+    <compoundname>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::ptJetComparison</compoundname>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_1_1ptJetComparison_1a10ccc97e4932d093f8d6d7d6261e39b1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::ptJetComparison::operator()</definition>
+        <argsstring>(const HEPUtils::Jet *i, const HEPUtils::Jet *j)</argsstring>
+        <name>operator()</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::ptJetComparison::operator()</qualifiedname>
+        <param>
+          <type>const HEPUtils::Jet *</type>
+          <declname>i</declname>
+        </param>
+        <param>
+          <type>const HEPUtils::Jet *</type>
+          <declname>j</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp" line="58" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp" bodystart="58" bodyend="58"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp" line="56" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp" bodystart="57" bodyend="59"/>
+    <listofallmembers>
+      <member refid="structGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_1_1ptJetComparison_1a10ccc97e4932d093f8d6d7d6261e39b1" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::ptJetComparison</scope><name>operator()</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

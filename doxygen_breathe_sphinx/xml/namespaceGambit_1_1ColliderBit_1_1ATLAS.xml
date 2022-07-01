@@ -1,0 +1,459 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="namespaceGambit_1_1ColliderBit_1_1ATLAS" kind="namespace" language="C++">
+    <compoundname>Gambit::ColliderBit::ATLAS</compoundname>
+      <sectiondef kind="user-defined">
+      <header>ATLAS detector efficiency functions</header>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a11974204f71df5d81e23f013b68b5027" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::ATLAS::applyElectronEff</definition>
+        <argsstring>(std::vector&lt; const HEPUtils::Particle * &gt; &amp;electrons)</argsstring>
+        <name>applyElectronEff</name>
+        <qualifiedname>Gambit::ColliderBit::ATLAS::applyElectronEff</qualifiedname>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Particle * &gt; &amp;</type>
+          <declname>electrons</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Randomly filter the supplied particle list by parameterised electron efficiency <simplesect kind="note"><para>Should be applied after the electron energy smearing </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="62" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="62" bodyend="69"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1aed15b411a9dd1525f4c429001c30e2a9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::ATLAS::applyMuonEff</definition>
+        <argsstring>(std::vector&lt; const HEPUtils::Particle * &gt; &amp;muons)</argsstring>
+        <name>applyMuonEff</name>
+        <qualifiedname>Gambit::ColliderBit::ATLAS::applyMuonEff</qualifiedname>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Particle * &gt; &amp;</type>
+          <declname>muons</declname>
+        </param>
+        <briefdescription>
+<para>Randomly filter the supplied particle list by parameterised muon efficiency. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="85" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="85" bodyend="92"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a6210e1c1e1bc6608f69993b0706ae8c0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::ATLAS::applyMuonEffR2</definition>
+        <argsstring>(std::vector&lt; const HEPUtils::Particle * &gt; &amp;muons)</argsstring>
+        <name>applyMuonEffR2</name>
+        <qualifiedname>Gambit::ColliderBit::ATLAS::applyMuonEffR2</qualifiedname>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Particle * &gt; &amp;</type>
+          <declname>muons</declname>
+        </param>
+        <briefdescription>
+<para>Randomly filter the supplied particle list by parameterised muon efficiency. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="96" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="96" bodyend="102"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a7f1d0f561ef2bb959ce676241583c33e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::ATLAS::applyTauEfficiencyR1</definition>
+        <argsstring>(std::vector&lt; const HEPUtils::Particle * &gt; &amp;taus)</argsstring>
+        <name>applyTauEfficiencyR1</name>
+        <qualifiedname>Gambit::ColliderBit::ATLAS::applyTauEfficiencyR1</qualifiedname>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Particle * &gt; &amp;</type>
+          <declname>taus</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Randomly filter the supplied particle list by parameterised Run 1 tau efficiency <simplesect kind="note"><para>From Delphes 3.1.2 </para>
+</simplesect>
+<xrefsect id="todo_1_todo000008"><xreftitle>Todo</xreftitle><xrefdescription><para>Use <ulink url="https://cds.cern.ch/record/1233743/files/ATL-PHYS-PUB-2010-001.pdf">https://cds.cern.ch/record/1233743/files/ATL-PHYS-PUB-2010-001.pdf</ulink> <ndash/> it is more accurate and has pT-dependence </para>
+</xrefdescription></xrefsect></para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="108" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="108" bodyend="110"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a9adc55ce219844b065be0eeaf11fdf29" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::ATLAS::applyTauEfficiencyR2</definition>
+        <argsstring>(std::vector&lt; const HEPUtils::Particle * &gt; &amp;taus)</argsstring>
+        <name>applyTauEfficiencyR2</name>
+        <qualifiedname>Gambit::ColliderBit::ATLAS::applyTauEfficiencyR2</qualifiedname>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Particle * &gt; &amp;</type>
+          <declname>taus</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Randomly filter the supplied particle list by parameterised Run 2 tau efficiency <simplesect kind="note"><para>From Delphes 3.3.2 &amp; ATL-PHYS-PUB-2015-045, 60% for 1-prong, 70% for multi-prong: this is <emphasis>wrong</emphasis>!! </para>
+</simplesect>
+<simplesect kind="note"><para>No delete, because this should only ever be applied to copies of the Event Particle* vectors in <ref refid="classGambit_1_1ColliderBit_1_1Analysis" kindref="compound">Analysis</ref> routines </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="116" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="116" bodyend="148"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a7fed72d230ec295af7d49ff61621a8c6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::ATLAS::applyPhotonEfficiencyR2</definition>
+        <argsstring>(std::vector&lt; const HEPUtils::Particle * &gt; &amp;photons)</argsstring>
+        <name>applyPhotonEfficiencyR2</name>
+        <qualifiedname>Gambit::ColliderBit::ATLAS::applyPhotonEfficiencyR2</qualifiedname>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Particle * &gt; &amp;</type>
+          <declname>photons</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="152" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="152" bodyend="164"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a507de27fec530a6e39e3b8011b7113fb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::ATLAS::smearElectronEnergy</definition>
+        <argsstring>(std::vector&lt; HEPUtils::Particle * &gt; &amp;electrons)</argsstring>
+        <name>smearElectronEnergy</name>
+        <qualifiedname>Gambit::ColliderBit::ATLAS::smearElectronEnergy</qualifiedname>
+        <param>
+          <type>std::vector&lt; HEPUtils::Particle * &gt; &amp;</type>
+          <declname>electrons</declname>
+        </param>
+        <briefdescription>
+<para>Randomly smear the supplied electrons&apos; momenta by parameterised resolutions. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="168" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="168" bodyend="207"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1ad58906fcb8d039c94e1fa423a76e70a6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::ATLAS::smearMuonMomentum</definition>
+        <argsstring>(std::vector&lt; HEPUtils::Particle * &gt; &amp;muons)</argsstring>
+        <name>smearMuonMomentum</name>
+        <qualifiedname>Gambit::ColliderBit::ATLAS::smearMuonMomentum</qualifiedname>
+        <param>
+          <type>std::vector&lt; HEPUtils::Particle * &gt; &amp;</type>
+          <declname>muons</declname>
+        </param>
+        <briefdescription>
+<para>Randomly smear the supplied muons&apos; momenta by parameterised resolutions. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="211" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="211" bodyend="235"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a43ab61722c904642c08b935644dbd0d9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::ATLAS::smearJets</definition>
+        <argsstring>(std::vector&lt; HEPUtils::Jet * &gt; &amp;jets)</argsstring>
+        <name>smearJets</name>
+        <qualifiedname>Gambit::ColliderBit::ATLAS::smearJets</qualifiedname>
+        <param>
+          <type>std::vector&lt; HEPUtils::Jet * &gt; &amp;</type>
+          <declname>jets</declname>
+        </param>
+        <briefdescription>
+<para>Randomly smear the supplied jets&apos; momenta by parameterised resolutions. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+<para><xrefsect id="todo_1_todo000009"><xreftitle>Todo</xreftitle><xrefdescription><para>Is this the best way to smear? Should we preserve the mean jet energy, or pT, or direction? </para>
+</xrefdescription></xrefsect></para>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="239" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="239" bodyend="262"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a8e7ceb91b11cb38469b7f264b8503bb1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::ATLAS::smearMET</definition>
+        <argsstring>(HEPUtils::P4 &amp;pmiss, double set)</argsstring>
+        <name>smearMET</name>
+        <qualifiedname>Gambit::ColliderBit::ATLAS::smearMET</qualifiedname>
+        <param>
+          <type>HEPUtils::P4 &amp;</type>
+          <declname>pmiss</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>set</declname>
+        </param>
+        <briefdescription>
+<para>Randomly smear the MET vector by parameterised resolutions. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="266" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="266" bodyend="281"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a788362cce2744e7839f03f6db3950b90" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::ATLAS::smearTaus</definition>
+        <argsstring>(std::vector&lt; HEPUtils::Particle * &gt; &amp;taus)</argsstring>
+        <name>smearTaus</name>
+        <qualifiedname>Gambit::ColliderBit::ATLAS::smearTaus</qualifiedname>
+        <param>
+          <type>std::vector&lt; HEPUtils::Particle * &gt; &amp;</type>
+          <declname>taus</declname>
+        </param>
+        <briefdescription>
+<para>Randomly smear the supplied taus&apos; momenta by parameterised resolutions. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+<para><xrefsect id="todo_1_todo000010"><xreftitle>Todo</xreftitle><xrefdescription><para>Is this the best way to smear? Should we preserve the mean jet energy, or pT, or direction? </para>
+</xrefdescription></xrefsect></para>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="285" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="285" bodyend="299"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1ab03047d9d6f4f1dae6fdd0389a8e57ac" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::ATLAS::applyLooseIDElectronSelectionR2</definition>
+        <argsstring>(std::vector&lt; const HEPUtils::Particle * &gt; &amp;electrons)</argsstring>
+        <name>applyLooseIDElectronSelectionR2</name>
+        <qualifiedname>Gambit::ColliderBit::ATLAS::applyLooseIDElectronSelectionR2</qualifiedname>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Particle * &gt; &amp;</type>
+          <declname>electrons</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Efficiency function for Loose ID electrons <simplesect kind="note"><para>Numbers digitised from Fig 3 of 13 TeV note (ATL-PHYS-PUB-2015-041) </para>
+</simplesect>
+<xrefsect id="todo_1_todo000011"><xreftitle>Todo</xreftitle><xrefdescription><para>What about faking by jets or non-electrons? </para>
+</xrefdescription></xrefsect></para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="305" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="305" bodyend="327"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1ae43a82fc034584efbd3cc1eac2f4fb5b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::ATLAS::applyLooseIDElectronSelectionR2</definition>
+        <argsstring>(std::vector&lt; HEPUtils::Particle * &gt; &amp;electrons)</argsstring>
+        <name>applyLooseIDElectronSelectionR2</name>
+        <qualifiedname>Gambit::ColliderBit::ATLAS::applyLooseIDElectronSelectionR2</qualifiedname>
+        <param>
+          <type>std::vector&lt; HEPUtils::Particle * &gt; &amp;</type>
+          <declname>electrons</declname>
+        </param>
+        <briefdescription>
+<para>Alias to allow non-const particle vectors. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="330" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="330" bodyend="332"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a8b216d9e4efc7df991880ec63234b234" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::ATLAS::applyMediumIDElectronSelectionR2</definition>
+        <argsstring>(std::vector&lt; const HEPUtils::Particle * &gt; &amp;electrons)</argsstring>
+        <name>applyMediumIDElectronSelectionR2</name>
+        <qualifiedname>Gambit::ColliderBit::ATLAS::applyMediumIDElectronSelectionR2</qualifiedname>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Particle * &gt; &amp;</type>
+          <declname>electrons</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Efficiency function for Loose ID electrons <simplesect kind="note"><para>Numbers digitised from Fig 3 of 13 TeV note (ATL-PHYS-PUB-2015-041) </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="336" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="336" bodyend="358"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1ab9a06c7b74a0a6fb60a3f4631aea30fc" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::ATLAS::applyMediumIDElectronSelectionR2</definition>
+        <argsstring>(std::vector&lt; HEPUtils::Particle * &gt; &amp;electrons)</argsstring>
+        <name>applyMediumIDElectronSelectionR2</name>
+        <qualifiedname>Gambit::ColliderBit::ATLAS::applyMediumIDElectronSelectionR2</qualifiedname>
+        <param>
+          <type>std::vector&lt; HEPUtils::Particle * &gt; &amp;</type>
+          <declname>electrons</declname>
+        </param>
+        <briefdescription>
+<para>Alias to allow non-const particle vectors. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="361" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="361" bodyend="363"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a0a1f1fd449b607e29c209e3b457e7d7e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::ATLAS::applyMediumIDElectronSelection</definition>
+        <argsstring>(std::vector&lt; const HEPUtils::Particle * &gt; &amp;electrons)</argsstring>
+        <name>applyMediumIDElectronSelection</name>
+        <qualifiedname>Gambit::ColliderBit::ATLAS::applyMediumIDElectronSelection</qualifiedname>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Particle * &gt; &amp;</type>
+          <declname>electrons</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Efficiency function for Medium ID electrons <simplesect kind="note"><para>Numbers digitised from 8 TeV note (ATLAS-CONF-2014-032) </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+<para><simplesect kind="note"><para>No delete is necessary, because this should only ever be applied to a copy of the Event Particle* vectors </para>
+</simplesect>
+<xrefsect id="todo_1_todo000012"><xreftitle>Todo</xreftitle><xrefdescription><para>This is an exact duplication of the below filtering code <ndash/> split into a single util fn (in unnamed namespace?) when binned fns are static </para>
+</xrefdescription></xrefsect></para>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="367" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="367" bodyend="435"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a983c53a960850a544394eb2a54ec2f8c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::ATLAS::applyMediumIDElectronSelection</definition>
+        <argsstring>(std::vector&lt; HEPUtils::Particle * &gt; &amp;electrons)</argsstring>
+        <name>applyMediumIDElectronSelection</name>
+        <qualifiedname>Gambit::ColliderBit::ATLAS::applyMediumIDElectronSelection</qualifiedname>
+        <param>
+          <type>std::vector&lt; HEPUtils::Particle * &gt; &amp;</type>
+          <declname>electrons</declname>
+        </param>
+        <briefdescription>
+<para>Alias to allow non-const particle vectors. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="439" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="439" bodyend="441"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a02e070dc82bdc10cf8d4d07477cd111c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::ATLAS::applyTightIDElectronSelection</definition>
+        <argsstring>(std::vector&lt; const HEPUtils::Particle * &gt; &amp;electrons)</argsstring>
+        <name>applyTightIDElectronSelection</name>
+        <qualifiedname>Gambit::ColliderBit::ATLAS::applyTightIDElectronSelection</qualifiedname>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Particle * &gt; &amp;</type>
+          <declname>electrons</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Efficiency function for Tight ID electrons <simplesect kind="note"><para>Numbers digitised from 8 TeV note (ATLAS-CONF-2014-032) </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+<para><simplesect kind="note"><para>No delete is necessary, because this should only ever be applied to a copy of the Event Particle* vectors </para>
+</simplesect>
+<xrefsect id="todo_1_todo000013"><xreftitle>Todo</xreftitle><xrefdescription><para>This is an exact duplication of the above filtering code <ndash/> split into a single util fn (in unnamed namespace?) when binned fns are static </para>
+</xrefdescription></xrefsect></para>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="446" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="446" bodyend="513"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a007d73ea93df5516dae8e99a99d23a40" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::ATLAS::applyTightIDElectronSelection</definition>
+        <argsstring>(std::vector&lt; HEPUtils::Particle * &gt; &amp;electrons)</argsstring>
+        <name>applyTightIDElectronSelection</name>
+        <qualifiedname>Gambit::ColliderBit::ATLAS::applyTightIDElectronSelection</qualifiedname>
+        <param>
+          <type>std::vector&lt; HEPUtils::Particle * &gt; &amp;</type>
+          <declname>electrons</declname>
+        </param>
+        <briefdescription>
+<para>Alias to allow non-const particle vectors. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="517" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="517" bodyend="519"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a9020cc2ad2fd30a62f5e69105b48c1a1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::ATLAS::applyElectronIDEfficiency2019</definition>
+        <argsstring>(std::vector&lt; const HEPUtils::Particle * &gt; &amp;electrons, str operating_point)</argsstring>
+        <name>applyElectronIDEfficiency2019</name>
+        <qualifiedname>Gambit::ColliderBit::ATLAS::applyElectronIDEfficiency2019</qualifiedname>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Particle * &gt; &amp;</type>
+          <declname>electrons</declname>
+        </param>
+        <param>
+          <type>str</type>
+          <declname>operating_point</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Electron 2019 ID efficiency functions from <ulink url="https://arxiv.org/pdf/1902.04655.pdf">https://arxiv.org/pdf/1902.04655.pdf</ulink> <simplesect kind="note"><para>These efficiencies are 1D efficiencies so only pT is used </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="524" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="524" bodyend="548"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a6411ca61a81ce789e3a480801ef7d565" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::ATLAS::applyElectronIsolationEfficiency2019</definition>
+        <argsstring>(std::vector&lt; const HEPUtils::Particle * &gt; &amp;electrons, str operating_point)</argsstring>
+        <name>applyElectronIsolationEfficiency2019</name>
+        <qualifiedname>Gambit::ColliderBit::ATLAS::applyElectronIsolationEfficiency2019</qualifiedname>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Particle * &gt; &amp;</type>
+          <declname>electrons</declname>
+        </param>
+        <param>
+          <type>str</type>
+          <declname>operating_point</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Electron 2019 Isolation efficiency functions from <ulink url="https://arxiv.org/pdf/1902.04655.pdf">https://arxiv.org/pdf/1902.04655.pdf</ulink> <simplesect kind="note"><para>These efficiencies are 1D efficiencies so only pT is used </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="552" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="552" bodyend="578"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>ATLAS-specific efficiency and smearing functions for super fast detector simulation. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="42" column="5"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,345 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="namespacegenerate__raster__scan__settings" kind="namespace" language="Python">
+    <compoundname>generate_raster_scan_settings</compoundname>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="generate__raster__scan__settings_8py_1af5a2a5ce10262f684004ba2327d55fa9" prot="public" static="no" mutable="no">
+        <type>list</type>
+        <definition>list generate_raster_scan_settings.m2_data</definition>
+        <argsstring></argsstring>
+        <name>m2_data</name>
+        <qualifiedname>generate_raster_scan_settings.m2_data</qualifiedname>
+        <initializer>=  [100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 425, 450, 475, 500, 525, 550, 575, 600, 625, 650, 675, 700, 725, 750, 775, 800, 825, 850, 875, 900, 925, 950, 975, 1000]</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" line="36" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="generate__raster__scan__settings_8py_1aa76c27c66f751438f155fec3bde6ebc0" prot="public" static="no" mutable="no">
+        <type>list</type>
+        <definition>list generate_raster_scan_settings.xsec_fb_data</definition>
+        <argsstring></argsstring>
+        <name>xsec_fb_data</name>
+        <qualifiedname>generate_raster_scan_settings.xsec_fb_data</qualifiedname>
+        <initializer>=  [22670.1, 10034.8, 5180.86, 2953.28, 1807.39, 1165.09, 782.487, 543.03, 386.936, 281.911, 209.439, 158.06, 121.013, 93.771, 73.4361, 58.0811, 46.3533, 37.2636, 30.1656, 24.5798, 20.1372, 16.5706, 13.7303, 11.3975, 9.51032, 7.9595, 6.69356, 5.63562, 4.75843, 4.02646, 3.42026, 2.90547, 2.49667, 2.12907, 1.8164, 1.56893, 1.34352]</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" line="37" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="generate__raster__scan__settings_8py_1accb2d48ed3ee78174d1b184f750ddb5f" prot="public" static="no" mutable="no">
+        <type>list</type>
+        <definition>list generate_raster_scan_settings.xsec_uncert_fb_data</definition>
+        <argsstring></argsstring>
+        <name>xsec_uncert_fb_data</name>
+        <qualifiedname>generate_raster_scan_settings.xsec_uncert_fb_data</qualifiedname>
+        <initializer>=  [973.967, 457.604, 253.223, 154.386, 101.316, 68.8042, 48.7463, 35.4083, 26.3602, 20.0201, 15.4539, 12.0956, 9.61659, 7.73547, 6.2389, 5.05005, 4.16461, 3.46763, 2.88065, 2.40183, 2.04438, 1.70195, 1.43519, 1.21937, 1.04092, 0.885243, 0.769988, 0.654544, 0.564061, 0.478362, 0.412315, 0.366257, 0.314019, 0.26801, 0.242682, 0.217618, 0.175604]</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" line="38" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="generate__raster__scan__settings_8py_1a416a341ae66ce161a4e9d093eff3cd92" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int generate_raster_scan_settings.n</definition>
+        <argsstring></argsstring>
+        <name>n</name>
+        <qualifiedname>generate_raster_scan_settings.n</qualifiedname>
+        <initializer>=  2</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" line="45" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="generate__raster__scan__settings_8py_1a0dffd1f73da59ab260dbf8ea9629b615" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int generate_raster_scan_settings.N</definition>
+        <argsstring></argsstring>
+        <name>N</name>
+        <qualifiedname>generate_raster_scan_settings.N</qualifiedname>
+        <initializer>=  8</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" line="46" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="generate__raster__scan__settings_8py_1aa754f766d44ffb30d2fb55c3f7054660" prot="public" static="no" mutable="no">
+        <type>list</type>
+        <definition>list generate_raster_scan_settings.m2</definition>
+        <argsstring></argsstring>
+        <name>m2</name>
+        <qualifiedname>generate_raster_scan_settings.m2</qualifiedname>
+        <initializer>=  m2_data[::n][:N]</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" line="47" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="generate__raster__scan__settings_8py_1adb44acc4d7f6771991a2b0992b631bd5" prot="public" static="no" mutable="no">
+        <type>list</type>
+        <definition>list generate_raster_scan_settings.xsec_fb</definition>
+        <argsstring></argsstring>
+        <name>xsec_fb</name>
+        <qualifiedname>generate_raster_scan_settings.xsec_fb</qualifiedname>
+        <initializer>=  xsec_fb_data[::n][:N]</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" line="48" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="generate__raster__scan__settings_8py_1a6e96049b3afff9d2a916b8b0afcb4642" prot="public" static="no" mutable="no">
+        <type>list</type>
+        <definition>list generate_raster_scan_settings.xsec_uncert_fb</definition>
+        <argsstring></argsstring>
+        <name>xsec_uncert_fb</name>
+        <qualifiedname>generate_raster_scan_settings.xsec_uncert_fb</qualifiedname>
+        <initializer>=  xsec_uncert_fb_data[::n][:N]</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" line="49" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="generate__raster__scan__settings_8py_1a2e51163dea33afa171f590d552556548" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int generate_raster_scan_settings.m1_min</definition>
+        <argsstring></argsstring>
+        <name>m1_min</name>
+        <qualifiedname>generate_raster_scan_settings.m1_min</qualifiedname>
+        <initializer>=  25.</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" line="52" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" bodystart="52" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="generate__raster__scan__settings_8py_1abb0dfa5f1e2b579ec2d52ec3ccb02cb5" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int generate_raster_scan_settings.m1_step</definition>
+        <argsstring></argsstring>
+        <name>m1_step</name>
+        <qualifiedname>generate_raster_scan_settings.m1_step</qualifiedname>
+        <initializer>=  50.</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" line="53" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="generate__raster__scan__settings_8py_1a20b011f6ebff5ba8e0dcd02edbf2d00b" prot="public" static="no" mutable="no">
+        <type>list</type>
+        <definition>list generate_raster_scan_settings.m1_raster</definition>
+        <argsstring></argsstring>
+        <name>m1_raster</name>
+        <qualifiedname>generate_raster_scan_settings.m1_raster</qualifiedname>
+        <initializer>=  []</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" line="56" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" bodystart="56" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="generate__raster__scan__settings_8py_1a3018cf7ca8063630628527c17431785f" prot="public" static="no" mutable="no">
+        <type>list</type>
+        <definition>list generate_raster_scan_settings.m2_raster</definition>
+        <argsstring></argsstring>
+        <name>m2_raster</name>
+        <qualifiedname>generate_raster_scan_settings.m2_raster</qualifiedname>
+        <initializer>=  []</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" line="57" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" bodystart="57" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="generate__raster__scan__settings_8py_1a31fa9744464b9e7b31495558c02b7cca" prot="public" static="no" mutable="no">
+        <type>list</type>
+        <definition>list generate_raster_scan_settings.xsec_fb_raster</definition>
+        <argsstring></argsstring>
+        <name>xsec_fb_raster</name>
+        <qualifiedname>generate_raster_scan_settings.xsec_fb_raster</qualifiedname>
+        <initializer>=  []</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" line="58" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" bodystart="58" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="generate__raster__scan__settings_8py_1a6ac7524312b496448cfe7f1413a6e765" prot="public" static="no" mutable="no">
+        <type>list</type>
+        <definition>list generate_raster_scan_settings.xsec_uncert_fb_raster</definition>
+        <argsstring></argsstring>
+        <name>xsec_uncert_fb_raster</name>
+        <qualifiedname>generate_raster_scan_settings.xsec_uncert_fb_raster</qualifiedname>
+        <initializer>=  []</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" line="59" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="generate__raster__scan__settings_8py_1a0df40e796db8282cb18b75f18a8696f1" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int generate_raster_scan_settings.m1</definition>
+        <argsstring></argsstring>
+        <name>m1</name>
+        <qualifiedname>generate_raster_scan_settings.m1</qualifiedname>
+        <initializer>=  m1_min</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" line="64" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" bodystart="64" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="generate__raster__scan__settings_8py_1a3cfcadc7602ae25b6e52549e1b1ea804" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string generate_raster_scan_settings.model_name</definition>
+        <argsstring></argsstring>
+        <name>model_name</name>
+        <qualifiedname>generate_raster_scan_settings.model_name</qualifiedname>
+        <initializer>=  &quot;ColliderBit_SLHA_scan_model&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" line="75" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" bodystart="75" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="generate__raster__scan__settings_8py_1a93da155992f682164f7c66f67ec9b5ce" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string generate_raster_scan_settings::m1_str</definition>
+        <argsstring></argsstring>
+        <name>m1_str</name>
+        <qualifiedname>generate_raster_scan_settings.m1_str</qualifiedname>
+        <initializer>=  &quot;\&quot;&quot; + model_name + &quot;::m1\&quot;&quot; + &quot;: [&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" line="77" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" bodystart="77" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="generate__raster__scan__settings_8py_1afdfad9ecaa182175c5354d937a53f009" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string generate_raster_scan_settings::m2_str</definition>
+        <argsstring></argsstring>
+        <name>m2_str</name>
+        <qualifiedname>generate_raster_scan_settings.m2_str</qualifiedname>
+        <initializer>=  &quot;\&quot;&quot; + model_name + &quot;::m2\&quot;&quot; + &quot;: [&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" line="82" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" bodystart="82" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="generate__raster__scan__settings_8py_1aa0c911d1493368616da4bb80ad4f4467" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string generate_raster_scan_settings::xsec_fb_str</definition>
+        <argsstring></argsstring>
+        <name>xsec_fb_str</name>
+        <qualifiedname>generate_raster_scan_settings.xsec_fb_str</qualifiedname>
+        <initializer>=  &quot;\&quot;&quot; + model_name + &quot;::xsec_fb\&quot;&quot; + &quot;: [&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" line="87" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" bodystart="87" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="generate__raster__scan__settings_8py_1acc036bcc7da5a5fecdd072e2ee58449f" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string generate_raster_scan_settings::xsec_uncert_fb_str</definition>
+        <argsstring></argsstring>
+        <name>xsec_uncert_fb_str</name>
+        <qualifiedname>generate_raster_scan_settings.xsec_uncert_fb_str</qualifiedname>
+        <initializer>=  &quot;\&quot;&quot; + model_name + &quot;::xsec_uncert_fb\&quot;&quot; + &quot;: [&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" line="92" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" bodystart="92" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="generate__raster__scan__settings_8py_1afcf3cb7c84846f9bf8a6a85a6d22f4e3" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string generate_raster_scan_settings.output</definition>
+        <argsstring></argsstring>
+        <name>output</name>
+        <qualifiedname>generate_raster_scan_settings.output</qualifiedname>
+        <initializer>=  &quot;&quot;&quot;
+
+Scanner:
+
+  use_scanner: raster
+
+  scanners:
+
+    raster:
+      plugin: raster
+      like: LogLike
+      parameters:
+        {}
+        {}
+        {}
+        {}
+
+&quot;&quot;&quot;.format(m1_str, m2_str, xsec_fb_str, xsec_uncert_fb_str)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" line="104" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" bodystart="104" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py" line="1" column="1"/>
+  </compounddef>
+</doxygen>

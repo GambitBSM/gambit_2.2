@@ -1,0 +1,522 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="namespaceGambit_1_1ColliderBit_1_1CMS" kind="namespace" language="C++">
+    <compoundname>Gambit::ColliderBit::CMS</compoundname>
+      <sectiondef kind="user-defined">
+      <header>CMS detector efficiency functions</header>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1CMS_1a89a3847d536a96d290b7d4c81c00372d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::CMS::applyElectronTrackingEff</definition>
+        <argsstring>(std::vector&lt; const HEPUtils::Particle * &gt; &amp;electrons)</argsstring>
+        <name>applyElectronTrackingEff</name>
+        <qualifiedname>Gambit::ColliderBit::CMS::applyElectronTrackingEff</qualifiedname>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Particle * &gt; &amp;</type>
+          <declname>electrons</declname>
+        </param>
+        <briefdescription>
+<para>Randomly filter the supplied particle list by parameterised electron tracking efficiency. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" line="50" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" bodystart="50" bodyend="57"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1CMS_1a21ef840d1b4329f3b773b9e77807b1af" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::CMS::applyElectronEff</definition>
+        <argsstring>(std::vector&lt; const HEPUtils::Particle * &gt; &amp;electrons)</argsstring>
+        <name>applyElectronEff</name>
+        <qualifiedname>Gambit::ColliderBit::CMS::applyElectronEff</qualifiedname>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Particle * &gt; &amp;</type>
+          <declname>electrons</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Randomly filter the supplied particle list by parameterised electron efficiency <simplesect kind="note"><para>Should be applied after the electron energy smearing </para>
+</simplesect>
+<simplesect kind="note"><para>Eff values currently identical to those in <ref refid="namespaceGambit_1_1ColliderBit_1_1ATLAS" kindref="compound">ATLAS</ref> (AB, 2016-01-24) </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" line="63" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" bodystart="63" bodyend="70"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1CMS_1a373164680c6bca8d94b699b17e038a72" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::CMS::applyMuonTrackEff</definition>
+        <argsstring>(std::vector&lt; const HEPUtils::Particle * &gt; &amp;muons)</argsstring>
+        <name>applyMuonTrackEff</name>
+        <qualifiedname>Gambit::ColliderBit::CMS::applyMuonTrackEff</qualifiedname>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Particle * &gt; &amp;</type>
+          <declname>muons</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Randomly filter the supplied particle list by parameterised muon tracking efficiency <simplesect kind="note"><para>Eff values currently identical to those in <ref refid="namespaceGambit_1_1ColliderBit_1_1ATLAS" kindref="compound">ATLAS</ref> (AB, 2016-01-24) </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" line="75" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" bodystart="75" bodyend="82"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1CMS_1ab1505d12e0fe18877d8afa86e83df707" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::CMS::applyMuonEff</definition>
+        <argsstring>(std::vector&lt; const HEPUtils::Particle * &gt; &amp;muons)</argsstring>
+        <name>applyMuonEff</name>
+        <qualifiedname>Gambit::ColliderBit::CMS::applyMuonEff</qualifiedname>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Particle * &gt; &amp;</type>
+          <declname>muons</declname>
+        </param>
+        <briefdescription>
+<para>Randomly filter the supplied particle list by parameterised muon efficiency. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" line="86" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" bodystart="86" bodyend="99"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1CMS_1adb68a1df2dfc3f8a8b30b95127834cb8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::CMS::applyTauEfficiency</definition>
+        <argsstring>(std::vector&lt; const HEPUtils::Particle * &gt; &amp;taus)</argsstring>
+        <name>applyTauEfficiency</name>
+        <qualifiedname>Gambit::ColliderBit::CMS::applyTauEfficiency</qualifiedname>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Particle * &gt; &amp;</type>
+          <declname>taus</declname>
+        </param>
+        <briefdescription>
+<para>Randomly filter the supplied particle list by parameterised tau efficiency. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="note"><para>No delete, because this should only ever be applied to copies of the Event Particle* vectors in <ref refid="classGambit_1_1ColliderBit_1_1Analysis" kindref="compound">Analysis</ref> routines </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" line="104" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" bodystart="104" bodyend="106"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1CMS_1a6e1e42a2d443facf5dc9e9558cd3cc53" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::CMS::smearElectronEnergy</definition>
+        <argsstring>(std::vector&lt; HEPUtils::Particle * &gt; &amp;electrons)</argsstring>
+        <name>smearElectronEnergy</name>
+        <qualifiedname>Gambit::ColliderBit::CMS::smearElectronEnergy</qualifiedname>
+        <param>
+          <type>std::vector&lt; HEPUtils::Particle * &gt; &amp;</type>
+          <declname>electrons</declname>
+        </param>
+        <briefdescription>
+<para>Randomly smear the supplied electrons&apos; momenta by parameterised resolutions. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Function that mimics the DELPHES electron energy resolution. We need to smear E, then recalculate pT, then reset the 4-vector. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" line="113" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" bodystart="113" bodyend="143"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1CMS_1a5b468afca764b653736efbdde08caa9c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::CMS::smearMuonMomentum</definition>
+        <argsstring>(std::vector&lt; HEPUtils::Particle * &gt; &amp;muons)</argsstring>
+        <name>smearMuonMomentum</name>
+        <qualifiedname>Gambit::ColliderBit::CMS::smearMuonMomentum</qualifiedname>
+        <param>
+          <type>std::vector&lt; HEPUtils::Particle * &gt; &amp;</type>
+          <declname>muons</declname>
+        </param>
+        <briefdescription>
+<para>Randomly smear the supplied muons&apos; momenta by parameterised resolutions. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Function that mimics the DELPHES muon momentum resolution. We need to smear pT, then recalculate E, then reset the 4-vector. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" line="150" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" bodystart="150" bodyend="179"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1CMS_1aa82b5cc950fdb91e31c9bb3ac7d26d80" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::CMS::smearJets</definition>
+        <argsstring>(std::vector&lt; HEPUtils::Jet * &gt; &amp;jets)</argsstring>
+        <name>smearJets</name>
+        <qualifiedname>Gambit::ColliderBit::CMS::smearJets</qualifiedname>
+        <param>
+          <type>std::vector&lt; HEPUtils::Jet * &gt; &amp;</type>
+          <declname>jets</declname>
+        </param>
+        <briefdescription>
+<para>Randomly smear the supplied jets&apos; momenta by parameterised resolutions. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Function that mimics the DELPHES jet momentum resolution. We need to smear pT, then recalculate E, then reset the 4-vector</para>
+<para><xrefsect id="todo_1_todo000014"><xreftitle>Todo</xreftitle><xrefdescription><para>Update cf. Matthias study for <ref refid="namespaceGambit_1_1ColliderBit_1_1ATLAS" kindref="compound">ATLAS</ref> </para>
+</xrefdescription></xrefsect></para>
+        </detaileddescription>
+        <inbodydescription>
+<para><xrefsect id="todo_1_todo000015"><xreftitle>Todo</xreftitle><xrefdescription><para>This is the <ref refid="namespaceGambit_1_1ColliderBit_1_1ATLAS" kindref="compound">ATLAS</ref> number... I can&apos;t find values for the <ref refid="namespaceGambit_1_1ColliderBit_1_1CMS" kindref="compound">CMS</ref> parameterisation, cf. <ulink url="https://cds.cern.ch/record/1339945/files/JME-10-014-pas.pdf">https://cds.cern.ch/record/1339945/files/JME-10-014-pas.pdf</ulink> <ulink url="https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideJetResolution">https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideJetResolution</ulink> <ulink url="https://github.com/adrager/cmssw/blob/CMSSW_7_2_X/CondFormats/JetMETObjects/test/TestCorrections.C">https://github.com/adrager/cmssw/blob/CMSSW_7_2_X/CondFormats/JetMETObjects/test/TestCorrections.C</ulink> </para>
+</xrefdescription></xrefsect></para>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" line="188" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" bodystart="188" bodyend="214"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1CMS_1ac1abbb95c9de02059ac9b59bfdea20a2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::CMS::smearTaus</definition>
+        <argsstring>(std::vector&lt; HEPUtils::Particle * &gt; &amp;taus)</argsstring>
+        <name>smearTaus</name>
+        <qualifiedname>Gambit::ColliderBit::CMS::smearTaus</qualifiedname>
+        <param>
+          <type>std::vector&lt; HEPUtils::Particle * &gt; &amp;</type>
+          <declname>taus</declname>
+        </param>
+        <briefdescription>
+<para>Randomly smear the supplied hadronic taus&apos; momenta by parameterised resolutions. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>We need to smear pT, then recalculate E, then reset the 4-vector. Same as for jets, but on a vector of particles. (?)</para>
+<para><xrefsect id="todo_1_todo000016"><xreftitle>Todo</xreftitle><xrefdescription><para>Update cf. Matthias study for <ref refid="namespaceGambit_1_1ColliderBit_1_1ATLAS" kindref="compound">ATLAS</ref> </para>
+</xrefdescription></xrefsect></para>
+        </detaileddescription>
+        <inbodydescription>
+<para><xrefsect id="todo_1_todo000017"><xreftitle>Todo</xreftitle><xrefdescription><para>Is this the best way to smear? Should we preserve the mean jet energy, or pT, or direction? </para>
+</xrefdescription></xrefsect></para>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" line="223" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" bodystart="223" bodyend="236"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1CMS_1ab8337314f862c7d52263076be261ceb6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::CMS::applyCSVv2MediumBtagEff</definition>
+        <argsstring>(std::vector&lt; const HEPUtils::Jet * &gt; &amp;bjets)</argsstring>
+        <name>applyCSVv2MediumBtagEff</name>
+        <qualifiedname>Gambit::ColliderBit::CMS::applyCSVv2MediumBtagEff</qualifiedname>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Jet * &gt; &amp;</type>
+          <declname>bjets</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Apply efficiency function to CSVv2 medium WP b-tagged jets <simplesect kind="note"><para>Numbers digitized from <ulink url="https://twiki.cern.ch/twiki/pub/CMSPublic/SUSMoriond2017ObjectsEfficiency/btag_eff_CSVv2_DeepCSV.pdf">https://twiki.cern.ch/twiki/pub/CMSPublic/SUSMoriond2017ObjectsEfficiency/btag_eff_CSVv2_DeepCSV.pdf</ulink> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" line="240" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" bodystart="240" bodyend="256"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1CMS_1af88e55a4e5b449cc45d61871b7d50006" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::CMS::applyCSVv2MediumBtagEff</definition>
+        <argsstring>(std::vector&lt; HEPUtils::Jet * &gt; &amp;bjets)</argsstring>
+        <name>applyCSVv2MediumBtagEff</name>
+        <qualifiedname>Gambit::ColliderBit::CMS::applyCSVv2MediumBtagEff</qualifiedname>
+        <param>
+          <type>std::vector&lt; HEPUtils::Jet * &gt; &amp;</type>
+          <declname>bjets</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" line="258" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" bodystart="258" bodyend="260"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1CMS_1a8277e9316f0d53cee8cdfa6d5495e238" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::CMS::applyCSVv2LooseBtagEff</definition>
+        <argsstring>(std::vector&lt; const HEPUtils::Jet * &gt; &amp;bjets)</argsstring>
+        <name>applyCSVv2LooseBtagEff</name>
+        <qualifiedname>Gambit::ColliderBit::CMS::applyCSVv2LooseBtagEff</qualifiedname>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Jet * &gt; &amp;</type>
+          <declname>bjets</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Apply efficiency function to CSVv2 loose WP b-tagged jets <simplesect kind="note"><para>Numbers digitized from <ulink url="https://twiki.cern.ch/twiki/pub/CMSPublic/SUSMoriond2017ObjectsEfficiency/btag_eff_CSVv2_DeepCSV.pdf">https://twiki.cern.ch/twiki/pub/CMSPublic/SUSMoriond2017ObjectsEfficiency/btag_eff_CSVv2_DeepCSV.pdf</ulink> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" line="264" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" bodystart="264" bodyend="280"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1CMS_1a3852aa0043fb37cd2438df29898cdd40" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::CMS::applyCSVv2LooseBtagEff</definition>
+        <argsstring>(std::vector&lt; HEPUtils::Jet * &gt; &amp;bjets)</argsstring>
+        <name>applyCSVv2LooseBtagEff</name>
+        <qualifiedname>Gambit::ColliderBit::CMS::applyCSVv2LooseBtagEff</qualifiedname>
+        <param>
+          <type>std::vector&lt; HEPUtils::Jet * &gt; &amp;</type>
+          <declname>bjets</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" line="282" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" bodystart="282" bodyend="284"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1CMS_1adbbc313338a5a9746f6f1e1c05e1a200" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::CMS::applyBtagMisId</definition>
+        <argsstring>(double mis_id_prob, std::vector&lt; const HEPUtils::Jet * &gt; &amp;jets, std::vector&lt; const HEPUtils::Jet * &gt; &amp;bjets)</argsstring>
+        <name>applyBtagMisId</name>
+        <qualifiedname>Gambit::ColliderBit::CMS::applyBtagMisId</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>mis_id_prob</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Jet * &gt; &amp;</type>
+          <declname>jets</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Jet * &gt; &amp;</type>
+          <declname>bjets</declname>
+        </param>
+        <briefdescription>
+<para>Apply user-specified b-tag misidentification rate (flat) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" line="288" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" bodystart="288" bodyend="294"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1CMS_1abfe6a5c39fab54024a07af03c9f04262" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::CMS::applyBtagMisId</definition>
+        <argsstring>(double mis_id_prob, std::vector&lt; HEPUtils::Jet * &gt; &amp;jets, std::vector&lt; HEPUtils::Jet * &gt; &amp;bjets)</argsstring>
+        <name>applyBtagMisId</name>
+        <qualifiedname>Gambit::ColliderBit::CMS::applyBtagMisId</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>mis_id_prob</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; HEPUtils::Jet * &gt; &amp;</type>
+          <declname>jets</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; HEPUtils::Jet * &gt; &amp;</type>
+          <declname>bjets</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" line="296" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" bodystart="296" bodyend="298"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1CMS_1a7aff46ccc1e659340beecc2f6bc3fbd9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::CMS::applyCSVv2LooseBtagMisId</definition>
+        <argsstring>(std::vector&lt; const HEPUtils::Jet * &gt; &amp;jets, std::vector&lt; const HEPUtils::Jet * &gt; &amp;bjets)</argsstring>
+        <name>applyCSVv2LooseBtagMisId</name>
+        <qualifiedname>Gambit::ColliderBit::CMS::applyCSVv2LooseBtagMisId</qualifiedname>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Jet * &gt; &amp;</type>
+          <declname>jets</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Jet * &gt; &amp;</type>
+          <declname>bjets</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Apply b-tag misidentification rate for CSVv2 loose WP <simplesect kind="note"><para>Numbers from Table 2 in <ulink url="https://arxiv.org/pdf/1712.07158.pdf">https://arxiv.org/pdf/1712.07158.pdf</ulink> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" line="303" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" bodystart="303" bodyend="309"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1CMS_1ae30d73d9612e4749ac8cb6f37a5cba0d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::CMS::applyCSVv2LooseBtagMisId</definition>
+        <argsstring>(std::vector&lt; HEPUtils::Jet * &gt; &amp;jets, std::vector&lt; HEPUtils::Jet * &gt; &amp;bjets)</argsstring>
+        <name>applyCSVv2LooseBtagMisId</name>
+        <qualifiedname>Gambit::ColliderBit::CMS::applyCSVv2LooseBtagMisId</qualifiedname>
+        <param>
+          <type>std::vector&lt; HEPUtils::Jet * &gt; &amp;</type>
+          <declname>jets</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; HEPUtils::Jet * &gt; &amp;</type>
+          <declname>bjets</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" line="311" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" bodystart="311" bodyend="313"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1CMS_1a9849c551a617d2d77d9beadbec937b9c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::CMS::applyCSVv2LooseBtagEffAndMisId</definition>
+        <argsstring>(std::vector&lt; const HEPUtils::Jet * &gt; &amp;jets, std::vector&lt; const HEPUtils::Jet * &gt; &amp;bjets)</argsstring>
+        <name>applyCSVv2LooseBtagEffAndMisId</name>
+        <qualifiedname>Gambit::ColliderBit::CMS::applyCSVv2LooseBtagEffAndMisId</qualifiedname>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Jet * &gt; &amp;</type>
+          <declname>jets</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Jet * &gt; &amp;</type>
+          <declname>bjets</declname>
+        </param>
+        <briefdescription>
+<para>Apply both b-tag efficiency and misidentification rate for CSVv2 loose WP. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" line="317" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" bodystart="317" bodyend="323"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1CMS_1af275457546e63ff4c867bede23940e49" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::CMS::applyCSVv2LooseBtagEffAndMisId</definition>
+        <argsstring>(std::vector&lt; HEPUtils::Jet * &gt; &amp;jets, std::vector&lt; HEPUtils::Jet * &gt; &amp;bjets)</argsstring>
+        <name>applyCSVv2LooseBtagEffAndMisId</name>
+        <qualifiedname>Gambit::ColliderBit::CMS::applyCSVv2LooseBtagEffAndMisId</qualifiedname>
+        <param>
+          <type>std::vector&lt; HEPUtils::Jet * &gt; &amp;</type>
+          <declname>jets</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; HEPUtils::Jet * &gt; &amp;</type>
+          <declname>bjets</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" line="325" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" bodystart="325" bodyend="327"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1CMS_1a3c45c10ae85d2a1a2c5174001f4e9a21" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::CMS::applyCSVv2MediumBtagMisId</definition>
+        <argsstring>(std::vector&lt; const HEPUtils::Jet * &gt; &amp;jets, std::vector&lt; const HEPUtils::Jet * &gt; &amp;bjets)</argsstring>
+        <name>applyCSVv2MediumBtagMisId</name>
+        <qualifiedname>Gambit::ColliderBit::CMS::applyCSVv2MediumBtagMisId</qualifiedname>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Jet * &gt; &amp;</type>
+          <declname>jets</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Jet * &gt; &amp;</type>
+          <declname>bjets</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Apply b-tag misidentification rate for CSVv2 medium WP <simplesect kind="note"><para>Numbers from Table 2 in <ulink url="https://arxiv.org/pdf/1712.07158.pdf">https://arxiv.org/pdf/1712.07158.pdf</ulink> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" line="332" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" bodystart="332" bodyend="338"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1CMS_1a13da06b00f2f54fc9334d4596e94c2a3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::CMS::applyCSVv2MediumBtagMisId</definition>
+        <argsstring>(std::vector&lt; HEPUtils::Jet * &gt; &amp;jets, std::vector&lt; HEPUtils::Jet * &gt; &amp;bjets)</argsstring>
+        <name>applyCSVv2MediumBtagMisId</name>
+        <qualifiedname>Gambit::ColliderBit::CMS::applyCSVv2MediumBtagMisId</qualifiedname>
+        <param>
+          <type>std::vector&lt; HEPUtils::Jet * &gt; &amp;</type>
+          <declname>jets</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; HEPUtils::Jet * &gt; &amp;</type>
+          <declname>bjets</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" line="340" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" bodystart="340" bodyend="342"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1CMS_1a89082670e09757644ae97095dab97659" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::CMS::applyCSVv2MediumBtagEffAndMisId</definition>
+        <argsstring>(std::vector&lt; const HEPUtils::Jet * &gt; &amp;jets, std::vector&lt; const HEPUtils::Jet * &gt; &amp;bjets)</argsstring>
+        <name>applyCSVv2MediumBtagEffAndMisId</name>
+        <qualifiedname>Gambit::ColliderBit::CMS::applyCSVv2MediumBtagEffAndMisId</qualifiedname>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Jet * &gt; &amp;</type>
+          <declname>jets</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; const HEPUtils::Jet * &gt; &amp;</type>
+          <declname>bjets</declname>
+        </param>
+        <briefdescription>
+<para>Apply both b-tag efficiency and misidentification rate for CSVv2 medium WP. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" line="346" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" bodystart="346" bodyend="352"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1CMS_1a9ad8e2fc85f72ff1b6970f5b17e8e87f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::CMS::applyCSVv2MediumBtagEffAndMisId</definition>
+        <argsstring>(std::vector&lt; HEPUtils::Jet * &gt; &amp;jets, std::vector&lt; HEPUtils::Jet * &gt; &amp;bjets)</argsstring>
+        <name>applyCSVv2MediumBtagEffAndMisId</name>
+        <qualifiedname>Gambit::ColliderBit::CMS::applyCSVv2MediumBtagEffAndMisId</qualifiedname>
+        <param>
+          <type>std::vector&lt; HEPUtils::Jet * &gt; &amp;</type>
+          <declname>jets</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; HEPUtils::Jet * &gt; &amp;</type>
+          <declname>bjets</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" line="354" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" bodystart="354" bodyend="356"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>CMS-specific efficiency and smearing functions for super fast detector simulation. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp" line="43" column="5"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="dir_18844a962068c5ffc5567e7b65967bca" kind="dir">
+    <compoundname>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit</compoundname>
+    <innerdir refid="dir_262b43c519d43214d405683c7e3a8f39">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses</innerdir>
+    <innerdir refid="dir_fd68025055671e0d2e19b14e75b158f3">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders</innerdir>
+    <innerdir refid="dir_12b2d02957c73176617de2a81a1a001d">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors</innerdir>
+    <innerdir refid="dir_2fff4dab633ec20c000165c1106151f7">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits</innerdir>
+    <innerdir refid="dir_b2272b1f38710d84426e6269e8974172">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models</innerdir>
+    <innerfile refid="ATLASEfficiencies_8hpp">ATLASEfficiencies.hpp</innerfile>
+    <innerfile refid="CMSEfficiencies_8hpp">CMSEfficiencies.hpp</innerfile>
+    <innerfile refid="ColliderBit__eventloop_8hpp">ColliderBit_eventloop.hpp</innerfile>
+    <innerfile refid="ColliderBit__eventloop__utils_8hpp">ColliderBit_eventloop_utils.hpp</innerfile>
+    <innerfile refid="ColliderBit__Higgs__rollcall_8hpp">ColliderBit_Higgs_rollcall.hpp</innerfile>
+    <innerfile refid="ColliderBit__LEP__rollcall_8hpp">ColliderBit_LEP_rollcall.hpp</innerfile>
+    <innerfile refid="ColliderBit__MC__rollcall_8hpp">ColliderBit_MC_rollcall.hpp</innerfile>
+    <innerfile refid="ColliderBit__rollcall_8hpp">ColliderBit_rollcall.hpp</innerfile>
+    <innerfile refid="ColliderBit__types_8hpp">ColliderBit_types.hpp</innerfile>
+    <innerfile refid="complete__process__PID__pair__multimaps_8hpp">complete_process_PID_pair_multimaps.hpp</innerfile>
+    <innerfile refid="generateEventPy8Collider_8hpp">generateEventPy8Collider.hpp</innerfile>
+    <innerfile refid="getPy8Collider_8hpp">getPy8Collider.hpp</innerfile>
+    <innerfile refid="lep__mssm__xsecs_8hpp">lep_mssm_xsecs.hpp</innerfile>
+    <innerfile refid="lester__mt2__bisect_8h">lester_mt2_bisect.h</innerfile>
+    <innerfile refid="lhef2heputils_8hpp">lhef2heputils.hpp</innerfile>
+    <innerfile refid="MC__convergence_8hpp">MC_convergence.hpp</innerfile>
+    <innerfile refid="MCLoopInfo_8hpp">MCLoopInfo.hpp</innerfile>
+    <innerfile refid="mt2__bisect_8h">mt2_bisect.h</innerfile>
+    <innerfile refid="mt2w_8h">mt2w.h</innerfile>
+    <innerfile refid="mt2w__bisect_8h">mt2w_bisect.h</innerfile>
+    <innerfile refid="topness_8h">topness.h</innerfile>
+    <innerfile refid="Utils_8hpp">Utils.hpp</innerfile>
+    <innerfile refid="xsec_8hpp">xsec.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/"/>
+  </compounddef>
+</doxygen>

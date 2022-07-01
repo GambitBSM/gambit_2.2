@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classGambit_1_1ColliderBit_1_1BaseDetector" kind="class" language="C++" prot="public" abstract="yes">
+    <compoundname>Gambit::ColliderBit::BaseDetector</compoundname>
+    <derivedcompoundref refid="classGambit_1_1ColliderBit_1_1BuckFast" prot="public" virt="non-virtual">Gambit::ColliderBit::BuckFast</derivedcompoundref>
+    <includes refid="BaseDetector_8hpp" local="no">BaseDetector.hpp</includes>
+      <sectiondef kind="user-defined">
+      <header>(Re-)Initialization functions</header>
+      <description><para>Settings parsing and initialization for each sub-class. </para>
+</description>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseDetector_1a6765538caba8bb3b2640ab839d402638" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>virtual void Gambit::ColliderBit::BaseDetector::init</definition>
+        <argsstring>(const std::vector&lt; std::string &gt; &amp;)</argsstring>
+        <name>init</name>
+        <qualifiedname>Gambit::ColliderBit::BaseDetector::init</qualifiedname>
+        <reimplementedby refid="classGambit_1_1ColliderBit_1_1BuckFast_1ad0467053d1962f2ce99bed9643adea8a">init</reimplementedby>
+        <param>
+          <type>const std::vector&lt; std::string &gt; &amp;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" line="63" column="22" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" bodystart="63" bodyend="63"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseDetector_1a30ff7f6b2468fb7425ab461ffe93c82c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>virtual void Gambit::ColliderBit::BaseDetector::init</definition>
+        <argsstring>()</argsstring>
+        <name>init</name>
+        <qualifiedname>Gambit::ColliderBit::BaseDetector::init</qualifiedname>
+        <reimplementedby refid="classGambit_1_1ColliderBit_1_1BuckFast_1a299949863c2f6f61c5e7aac6ce3cb4fc">init</reimplementedby>
+        <briefdescription>
+<para>General init for any collider of this type - no settings version. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" line="65" column="22" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" bodystart="65" bodyend="65"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseDetector_1a43059e9b5a38d1f395d45fe21a95a46c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::BaseDetector::BaseDetector</definition>
+        <argsstring>()</argsstring>
+        <name>BaseDetector</name>
+        <qualifiedname>Gambit::ColliderBit::BaseDetector::BaseDetector</qualifiedname>
+        <briefdescription>
+<para>Constructor. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" line="51" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" bodystart="51" bodyend="51"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseDetector_1abeb0944a917583cd386069aa3be18acc" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type></type>
+        <definition>virtual Gambit::ColliderBit::BaseDetector::~BaseDetector</definition>
+        <argsstring>()</argsstring>
+        <name>~BaseDetector</name>
+        <qualifiedname>Gambit::ColliderBit::BaseDetector::~BaseDetector</qualifiedname>
+        <briefdescription>
+<para>Destructor. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" line="53" column="17" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" bodystart="53" bodyend="53"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseDetector_1a29a2425364aa9778c37ffffc5b6a2eb1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>virtual void Gambit::ColliderBit::BaseDetector::clear</definition>
+        <argsstring>()</argsstring>
+        <name>clear</name>
+        <qualifiedname>Gambit::ColliderBit::BaseDetector::clear</qualifiedname>
+        <briefdescription>
+<para>Reset this instance for reuse, avoiding the need for &quot;new&quot; or &quot;delete&quot;. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" line="55" column="22" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" bodystart="55" bodyend="55"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseDetector_1af54fbafcfc406121532d925ea06ff476" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
+        <type>void</type>
+        <definition>virtual void Gambit::ColliderBit::BaseDetector::processEvent</definition>
+        <argsstring>(HEPUtils::Event &amp;) const =0</argsstring>
+        <name>processEvent</name>
+        <qualifiedname>Gambit::ColliderBit::BaseDetector::processEvent</qualifiedname>
+        <reimplementedby refid="classGambit_1_1ColliderBit_1_1BuckFast_1a39363bb325b8bf55b6becc6995df8e2e">processEvent</reimplementedby>
+        <param>
+          <type>HEPUtils::Event &amp;</type>
+        </param>
+        <briefdescription>
+<para>Perform the actual simulation on the next collider event. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" line="58" column="22"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>An abstract base class for detector simulators within ColliderBit. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1">
+        <label>Gambit::ColliderBit::BaseDetector</label>
+        <link refid="classGambit_1_1ColliderBit_1_1BaseDetector"/>
+      </node>
+      <node id="2">
+        <label>Gambit::ColliderBit::BuckFast</label>
+        <link refid="classGambit_1_1ColliderBit_1_1BuckFast"/>
+        <childnode refid="1" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" line="45" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" bodystart="46" bodyend="68"/>
+    <listofallmembers>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseDetector_1a43059e9b5a38d1f395d45fe21a95a46c" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::BaseDetector</scope><name>BaseDetector</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseDetector_1a29a2425364aa9778c37ffffc5b6a2eb1" prot="public" virt="virtual"><scope>Gambit::ColliderBit::BaseDetector</scope><name>clear</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseDetector_1a6765538caba8bb3b2640ab839d402638" prot="public" virt="virtual"><scope>Gambit::ColliderBit::BaseDetector</scope><name>init</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseDetector_1a30ff7f6b2468fb7425ab461ffe93c82c" prot="public" virt="virtual"><scope>Gambit::ColliderBit::BaseDetector</scope><name>init</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseDetector_1af54fbafcfc406121532d925ea06ff476" prot="public" virt="pure-virtual"><scope>Gambit::ColliderBit::BaseDetector</scope><name>processEvent</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseDetector_1abeb0944a917583cd386069aa3be18acc" prot="public" virt="virtual"><scope>Gambit::ColliderBit::BaseDetector</scope><name>~BaseDetector</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

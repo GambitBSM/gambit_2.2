@@ -1,0 +1,736 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classmy__simplex" kind="class" language="C++" prot="public">
+    <compoundname>my_simplex</compoundname>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classmy__simplex_1a82078337b8ba5908b2485dac89c80043" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int my_simplex::d</definition>
+        <argsstring></argsstring>
+        <name>d</name>
+        <qualifiedname>my_simplex::d</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="166" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="166" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__simplex_1aef89a3f9001b08b7322eff88c330d9da" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_simplex::alpha</definition>
+        <argsstring></argsstring>
+        <name>alpha</name>
+        <qualifiedname>my_simplex::alpha</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="167" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="167" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__simplex_1af62617d1c8987201881b6a812c06bee6" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_simplex::beta</definition>
+        <argsstring></argsstring>
+        <name>beta</name>
+        <qualifiedname>my_simplex::beta</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="167" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="167" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__simplex_1ab0e6efb5a25ce117e44dc56f1a0079de" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_simplex::gamma</definition>
+        <argsstring></argsstring>
+        <name>gamma</name>
+        <qualifiedname>my_simplex::gamma</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="167" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="167" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classmy__simplex_1ad35e5c86d2ea2f2a8e1d0656767300d8" prot="public" static="no" mutable="no">
+        <type><ref refid="structmy__func" kindref="compound">my_func</ref> *</type>
+        <definition>my_func* my_simplex::f</definition>
+        <argsstring></argsstring>
+        <name>f</name>
+        <qualifiedname>my_simplex::f</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="170" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="170" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__simplex_1a9a65bc250f24cb3ee95a6de2bb7ab2d2" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_simplex::xstart[DMAX *(DMAX+1)]</definition>
+        <argsstring>[DMAX *(DMAX+1)]</argsstring>
+        <name>xstart</name>
+        <qualifiedname>my_simplex::xstart</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="172" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="172" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__simplex_1a45d380f8ba21cbef67568d71c3ee4464" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_simplex::x[DMAX *(DMAX+1)]</definition>
+        <argsstring>[DMAX *(DMAX+1)]</argsstring>
+        <name>x</name>
+        <qualifiedname>my_simplex::x</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="173" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="173" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__simplex_1a352634ad837edff0b71e668187e77a7b" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_simplex::xh[DMAX]</definition>
+        <argsstring>[DMAX]</argsstring>
+        <name>xh</name>
+        <qualifiedname>my_simplex::xh</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="174" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="174" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__simplex_1ac4870e2420b1a9eb9d710f4eaeec3efc" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_simplex::xl[DMAX]</definition>
+        <argsstring>[DMAX]</argsstring>
+        <name>xl</name>
+        <qualifiedname>my_simplex::xl</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="175" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="175" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__simplex_1a97487e6bd13a6472947a08e0d1b1dbe6" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_simplex::y[DMAX+1]</definition>
+        <argsstring>[DMAX+1]</argsstring>
+        <name>y</name>
+        <qualifiedname>my_simplex::y</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="176" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="176" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__simplex_1a7bebbfc93083e55a5272250858c5c1aa" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_simplex::yl</definition>
+        <argsstring></argsstring>
+        <name>yl</name>
+        <qualifiedname>my_simplex::yl</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="177" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="177" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__simplex_1ad89f0e17afca06ab9102408cb39b5ce3" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_simplex::ynh</definition>
+        <argsstring></argsstring>
+        <name>ynh</name>
+        <qualifiedname>my_simplex::ynh</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="177" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="177" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__simplex_1af793f6b0be1abcb4e2c6a7c790c379e5" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_simplex::yh</definition>
+        <argsstring></argsstring>
+        <name>yh</name>
+        <qualifiedname>my_simplex::yh</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="177" column="17" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="177" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__simplex_1a4b468ec4759d459e3f3eb866d6855faf" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_simplex::xCentroid[DMAX]</definition>
+        <argsstring>[DMAX]</argsstring>
+        <name>xCentroid</name>
+        <qualifiedname>my_simplex::xCentroid</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="178" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="178" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__simplex_1a767a239e44b8455adfbe844d9d6c4a89" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_simplex::yReflect</definition>
+        <argsstring></argsstring>
+        <name>yReflect</name>
+        <qualifiedname>my_simplex::yReflect</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="179" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="179" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__simplex_1a1fb733e3a390ea5a40fef81e572b9dac" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_simplex::yExpand</definition>
+        <argsstring></argsstring>
+        <name>yExpand</name>
+        <qualifiedname>my_simplex::yExpand</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="179" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="179" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__simplex_1ae9ebc206912f719b4c1e2830e0ad78ea" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_simplex::yContract</definition>
+        <argsstring></argsstring>
+        <name>yContract</name>
+        <qualifiedname>my_simplex::yContract</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="179" column="27" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="179" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__simplex_1a88dfa53ad2b72c6f11596a8155403ef0" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_simplex::xReflect[DMAX]</definition>
+        <argsstring>[DMAX]</argsstring>
+        <name>xReflect</name>
+        <qualifiedname>my_simplex::xReflect</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="180" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="180" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__simplex_1aa464da77257766779bd9b06aae7b28b8" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_simplex::xExpand[DMAX]</definition>
+        <argsstring>[DMAX]</argsstring>
+        <name>xExpand</name>
+        <qualifiedname>my_simplex::xExpand</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="181" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="181" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__simplex_1a4f06597397a69a91a6b45d55bb3f07df" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_simplex::xContract[DMAX]</definition>
+        <argsstring>[DMAX]</argsstring>
+        <name>xContract</name>
+        <qualifiedname>my_simplex::xContract</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="182" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="182" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__simplex_1ac1d475adfcc08b19eac6358213405177" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int my_simplex::imin</definition>
+        <argsstring></argsstring>
+        <name>imin</name>
+        <qualifiedname>my_simplex::imin</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="185" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="185" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__simplex_1a945744388425495f24fe2d06ea2d8e0b" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int my_simplex::imax</definition>
+        <argsstring></argsstring>
+        <name>imax</name>
+        <qualifiedname>my_simplex::imax</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="185" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="185" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__simplex_1a9b2809326b9fc057000a5ca1f148ecab" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int my_simplex::inmax</definition>
+        <argsstring></argsstring>
+        <name>inmax</name>
+        <qualifiedname>my_simplex::inmax</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="185" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="185" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classmy__simplex_1a672d295dab5fa96684fd19ff884c5a34" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>my_simplex::my_simplex</definition>
+        <argsstring>(int, double, double, double, my_func *)</argsstring>
+        <name>my_simplex</name>
+        <qualifiedname>my_simplex::my_simplex</qualifiedname>
+        <param>
+          <type>int</type>
+          <defname>dd</defname>
+        </param>
+        <param>
+          <type>double</type>
+          <defname>aalpha</defname>
+        </param>
+        <param>
+          <type>double</type>
+          <defname>bbeta</defname>
+        </param>
+        <param>
+          <type>double</type>
+          <defname>ggamma</defname>
+        </param>
+        <param>
+          <type><ref refid="structmy__func" kindref="compound">my_func</ref> *</type>
+          <defname>ff</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="171" column="3" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="225" bodyend="225"/>
+      </memberdef>
+      <memberdef kind="function" id="classmy__simplex_1a30ecefd8034231f79f83fb47cd349143" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void my_simplex::find_min</definition>
+        <argsstring>()</argsstring>
+        <name>find_min</name>
+        <qualifiedname>my_simplex::find_min</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="183" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="284" bodyend="303"/>
+      </memberdef>
+      <memberdef kind="function" id="classmy__simplex_1aeff084b717bd5443f668a015af0bee0b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void my_simplex::find_max</definition>
+        <argsstring>()</argsstring>
+        <name>find_max</name>
+        <qualifiedname>my_simplex::find_max</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="184" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="255" bodyend="282"/>
+      </memberdef>
+      <memberdef kind="function" id="classmy__simplex_1a71cc487ee36000a0a29366a0a085e9ea" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void my_simplex::my_SetUp</definition>
+        <argsstring>(double xin[])</argsstring>
+        <name>my_SetUp</name>
+        <qualifiedname>my_simplex::my_SetUp</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>xin</declname>
+          <array>[]</array>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="186" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="228" bodyend="243"/>
+      </memberdef>
+      <memberdef kind="function" id="classmy__simplex_1ab8a1fc0d51e86b2e49637443830a3ced" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void my_simplex::set_y</definition>
+        <argsstring>()</argsstring>
+        <name>set_y</name>
+        <qualifiedname>my_simplex::set_y</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="187" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="245" bodyend="253"/>
+      </memberdef>
+      <memberdef kind="function" id="classmy__simplex_1af0efa9df623784ed9830267c8bcd5853" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void my_simplex::my_Centroid</definition>
+        <argsstring>(int)</argsstring>
+        <name>my_Centroid</name>
+        <qualifiedname>my_simplex::my_Centroid</qualifiedname>
+        <param>
+          <type>int</type>
+          <defname>h</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="188" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="305" bodyend="318"/>
+      </memberdef>
+      <memberdef kind="function" id="classmy__simplex_1a48628a00860da12764b5123c6248de05" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void my_simplex::my_Reflection</definition>
+        <argsstring>()</argsstring>
+        <name>my_Reflection</name>
+        <qualifiedname>my_simplex::my_Reflection</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="189" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="320" bodyend="329"/>
+      </memberdef>
+      <memberdef kind="function" id="classmy__simplex_1a74d15668fe5d29070b65a4749eba94eb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void my_simplex::my_Expansion</definition>
+        <argsstring>()</argsstring>
+        <name>my_Expansion</name>
+        <qualifiedname>my_simplex::my_Expansion</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="190" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="331" bodyend="340"/>
+      </memberdef>
+      <memberdef kind="function" id="classmy__simplex_1a527ec2f632a99329ad4867350f575967" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void my_simplex::my_Contraction</definition>
+        <argsstring>()</argsstring>
+        <name>my_Contraction</name>
+        <qualifiedname>my_simplex::my_Contraction</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="191" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="342" bodyend="350"/>
+      </memberdef>
+      <memberdef kind="function" id="classmy__simplex_1a45294ebb0cee6784714be03b124ceec1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void my_simplex::replace_all</definition>
+        <argsstring>()</argsstring>
+        <name>replace_all</name>
+        <qualifiedname>my_simplex::replace_all</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="192" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="352" bodyend="362"/>
+      </memberdef>
+      <memberdef kind="function" id="classmy__simplex_1a0d370a34ec2d772ad372d7c6823ae683" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double my_simplex::get_yavg</definition>
+        <argsstring>()</argsstring>
+        <name>get_yavg</name>
+        <qualifiedname>my_simplex::get_yavg</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="193" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="364" bodyend="373"/>
+      </memberdef>
+      <memberdef kind="function" id="classmy__simplex_1ab35d03eac2e5905c51f193e224a45935" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double my_simplex::get_sigma</definition>
+        <argsstring>()</argsstring>
+        <name>get_sigma</name>
+        <qualifiedname>my_simplex::get_sigma</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="194" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="375" bodyend="391"/>
+      </memberdef>
+      <memberdef kind="function" id="classmy__simplex_1a440c786f1b26781d40bdffe8766430d5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void my_simplex::print_Centroid</definition>
+        <argsstring>()</argsstring>
+        <name>print_Centroid</name>
+        <qualifiedname>my_simplex::print_Centroid</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="195" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="393" bodyend="405"/>
+      </memberdef>
+      <memberdef kind="function" id="classmy__simplex_1abb251388f4adf34d6dfd9a2b2ffa3b32" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void my_simplex::print_Reflect</definition>
+        <argsstring>()</argsstring>
+        <name>print_Reflect</name>
+        <qualifiedname>my_simplex::print_Reflect</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="196" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="407" bodyend="418"/>
+      </memberdef>
+      <memberdef kind="function" id="classmy__simplex_1a9130f028a5a70239bb775824c6a84bd3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void my_simplex::print_Expand</definition>
+        <argsstring>()</argsstring>
+        <name>print_Expand</name>
+        <qualifiedname>my_simplex::print_Expand</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="197" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="420" bodyend="432"/>
+      </memberdef>
+      <memberdef kind="function" id="classmy__simplex_1a066b4e087a5e0e61e6f870de0f2638ba" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void my_simplex::print_Contract</definition>
+        <argsstring>()</argsstring>
+        <name>print_Contract</name>
+        <qualifiedname>my_simplex::print_Contract</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="198" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="434" bodyend="446"/>
+      </memberdef>
+      <memberdef kind="function" id="classmy__simplex_1a4a0961750018efd820748b1677a9db66" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void my_simplex::print_max</definition>
+        <argsstring>()</argsstring>
+        <name>print_max</name>
+        <qualifiedname>my_simplex::print_max</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="199" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="448" bodyend="453"/>
+      </memberdef>
+      <memberdef kind="function" id="classmy__simplex_1a11273f2abb2d8b11dec3506f332c7c33" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void my_simplex::print_min</definition>
+        <argsstring>()</argsstring>
+        <name>print_min</name>
+        <qualifiedname>my_simplex::print_min</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="200" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="455" bodyend="459"/>
+      </memberdef>
+      <memberdef kind="function" id="classmy__simplex_1a8c1c12e50dee5ce3ce7d3111efb0f41f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void my_simplex::print_all</definition>
+        <argsstring>()</argsstring>
+        <name>print_all</name>
+        <qualifiedname>my_simplex::print_all</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="201" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="516" bodyend="617"/>
+      </memberdef>
+      <memberdef kind="function" id="classmy__simplex_1aa4836a2c76d06acf04daaca260f4975d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void my_simplex::print_xy</definition>
+        <argsstring>()</argsstring>
+        <name>print_xy</name>
+        <qualifiedname>my_simplex::print_xy</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="202" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="496" bodyend="515"/>
+      </memberdef>
+      <memberdef kind="function" id="classmy__simplex_1a97617cf2eacf0c93b55855335325f190" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void my_simplex::print_xyl</definition>
+        <argsstring>()</argsstring>
+        <name>print_xyl</name>
+        <qualifiedname>my_simplex::print_xyl</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="203" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="478" bodyend="494"/>
+      </memberdef>
+      <memberdef kind="function" id="classmy__simplex_1a9462e9e8044f408cd0ce93b281f49a55" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void my_simplex::print_xyh</definition>
+        <argsstring>()</argsstring>
+        <name>print_xyh</name>
+        <qualifiedname>my_simplex::print_xyh</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="204" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="461" bodyend="476"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="2">
+        <label>my_func</label>
+        <link refid="structmy__func"/>
+      </node>
+      <node id="1">
+        <label>my_simplex</label>
+        <link refid="classmy__simplex"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>f</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="163" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="163" bodyend="205"/>
+    <listofallmembers>
+      <member refid="classmy__simplex_1aef89a3f9001b08b7322eff88c330d9da" prot="private" virt="non-virtual"><scope>my_simplex</scope><name>alpha</name></member>
+      <member refid="classmy__simplex_1af62617d1c8987201881b6a812c06bee6" prot="private" virt="non-virtual"><scope>my_simplex</scope><name>beta</name></member>
+      <member refid="classmy__simplex_1a82078337b8ba5908b2485dac89c80043" prot="private" virt="non-virtual"><scope>my_simplex</scope><name>d</name></member>
+      <member refid="classmy__simplex_1ad35e5c86d2ea2f2a8e1d0656767300d8" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>f</name></member>
+      <member refid="classmy__simplex_1aeff084b717bd5443f668a015af0bee0b" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>find_max</name></member>
+      <member refid="classmy__simplex_1a30ecefd8034231f79f83fb47cd349143" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>find_min</name></member>
+      <member refid="classmy__simplex_1ab0e6efb5a25ce117e44dc56f1a0079de" prot="private" virt="non-virtual"><scope>my_simplex</scope><name>gamma</name></member>
+      <member refid="classmy__simplex_1ab35d03eac2e5905c51f193e224a45935" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>get_sigma</name></member>
+      <member refid="classmy__simplex_1a0d370a34ec2d772ad372d7c6823ae683" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>get_yavg</name></member>
+      <member refid="classmy__simplex_1a945744388425495f24fe2d06ea2d8e0b" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>imax</name></member>
+      <member refid="classmy__simplex_1ac1d475adfcc08b19eac6358213405177" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>imin</name></member>
+      <member refid="classmy__simplex_1a9b2809326b9fc057000a5ca1f148ecab" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>inmax</name></member>
+      <member refid="classmy__simplex_1af0efa9df623784ed9830267c8bcd5853" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>my_Centroid</name></member>
+      <member refid="classmy__simplex_1a527ec2f632a99329ad4867350f575967" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>my_Contraction</name></member>
+      <member refid="classmy__simplex_1a74d15668fe5d29070b65a4749eba94eb" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>my_Expansion</name></member>
+      <member refid="classmy__simplex_1a48628a00860da12764b5123c6248de05" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>my_Reflection</name></member>
+      <member refid="classmy__simplex_1a71cc487ee36000a0a29366a0a085e9ea" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>my_SetUp</name></member>
+      <member refid="classmy__simplex_1a672d295dab5fa96684fd19ff884c5a34" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>my_simplex</name></member>
+      <member refid="classmy__simplex_1a8c1c12e50dee5ce3ce7d3111efb0f41f" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>print_all</name></member>
+      <member refid="classmy__simplex_1a440c786f1b26781d40bdffe8766430d5" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>print_Centroid</name></member>
+      <member refid="classmy__simplex_1a066b4e087a5e0e61e6f870de0f2638ba" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>print_Contract</name></member>
+      <member refid="classmy__simplex_1a9130f028a5a70239bb775824c6a84bd3" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>print_Expand</name></member>
+      <member refid="classmy__simplex_1a4a0961750018efd820748b1677a9db66" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>print_max</name></member>
+      <member refid="classmy__simplex_1a11273f2abb2d8b11dec3506f332c7c33" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>print_min</name></member>
+      <member refid="classmy__simplex_1abb251388f4adf34d6dfd9a2b2ffa3b32" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>print_Reflect</name></member>
+      <member refid="classmy__simplex_1aa4836a2c76d06acf04daaca260f4975d" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>print_xy</name></member>
+      <member refid="classmy__simplex_1a9462e9e8044f408cd0ce93b281f49a55" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>print_xyh</name></member>
+      <member refid="classmy__simplex_1a97617cf2eacf0c93b55855335325f190" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>print_xyl</name></member>
+      <member refid="classmy__simplex_1a45294ebb0cee6784714be03b124ceec1" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>replace_all</name></member>
+      <member refid="classmy__simplex_1ab8a1fc0d51e86b2e49637443830a3ced" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>set_y</name></member>
+      <member refid="classmy__simplex_1a45d380f8ba21cbef67568d71c3ee4464" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>x</name></member>
+      <member refid="classmy__simplex_1a4b468ec4759d459e3f3eb866d6855faf" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>xCentroid</name></member>
+      <member refid="classmy__simplex_1a4f06597397a69a91a6b45d55bb3f07df" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>xContract</name></member>
+      <member refid="classmy__simplex_1aa464da77257766779bd9b06aae7b28b8" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>xExpand</name></member>
+      <member refid="classmy__simplex_1a352634ad837edff0b71e668187e77a7b" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>xh</name></member>
+      <member refid="classmy__simplex_1ac4870e2420b1a9eb9d710f4eaeec3efc" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>xl</name></member>
+      <member refid="classmy__simplex_1a88dfa53ad2b72c6f11596a8155403ef0" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>xReflect</name></member>
+      <member refid="classmy__simplex_1a9a65bc250f24cb3ee95a6de2bb7ab2d2" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>xstart</name></member>
+      <member refid="classmy__simplex_1a97487e6bd13a6472947a08e0d1b1dbe6" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>y</name></member>
+      <member refid="classmy__simplex_1ae9ebc206912f719b4c1e2830e0ad78ea" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>yContract</name></member>
+      <member refid="classmy__simplex_1a1fb733e3a390ea5a40fef81e572b9dac" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>yExpand</name></member>
+      <member refid="classmy__simplex_1af793f6b0be1abcb4e2c6a7c790c379e5" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>yh</name></member>
+      <member refid="classmy__simplex_1a7bebbfc93083e55a5272250858c5c1aa" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>yl</name></member>
+      <member refid="classmy__simplex_1ad89f0e17afca06ab9102408cb39b5ce3" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>ynh</name></member>
+      <member refid="classmy__simplex_1a767a239e44b8455adfbe844d9d6c4a89" prot="public" virt="non-virtual"><scope>my_simplex</scope><name>yReflect</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

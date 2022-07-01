@@ -1,0 +1,1008 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classmt2__bisect_1_1mt2" kind="class" language="C++" prot="public">
+    <compoundname>mt2_bisect::mt2</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1af9716d9206933df2b48dfe72bad1411b" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int mt2_bisect::mt2::nevt</definition>
+        <argsstring></argsstring>
+        <name>nevt</name>
+        <qualifiedname>mt2_bisect::mt2::nevt</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="28" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a7ebc6bb7302a1c11d5b5193430910f7b" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool mt2_bisect::mt2::solved</definition>
+        <argsstring></argsstring>
+        <name>solved</name>
+        <qualifiedname>mt2_bisect::mt2::solved</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="31" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a507728e6bd4b96bf5ce5cb37a58bf7a4" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool mt2_bisect::mt2::momenta_set</definition>
+        <argsstring></argsstring>
+        <name>momenta_set</name>
+        <qualifiedname>mt2_bisect::mt2::momenta_set</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="32" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1aab0cf977519c8e349491512134cbcd75" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::mt2_b</definition>
+        <argsstring></argsstring>
+        <name>mt2_b</name>
+        <qualifiedname>mt2_bisect::mt2::mt2_b</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="33" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a3534737419ae3e3b9e3787e407856705" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::pax</definition>
+        <argsstring></argsstring>
+        <name>pax</name>
+        <qualifiedname>mt2_bisect::mt2::pax</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="42" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1ad4a8d0fcf4fe7da324fd2998c1827d2e" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::pay</definition>
+        <argsstring></argsstring>
+        <name>pay</name>
+        <qualifiedname>mt2_bisect::mt2::pay</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="42" column="18" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a960ac405a654d8e8f200eb862cb708e0" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::ma</definition>
+        <argsstring></argsstring>
+        <name>ma</name>
+        <qualifiedname>mt2_bisect::mt2::ma</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="42" column="22" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1ac3e441f26cd61d8d29c1e3f19b31ab52" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::Ea</definition>
+        <argsstring></argsstring>
+        <name>Ea</name>
+        <qualifiedname>mt2_bisect::mt2::Ea</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="42" column="25" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a7316ac3d9d98750ed1fc2b973d4076ca" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::pmissx</definition>
+        <argsstring></argsstring>
+        <name>pmissx</name>
+        <qualifiedname>mt2_bisect::mt2::pmissx</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="43" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="43" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a8e34feab27849532354cfcf22b7f1481" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::pmissy</definition>
+        <argsstring></argsstring>
+        <name>pmissy</name>
+        <qualifiedname>mt2_bisect::mt2::pmissy</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="43" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="43" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1aaeebe398162070911418b2cc49c5c39c" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::pbx</definition>
+        <argsstring></argsstring>
+        <name>pbx</name>
+        <qualifiedname>mt2_bisect::mt2::pbx</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="44" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a7f7ce3b6ee60a8dfd2153ce3e442dfe9" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::pby</definition>
+        <argsstring></argsstring>
+        <name>pby</name>
+        <qualifiedname>mt2_bisect::mt2::pby</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="44" column="18" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a39713df137c2996cda0f90e6f7f3bb7b" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::mb</definition>
+        <argsstring></argsstring>
+        <name>mb</name>
+        <qualifiedname>mt2_bisect::mt2::mb</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="44" column="22" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a047587f75c61e1e48fa732bec6637871" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::Eb</definition>
+        <argsstring></argsstring>
+        <name>Eb</name>
+        <qualifiedname>mt2_bisect::mt2::Eb</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="44" column="25" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1ae26c7118421a65d4e4dc4107f1f4a0f9" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::mn</definition>
+        <argsstring></argsstring>
+        <name>mn</name>
+        <qualifiedname>mt2_bisect::mt2::mn</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="45" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a9469db4cd0970c5ea9d96c0c7ac9dcb4" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::mn_unscale</definition>
+        <argsstring></argsstring>
+        <name>mn_unscale</name>
+        <qualifiedname>mt2_bisect::mt2::mn_unscale</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="45" column="17" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a3dc43b0863443e8c7a9dea59406788fe" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::masq</definition>
+        <argsstring></argsstring>
+        <name>masq</name>
+        <qualifiedname>mt2_bisect::mt2::masq</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="48" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a7b4640c37fa5662537502b7044f569c4" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::Easq</definition>
+        <argsstring></argsstring>
+        <name>Easq</name>
+        <qualifiedname>mt2_bisect::mt2::Easq</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="48" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a929a5aaadd35e73554575844bc60761a" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::mbsq</definition>
+        <argsstring></argsstring>
+        <name>mbsq</name>
+        <qualifiedname>mt2_bisect::mt2::mbsq</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="49" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a206e4f7c06b17d98e93cb9b7b6c65a8d" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::Ebsq</definition>
+        <argsstring></argsstring>
+        <name>Ebsq</name>
+        <qualifiedname>mt2_bisect::mt2::Ebsq</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="49" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a753e2a9c4c3beb741aa456016ec8ed3d" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::pmissxsq</definition>
+        <argsstring></argsstring>
+        <name>pmissxsq</name>
+        <qualifiedname>mt2_bisect::mt2::pmissxsq</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="50" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a8753d19b43510a1238354c9572fda515" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::pmissysq</definition>
+        <argsstring></argsstring>
+        <name>pmissysq</name>
+        <qualifiedname>mt2_bisect::mt2::pmissysq</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="50" column="23" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a1779bbbb212f5df7d7cd78564a399eb2" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::mnsq</definition>
+        <argsstring></argsstring>
+        <name>mnsq</name>
+        <qualifiedname>mt2_bisect::mt2::mnsq</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="51" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="51" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1ad15f66e903cb388aa14c16c1997d311f" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::a1</definition>
+        <argsstring></argsstring>
+        <name>a1</name>
+        <qualifiedname>mt2_bisect::mt2::a1</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="54" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a18ee8fe1317d3a9d2aa546e76ba667a8" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::b1</definition>
+        <argsstring></argsstring>
+        <name>b1</name>
+        <qualifiedname>mt2_bisect::mt2::b1</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="54" column="17" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1ae7a91d4edad8084ad969fc56398793a4" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::c1</definition>
+        <argsstring></argsstring>
+        <name>c1</name>
+        <qualifiedname>mt2_bisect::mt2::c1</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="54" column="20" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a08b388a9c68014f4ac7f2b92b561b26c" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::a2</definition>
+        <argsstring></argsstring>
+        <name>a2</name>
+        <qualifiedname>mt2_bisect::mt2::a2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="54" column="23" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a150d1726b5124ff1e89d4bad6124acf4" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::b2</definition>
+        <argsstring></argsstring>
+        <name>b2</name>
+        <qualifiedname>mt2_bisect::mt2::b2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="54" column="26" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a4747927fbbfbb8ffb7c31f5a1018d042" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::c2</definition>
+        <argsstring></argsstring>
+        <name>c2</name>
+        <qualifiedname>mt2_bisect::mt2::c2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="54" column="29" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a4b5ffc1b273db129e3ff42079ff99316" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::d1</definition>
+        <argsstring></argsstring>
+        <name>d1</name>
+        <qualifiedname>mt2_bisect::mt2::d1</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="54" column="32" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a8be3a1d61f06f33ef7dc2f2813d7d9e7" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::e1</definition>
+        <argsstring></argsstring>
+        <name>e1</name>
+        <qualifiedname>mt2_bisect::mt2::e1</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="54" column="35" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a70997d2c31c72d68f05bc603b0167dee" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::f1</definition>
+        <argsstring></argsstring>
+        <name>f1</name>
+        <qualifiedname>mt2_bisect::mt2::f1</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="54" column="38" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1aa34f882506864107119a9b94f8453f90" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::d2</definition>
+        <argsstring></argsstring>
+        <name>d2</name>
+        <qualifiedname>mt2_bisect::mt2::d2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="54" column="41" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a1fd7a4ecb78f333f40c0daed9e60769d" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::e2</definition>
+        <argsstring></argsstring>
+        <name>e2</name>
+        <qualifiedname>mt2_bisect::mt2::e2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="54" column="44" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a3f705242eadc460047d4c60dace2d20e" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::f2</definition>
+        <argsstring></argsstring>
+        <name>f2</name>
+        <qualifiedname>mt2_bisect::mt2::f2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="54" column="47" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a1b5d6e5bc718e180ec1445fdd1e5d378" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::d11</definition>
+        <argsstring></argsstring>
+        <name>d11</name>
+        <qualifiedname>mt2_bisect::mt2::d11</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="55" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a20945cc51786df3027af8add99fdf3a4" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::e11</definition>
+        <argsstring></argsstring>
+        <name>e11</name>
+        <qualifiedname>mt2_bisect::mt2::e11</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="55" column="18" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a8887a679793339bbdd1745ff759a96d1" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::f12</definition>
+        <argsstring></argsstring>
+        <name>f12</name>
+        <qualifiedname>mt2_bisect::mt2::f12</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="55" column="22" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1ac84a378a927ebd776387f77c25c8ac27" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::f10</definition>
+        <argsstring></argsstring>
+        <name>f10</name>
+        <qualifiedname>mt2_bisect::mt2::f10</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="55" column="26" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a2682a1bf0d4fc6b1604a1cae4d9a092d" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::d21</definition>
+        <argsstring></argsstring>
+        <name>d21</name>
+        <qualifiedname>mt2_bisect::mt2::d21</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="55" column="30" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a0ad25ba259466619a434090aa13e5af2" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::d20</definition>
+        <argsstring></argsstring>
+        <name>d20</name>
+        <qualifiedname>mt2_bisect::mt2::d20</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="55" column="34" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a7cf171fd398d4ce3f8759b5fb1637d5e" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::e21</definition>
+        <argsstring></argsstring>
+        <name>e21</name>
+        <qualifiedname>mt2_bisect::mt2::e21</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="55" column="38" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a090524c843f3c53cf5e9fea61d84c0c6" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::e20</definition>
+        <argsstring></argsstring>
+        <name>e20</name>
+        <qualifiedname>mt2_bisect::mt2::e20</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="55" column="42" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a7aae12db4be21fff7ceaebff04234c0d" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::f22</definition>
+        <argsstring></argsstring>
+        <name>f22</name>
+        <qualifiedname>mt2_bisect::mt2::f22</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="55" column="46" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1af3bbe7ccba67360e1b399aa230142ed3" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::f21</definition>
+        <argsstring></argsstring>
+        <name>f21</name>
+        <qualifiedname>mt2_bisect::mt2::f21</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="55" column="50" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a4d2b2a63ef94a4ff0d26a923343c96ab" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::f20</definition>
+        <argsstring></argsstring>
+        <name>f20</name>
+        <qualifiedname>mt2_bisect::mt2::f20</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="55" column="54" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1a67c0805acf169d14c4b95259151841fb" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::scale</definition>
+        <argsstring></argsstring>
+        <name>scale</name>
+        <qualifiedname>mt2_bisect::mt2::scale</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="57" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="57" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmt2__bisect_1_1mt2_1ab635f2e304f727787b375c3a90040a6d" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::precision</definition>
+        <argsstring></argsstring>
+        <name>precision</name>
+        <qualifiedname>mt2_bisect::mt2::precision</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="58" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="58" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classmt2__bisect_1_1mt2_1a01fcc20ac94df1ec2b9d0dd8360fa5e3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>mt2_bisect::mt2::mt2</definition>
+        <argsstring>()</argsstring>
+        <name>mt2</name>
+        <qualifiedname>mt2_bisect::mt2::mt2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="21" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2_bisect.cpp" bodystart="42" bodyend="48"/>
+      </memberdef>
+      <memberdef kind="function" id="classmt2__bisect_1_1mt2_1a6cd3bc5b333f1819bc09f5162224dbc1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void mt2_bisect::mt2::mt2_bisect</definition>
+        <argsstring>()</argsstring>
+        <name>mt2_bisect</name>
+        <qualifiedname>mt2_bisect::mt2::mt2_bisect</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="22" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2_bisect.cpp" bodystart="332" bodyend="481"/>
+      </memberdef>
+      <memberdef kind="function" id="classmt2__bisect_1_1mt2_1a3d2118c62a8becb5e97c4ad33b5df4d0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void mt2_bisect::mt2::mt2_massless</definition>
+        <argsstring>()</argsstring>
+        <name>mt2_massless</name>
+        <qualifiedname>mt2_bisect::mt2::mt2_massless</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="23" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2_bisect.cpp" bodystart="147" bodyend="272"/>
+      </memberdef>
+      <memberdef kind="function" id="classmt2__bisect_1_1mt2_1ae96efe5c7b94e26dae5cdccfd0716424" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void mt2_bisect::mt2::set_momenta</definition>
+        <argsstring>(double *pa0, double *pb0, double *pmiss0)</argsstring>
+        <name>set_momenta</name>
+        <qualifiedname>mt2_bisect::mt2::set_momenta</qualifiedname>
+        <param>
+          <type>double *</type>
+          <declname>pa0</declname>
+        </param>
+        <param>
+          <type>double *</type>
+          <declname>pb0</declname>
+        </param>
+        <param>
+          <type>double *</type>
+          <declname>pmiss0</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="24" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2_bisect.cpp" bodystart="62" bodyend="128"/>
+      </memberdef>
+      <memberdef kind="function" id="classmt2__bisect_1_1mt2_1ade618f1916cef9ee65e1da73d224e03c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void mt2_bisect::mt2::set_mn</definition>
+        <argsstring>(double mn)</argsstring>
+        <name>set_mn</name>
+        <qualifiedname>mt2_bisect::mt2::set_mn</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>mn</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="25" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2_bisect.cpp" bodystart="130" bodyend="136"/>
+      </memberdef>
+      <memberdef kind="function" id="classmt2__bisect_1_1mt2_1a876c30e4e6aca8d9740de6ebc616677c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double mt2_bisect::mt2::get_mt2</definition>
+        <argsstring>()</argsstring>
+        <name>get_mt2</name>
+        <qualifiedname>mt2_bisect::mt2::get_mt2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="26" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2_bisect.cpp" bodystart="50" bodyend="60"/>
+      </memberdef>
+      <memberdef kind="function" id="classmt2__bisect_1_1mt2_1adc6803ca845d6be3b5fcd38dfa97df83" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void mt2_bisect::mt2::print</definition>
+        <argsstring>()</argsstring>
+        <name>print</name>
+        <qualifiedname>mt2_bisect::mt2::print</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="27" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2_bisect.cpp" bodystart="138" bodyend="144"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classmt2__bisect_1_1mt2_1a753cb29256f5e39fa9d8b481ea3c2a4f" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int mt2_bisect::mt2::nsols</definition>
+        <argsstring>(double Dsq)</argsstring>
+        <name>nsols</name>
+        <qualifiedname>mt2_bisect::mt2::nsols</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>Dsq</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="35" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2_bisect.cpp" bodystart="545" bodyend="628"/>
+      </memberdef>
+      <memberdef kind="function" id="classmt2__bisect_1_1mt2_1a22754238996e7f1aab345683e9db07d3" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int mt2_bisect::mt2::nsols_massless</definition>
+        <argsstring>(double Dsq)</argsstring>
+        <name>nsols_massless</name>
+        <qualifiedname>mt2_bisect::mt2::nsols_massless</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>Dsq</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="36" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2_bisect.cpp" bodystart="274" bodyend="330"/>
+      </memberdef>
+      <memberdef kind="function" id="classmt2__bisect_1_1mt2_1a54e850b5b966eb75a59119a5a5f91117" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int mt2_bisect::mt2::signchange_n</definition>
+        <argsstring>(long double t1, long double t2, long double t3, long double t4, long double t5)</argsstring>
+        <name>signchange_n</name>
+        <qualifiedname>mt2_bisect::mt2::signchange_n</qualifiedname>
+        <param>
+          <type>long double</type>
+          <declname>t1</declname>
+        </param>
+        <param>
+          <type>long double</type>
+          <declname>t2</declname>
+        </param>
+        <param>
+          <type>long double</type>
+          <declname>t3</declname>
+        </param>
+        <param>
+          <type>long double</type>
+          <declname>t4</declname>
+        </param>
+        <param>
+          <type>long double</type>
+          <declname>t5</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="37" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2_bisect.cpp" bodystart="630" bodyend="639"/>
+      </memberdef>
+      <memberdef kind="function" id="classmt2__bisect_1_1mt2_1a045c532dc9a0984db825dd758fa68063" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int mt2_bisect::mt2::signchange_p</definition>
+        <argsstring>(long double t1, long double t2, long double t3, long double t4, long double t5)</argsstring>
+        <name>signchange_p</name>
+        <qualifiedname>mt2_bisect::mt2::signchange_p</qualifiedname>
+        <param>
+          <type>long double</type>
+          <declname>t1</declname>
+        </param>
+        <param>
+          <type>long double</type>
+          <declname>t2</declname>
+        </param>
+        <param>
+          <type>long double</type>
+          <declname>t3</declname>
+        </param>
+        <param>
+          <type>long double</type>
+          <declname>t4</declname>
+        </param>
+        <param>
+          <type>long double</type>
+          <declname>t5</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="38" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2_bisect.cpp" bodystart="640" bodyend="649"/>
+      </memberdef>
+      <memberdef kind="function" id="classmt2__bisect_1_1mt2_1a674662c61ea4617c2fdfac9560ba6991" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int mt2_bisect::mt2::scan_high</definition>
+        <argsstring>(double &amp;Deltasq_high)</argsstring>
+        <name>scan_high</name>
+        <qualifiedname>mt2_bisect::mt2::scan_high</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>Deltasq_high</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="39" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2_bisect.cpp" bodystart="523" bodyend="544"/>
+      </memberdef>
+      <memberdef kind="function" id="classmt2__bisect_1_1mt2_1afbd80ac52a81a3eabe40c8f0fcaac036" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int mt2_bisect::mt2::find_high</definition>
+        <argsstring>(double &amp;Deltasq_high)</argsstring>
+        <name>find_high</name>
+        <qualifiedname>mt2_bisect::mt2::find_high</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>Deltasq_high</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="40" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2_bisect.cpp" bodystart="483" bodyend="522"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="17" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="18" bodyend="59"/>
+    <listofallmembers>
+      <member refid="classmt2__bisect_1_1mt2_1ad15f66e903cb388aa14c16c1997d311f" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>a1</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a08b388a9c68014f4ac7f2b92b561b26c" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>a2</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a18ee8fe1317d3a9d2aa546e76ba667a8" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>b1</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a150d1726b5124ff1e89d4bad6124acf4" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>b2</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1ae7a91d4edad8084ad969fc56398793a4" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>c1</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a4747927fbbfbb8ffb7c31f5a1018d042" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>c2</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a4b5ffc1b273db129e3ff42079ff99316" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>d1</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a1b5d6e5bc718e180ec1445fdd1e5d378" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>d11</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1aa34f882506864107119a9b94f8453f90" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>d2</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a0ad25ba259466619a434090aa13e5af2" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>d20</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a2682a1bf0d4fc6b1604a1cae4d9a092d" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>d21</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a8be3a1d61f06f33ef7dc2f2813d7d9e7" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>e1</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a20945cc51786df3027af8add99fdf3a4" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>e11</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a1fd7a4ecb78f333f40c0daed9e60769d" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>e2</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a090524c843f3c53cf5e9fea61d84c0c6" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>e20</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a7cf171fd398d4ce3f8759b5fb1637d5e" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>e21</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1ac3e441f26cd61d8d29c1e3f19b31ab52" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>Ea</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a7b4640c37fa5662537502b7044f569c4" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>Easq</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a047587f75c61e1e48fa732bec6637871" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>Eb</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a206e4f7c06b17d98e93cb9b7b6c65a8d" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>Ebsq</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a70997d2c31c72d68f05bc603b0167dee" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>f1</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1ac84a378a927ebd776387f77c25c8ac27" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>f10</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a8887a679793339bbdd1745ff759a96d1" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>f12</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a3f705242eadc460047d4c60dace2d20e" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>f2</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a4d2b2a63ef94a4ff0d26a923343c96ab" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>f20</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1af3bbe7ccba67360e1b399aa230142ed3" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>f21</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a7aae12db4be21fff7ceaebff04234c0d" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>f22</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1afbd80ac52a81a3eabe40c8f0fcaac036" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>find_high</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a876c30e4e6aca8d9740de6ebc616677c" prot="public" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>get_mt2</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a960ac405a654d8e8f200eb862cb708e0" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>ma</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a3dc43b0863443e8c7a9dea59406788fe" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>masq</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a39713df137c2996cda0f90e6f7f3bb7b" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>mb</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a929a5aaadd35e73554575844bc60761a" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>mbsq</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1ae26c7118421a65d4e4dc4107f1f4a0f9" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>mn</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a9469db4cd0970c5ea9d96c0c7ac9dcb4" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>mn_unscale</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a1779bbbb212f5df7d7cd78564a399eb2" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>mnsq</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a507728e6bd4b96bf5ce5cb37a58bf7a4" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>momenta_set</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a01fcc20ac94df1ec2b9d0dd8360fa5e3" prot="public" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>mt2</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1aab0cf977519c8e349491512134cbcd75" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>mt2_b</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a6cd3bc5b333f1819bc09f5162224dbc1" prot="public" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>mt2_bisect</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a3d2118c62a8becb5e97c4ad33b5df4d0" prot="public" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>mt2_massless</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1af9716d9206933df2b48dfe72bad1411b" prot="public" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>nevt</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a753cb29256f5e39fa9d8b481ea3c2a4f" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>nsols</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a22754238996e7f1aab345683e9db07d3" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>nsols_massless</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a3534737419ae3e3b9e3787e407856705" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>pax</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1ad4a8d0fcf4fe7da324fd2998c1827d2e" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>pay</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1aaeebe398162070911418b2cc49c5c39c" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>pbx</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a7f7ce3b6ee60a8dfd2153ce3e442dfe9" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>pby</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a7316ac3d9d98750ed1fc2b973d4076ca" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>pmissx</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a753e2a9c4c3beb741aa456016ec8ed3d" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>pmissxsq</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a8e34feab27849532354cfcf22b7f1481" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>pmissy</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a8753d19b43510a1238354c9572fda515" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>pmissysq</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1ab635f2e304f727787b375c3a90040a6d" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>precision</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1adc6803ca845d6be3b5fcd38dfa97df83" prot="public" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>print</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a67c0805acf169d14c4b95259151841fb" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>scale</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a674662c61ea4617c2fdfac9560ba6991" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>scan_high</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1ade618f1916cef9ee65e1da73d224e03c" prot="public" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>set_mn</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1ae96efe5c7b94e26dae5cdccfd0716424" prot="public" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>set_momenta</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a54e850b5b966eb75a59119a5a5f91117" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>signchange_n</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a045c532dc9a0984db825dd758fa68063" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>signchange_p</name></member>
+      <member refid="classmt2__bisect_1_1mt2_1a7ebc6bb7302a1c11d5b5193430910f7b" prot="private" virt="non-virtual"><scope>mt2_bisect::mt2</scope><name>solved</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

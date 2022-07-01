@@ -1,0 +1,136 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classGambit_1_1ColliderBit_1_1ALEPHStauLimitAt208GeV" kind="class" language="C++" prot="public">
+    <compoundname>Gambit::ColliderBit::ALEPHStauLimitAt208GeV</compoundname>
+    <basecompoundref refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer" prot="public" virt="non-virtual">Gambit::ColliderBit::BaseLimitContainer</basecompoundref>
+    <includes refid="ALEPHSleptonLimits_8hpp" local="no">ALEPHSleptonLimits.hpp</includes>
+      <sectiondef kind="user-defined">
+      <header>Point interpolation, conversion, and region checks</header>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1ALEPHStauLimitAt208GeV_1ae4823b0cd9eb23b5047ebeb5da5e401f" prot="public" static="no" const="yes" explicit="no" inline="no" virt="virtual">
+        <type><ref refid="classGambit_1_1ColliderBit_1_1P2" kindref="compound">P2</ref></type>
+        <definition>P2 Gambit::ColliderBit::ALEPHStauLimitAt208GeV::convertPt</definition>
+        <argsstring>(double x, double y) const</argsstring>
+        <name>convertPt</name>
+        <qualifiedname>Gambit::ColliderBit::ALEPHStauLimitAt208GeV::convertPt</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a886639d890cb7876fa839017e9291774">convertPt</reimplements>
+        <param>
+          <type>double</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>y</declname>
+        </param>
+        <briefdescription>
+<para>Convert a point from pixel units to axis units. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/ALEPHSleptonLimits.hpp" line="52" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits/ALEPHSleptonLimits.cpp" bodystart="6180" bodyend="6184"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1ALEPHStauLimitAt208GeV_1a60633ba40fcf5076f5a95fddc4afaf5f" prot="public" static="no" const="yes" explicit="no" inline="no" virt="virtual">
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::ALEPHStauLimitAt208GeV::isWithinExclusionRegion</definition>
+        <argsstring>(double x, double y, double mZ) const</argsstring>
+        <name>isWithinExclusionRegion</name>
+        <qualifiedname>Gambit::ColliderBit::ALEPHStauLimitAt208GeV::isWithinExclusionRegion</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a7868f6d2819b3851808f4a03edb8a05e">isWithinExclusionRegion</reimplements>
+        <param>
+          <type>double</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>y</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>mZ</declname>
+        </param>
+        <briefdescription>
+<para>Check to see if the point is within the exclusion region. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/ALEPHSleptonLimits.hpp" line="54" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits/ALEPHSleptonLimits.cpp" bodystart="6186" bodyend="6189"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="user-defined">
+      <header>Construction, initializing with all necessary data from the plot</header>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1ALEPHStauLimitAt208GeV_1a344514b74f4382ccfaae720a19daa36b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::ALEPHStauLimitAt208GeV::ALEPHStauLimitAt208GeV</definition>
+        <argsstring>()</argsstring>
+        <name>ALEPHStauLimitAt208GeV</name>
+        <qualifiedname>Gambit::ColliderBit::ALEPHStauLimitAt208GeV::ALEPHStauLimitAt208GeV</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/ALEPHSleptonLimits.hpp" line="60" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits/ALEPHSleptonLimits.cpp" bodystart="6191" bodyend="7995"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>A class to contain the limit data from ALEPH_PLB526_2002_206, figure 3c. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1">
+        <label>Gambit::ColliderBit::ALEPHStauLimitAt208GeV</label>
+        <link refid="classGambit_1_1ColliderBit_1_1ALEPHStauLimitAt208GeV"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>Gambit::ColliderBit::BaseLimitContainer</label>
+        <link refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1">
+        <label>Gambit::ColliderBit::ALEPHStauLimitAt208GeV</label>
+        <link refid="classGambit_1_1ColliderBit_1_1ALEPHStauLimitAt208GeV"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>Gambit::ColliderBit::BaseLimitContainer</label>
+        <link refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer"/>
+        <childnode refid="3" relation="usage">
+          <edgelabel>_externalPoint</edgelabel>
+        </childnode>
+      </node>
+      <node id="3">
+        <label>Gambit::ColliderBit::P2</label>
+        <link refid="classGambit_1_1ColliderBit_1_1P2"/>
+      </node>
+    </collaborationgraph>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/ALEPHSleptonLimits.hpp" line="47" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/ALEPHSleptonLimits.hpp" bodystart="47" bodyend="62"/>
+    <listofallmembers>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a92ac7a894497bba1d5ebb54bcc0cfe32" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::ALEPHStauLimitAt208GeV</scope><name>_externalPoint</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1ab5612b14cb0afa257d734db994f4cf9e" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::ALEPHStauLimitAt208GeV</scope><name>_limitContours</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a2e41f565834c702b7dc3407edfce0c58" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::ALEPHStauLimitAt208GeV</scope><name>_limitValuesSorted</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1ALEPHStauLimitAt208GeV_1a344514b74f4382ccfaae720a19daa36b" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::ALEPHStauLimitAt208GeV</scope><name>ALEPHStauLimitAt208GeV</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1ac048a543d84ea030d5c6112948f046a1" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::ALEPHStauLimitAt208GeV</scope><name>BaseLimitContainer</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1af0a62b0113edab7c63d419044f4fbb30" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::ALEPHStauLimitAt208GeV</scope><name>Contours</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a01f125e9632da4bafc0d8cfce3c67916" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::ALEPHStauLimitAt208GeV</scope><name>ContoursPointer</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1ALEPHStauLimitAt208GeV_1ae4823b0cd9eb23b5047ebeb5da5e401f" prot="public" virt="virtual"><scope>Gambit::ColliderBit::ALEPHStauLimitAt208GeV</scope><name>convertPt</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1ac8bb4e9ecd3bd687430934a7d5c06072" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::ALEPHStauLimitAt208GeV</scope><name>Corners</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1aee6a44b01a17bd3b91ca5542428da10b" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::ALEPHStauLimitAt208GeV</scope><name>dumpLightPlotData</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a4ffeb04551bd95c730a9725abdcf59bb" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::ALEPHStauLimitAt208GeV</scope><name>dumpPlotData</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1ALEPHStauLimitAt208GeV_1a60633ba40fcf5076f5a95fddc4afaf5f" prot="public" virt="virtual"><scope>Gambit::ColliderBit::ALEPHStauLimitAt208GeV</scope><name>isWithinExclusionRegion</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1ada1ec947a57acf8cec088822940b4ce2" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::ALEPHStauLimitAt208GeV</scope><name>limitAverage</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1af03ddeccbc3e882935ee023362726d20" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::ALEPHStauLimitAt208GeV</scope><name>LimitContourEntry</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a40cede06c7138118bc911dff1fa83099" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::ALEPHStauLimitAt208GeV</scope><name>LimitContours</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a719fe557148f5e84f5e00198d62b5a02" prot="public" virt="virtual"><scope>Gambit::ColliderBit::ALEPHStauLimitAt208GeV</scope><name>specialLimit</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a0c6085c4694ec3da44a399b911fceb14" prot="public" virt="virtual"><scope>Gambit::ColliderBit::ALEPHStauLimitAt208GeV</scope><name>~BaseLimitContainer</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

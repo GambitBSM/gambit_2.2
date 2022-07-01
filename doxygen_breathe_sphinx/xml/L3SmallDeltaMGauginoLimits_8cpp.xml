@@ -1,0 +1,410 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="L3SmallDeltaMGauginoLimits_8cpp" kind="file" language="C++">
+    <compoundname>L3SmallDeltaMGauginoLimits.cpp</compoundname>
+    <includes refid="L3SmallDeltaMGauginoLimits_8hpp" local="yes">gambit/ColliderBit/limits/L3SmallDeltaMGauginoLimits.hpp</includes>
+    <incdepgraph>
+      <node id="3">
+        <label>gambit/ColliderBit/limits/BaseLimitContainer.hpp</label>
+        <link refid="BaseLimitContainer_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>gambit/ColliderBit/limits/L3SmallDeltaMGauginoLimits.hpp</label>
+        <link refid="L3SmallDeltaMGauginoLimits_8hpp_source"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="15">
+        <label>gambit/ColliderBit/limits/PointsAndLines.hpp</label>
+        <link refid="PointsAndLines_8hpp_source"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits/L3SmallDeltaMGauginoLimits.cpp</label>
+        <link refid="L3SmallDeltaMGauginoLimits_8cpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>algorithm</label>
+      </node>
+      <node id="5">
+        <label>cmath</label>
+      </node>
+      <node id="6">
+        <label>cstdlib</label>
+      </node>
+      <node id="7">
+        <label>fstream</label>
+      </node>
+      <node id="14">
+        <label>gambit/Elements/shared_types.hpp</label>
+      </node>
+      <node id="8">
+        <label>iostream</label>
+      </node>
+      <node id="9">
+        <label>limits</label>
+      </node>
+      <node id="10">
+        <label>map</label>
+      </node>
+      <node id="16">
+        <label>sstream</label>
+      </node>
+      <node id="11">
+        <label>string</label>
+      </node>
+      <node id="12">
+        <label>utility</label>
+      </node>
+      <node id="13">
+        <label>vector</label>
+      </node>
+    </incdepgraph>
+    <innernamespace refid="namespaceGambit">Gambit</innernamespace>
+    <innernamespace refid="namespaceGambit_1_1ColliderBit">Gambit::ColliderBit</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&quot;gambit/ColliderBit/limits/L3SmallDeltaMGauginoLimits.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespaceGambit" kindref="compound">Gambit</ref><sp/>{</highlight></codeline>
+<codeline lineno="4"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">ColliderBit<sp/>{</highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"><sp/><sp/><sp/><sp/>P2<sp/><ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV::convertPt</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>x,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>y)</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="8"><highlight class="keyword"><sp/><sp/><sp/><sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>P2(45.<sp/>+<sp/>(x<sp/>-<sp/>138.00)<sp/>/<sp/>(1014.00<sp/>-<sp/>138.00)<sp/>*<sp/>(95.<sp/>-<sp/>45.),</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>4.<sp/>+<sp/>(y<sp/>-<sp/>56.00)<sp/>/<sp/>(239.00<sp/>-<sp/>56.00)<sp/>*<sp/>(0.<sp/>-<sp/>4.));</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a11b73b724e593bb72090665ca91cbaea" kindref="member">L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV::isWithinExclusionRegion</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>x,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>y,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">)</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="14"><highlight class="keyword"><sp/><sp/><sp/><sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(y<sp/>&lt;=<sp/>x<sp/>and<sp/>x<sp/>&lt;=<sp/>188.6<sp/>/<sp/>2.);</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/>L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV::L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV()<sp/>{</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a2e41f565834c702b7dc3407edfce0c58" kindref="member">_limitValuesSorted</ref>.push_back(1.0);</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a2e41f565834c702b7dc3407edfce0c58" kindref="member">_limitValuesSorted</ref>.push_back(2.0);</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a2e41f565834c702b7dc3407edfce0c58" kindref="member">_limitValuesSorted</ref>.push_back(4.0);</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a2e41f565834c702b7dc3407edfce0c58" kindref="member">_limitValuesSorted</ref>.push_back(6.0);</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Corners<sp/>corners;</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>ContoursPointer<sp/>contoursPointer;</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.clear();</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(138.00,234.00));</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(302.00,231.00));</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(503.00,225.00));</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(474.00,217.00));</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(465.00,193.00));</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(341.00,158.00));</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(167.00,103.00));</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(138.00,62.00));</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(138.00,234.00));</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer<sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/>Contours();</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer-&gt;resize(corners.size()<sp/>-<sp/>1);</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>std::transform(corners.begin(),<sp/>--corners.end(),<sp/>++corners.begin(),</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer-&gt;begin(),<sp/>makeLine);</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>_limitContours.insert(LimitContourEntry(0,<sp/>contoursPointer));</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.clear();</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(138.00,234.00));</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(489.00,232.00));</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(664.00,231.00));</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(693.00,230.00));</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(729.00,224.00));</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(719.00,215.00));</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(728.00,192.00));</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(707.00,146.00));</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(561.00,101.00));</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(263.00,56.00));</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(138.00,56.00));</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(138.00,234.00));</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer<sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/>Contours();</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer-&gt;resize(corners.size()<sp/>-<sp/>1);</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>std::transform(corners.begin(),<sp/>--corners.end(),<sp/>++corners.begin(),</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer-&gt;begin(),<sp/>makeLine);</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>_limitContours.insert(LimitContourEntry(1,<sp/>contoursPointer));</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.clear();</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(138.00,234.00));</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(489.00,232.00));</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(752.00,231.00));</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(832.00,230.00));</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(833.00,224.00));</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(838.00,216.00));</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(839.00,192.00));</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(824.00,145.00));</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(742.00,101.00));</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(731.00,56.00));</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(138.00,56.00));</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(138.00,234.00));</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer<sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/>Contours();</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer-&gt;resize(corners.size()<sp/>-<sp/>1);</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>std::transform(corners.begin(),<sp/>--corners.end(),<sp/>++corners.begin(),</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer-&gt;begin(),<sp/>makeLine);</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>_limitContours.insert(LimitContourEntry(2,<sp/>contoursPointer));</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.clear();</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(138.00,234.00));</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(490.00,233.00));</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(752.00,232.00));</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(845.00,230.00));</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(852.00,229.00));</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(852.00,208.00));</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(854.00,190.00));</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(852.00,143.00));</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(840.00,101.00));</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(795.00,56.00));</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(138.00,56.00));</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a02b83078de9b3a7d21058901804c07c8" kindref="member">convertPt</ref>(138.00,234.00));</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer<sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/>Contours();</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer-&gt;resize(corners.size()<sp/>-<sp/>1);</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>std::transform(corners.begin(),<sp/>--corners.end(),<sp/>++corners.begin(),</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer-&gt;begin(),<sp/>makeLine);</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>_limitContours.insert(LimitContourEntry(3,<sp/>contoursPointer));</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"></highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="112"><highlight class="normal"></highlight></codeline>
+<codeline lineno="113"><highlight class="normal"></highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/>P2<sp/><ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV::convertPt</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>x,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>y)</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="115"><highlight class="keyword"><sp/><sp/><sp/><sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>P2(45.<sp/>+<sp/>(x<sp/>-<sp/>140.00)<sp/>/<sp/>(1017.00<sp/>-<sp/>140.00)<sp/>*<sp/>(95.<sp/>-<sp/>45.),</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>4.<sp/>+<sp/>(y<sp/>-<sp/>415.00)<sp/>/<sp/>(598.00<sp/>-<sp/>415.00)<sp/>*<sp/>(0.<sp/>-<sp/>4.));</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"></highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a816043e3b66538292a29a368b039a2bf" kindref="member">L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV::isWithinExclusionRegion</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>x,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>y,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">)</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="121"><highlight class="keyword"><sp/><sp/><sp/><sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(y<sp/>&lt;=<sp/>x<sp/>and<sp/>x<sp/>&lt;=<sp/>188.6<sp/>/<sp/>2.);</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"></highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/>L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV::L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV()</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a2e41f565834c702b7dc3407edfce0c58" kindref="member">_limitValuesSorted</ref>.push_back(1.0);</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a2e41f565834c702b7dc3407edfce0c58" kindref="member">_limitValuesSorted</ref>.push_back(2.0);</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a2e41f565834c702b7dc3407edfce0c58" kindref="member">_limitValuesSorted</ref>.push_back(4.0);</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a2e41f565834c702b7dc3407edfce0c58" kindref="member">_limitValuesSorted</ref>.push_back(6.0);</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"></highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Corners<sp/>corners;</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>ContoursPointer<sp/>contoursPointer;</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"></highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.clear();</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(140.00,415.00));</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(143.00,415.00));</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(168.00,461.00));</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(262.00,507.00));</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(372.00,552.00));</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(370.00,577.00));</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(376.00,584.00));</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(265.00,590.00));</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(140.00,598.00));</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(140.00,415.00));</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"></highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer<sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/>Contours();</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer-&gt;resize(corners.size()<sp/>-<sp/>1);</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>std::transform(corners.begin(),<sp/>--corners.end(),<sp/>++corners.begin(),</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer-&gt;begin(),<sp/>makeLine);</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>_limitContours.insert(LimitContourEntry(0,<sp/>contoursPointer));</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"></highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.clear();</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(140.00,415.00));</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(238.00,415.00));</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(412.00,458.00));</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(639.00,506.00));</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(650.00,550.00));</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(679.00,574.00));</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(630.00,588.00));</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(608.00,591.00));</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(526.00,593.00));</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(140.00,598.00));</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(140.00,415.00));</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"></highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer<sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/>Contours();</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer-&gt;resize(corners.size()<sp/>-<sp/>1);</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>std::transform(corners.begin(),<sp/>--corners.end(),<sp/>++corners.begin(),</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer-&gt;begin(),<sp/>makeLine);</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>_limitContours.insert(LimitContourEntry(1,<sp/>contoursPointer));</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"></highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.clear();</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(140.00,415.00));</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(469.00,415.00));</highlight></codeline>
+<codeline lineno="180"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(705.00,459.00));</highlight></codeline>
+<codeline lineno="181"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(785.00,506.00));</highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(801.00,553.00));</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(800.00,583.00));</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(791.00,588.00));</highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(699.00,596.00));</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(526.00,597.00));</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(140.00,598.00));</highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(140.00,415.00));</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"></highlight></codeline>
+<codeline lineno="190"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer<sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/>Contours();</highlight></codeline>
+<codeline lineno="191"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer-&gt;resize(corners.size()<sp/>-<sp/>1);</highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>std::transform(corners.begin(),<sp/>--corners.end(),<sp/>++corners.begin(),</highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer-&gt;begin(),<sp/>makeLine);</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>_limitContours.insert(LimitContourEntry(2,<sp/>contoursPointer));</highlight></codeline>
+<codeline lineno="195"><highlight class="normal"></highlight></codeline>
+<codeline lineno="197"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.clear();</highlight></codeline>
+<codeline lineno="198"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(140.00,415.00));</highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(765.00,415.00));</highlight></codeline>
+<codeline lineno="200"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(773.00,428.00));</highlight></codeline>
+<codeline lineno="201"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(825.00,506.00));</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(835.00,548.00));</highlight></codeline>
+<codeline lineno="203"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(836.00,574.00));</highlight></codeline>
+<codeline lineno="204"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(829.00,588.00));</highlight></codeline>
+<codeline lineno="205"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(798.00,592.00));</highlight></codeline>
+<codeline lineno="206"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(745.00,595.00));</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(526.00,597.00));</highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(140.00,598.00));</highlight></codeline>
+<codeline lineno="209"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMAnySneutrinoLimitAt188pt6GeV_1a0a17d48e21bef2f63a0131a91635399a" kindref="member">convertPt</ref>(140.00,415.00));</highlight></codeline>
+<codeline lineno="210"><highlight class="normal"></highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer<sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/>Contours();</highlight></codeline>
+<codeline lineno="212"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer-&gt;resize(corners.size()<sp/>-<sp/>1);</highlight></codeline>
+<codeline lineno="213"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>std::transform(corners.begin(),<sp/>--corners.end(),<sp/>++corners.begin(),</highlight></codeline>
+<codeline lineno="214"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer-&gt;begin(),<sp/>makeLine);</highlight></codeline>
+<codeline lineno="215"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>_limitContours.insert(LimitContourEntry(3,<sp/>contoursPointer));</highlight></codeline>
+<codeline lineno="216"><highlight class="normal"></highlight></codeline>
+<codeline lineno="217"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="218"><highlight class="normal"></highlight></codeline>
+<codeline lineno="219"><highlight class="normal"></highlight></codeline>
+<codeline lineno="220"><highlight class="normal"></highlight></codeline>
+<codeline lineno="221"><highlight class="normal"><sp/><sp/><sp/><sp/>P2<sp/><ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV::convertPt</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>x,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>y)</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="222"><highlight class="keyword"><sp/><sp/><sp/><sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="223"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>P2(45.<sp/>+<sp/>(x<sp/>-<sp/>141.00)<sp/>/<sp/>(1018.00<sp/>-<sp/>141.00)<sp/>*<sp/>(95.<sp/>-<sp/>45.),</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>4.<sp/>+<sp/>(y<sp/>-<sp/>772.00)<sp/>/<sp/>(956.00<sp/>-<sp/>772.00)<sp/>*<sp/>(0.<sp/>-<sp/>4.));</highlight></codeline>
+<codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="226"><highlight class="normal"></highlight></codeline>
+<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a0145bcb99beb0d53589809ce769b5c77" kindref="member">L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV::isWithinExclusionRegion</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>x,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>y,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">)</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="228"><highlight class="keyword"><sp/><sp/><sp/><sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="229"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(y<sp/>&lt;=<sp/>x<sp/>and<sp/>x<sp/>&lt;=<sp/>188.6<sp/>/<sp/>2.);</highlight></codeline>
+<codeline lineno="230"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="231"><highlight class="normal"></highlight></codeline>
+<codeline lineno="232"><highlight class="normal"><sp/><sp/><sp/><sp/>L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV::L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV()</highlight></codeline>
+<codeline lineno="233"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="235"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a2e41f565834c702b7dc3407edfce0c58" kindref="member">_limitValuesSorted</ref>.push_back(1.0);</highlight></codeline>
+<codeline lineno="236"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a2e41f565834c702b7dc3407edfce0c58" kindref="member">_limitValuesSorted</ref>.push_back(2.0);</highlight></codeline>
+<codeline lineno="237"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a2e41f565834c702b7dc3407edfce0c58" kindref="member">_limitValuesSorted</ref>.push_back(4.0);</highlight></codeline>
+<codeline lineno="238"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a2e41f565834c702b7dc3407edfce0c58" kindref="member">_limitValuesSorted</ref>.push_back(6.0);</highlight></codeline>
+<codeline lineno="239"><highlight class="normal"></highlight></codeline>
+<codeline lineno="241"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Corners<sp/>corners;</highlight></codeline>
+<codeline lineno="242"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>ContoursPointer<sp/>contoursPointer;</highlight></codeline>
+<codeline lineno="243"><highlight class="normal"></highlight></codeline>
+<codeline lineno="245"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.clear();</highlight></codeline>
+<codeline lineno="246"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(141.00,820.00));</highlight></codeline>
+<codeline lineno="247"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(223.00,865.00));</highlight></codeline>
+<codeline lineno="248"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(394.00,910.00));</highlight></codeline>
+<codeline lineno="249"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(404.00,943.00));</highlight></codeline>
+<codeline lineno="250"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(141.00,950.00));</highlight></codeline>
+<codeline lineno="251"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(141.00,820.00));</highlight></codeline>
+<codeline lineno="252"><highlight class="normal"></highlight></codeline>
+<codeline lineno="253"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer<sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/>Contours();</highlight></codeline>
+<codeline lineno="254"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer-&gt;resize(corners.size()<sp/>-<sp/>1);</highlight></codeline>
+<codeline lineno="255"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>std::transform(corners.begin(),<sp/>--corners.end(),<sp/>++corners.begin(),</highlight></codeline>
+<codeline lineno="256"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer-&gt;begin(),<sp/>makeLine);</highlight></codeline>
+<codeline lineno="257"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>_limitContours.insert(LimitContourEntry(0,<sp/>contoursPointer));</highlight></codeline>
+<codeline lineno="258"><highlight class="normal"></highlight></codeline>
+<codeline lineno="260"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.clear();</highlight></codeline>
+<codeline lineno="261"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(141.00,772.00));</highlight></codeline>
+<codeline lineno="262"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(181.00,772.00));</highlight></codeline>
+<codeline lineno="263"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(551.00,817.00));</highlight></codeline>
+<codeline lineno="264"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(692.00,863.00));</highlight></codeline>
+<codeline lineno="265"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(720.00,910.00));</highlight></codeline>
+<codeline lineno="266"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(712.00,933.00));</highlight></codeline>
+<codeline lineno="267"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(727.00,942.00));</highlight></codeline>
+<codeline lineno="268"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(684.00,947.00));</highlight></codeline>
+<codeline lineno="269"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(653.00,948.00));</highlight></codeline>
+<codeline lineno="270"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(141.00,950.00));</highlight></codeline>
+<codeline lineno="271"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(141.00,772.00));</highlight></codeline>
+<codeline lineno="272"><highlight class="normal"></highlight></codeline>
+<codeline lineno="273"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer<sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/>Contours();</highlight></codeline>
+<codeline lineno="274"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer-&gt;resize(corners.size()<sp/>-<sp/>1);</highlight></codeline>
+<codeline lineno="275"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>std::transform(corners.begin(),<sp/>--corners.end(),<sp/>++corners.begin(),</highlight></codeline>
+<codeline lineno="276"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer-&gt;begin(),<sp/>makeLine);</highlight></codeline>
+<codeline lineno="277"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>_limitContours.insert(LimitContourEntry(1,<sp/>contoursPointer));</highlight></codeline>
+<codeline lineno="278"><highlight class="normal"></highlight></codeline>
+<codeline lineno="280"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.clear();</highlight></codeline>
+<codeline lineno="281"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(141.00,772.00));</highlight></codeline>
+<codeline lineno="282"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(728.00,772.00));</highlight></codeline>
+<codeline lineno="283"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(737.00,817.00));</highlight></codeline>
+<codeline lineno="284"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(821.00,863.00));</highlight></codeline>
+<codeline lineno="285"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(835.00,907.00));</highlight></codeline>
+<codeline lineno="286"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(837.00,931.00));</highlight></codeline>
+<codeline lineno="287"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(827.00,947.00));</highlight></codeline>
+<codeline lineno="288"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(783.00,948.00));</highlight></codeline>
+<codeline lineno="289"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(735.00,948.00));</highlight></codeline>
+<codeline lineno="290"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(141.00,950.00));</highlight></codeline>
+<codeline lineno="291"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(141.00,772.00));</highlight></codeline>
+<codeline lineno="292"><highlight class="normal"></highlight></codeline>
+<codeline lineno="293"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer<sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/>Contours();</highlight></codeline>
+<codeline lineno="294"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer-&gt;resize(corners.size()<sp/>-<sp/>1);</highlight></codeline>
+<codeline lineno="295"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>std::transform(corners.begin(),<sp/>--corners.end(),<sp/>++corners.begin(),</highlight></codeline>
+<codeline lineno="296"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer-&gt;begin(),<sp/>makeLine);</highlight></codeline>
+<codeline lineno="297"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>_limitContours.insert(LimitContourEntry(2,<sp/>contoursPointer));</highlight></codeline>
+<codeline lineno="298"><highlight class="normal"></highlight></codeline>
+<codeline lineno="300"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.clear();</highlight></codeline>
+<codeline lineno="301"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(141.00,772.00));</highlight></codeline>
+<codeline lineno="302"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(790.00,772.00));</highlight></codeline>
+<codeline lineno="303"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(841.00,816.00));</highlight></codeline>
+<codeline lineno="304"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(860.00,862.00));</highlight></codeline>
+<codeline lineno="305"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(862.00,905.00));</highlight></codeline>
+<codeline lineno="306"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(859.00,939.00));</highlight></codeline>
+<codeline lineno="307"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(861.00,946.00));</highlight></codeline>
+<codeline lineno="308"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(850.00,948.00));</highlight></codeline>
+<codeline lineno="309"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(787.00,949.00));</highlight></codeline>
+<codeline lineno="310"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(141.00,950.00));</highlight></codeline>
+<codeline lineno="311"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>corners.push_back(<ref refid="classGambit_1_1ColliderBit_1_1L3ChargedHiggsinoSmallDeltaMLimitAt188pt6GeV_1a33f3b81bc3da843d29bc239f2b89c064" kindref="member">convertPt</ref>(141.00,772.00));</highlight></codeline>
+<codeline lineno="312"><highlight class="normal"></highlight></codeline>
+<codeline lineno="313"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer<sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/>Contours();</highlight></codeline>
+<codeline lineno="314"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer-&gt;resize(corners.size()<sp/>-<sp/>1);</highlight></codeline>
+<codeline lineno="315"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>std::transform(corners.begin(),<sp/>--corners.end(),<sp/>++corners.begin(),</highlight></codeline>
+<codeline lineno="316"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contoursPointer-&gt;begin(),<sp/>makeLine);</highlight></codeline>
+<codeline lineno="317"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>_limitContours.insert(LimitContourEntry(3,<sp/>contoursPointer));</highlight></codeline>
+<codeline lineno="318"><highlight class="normal"></highlight></codeline>
+<codeline lineno="319"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="320"><highlight class="normal"></highlight></codeline>
+<codeline lineno="321"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="322"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits/L3SmallDeltaMGauginoLimits.cpp"/>
+  </compounddef>
+</doxygen>

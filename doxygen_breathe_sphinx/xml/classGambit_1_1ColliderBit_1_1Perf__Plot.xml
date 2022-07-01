@@ -1,0 +1,174 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classGambit_1_1ColliderBit_1_1Perf__Plot" kind="class" language="C++" prot="public">
+    <compoundname>Gambit::ColliderBit::Perf_Plot</compoundname>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Perf__Plot_1ad4238a1f42d35dec8a7b307c6505a5e2" prot="private" static="no" mutable="no">
+        <type>string</type>
+        <definition>string Gambit::ColliderBit::Perf_Plot::_outfilename</definition>
+        <argsstring></argsstring>
+        <name>_outfilename</name>
+        <qualifiedname>Gambit::ColliderBit::Perf_Plot::_outfilename</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Perf_Plot.hpp" line="22" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Perf_Plot.hpp" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Perf__Plot_1a0b99c6d550c20d0b2acbeb11c5141af1" prot="private" static="no" mutable="no">
+        <type>size_t</type>
+        <definition>size_t Gambit::ColliderBit::Perf_Plot::_numvariables</definition>
+        <argsstring></argsstring>
+        <name>_numvariables</name>
+        <qualifiedname>Gambit::ColliderBit::Perf_Plot::_numvariables</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Perf_Plot.hpp" line="23" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Perf_Plot.hpp" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Perf__Plot_1a81b4480ede6a7061ee0207e9d44ca029" prot="private" static="no" mutable="no">
+        <type>vector&lt; const char * &gt;</type>
+        <definition>vector&lt;const char*&gt; Gambit::ColliderBit::Perf_Plot::_variables</definition>
+        <argsstring></argsstring>
+        <name>_variables</name>
+        <qualifiedname>Gambit::ColliderBit::Perf_Plot::_variables</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Perf_Plot.hpp" line="24" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Perf_Plot.hpp" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Perf__Plot_1a574161575188a173339e2d0eefa12796" prot="private" static="no" mutable="no">
+        <type>vector&lt; vector&lt; double &gt; &gt;</type>
+        <definition>vector&lt;vector&lt;double&gt; &gt; Gambit::ColliderBit::Perf_Plot::_values</definition>
+        <argsstring></argsstring>
+        <name>_values</name>
+        <qualifiedname>Gambit::ColliderBit::Perf_Plot::_values</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Perf_Plot.hpp" line="25" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Perf_Plot.hpp" bodystart="25" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Perf__Plot_1a9ad556fe52250f7234805bc8cab63601" prot="private" static="no" mutable="no">
+        <type>hid_t</type>
+        <definition>hid_t Gambit::ColliderBit::Perf_Plot::file</definition>
+        <argsstring></argsstring>
+        <name>file</name>
+        <qualifiedname>Gambit::ColliderBit::Perf_Plot::file</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Perf_Plot.hpp" line="26" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Perf_Plot.hpp" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Perf__Plot_1a9e16271512a7ca12da49ce8ca8cd169e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::Perf_Plot::~Perf_Plot</definition>
+        <argsstring>()</argsstring>
+        <name>~Perf_Plot</name>
+        <qualifiedname>Gambit::ColliderBit::Perf_Plot::~Perf_Plot</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Perf_Plot.hpp" line="30" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Perf_Plot.hpp" bodystart="30" bodyend="32"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Perf__Plot_1ae72d424b45a070b19ccf815fc570f9b6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::Perf_Plot::Perf_Plot</definition>
+        <argsstring>(string outFileName, vector&lt; const char * &gt; *varNames)</argsstring>
+        <name>Perf_Plot</name>
+        <qualifiedname>Gambit::ColliderBit::Perf_Plot::Perf_Plot</qualifiedname>
+        <param>
+          <type>string</type>
+          <declname>outFileName</declname>
+        </param>
+        <param>
+          <type>vector&lt; const char * &gt; *</type>
+          <declname>varNames</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Perf_Plot.hpp" line="35" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Perf_Plot.hpp" bodystart="35" bodyend="44"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Perf__Plot_1a7048607b98e2688c23d2a616a77cc487" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::Perf_Plot::fill</definition>
+        <argsstring>(vector&lt; double &gt; *varValues)</argsstring>
+        <name>fill</name>
+        <qualifiedname>Gambit::ColliderBit::Perf_Plot::fill</qualifiedname>
+        <param>
+          <type>vector&lt; double &gt; *</type>
+          <declname>varValues</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Perf_Plot.hpp" line="46" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Perf_Plot.hpp" bodystart="46" bodyend="48"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Perf__Plot_1a9529eb4e26a7f91a41ee62eefdcc152f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::Perf_Plot::createFile</definition>
+        <argsstring>(double luminosity=0., double xsec_per_event=0.)</argsstring>
+        <name>createFile</name>
+        <qualifiedname>Gambit::ColliderBit::Perf_Plot::createFile</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>luminosity</declname>
+          <defval>0.</defval>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>xsec_per_event</declname>
+          <defval>0.</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Perf_Plot.hpp" line="50" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Perf_Plot.hpp" bodystart="50" bodyend="123"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Perf_Plot.hpp" line="19" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Perf_Plot.hpp" bodystart="19" bodyend="125"/>
+    <listofallmembers>
+      <member refid="classGambit_1_1ColliderBit_1_1Perf__Plot_1a0b99c6d550c20d0b2acbeb11c5141af1" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Perf_Plot</scope><name>_numvariables</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Perf__Plot_1ad4238a1f42d35dec8a7b307c6505a5e2" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Perf_Plot</scope><name>_outfilename</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Perf__Plot_1a574161575188a173339e2d0eefa12796" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Perf_Plot</scope><name>_values</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Perf__Plot_1a81b4480ede6a7061ee0207e9d44ca029" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Perf_Plot</scope><name>_variables</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Perf__Plot_1a9529eb4e26a7f91a41ee62eefdcc152f" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Perf_Plot</scope><name>createFile</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Perf__Plot_1a9ad556fe52250f7234805bc8cab63601" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Perf_Plot</scope><name>file</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Perf__Plot_1a7048607b98e2688c23d2a616a77cc487" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Perf_Plot</scope><name>fill</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Perf__Plot_1ae72d424b45a070b19ccf815fc570f9b6" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Perf_Plot</scope><name>Perf_Plot</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Perf__Plot_1a9e16271512a7ca12da49ce8ca8cd169e" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Perf_Plot</scope><name>~Perf_Plot</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

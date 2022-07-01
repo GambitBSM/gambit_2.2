@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="namespacemt2__bisect" kind="namespace" language="C++">
+    <compoundname>mt2_bisect</compoundname>
+    <innerclass refid="classmt2__bisect_1_1mt2" prot="public">mt2_bisect::mt2</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="15" column="1"/>
+  </compounddef>
+</doxygen>

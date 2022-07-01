@@ -1,0 +1,537 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="namespaceGambit_1_1ColliderBit_1_1EventConversion" kind="namespace" language="C++">
+    <compoundname>Gambit::ColliderBit::EventConversion</compoundname>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="EventConversionUtils_8hpp_1a66aaa9edc3eff393269f7ed8a780e70d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename ParticleP</type>
+          </param>
+        </templateparamlist>
+        <type>int</type>
+        <definition>int Gambit::ColliderBit::EventConversion::get_unified_pid</definition>
+        <argsstring>(ParticleP p)</argsstring>
+        <name>get_unified_pid</name>
+        <qualifiedname>Gambit::ColliderBit::EventConversion::get_unified_pid</qualifiedname>
+        <param>
+          <type>ParticleP</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" line="50" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" bodystart="50" bodyend="50"/>
+      </memberdef>
+      <memberdef kind="function" id="EventConversionUtils_8hpp_1a47b004ebfcd479d053e1ad115c8862ce" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename ParticleP</type>
+          </param>
+        </templateparamlist>
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::EventConversion::get_unified_isFinal</definition>
+        <argsstring>(ParticleP p)</argsstring>
+        <name>get_unified_isFinal</name>
+        <qualifiedname>Gambit::ColliderBit::EventConversion::get_unified_isFinal</qualifiedname>
+        <param>
+          <type>ParticleP</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" line="53" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" bodystart="53" bodyend="53"/>
+      </memberdef>
+      <memberdef kind="function" id="EventConversionUtils_8hpp_1ad859650b7ad8619b469c86c99d1d034c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename ParticleP</type>
+          </param>
+        </templateparamlist>
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::EventConversion::get_unified_eta</definition>
+        <argsstring>(ParticleP p)</argsstring>
+        <name>get_unified_eta</name>
+        <qualifiedname>Gambit::ColliderBit::EventConversion::get_unified_eta</qualifiedname>
+        <param>
+          <type>ParticleP</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" line="56" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" bodystart="56" bodyend="56"/>
+      </memberdef>
+      <memberdef kind="function" id="EventConversionUtils_8hpp_1aec371b0b37374709072056791af48044" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename ParticleP</type>
+          </param>
+        </templateparamlist>
+        <type>HEPUtils::P4</type>
+        <definition>HEPUtils::P4 Gambit::ColliderBit::EventConversion::get_unified_momentum</definition>
+        <argsstring>(ParticleP p)</argsstring>
+        <name>get_unified_momentum</name>
+        <qualifiedname>Gambit::ColliderBit::EventConversion::get_unified_momentum</qualifiedname>
+        <param>
+          <type>ParticleP</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" line="59" column="27" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" bodystart="59" bodyend="59"/>
+      </memberdef>
+      <memberdef kind="function" id="EventConversionUtils_8hpp_1a5b46b18371847c6f3950580433e2b7a0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename ParticleP</type>
+          </param>
+        </templateparamlist>
+        <type>FJNS::PseudoJet</type>
+        <definition>FJNS::PseudoJet Gambit::ColliderBit::EventConversion::get_unified_pseudojet</definition>
+        <argsstring>(ParticleP p)</argsstring>
+        <name>get_unified_pseudojet</name>
+        <qualifiedname>Gambit::ColliderBit::EventConversion::get_unified_pseudojet</qualifiedname>
+        <param>
+          <type>ParticleP</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" line="62" column="30" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" bodystart="62" bodyend="62"/>
+      </memberdef>
+      <memberdef kind="function" id="EventConversionUtils_8hpp_1a03d229399cec64f6093912f83bf4f5c1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename ParticleP</type>
+          </param>
+          <param>
+            <type>typename EventT</type>
+          </param>
+        </templateparamlist>
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::EventConversion::get_unified_fromHadron</definition>
+        <argsstring>(ParticleP &amp;, const EventT &amp;pevt, int i)</argsstring>
+        <name>get_unified_fromHadron</name>
+        <qualifiedname>Gambit::ColliderBit::EventConversion::get_unified_fromHadron</qualifiedname>
+        <param>
+          <type>ParticleP &amp;</type>
+        </param>
+        <param>
+          <type>const EventT &amp;</type>
+          <declname>pevt</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>i</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" line="65" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" bodystart="65" bodyend="65"/>
+      </memberdef>
+      <memberdef kind="function" id="EventConversionUtils_8hpp_1afccc7247fc89851a6ffa78e46f032a12" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename ParticleP</type>
+          </param>
+        </templateparamlist>
+        <type>int</type>
+        <definition>int Gambit::ColliderBit::EventConversion::get_unified_mother1</definition>
+        <argsstring>(ParticleP &amp;p)</argsstring>
+        <name>get_unified_mother1</name>
+        <qualifiedname>Gambit::ColliderBit::EventConversion::get_unified_mother1</qualifiedname>
+        <param>
+          <type>ParticleP &amp;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" line="68" column="18" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" bodystart="68" bodyend="68"/>
+      </memberdef>
+      <memberdef kind="function" id="EventConversionUtils_8hpp_1ab527a3085ce68b94eb37db5d76ced06c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename ParticleP</type>
+          </param>
+        </templateparamlist>
+        <type>int</type>
+        <definition>int Gambit::ColliderBit::EventConversion::get_unified_mother2</definition>
+        <argsstring>(ParticleP &amp;p)</argsstring>
+        <name>get_unified_mother2</name>
+        <qualifiedname>Gambit::ColliderBit::EventConversion::get_unified_mother2</qualifiedname>
+        <param>
+          <type>ParticleP &amp;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" line="70" column="18" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" bodystart="70" bodyend="70"/>
+      </memberdef>
+      <memberdef kind="function" id="EventConversionUtils_8hpp_1a8a8ec0d1226991832c40e8676eb8c3ff" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename ParticleP</type>
+          </param>
+          <param>
+            <type>typename EventT</type>
+          </param>
+        </templateparamlist>
+        <type>int</type>
+        <definition>int Gambit::ColliderBit::EventConversion::get_unified_mother1_pid</definition>
+        <argsstring>(ParticleP &amp;p, EventT &amp;pevt)</argsstring>
+        <name>get_unified_mother1_pid</name>
+        <qualifiedname>Gambit::ColliderBit::EventConversion::get_unified_mother1_pid</qualifiedname>
+        <param>
+          <type>ParticleP &amp;</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type>EventT &amp;</type>
+          <declname>pevt</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" line="73" column="18" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" bodystart="73" bodyend="73"/>
+      </memberdef>
+      <memberdef kind="function" id="EventConversionUtils_8hpp_1a5eaf2a72b7e21cc6ae3df430a1bad198" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename ParticleP</type>
+          </param>
+          <param>
+            <type>typename EventT</type>
+          </param>
+        </templateparamlist>
+        <type>int</type>
+        <definition>int Gambit::ColliderBit::EventConversion::get_unified_mother2_pid</definition>
+        <argsstring>(ParticleP &amp;p, EventT &amp;pevt)</argsstring>
+        <name>get_unified_mother2_pid</name>
+        <qualifiedname>Gambit::ColliderBit::EventConversion::get_unified_mother2_pid</qualifiedname>
+        <param>
+          <type>ParticleP &amp;</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type>EventT &amp;</type>
+          <declname>pevt</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" line="75" column="18" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" bodystart="75" bodyend="75"/>
+      </memberdef>
+      <memberdef kind="function" id="EventConversionUtils_8hpp_1a5901c69e006fd8c320521d42659d9694" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename ParticleP</type>
+          </param>
+          <param>
+            <type>typename EventT</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::EventConversion::get_unified_child_ids</definition>
+        <argsstring>(ParticleP &amp;p, EventT &amp;pevt, std::vector&lt; int &gt; &amp;unified_child_id_results)</argsstring>
+        <name>get_unified_child_ids</name>
+        <qualifiedname>Gambit::ColliderBit::EventConversion::get_unified_child_ids</qualifiedname>
+        <param>
+          <type>ParticleP &amp;</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type>EventT &amp;</type>
+          <declname>pevt</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; int &gt; &amp;</type>
+          <declname>unified_child_id_results</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" line="78" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" bodystart="78" bodyend="86"/>
+      </memberdef>
+      <memberdef kind="function" id="EventConversionUtils_8hpp_1ad995f0e518b3203f1c8e10f52a0c68c2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::EventConversion::HEPMC3_isParton</definition>
+        <argsstring>(int pid)</argsstring>
+        <name>HEPMC3_isParton</name>
+        <qualifiedname>Gambit::ColliderBit::EventConversion::HEPMC3_isParton</qualifiedname>
+        <param>
+          <type>int</type>
+          <declname>pid</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>The MCUtils isParton function only checks for quarks/gluons, whereas the Pythia function used in <ref refid="namespaceGambit" kindref="compound">Gambit</ref> includes diquarks too, so we manually define this function using the isParton and isDiquark options in MCUtils. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" line="93" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" bodystart="93" bodyend="93"/>
+      </memberdef>
+      <memberdef kind="function" id="EventConversionUtils_8hpp_1aa25ac5fe7cdf4f5da23c444de686309d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int Gambit::ColliderBit::EventConversion::get_unified_pid</definition>
+        <argsstring>(const HepMC3::GenParticlePtr &amp;gp)</argsstring>
+        <name>get_unified_pid</name>
+        <qualifiedname>Gambit::ColliderBit::EventConversion::get_unified_pid</qualifiedname>
+        <param>
+          <type>const HepMC3::GenParticlePtr &amp;</type>
+          <declname>gp</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" line="95" column="20" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" bodystart="95" bodyend="95"/>
+      </memberdef>
+      <memberdef kind="function" id="EventConversionUtils_8hpp_1a4fff66ac300704d51b8197d77d441c56" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::EventConversion::get_unified_isFinal</definition>
+        <argsstring>(const HepMC3::GenParticlePtr &amp;gp)</argsstring>
+        <name>get_unified_isFinal</name>
+        <qualifiedname>Gambit::ColliderBit::EventConversion::get_unified_isFinal</qualifiedname>
+        <param>
+          <type>const HepMC3::GenParticlePtr &amp;</type>
+          <declname>gp</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" line="97" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" bodystart="97" bodyend="97"/>
+      </memberdef>
+      <memberdef kind="function" id="EventConversionUtils_8hpp_1aecc0c3f77db9ce3cc0e8455bc0352566" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>HEPUtils::P4</type>
+        <definition>HEPUtils::P4 Gambit::ColliderBit::EventConversion::get_unified_momentum</definition>
+        <argsstring>(const HepMC3::GenParticlePtr &amp;gp)</argsstring>
+        <name>get_unified_momentum</name>
+        <qualifiedname>Gambit::ColliderBit::EventConversion::get_unified_momentum</qualifiedname>
+        <param>
+          <type>const HepMC3::GenParticlePtr &amp;</type>
+          <declname>gp</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" line="99" column="29" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" bodystart="99" bodyend="103"/>
+      </memberdef>
+      <memberdef kind="function" id="EventConversionUtils_8hpp_1a17a4f804344df426d1b71f323d4cfc09" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>FJNS::PseudoJet</type>
+        <definition>FJNS::PseudoJet Gambit::ColliderBit::EventConversion::get_unified_pseudojet</definition>
+        <argsstring>(const HepMC3::GenParticlePtr &amp;gp)</argsstring>
+        <name>get_unified_pseudojet</name>
+        <qualifiedname>Gambit::ColliderBit::EventConversion::get_unified_pseudojet</qualifiedname>
+        <param>
+          <type>const HepMC3::GenParticlePtr &amp;</type>
+          <declname>gp</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" line="105" column="32" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" bodystart="105" bodyend="109"/>
+      </memberdef>
+      <memberdef kind="function" id="EventConversionUtils_8hpp_1aaa3ad7c563660da2c1fd2d13d78ec172" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::EventConversion::get_unified_eta</definition>
+        <argsstring>(const HepMC3::GenParticlePtr &amp;gp)</argsstring>
+        <name>get_unified_eta</name>
+        <qualifiedname>Gambit::ColliderBit::EventConversion::get_unified_eta</qualifiedname>
+        <param>
+          <type>const HepMC3::GenParticlePtr &amp;</type>
+          <declname>gp</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" line="111" column="23" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" bodystart="111" bodyend="111"/>
+      </memberdef>
+      <memberdef kind="function" id="EventConversionUtils_8hpp_1a50ca5b5fcc4bd21abcfee5d8d2a32e18" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::EventConversion::get_unified_fromHadron</definition>
+        <argsstring>(const HepMC3::GenParticlePtr &amp;gp, const std::vector&lt; HepMC3::GenParticlePtr &gt; &amp;pevt, int i)</argsstring>
+        <name>get_unified_fromHadron</name>
+        <qualifiedname>Gambit::ColliderBit::EventConversion::get_unified_fromHadron</qualifiedname>
+        <param>
+          <type>const HepMC3::GenParticlePtr &amp;</type>
+          <declname>gp</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; HepMC3::GenParticlePtr &gt; &amp;</type>
+          <declname>pevt</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>i</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" line="113" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" bodystart="113" bodyend="128"/>
+      </memberdef>
+      <memberdef kind="function" id="EventConversionUtils_8hpp_1a4b26074bc4b7a16b790e3ca9ab8ca12d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int Gambit::ColliderBit::EventConversion::get_unified_mother1</definition>
+        <argsstring>(const HepMC3::GenParticlePtr &amp;)</argsstring>
+        <name>get_unified_mother1</name>
+        <qualifiedname>Gambit::ColliderBit::EventConversion::get_unified_mother1</qualifiedname>
+        <param>
+          <type>const HepMC3::GenParticlePtr &amp;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" line="130" column="20" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" bodystart="130" bodyend="130"/>
+      </memberdef>
+      <memberdef kind="function" id="EventConversionUtils_8hpp_1af3e480efa617cb93220f6a636140fffb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int Gambit::ColliderBit::EventConversion::get_unified_mother2</definition>
+        <argsstring>(const HepMC3::GenParticlePtr &amp;)</argsstring>
+        <name>get_unified_mother2</name>
+        <qualifiedname>Gambit::ColliderBit::EventConversion::get_unified_mother2</qualifiedname>
+        <param>
+          <type>const HepMC3::GenParticlePtr &amp;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" line="131" column="20" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" bodystart="131" bodyend="131"/>
+      </memberdef>
+      <memberdef kind="function" id="EventConversionUtils_8hpp_1ab4ce58d6070230d33e17e4fdd3ec7593" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int Gambit::ColliderBit::EventConversion::get_unified_mother1_pid</definition>
+        <argsstring>(const HepMC3::GenParticlePtr &amp;, const std::vector&lt; HepMC3::GenParticlePtr &gt; &amp;)</argsstring>
+        <name>get_unified_mother1_pid</name>
+        <qualifiedname>Gambit::ColliderBit::EventConversion::get_unified_mother1_pid</qualifiedname>
+        <param>
+          <type>const HepMC3::GenParticlePtr &amp;</type>
+        </param>
+        <param>
+          <type>const std::vector&lt; HepMC3::GenParticlePtr &gt; &amp;</type>
+        </param>
+        <briefdescription>
+<para>Shouldn&apos;t ever need to call a HepMC3 version of this, but for safety here&apos;s one that just returns 0. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" line="134" column="20" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" bodystart="134" bodyend="134"/>
+      </memberdef>
+      <memberdef kind="function" id="EventConversionUtils_8hpp_1a770e75c5700bcba64f3f274010403168" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int Gambit::ColliderBit::EventConversion::get_unified_mother2_pid</definition>
+        <argsstring>(const HepMC3::GenParticlePtr &amp;, const std::vector&lt; HepMC3::GenParticlePtr &gt; &amp;)</argsstring>
+        <name>get_unified_mother2_pid</name>
+        <qualifiedname>Gambit::ColliderBit::EventConversion::get_unified_mother2_pid</qualifiedname>
+        <param>
+          <type>const HepMC3::GenParticlePtr &amp;</type>
+        </param>
+        <param>
+          <type>const std::vector&lt; HepMC3::GenParticlePtr &gt; &amp;</type>
+        </param>
+        <briefdescription>
+<para>Shouldn&apos;t ever need to call a HepMC3 version of this, but for safety here&apos;s one that just returns 0. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" line="136" column="20" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" bodystart="136" bodyend="136"/>
+      </memberdef>
+      <memberdef kind="function" id="EventConversionUtils_8hpp_1af921a7edeca1d7d217e277440c9cb8e9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::EventConversion::get_unified_child_ids</definition>
+        <argsstring>(const HepMC3::GenParticlePtr &amp;gp, const std::vector&lt; HepMC3::GenParticlePtr &gt; &amp;, std::vector&lt; int &gt; &amp;unified_child_id_results)</argsstring>
+        <name>get_unified_child_ids</name>
+        <qualifiedname>Gambit::ColliderBit::EventConversion::get_unified_child_ids</qualifiedname>
+        <param>
+          <type>const HepMC3::GenParticlePtr &amp;</type>
+          <declname>gp</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; HepMC3::GenParticlePtr &gt; &amp;</type>
+        </param>
+        <param>
+          <type>std::vector&lt; int &gt; &amp;</type>
+          <declname>unified_child_id_results</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" line="138" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" bodystart="138" bodyend="146"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp" line="46" column="5"/>
+  </compounddef>
+</doxygen>

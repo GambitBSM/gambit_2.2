@@ -1,0 +1,252 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="structLester_1_1EllipseParams" kind="struct" language="C++" prot="public">
+    <compoundname>Lester::EllipseParams</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structLester_1_1EllipseParams_1a95afe64aa1687111e1317fa4045fc55c" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Lester::EllipseParams::c_xx</definition>
+        <argsstring></argsstring>
+        <name>c_xx</name>
+        <qualifiedname>Lester::EllipseParams::c_xx</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="190" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="190" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structLester_1_1EllipseParams_1a494ff14d11c07b4428bca666ea8343b3" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Lester::EllipseParams::c_yy</definition>
+        <argsstring></argsstring>
+        <name>c_yy</name>
+        <qualifiedname>Lester::EllipseParams::c_yy</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="191" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="191" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structLester_1_1EllipseParams_1a4f0a5a453728e503760325677c01b713" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Lester::EllipseParams::c_xy</definition>
+        <argsstring></argsstring>
+        <name>c_xy</name>
+        <qualifiedname>Lester::EllipseParams::c_xy</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="192" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="192" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structLester_1_1EllipseParams_1a6c0631a050a6564c804c35aea4997c29" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Lester::EllipseParams::c_x</definition>
+        <argsstring></argsstring>
+        <name>c_x</name>
+        <qualifiedname>Lester::EllipseParams::c_x</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="193" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="193" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structLester_1_1EllipseParams_1a8b000ff58e2ff2511da0f6234e191e6e" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Lester::EllipseParams::c_y</definition>
+        <argsstring></argsstring>
+        <name>c_y</name>
+        <qualifiedname>Lester::EllipseParams::c_y</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="194" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="194" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structLester_1_1EllipseParams_1a86dd4c4bad1eee26d81071efa1137114" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Lester::EllipseParams::c</definition>
+        <argsstring></argsstring>
+        <name>c</name>
+        <qualifiedname>Lester::EllipseParams::c</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="195" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="195" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structLester_1_1EllipseParams_1ad777140c2b6da121e1fa322b76b12a9e" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Lester::EllipseParams::det</definition>
+        <argsstring></argsstring>
+        <name>det</name>
+        <qualifiedname>Lester::EllipseParams::det</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="196" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="196" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structLester_1_1EllipseParams_1a38ae9677eb46aee9fcd5aa51c86ae9a8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Lester::EllipseParams::EllipseParams</definition>
+        <argsstring>(const double c_xx2, const double c_yy2, const double c_xy2, const double c_x2, const double c_y2, const double c2)</argsstring>
+        <name>EllipseParams</name>
+        <qualifiedname>Lester::EllipseParams::EllipseParams</qualifiedname>
+        <param>
+          <type>const double</type>
+          <declname>c_xx2</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>c_yy2</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>c_xy2</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>c_x2</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>c_y2</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>c2</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="138" column="3" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="138" bodyend="156"/>
+      </memberdef>
+      <memberdef kind="function" id="structLester_1_1EllipseParams_1ae17c2aa371db1a0611c0751e3727ca68" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Lester::EllipseParams::EllipseParams</definition>
+        <argsstring>()</argsstring>
+        <name>EllipseParams</name>
+        <qualifiedname>Lester::EllipseParams::EllipseParams</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="157" column="3" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="157" bodyend="158"/>
+      </memberdef>
+      <memberdef kind="function" id="structLester_1_1EllipseParams_1ad4cc8073619a8224ece6e6bed8d3ccd2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Lester::EllipseParams::setDet</definition>
+        <argsstring>()</argsstring>
+        <name>setDet</name>
+        <qualifiedname>Lester::EllipseParams::setDet</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="159" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="159" bodyend="161"/>
+      </memberdef>
+      <memberdef kind="function" id="structLester_1_1EllipseParams_1a74def2b1875f0381b692341826503035" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Lester::EllipseParams::EllipseParams</definition>
+        <argsstring>(const double x0, const double y0)</argsstring>
+        <name>EllipseParams</name>
+        <qualifiedname>Lester::EllipseParams::EllipseParams</qualifiedname>
+        <param>
+          <type>const double</type>
+          <declname>x0</declname>
+        </param>
+        <param>
+          <type>const double</type>
+          <declname>y0</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="163" column="3" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="163" bodyend="173"/>
+      </memberdef>
+      <memberdef kind="function" id="structLester_1_1EllipseParams_1a068ab36aa7c2247a31e94a9dd92eef3e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Lester::EllipseParams::lesterFactor</definition>
+        <argsstring>(const EllipseParams &amp;e2) const</argsstring>
+        <name>lesterFactor</name>
+        <qualifiedname>Lester::EllipseParams::lesterFactor</qualifiedname>
+        <param>
+          <type>const <ref refid="structLester_1_1EllipseParams" kindref="compound">EllipseParams</ref> &amp;</type>
+          <declname>e2</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="174" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="174" bodyend="178"/>
+      </memberdef>
+      <memberdef kind="function" id="structLester_1_1EllipseParams_1acaa9758a6fadc27ce54f5b16dc68e193" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Lester::EllipseParams::operator==</definition>
+        <argsstring>(const EllipseParams &amp;other) const</argsstring>
+        <name>operator==</name>
+        <qualifiedname>Lester::EllipseParams::operator==</qualifiedname>
+        <param>
+          <type>const <ref refid="structLester_1_1EllipseParams" kindref="compound">EllipseParams</ref> &amp;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="179" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="179" bodyend="187"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="130" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="130" bodyend="197"/>
+    <listofallmembers>
+      <member refid="structLester_1_1EllipseParams_1a86dd4c4bad1eee26d81071efa1137114" prot="public" virt="non-virtual"><scope>Lester::EllipseParams</scope><name>c</name></member>
+      <member refid="structLester_1_1EllipseParams_1a6c0631a050a6564c804c35aea4997c29" prot="public" virt="non-virtual"><scope>Lester::EllipseParams</scope><name>c_x</name></member>
+      <member refid="structLester_1_1EllipseParams_1a95afe64aa1687111e1317fa4045fc55c" prot="public" virt="non-virtual"><scope>Lester::EllipseParams</scope><name>c_xx</name></member>
+      <member refid="structLester_1_1EllipseParams_1a4f0a5a453728e503760325677c01b713" prot="public" virt="non-virtual"><scope>Lester::EllipseParams</scope><name>c_xy</name></member>
+      <member refid="structLester_1_1EllipseParams_1a8b000ff58e2ff2511da0f6234e191e6e" prot="public" virt="non-virtual"><scope>Lester::EllipseParams</scope><name>c_y</name></member>
+      <member refid="structLester_1_1EllipseParams_1a494ff14d11c07b4428bca666ea8343b3" prot="public" virt="non-virtual"><scope>Lester::EllipseParams</scope><name>c_yy</name></member>
+      <member refid="structLester_1_1EllipseParams_1ad777140c2b6da121e1fa322b76b12a9e" prot="public" virt="non-virtual"><scope>Lester::EllipseParams</scope><name>det</name></member>
+      <member refid="structLester_1_1EllipseParams_1a38ae9677eb46aee9fcd5aa51c86ae9a8" prot="public" virt="non-virtual"><scope>Lester::EllipseParams</scope><name>EllipseParams</name></member>
+      <member refid="structLester_1_1EllipseParams_1ae17c2aa371db1a0611c0751e3727ca68" prot="public" virt="non-virtual"><scope>Lester::EllipseParams</scope><name>EllipseParams</name></member>
+      <member refid="structLester_1_1EllipseParams_1a74def2b1875f0381b692341826503035" prot="public" virt="non-virtual"><scope>Lester::EllipseParams</scope><name>EllipseParams</name></member>
+      <member refid="structLester_1_1EllipseParams_1a068ab36aa7c2247a31e94a9dd92eef3e" prot="public" virt="non-virtual"><scope>Lester::EllipseParams</scope><name>lesterFactor</name></member>
+      <member refid="structLester_1_1EllipseParams_1acaa9758a6fadc27ce54f5b16dc68e193" prot="public" virt="non-virtual"><scope>Lester::EllipseParams</scope><name>operator==</name></member>
+      <member refid="structLester_1_1EllipseParams_1ad4cc8073619a8224ece6e6bed8d3ccd2" prot="public" virt="non-virtual"><scope>Lester::EllipseParams</scope><name>setDet</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

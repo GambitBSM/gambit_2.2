@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="generate__raster__scan__settings_8py" kind="file" language="Python">
+    <compoundname>generate_raster_scan_settings.py</compoundname>
+    <innernamespace refid="namespacegenerate__raster__scan__settings">generate_raster_scan_settings</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">#!/usr/bin/env<sp/>python</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">#</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">#<sp/>GAMBIT:<sp/>Global<sp/>and<sp/>Modular<sp/>BSM<sp/>Inference<sp/>Tool</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">#*********************************************</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">#<sp/>\file</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">#</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">#<sp/>Simple<sp/>script<sp/>for<sp/>generating<sp/>parameter<sp/>value<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="comment">#<sp/>lists<sp/>for<sp/>the<sp/>&apos;raster&apos;<sp/>scanner,<sp/>when<sp/>used</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="comment">#<sp/>to<sp/>perform<sp/>&quot;SLHA<sp/>scans&quot;<sp/>of<sp/>simplified<sp/>models</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="comment">#<sp/>with<sp/>ColliderBit.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="comment">#</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="comment">#*********************************************</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="comment">#</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="comment">#<sp/><sp/>Authors<sp/>(add<sp/>name<sp/>and<sp/>date<sp/>if<sp/>you<sp/>modify):</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="comment">#</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="comment">#<sp/><sp/>\author<sp/>Anders<sp/>Kvellestad</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="comment">#<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(a.kvellestad@imperial.ac.uk)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="comment">#<sp/><sp/><sp/><sp/>\date<sp/>2019<sp/>Jul</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="comment">#</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="comment">#*********************************************</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="comment">#<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="comment">#<sp/>Example:<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="comment">#<sp/><sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="comment">#<sp/><sp/><sp/>m1<sp/>:<sp/>mass<sp/>of<sp/>neutralino1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="comment">#<sp/><sp/><sp/>m2<sp/>:<sp/>mass<sp/>of<sp/>chargino1<sp/>=<sp/>mass<sp/>of<sp/>neutralino2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="comment">#<sp/><sp/><sp/>xsec_fb:<sp/>NLO+NLL<sp/>cross-section<sp/>[fb]<sp/>for<sp/>wino-like<sp/>chi1pm<sp/>+<sp/>chi10<sp/>production<sp/>at<sp/>13<sp/>TeV.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="comment">#<sp/><sp/><sp/>xsec_uncert_fb:<sp/>absolute<sp/>cross-section<sp/>uncertainty<sp/>[fb]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="comment">#</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="comment">#<sp/><sp/><sp/>Cross-section<sp/>values<sp/>and<sp/>uncertainties<sp/>are<sp/>taken<sp/>from<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="comment">#<sp/><sp/><sp/>https://twiki.cern.ch/twiki/bin/view/LHCPhysics/SUSYCrossSections13TeVn2x1wino#Envelope_of_CTEQ6_6_and_MSTW2008</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="comment">#<sp/><sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/>__future__<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>print_function</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal">m2_data<sp/>=<sp/>[100,<sp/>125,<sp/>150,<sp/>175,<sp/>200,<sp/>225,<sp/>250,<sp/>275,<sp/>300,<sp/>325,<sp/>350,<sp/>375,<sp/>400,<sp/>425,<sp/>450,<sp/>475,<sp/>500,<sp/>525,<sp/>550,<sp/>575,<sp/>600,<sp/>625,<sp/>650,<sp/>675,<sp/>700,<sp/>725,<sp/>750,<sp/>775,<sp/>800,<sp/>825,<sp/>850,<sp/>875,<sp/>900,<sp/>925,<sp/>950,<sp/>975,<sp/>1000]</highlight></codeline>
+<codeline lineno="37"><highlight class="normal">xsec_fb_data<sp/>=<sp/>[22670.1,<sp/>10034.8,<sp/>5180.86,<sp/>2953.28,<sp/>1807.39,<sp/>1165.09,<sp/>782.487,<sp/>543.03,<sp/>386.936,<sp/>281.911,<sp/>209.439,<sp/>158.06,<sp/>121.013,<sp/>93.771,<sp/>73.4361,<sp/>58.0811,<sp/>46.3533,<sp/>37.2636,<sp/>30.1656,<sp/>24.5798,<sp/>20.1372,<sp/>16.5706,<sp/>13.7303,<sp/>11.3975,<sp/>9.51032,<sp/>7.9595,<sp/>6.69356,<sp/>5.63562,<sp/>4.75843,<sp/>4.02646,<sp/>3.42026,<sp/>2.90547,<sp/>2.49667,<sp/>2.12907,<sp/>1.8164,<sp/>1.56893,<sp/>1.34352]</highlight></codeline>
+<codeline lineno="38"><highlight class="normal">xsec_uncert_fb_data<sp/>=<sp/>[973.967,<sp/>457.604,<sp/>253.223,<sp/>154.386,<sp/>101.316,<sp/>68.8042,<sp/>48.7463,<sp/>35.4083,<sp/>26.3602,<sp/>20.0201,<sp/>15.4539,<sp/>12.0956,<sp/>9.61659,<sp/>7.73547,<sp/>6.2389,<sp/>5.05005,<sp/>4.16461,<sp/>3.46763,<sp/>2.88065,<sp/>2.40183,<sp/>2.04438,<sp/>1.70195,<sp/>1.43519,<sp/>1.21937,<sp/>1.04092,<sp/>0.885243,<sp/>0.769988,<sp/>0.654544,<sp/>0.564061,<sp/>0.478362,<sp/>0.412315,<sp/>0.366257,<sp/>0.314019,<sp/>0.26801,<sp/>0.242682,<sp/>0.217618,<sp/>0.175604]</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight><highlight class="keyword">assert</highlight><highlight class="normal"><sp/>len(m2_data)<sp/>==<sp/>len(xsec_fb_data)</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight><highlight class="keyword">assert</highlight><highlight class="normal"><sp/>len(m2_data)<sp/>==<sp/>len(xsec_uncert_fb_data)</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="comment">#<sp/>Pick<sp/>out<sp/>every<sp/>n-th<sp/>point,<sp/>and<sp/>no<sp/>more<sp/>than<sp/>N<sp/>different<sp/>m2<sp/>values</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal">n<sp/>=<sp/>2</highlight></codeline>
+<codeline lineno="46"><highlight class="normal">N<sp/>=<sp/>8</highlight></codeline>
+<codeline lineno="47"><highlight class="normal">m2<sp/>=<sp/>m2_data[::n][:N]</highlight></codeline>
+<codeline lineno="48"><highlight class="normal">xsec_fb<sp/>=<sp/>xsec_fb_data[::n][:N]</highlight></codeline>
+<codeline lineno="49"><highlight class="normal">xsec_uncert_fb<sp/>=<sp/>xsec_uncert_fb_data[::n][:N]</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight><highlight class="comment">#<sp/>Steps<sp/>in<sp/>m1<sp/>for<sp/>every<sp/>m2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal">m1_min<sp/>=<sp/>25.</highlight></codeline>
+<codeline lineno="53"><highlight class="normal">m1_step<sp/>=<sp/>50.</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight><highlight class="comment">#<sp/>Generate<sp/>lists</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal">m1_raster<sp/>=<sp/>[]</highlight></codeline>
+<codeline lineno="57"><highlight class="normal">m2_raster<sp/>=<sp/>[]</highlight></codeline>
+<codeline lineno="58"><highlight class="normal">xsec_fb_raster<sp/>=<sp/>[]</highlight></codeline>
+<codeline lineno="59"><highlight class="normal">xsec_uncert_fb_raster<sp/>=<sp/>[]</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight><highlight class="comment">#<sp/>xsec_fractional_uncert_raster<sp/>=<sp/>[]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>i<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>range(len(m2)):</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/>m1<sp/>=<sp/>m1_min</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(m1<sp/>&lt;<sp/>m2[i]):</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m1_raster.append(m1)</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m2_raster.append(m2[i])</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>xsec_fb_raster.append(xsec_fb[i])</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>xsec_uncert_fb_raster.append(xsec_uncert_fb[i])</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>xsec_fractional_uncert_raster.append(xsec_uncert_fb[i]<sp/>/<sp/>xsec_fb[i])</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m1<sp/>+=<sp/>m1_step</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight><highlight class="comment">#<sp/>Format<sp/>parameter<sp/>lists<sp/>for<sp/>output</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="75"><highlight class="normal">model_name=<sp/></highlight><highlight class="stringliteral">&quot;ColliderBit_SLHA_scan_model&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight></codeline>
+<codeline lineno="77"><highlight class="normal">m1_str<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;\&quot;&quot;</highlight><highlight class="normal"><sp/>+<sp/>model_name<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;::m1\&quot;&quot;</highlight><highlight class="normal"><sp/>+<sp/></highlight><highlight class="stringliteral">&quot;:<sp/>[&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>x<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>m1_raster:</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/>m1_str<sp/>+=<sp/></highlight><highlight class="stringliteral">&quot;%.1f,<sp/>&quot;</highlight><highlight class="normal"><sp/>%<sp/>x</highlight></codeline>
+<codeline lineno="80"><highlight class="normal">m1_str<sp/>=<sp/>m1_str[:-2]<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;]&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal">m2_str<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;\&quot;&quot;</highlight><highlight class="normal"><sp/>+<sp/>model_name<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;::m2\&quot;&quot;</highlight><highlight class="normal"><sp/>+<sp/></highlight><highlight class="stringliteral">&quot;:<sp/>[&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>x<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>m2_raster:</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/>m2_str<sp/>+=<sp/></highlight><highlight class="stringliteral">&quot;%.1f,<sp/>&quot;</highlight><highlight class="normal"><sp/>%<sp/>x</highlight></codeline>
+<codeline lineno="85"><highlight class="normal">m2_str<sp/>=<sp/>m2_str[:-2]<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;]&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"></highlight></codeline>
+<codeline lineno="87"><highlight class="normal">xsec_fb_str<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;\&quot;&quot;</highlight><highlight class="normal"><sp/>+<sp/>model_name<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;::xsec_fb\&quot;&quot;</highlight><highlight class="normal"><sp/>+<sp/></highlight><highlight class="stringliteral">&quot;:<sp/>[&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>x<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>xsec_fb_raster:</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/>xsec_fb_str<sp/>+=<sp/></highlight><highlight class="stringliteral">&quot;%.1f,<sp/>&quot;</highlight><highlight class="normal"><sp/>%<sp/>x</highlight></codeline>
+<codeline lineno="90"><highlight class="normal">xsec_fb_str<sp/>=<sp/>xsec_fb_str[:-2]<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;]&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal">xsec_uncert_fb_str<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;\&quot;&quot;</highlight><highlight class="normal"><sp/>+<sp/>model_name<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;::xsec_uncert_fb\&quot;&quot;</highlight><highlight class="normal"><sp/>+<sp/></highlight><highlight class="stringliteral">&quot;:<sp/>[&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>x<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>xsec_uncert_fb_raster:</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/>xsec_uncert_fb_str<sp/>+=<sp/></highlight><highlight class="stringliteral">&quot;%.2f,<sp/>&quot;</highlight><highlight class="normal"><sp/>%<sp/>x</highlight></codeline>
+<codeline lineno="95"><highlight class="normal">xsec_uncert_fb_str<sp/>=<sp/>xsec_uncert_fb_str[:-2]<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;]&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"></highlight><highlight class="comment">#<sp/>xsec_fractional_uncert_str<sp/>=<sp/>&quot;\&quot;&quot;<sp/>+<sp/>model_name<sp/>+<sp/>&quot;::p4\&quot;&quot;<sp/>+<sp/>&quot;:<sp/>[&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="98"><highlight class="normal"></highlight><highlight class="comment">#<sp/>for<sp/>x<sp/>in<sp/>xsec_fractional_uncert_raster:</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight><highlight class="comment">#<sp/><sp/><sp/><sp/><sp/>xsec_fractional_uncert_str<sp/>+=<sp/>&quot;%.2f,<sp/>&quot;<sp/>%<sp/>x</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight><highlight class="comment">#<sp/>xsec_fractional_uncert_str<sp/>=<sp/>xsec_fractional_uncert_str[:-2]<sp/>+<sp/>&quot;]&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="101"><highlight class="normal"></highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight><highlight class="comment">#<sp/>Print<sp/>output</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="104"><highlight class="normal">output<sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;&quot;&quot;</highlight></codeline>
+<codeline lineno="105"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="106"><highlight class="stringliteral">Scanner:</highlight></codeline>
+<codeline lineno="107"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="108"><highlight class="stringliteral"><sp/><sp/>use_scanner:<sp/>raster</highlight></codeline>
+<codeline lineno="109"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="110"><highlight class="stringliteral"><sp/><sp/>scanners:</highlight></codeline>
+<codeline lineno="111"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="112"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>raster:</highlight></codeline>
+<codeline lineno="113"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/>plugin:<sp/>raster</highlight></codeline>
+<codeline lineno="114"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/>like:<sp/>LogLike</highlight></codeline>
+<codeline lineno="115"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/>parameters:</highlight></codeline>
+<codeline lineno="116"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{}</highlight></codeline>
+<codeline lineno="117"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{}</highlight></codeline>
+<codeline lineno="118"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{}</highlight></codeline>
+<codeline lineno="119"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{}</highlight></codeline>
+<codeline lineno="120"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="121"><highlight class="stringliteral">&quot;&quot;&quot;.format(m1_str,<sp/>m2_str,<sp/>xsec_fb_str,<sp/>xsec_uncert_fb_str)<sp/></highlight></codeline>
+<codeline lineno="122"><highlight class="stringliteral">#<sp/>&quot;&quot;&quot;</highlight><highlight class="normal">.format(m1_str,<sp/>m2_str,<sp/>xsec_fb_str,<sp/>xsec_fractional_uncert_str)<sp/></highlight></codeline>
+<codeline lineno="123"><highlight class="normal"></highlight></codeline>
+<codeline lineno="124"><highlight class="normal">print(output)</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/generate_raster_scan_settings.py"/>
+  </compounddef>
+</doxygen>

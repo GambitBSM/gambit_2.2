@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="mainEWinos__bino__winos__higgsinos_8cc" kind="file" language="C++">
+    <compoundname>mainEWinos_bino_winos_higgsinos.cc</compoundname>
+    <includes local="yes">Pythia8/Pythia.h</includes>
+    <includes local="yes">Pythia8Plugins/HepMC2.h</includes>
+    <incdepgraph>
+      <node id="1">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/examples/HepMC_example/mainEWinos_bino_winos_higgsinos.cc</label>
+        <link refid="mainEWinos__bino__winos__higgsinos_8cc"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>Pythia8/Pythia.h</label>
+      </node>
+      <node id="3">
+        <label>Pythia8Plugins/HepMC2.h</label>
+      </node>
+    </incdepgraph>
+    <innernamespace refid="namespacePythia8">Pythia8</innernamespace>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="mainEWinos__bino__winos__higgsinos_8cc_1ae66f6b31b5ad750f1fe042a706a4e3d4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int main</definition>
+        <argsstring>()</argsstring>
+        <name>main</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/examples/HepMC_example/mainEWinos_bino_winos_higgsinos.cc" line="16" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/examples/HepMC_example/mainEWinos_bino_winos_higgsinos.cc" bodystart="16" bodyend="57"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">//<sp/>mainEwinos_bino_winos_higgsinos.cc.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Author:<sp/>Tomas<sp/>Gonzalo<sp/>(tomas.gonzalo@monash.edu)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">//<sp/>This<sp/>program<sp/>illustrates<sp/>how<sp/>HepMC<sp/>can<sp/>be<sp/>interfaced<sp/>to<sp/>Pythia8.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">//<sp/>It<sp/>uses<sp/>the<sp/>SLHA<sp/>file<sp/>for<sp/>the<sp/>best<sp/>fit<sp/>point<sp/>from<sp/>EWMSSM</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">//<sp/>arXiv:1809.02097<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="comment">//<sp/>WARNING:<sp/>the<sp/>default<sp/>version<sp/>generateds<sp/>30k<sp/>events,<sp/>including<sp/>ISR,<sp/>FSR<sp/>and<sp/>Hadronization.<sp/>HepMC<sp/>files<sp/>can<sp/>weight<sp/>over<sp/>2G</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;Pythia8/Pythia.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;Pythia8Plugins/HepMC2.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">Pythia8;</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main()<sp/>{</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Interface<sp/>for<sp/>conversion<sp/>from<sp/>Pythia8::Event<sp/>to<sp/>HepMC<sp/>event.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/>HepMC::Pythia8ToHepMC<sp/>ToHepMC;</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Specify<sp/>file<sp/>where<sp/>HepMC<sp/>events<sp/>will<sp/>be<sp/>stored.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/>HepMC::IO_GenEvent<sp/>ascii_io(</highlight><highlight class="stringliteral">&quot;hepmcEWinos_bino_winos_higgsinos.dat&quot;</highlight><highlight class="normal">,<sp/>std::ios::out);</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Generator.<sp/>Shorthand<sp/>for<sp/>the<sp/>event.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/>Pythia<sp/>pythia;</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Event&amp;<sp/>event<sp/>=<sp/>pythia.event;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Read<sp/>in<sp/>commands<sp/>from<sp/>external<sp/>file.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/>pythia.readFile(</highlight><highlight class="stringliteral">&quot;mainEWinos_bino_winos_higgsinos.cmnd&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Initialize</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/>pythia.init();</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Extract<sp/>settings<sp/>to<sp/>be<sp/>used<sp/>in<sp/>the<sp/>main<sp/>program.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>nEvent<sp/><sp/><sp/>=<sp/>pythia.mode(</highlight><highlight class="stringliteral">&quot;Main:numberOfEvents&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Begin<sp/>event<sp/>loop.<sp/>Generate<sp/>event.<sp/>Skip<sp/>if<sp/>error.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>iEvent<sp/>=<sp/>0;<sp/>iEvent<sp/>&lt;<sp/>nEvent;<sp/>++iEvent)</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!pythia.next())<sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Construct<sp/>new<sp/>empty<sp/>HepMC<sp/>event<sp/>and<sp/>fill<sp/>it.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Units<sp/>will<sp/>be<sp/>as<sp/>chosen<sp/>for<sp/>HepMC<sp/>build;<sp/>but<sp/>can<sp/>be<sp/>changed</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>by<sp/>arguments,<sp/>e.g.<sp/>GenEvt(<sp/>HepMC::Units::GEV,<sp/>HepMC::Units::MM)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/>HepMC::GenEvent*<sp/>hepmcevt<sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/>HepMC::GenEvent();</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/>ToHepMC.fill_next_event(<sp/>pythia,<sp/>hepmcevt<sp/>);</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Write<sp/>the<sp/>HepMC<sp/>event<sp/>to<sp/>file.<sp/>Done<sp/>with<sp/>it.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/>ascii_io<sp/>&lt;&lt;<sp/>hepmcevt;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal"><sp/>hepmcevt;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>End<sp/>of<sp/>event<sp/>loop.<sp/>Statistics.<sp/>Histogram.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/>pythia.stat();</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Done.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="57"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/examples/HepMC_example/mainEWinos_bino_winos_higgsinos.cc"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="namespacecollider__harvester" kind="namespace" language="Python">
+    <compoundname>collider_harvester</compoundname>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="collider__harvester_8py_1a919afdd34c7e1170ed5f19cf5332e3ec" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string collider_harvester.toolsfile</definition>
+        <argsstring></argsstring>
+        <name>toolsfile</name>
+        <qualifiedname>collider_harvester.toolsfile</qualifiedname>
+        <initializer>= &quot;./Utils/scripts/harvesting_tools.py&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/collider_harvester.py" line="27" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/collider_harvester.py" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="collider__harvester_8py_1a3d82efab9eade325fcf205a9bcc37864" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>def</type>
+        <definition>def collider_harvester.main</definition>
+        <argsstring>(argv)</argsstring>
+        <name>main</name>
+        <qualifiedname>collider_harvester.main</qualifiedname>
+        <param>
+          <type>argv</type>
+          <defname>argv</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/collider_harvester.py" line="30" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/collider_harvester.py" bodystart="30" bodyend="140"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/collider_harvester.py" line="1" column="1"/>
+  </compounddef>
+</doxygen>

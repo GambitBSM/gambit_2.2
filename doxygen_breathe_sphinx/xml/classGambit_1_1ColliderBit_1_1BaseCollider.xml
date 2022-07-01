@@ -1,0 +1,334 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classGambit_1_1ColliderBit_1_1BaseCollider" kind="class" language="C++" prot="public" abstract="yes">
+    <compoundname>Gambit::ColliderBit::BaseCollider</compoundname>
+    <derivedcompoundref refid="classGambit_1_1ColliderBit_1_1Py8Collider" prot="public" virt="non-virtual">Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;</derivedcompoundref>
+    <includes refid="BaseCollider_8hpp" local="no">BaseCollider.hpp</includes>
+      <sectiondef kind="user-defined">
+      <header>Event generation and cross section functions:</header>
+      <description><para>Report the total or process-specific cross section (in fb or pb). </para>
+</description>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1a51e5e169ab6ad3c5e937046d8213a2b9" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
+        <type>double</type>
+        <definition>virtual double Gambit::ColliderBit::BaseCollider::xsec_fb</definition>
+        <argsstring>() const =0</argsstring>
+        <name>xsec_fb</name>
+        <qualifiedname>Gambit::ColliderBit::BaseCollider::xsec_fb</qualifiedname>
+        <reimplementedby refid="classGambit_1_1ColliderBit_1_1Py8Collider_1a140a68f9f9181c4af6abdaf6b2728dd6">xsec_fb</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="45" column="24"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1a39c14ee12a602a337d24ff1d7635ecba" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
+        <type>double</type>
+        <definition>virtual double Gambit::ColliderBit::BaseCollider::xsec_fb</definition>
+        <argsstring>(int) const =0</argsstring>
+        <name>xsec_fb</name>
+        <qualifiedname>Gambit::ColliderBit::BaseCollider::xsec_fb</qualifiedname>
+        <reimplementedby refid="classGambit_1_1ColliderBit_1_1Py8Collider_1a9d5000a64828612ddee0fb1733c8bde7">xsec_fb</reimplementedby>
+        <param>
+          <type>int</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="46" column="24"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1a87acc06518241b88d9083cda640bdf0e" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
+        <type>double</type>
+        <definition>virtual double Gambit::ColliderBit::BaseCollider::xsec_pb</definition>
+        <argsstring>() const =0</argsstring>
+        <name>xsec_pb</name>
+        <qualifiedname>Gambit::ColliderBit::BaseCollider::xsec_pb</qualifiedname>
+        <reimplementedby refid="classGambit_1_1ColliderBit_1_1Py8Collider_1a77dce3d6ebdc654f04fa523943281391">xsec_pb</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="47" column="24"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1a89d71e1f8015234ffcbd4e3cf237f8b9" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
+        <type>double</type>
+        <definition>virtual double Gambit::ColliderBit::BaseCollider::xsec_pb</definition>
+        <argsstring>(int) const =0</argsstring>
+        <name>xsec_pb</name>
+        <qualifiedname>Gambit::ColliderBit::BaseCollider::xsec_pb</qualifiedname>
+        <reimplementedby refid="classGambit_1_1ColliderBit_1_1Py8Collider_1a77873f5eee4cc5a0c485789099e01679">xsec_pb</reimplementedby>
+        <param>
+          <type>int</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="48" column="24"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1a7430cf7800a82f16b6f15a83db98fee6" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
+        <type>double</type>
+        <definition>virtual double Gambit::ColliderBit::BaseCollider::xsecErr_fb</definition>
+        <argsstring>() const =0</argsstring>
+        <name>xsecErr_fb</name>
+        <qualifiedname>Gambit::ColliderBit::BaseCollider::xsecErr_fb</qualifiedname>
+        <reimplementedby refid="classGambit_1_1ColliderBit_1_1Py8Collider_1a0790014470d018de91a3c9abece7859a">xsecErr_fb</reimplementedby>
+        <briefdescription>
+<para>Report the uncertainty in the total or process-specific cross section (in fb or pb). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="50" column="24"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1abb15f7bd2914f06ea12ce3239626260a" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
+        <type>double</type>
+        <definition>virtual double Gambit::ColliderBit::BaseCollider::xsecErr_fb</definition>
+        <argsstring>(int) const =0</argsstring>
+        <name>xsecErr_fb</name>
+        <qualifiedname>Gambit::ColliderBit::BaseCollider::xsecErr_fb</qualifiedname>
+        <reimplementedby refid="classGambit_1_1ColliderBit_1_1Py8Collider_1ad560f82f420244285376c75e013cab1a">xsecErr_fb</reimplementedby>
+        <param>
+          <type>int</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="51" column="24"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1ae58e9a6ae2631f92c0ac9769a82c5424" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
+        <type>double</type>
+        <definition>virtual double Gambit::ColliderBit::BaseCollider::xsecErr_pb</definition>
+        <argsstring>() const =0</argsstring>
+        <name>xsecErr_pb</name>
+        <qualifiedname>Gambit::ColliderBit::BaseCollider::xsecErr_pb</qualifiedname>
+        <reimplementedby refid="classGambit_1_1ColliderBit_1_1Py8Collider_1a151fafe2a64f5c4abe7e4a03428dc79c">xsecErr_pb</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="52" column="24"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1ac777ece98d0a00da1fc323ea6688a718" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
+        <type>double</type>
+        <definition>virtual double Gambit::ColliderBit::BaseCollider::xsecErr_pb</definition>
+        <argsstring>(int) const =0</argsstring>
+        <name>xsecErr_pb</name>
+        <qualifiedname>Gambit::ColliderBit::BaseCollider::xsecErr_pb</qualifiedname>
+        <reimplementedby refid="classGambit_1_1ColliderBit_1_1Py8Collider_1afb12aeee546b015dcf120fe55ae75ffb">xsecErr_pb</reimplementedby>
+        <param>
+          <type>int</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="53" column="24"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1a34f259dd52ec118da2e6e57217b9f8d1" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
+        <type>int</type>
+        <definition>virtual int Gambit::ColliderBit::BaseCollider::process_code</definition>
+        <argsstring>() const =0</argsstring>
+        <name>process_code</name>
+        <qualifiedname>Gambit::ColliderBit::BaseCollider::process_code</qualifiedname>
+        <reimplementedby refid="classGambit_1_1ColliderBit_1_1Py8Collider_1af0a0e267ea5fced895a34e729609c8ef">process_code</reimplementedby>
+        <briefdescription>
+<para>Report an integer process code for the last generated event. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="55" column="21"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1a52c3ee9941f4d209a5eefc444794d33e" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
+        <type>std::vector&lt; int &gt;</type>
+        <definition>virtual std::vector&lt; int &gt; Gambit::ColliderBit::BaseCollider::all_active_process_codes</definition>
+        <argsstring>() const =0</argsstring>
+        <name>all_active_process_codes</name>
+        <qualifiedname>Gambit::ColliderBit::BaseCollider::all_active_process_codes</qualifiedname>
+        <reimplementedby refid="classGambit_1_1ColliderBit_1_1Py8Collider_1aff94f87efa8800793a1bb3fc11834801">all_active_process_codes</reimplementedby>
+        <briefdescription>
+<para>Report the list of all active process codes. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="57" column="29"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="user-defined">
+      <header>(Re-)Initialization functions:</header>
+      <description><para>General init for any collider of this type. </para>
+</description>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1adda9bdab7e968f6509eb107318d252b5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>virtual void Gambit::ColliderBit::BaseCollider::init</definition>
+        <argsstring>(const std::vector&lt; std::string &gt; &amp;)</argsstring>
+        <name>init</name>
+        <qualifiedname>Gambit::ColliderBit::BaseCollider::init</qualifiedname>
+        <reimplementedby refid="classGambit_1_1ColliderBit_1_1Py8Collider_1aa0e506de7f07e74bef7594c3eedfd1a1">init</reimplementedby>
+        <param>
+          <type>const std::vector&lt; std::string &gt; &amp;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="63" column="22" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" bodystart="63" bodyend="63"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1a7b8431d21b44966ec97962a371ba1abf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>virtual void Gambit::ColliderBit::BaseCollider::init</definition>
+        <argsstring>()</argsstring>
+        <name>init</name>
+        <qualifiedname>Gambit::ColliderBit::BaseCollider::init</qualifiedname>
+        <reimplementedby refid="classGambit_1_1ColliderBit_1_1Py8Collider_1aeae80e144f0889e0d5fb42e44c43ffdd">init</reimplementedby>
+        <briefdescription>
+<para>General init for any collider of this type - no settings version. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="65" column="22" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" bodystart="65" bodyend="65"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1BaseCollider_1a9425492cd832b3ffcbcf03aeaf1b6755" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::BaseCollider::partonOnly</definition>
+        <argsstring></argsstring>
+        <name>partonOnly</name>
+        <qualifiedname>Gambit::ColliderBit::BaseCollider::partonOnly</qualifiedname>
+        <briefdescription>
+<para>Flag indicating if events from this collider should be processed as parton-only or full events. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="69" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" bodystart="69" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1BaseCollider_1a5081cf86ba1a4fd8ddd9a02b07e6c66c" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::BaseCollider::antiktR</definition>
+        <argsstring></argsstring>
+        <name>antiktR</name>
+        <qualifiedname>Gambit::ColliderBit::BaseCollider::antiktR</qualifiedname>
+        <briefdescription>
+<para>The jet radius used for the anti-kt jet clustering. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="71" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" bodystart="71" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1a343ec91eb872b66b16f1dd92ae56a270" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::BaseCollider::BaseCollider</definition>
+        <argsstring>()</argsstring>
+        <name>BaseCollider</name>
+        <qualifiedname>Gambit::ColliderBit::BaseCollider::BaseCollider</qualifiedname>
+        <briefdescription>
+<para>Constructor. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="36" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" bodystart="36" bodyend="36"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1ab6f9a876625fb205bb8171a7ca322343" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type></type>
+        <definition>virtual Gambit::ColliderBit::BaseCollider::~BaseCollider</definition>
+        <argsstring>()</argsstring>
+        <name>~BaseCollider</name>
+        <qualifiedname>Gambit::ColliderBit::BaseCollider::~BaseCollider</qualifiedname>
+        <briefdescription>
+<para>Destructor. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="38" column="17" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" bodystart="38" bodyend="38"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1a9bfda44ae01c04766f4eeeab405ff718" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>virtual void Gambit::ColliderBit::BaseCollider::clear</definition>
+        <argsstring>()</argsstring>
+        <name>clear</name>
+        <qualifiedname>Gambit::ColliderBit::BaseCollider::clear</qualifiedname>
+        <reimplementedby refid="classGambit_1_1ColliderBit_1_1Py8Collider_1ac02bb06d51ba26df044bd535e6429e2b">clear</reimplementedby>
+        <briefdescription>
+<para>Reset this instance for reuse, avoiding the need for &quot;new&quot; or &quot;delete&quot;. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="40" column="22" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" bodystart="40" bodyend="40"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>An abstract base class for collider simulators within ColliderBit. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1">
+        <label>Gambit::ColliderBit::BaseCollider</label>
+        <link refid="classGambit_1_1ColliderBit_1_1BaseCollider"/>
+      </node>
+      <node id="2">
+        <label>Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;</label>
+        <link refid="classGambit_1_1ColliderBit_1_1Py8Collider"/>
+        <childnode refid="1" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="30" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" bodystart="31" bodyend="73"/>
+    <listofallmembers>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a52c3ee9941f4d209a5eefc444794d33e" prot="public" virt="pure-virtual"><scope>Gambit::ColliderBit::BaseCollider</scope><name>all_active_process_codes</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a5081cf86ba1a4fd8ddd9a02b07e6c66c" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::BaseCollider</scope><name>antiktR</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a343ec91eb872b66b16f1dd92ae56a270" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::BaseCollider</scope><name>BaseCollider</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a9bfda44ae01c04766f4eeeab405ff718" prot="public" virt="virtual"><scope>Gambit::ColliderBit::BaseCollider</scope><name>clear</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseCollider_1adda9bdab7e968f6509eb107318d252b5" prot="public" virt="virtual"><scope>Gambit::ColliderBit::BaseCollider</scope><name>init</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a7b8431d21b44966ec97962a371ba1abf" prot="public" virt="virtual"><scope>Gambit::ColliderBit::BaseCollider</scope><name>init</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a9425492cd832b3ffcbcf03aeaf1b6755" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::BaseCollider</scope><name>partonOnly</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a34f259dd52ec118da2e6e57217b9f8d1" prot="public" virt="pure-virtual"><scope>Gambit::ColliderBit::BaseCollider</scope><name>process_code</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a51e5e169ab6ad3c5e937046d8213a2b9" prot="public" virt="pure-virtual"><scope>Gambit::ColliderBit::BaseCollider</scope><name>xsec_fb</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a39c14ee12a602a337d24ff1d7635ecba" prot="public" virt="pure-virtual"><scope>Gambit::ColliderBit::BaseCollider</scope><name>xsec_fb</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a87acc06518241b88d9083cda640bdf0e" prot="public" virt="pure-virtual"><scope>Gambit::ColliderBit::BaseCollider</scope><name>xsec_pb</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a89d71e1f8015234ffcbd4e3cf237f8b9" prot="public" virt="pure-virtual"><scope>Gambit::ColliderBit::BaseCollider</scope><name>xsec_pb</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a7430cf7800a82f16b6f15a83db98fee6" prot="public" virt="pure-virtual"><scope>Gambit::ColliderBit::BaseCollider</scope><name>xsecErr_fb</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseCollider_1abb15f7bd2914f06ea12ce3239626260a" prot="public" virt="pure-virtual"><scope>Gambit::ColliderBit::BaseCollider</scope><name>xsecErr_fb</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseCollider_1ae58e9a6ae2631f92c0ac9769a82c5424" prot="public" virt="pure-virtual"><scope>Gambit::ColliderBit::BaseCollider</scope><name>xsecErr_pb</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseCollider_1ac777ece98d0a00da1fc323ea6688a718" prot="public" virt="pure-virtual"><scope>Gambit::ColliderBit::BaseCollider</scope><name>xsecErr_pb</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseCollider_1ab6f9a876625fb205bb8171a7ca322343" prot="public" virt="virtual"><scope>Gambit::ColliderBit::BaseCollider</scope><name>~BaseCollider</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,572 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="ColliderBit__eventloop_8hpp" kind="file" language="C++">
+    <compoundname>ColliderBit_eventloop.hpp</compoundname>
+    <includes local="yes">gambit/Elements/gambit_module_headers.hpp</includes>
+    <includes refid="ColliderBit__rollcall_8hpp" local="yes">gambit/ColliderBit/ColliderBit_rollcall.hpp</includes>
+    <includes refid="ColliderBit__eventloop__utils_8hpp" local="yes">gambit/ColliderBit/ColliderBit_eventloop_utils.hpp</includes>
+    <includedby refid="generateEventPy8Collider_8hpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/generateEventPy8Collider.hpp</includedby>
+    <includedby refid="getPy8Collider_8hpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/getPy8Collider.hpp</includedby>
+    <includedby refid="ColliderBit__eventloop_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_eventloop.cpp</includedby>
+    <includedby refid="collider__event__weights_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/collider_event_weights.cpp</includedby>
+    <includedby refid="getActiveProcessCodes_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getActiveProcessCodes.cpp</includedby>
+    <includedby refid="getAnalysisContainer_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getAnalysisContainer.cpp</includedby>
+    <includedby refid="getBuckFast_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getBuckFast.cpp</includedby>
+    <includedby refid="getHepMCEvent_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getHepMCEvent.cpp</includedby>
+    <includedby refid="getLHEvent_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getLHEvent.cpp</includedby>
+    <includedby refid="getxsec_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getxsec.cpp</includedby>
+    <includedby refid="process__code__PID__pair__mapping_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/process_code_PID_pair_mapping.cpp</includedby>
+    <includedby refid="runAnalyses_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/runAnalyses.cpp</includedby>
+    <includedby refid="smearEvent_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/smearEvent.cpp</includedby>
+    <incdepgraph>
+      <node id="52">
+        <label>gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp</label>
+        <link refid="ColliderBit__Higgs__rollcall_8hpp"/>
+      </node>
+      <node id="53">
+        <label>gambit/ColliderBit/ColliderBit_LEP_rollcall.hpp</label>
+        <link refid="ColliderBit__LEP__rollcall_8hpp"/>
+      </node>
+      <node id="54">
+        <label>gambit/ColliderBit/ColliderBit_MC_rollcall.hpp</label>
+        <link refid="ColliderBit__MC__rollcall_8hpp"/>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_eventloop.hpp</label>
+        <link refid="ColliderBit__eventloop_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="56" relation="include">
+        </childnode>
+      </node>
+      <node id="56">
+        <label>gambit/ColliderBit/ColliderBit_eventloop_utils.hpp</label>
+        <link refid="ColliderBit__eventloop__utils_8hpp"/>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>gambit/ColliderBit/ColliderBit_rollcall.hpp</label>
+        <link refid="ColliderBit__rollcall_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="52" relation="include">
+        </childnode>
+        <childnode refid="53" relation="include">
+        </childnode>
+        <childnode refid="54" relation="include">
+        </childnode>
+        <childnode refid="55" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>gambit/ColliderBit/ColliderBit_types.hpp</label>
+        <link refid="ColliderBit__types_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="42" relation="include">
+        </childnode>
+        <childnode refid="48" relation="include">
+        </childnode>
+        <childnode refid="49" relation="include">
+        </childnode>
+        <childnode refid="50" relation="include">
+        </childnode>
+        <childnode refid="51" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>gambit/ColliderBit/MCLoopInfo.hpp</label>
+        <link refid="MCLoopInfo_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>gambit/ColliderBit/MC_convergence.hpp</label>
+        <link refid="MC__convergence_8hpp"/>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="29">
+        <label>gambit/ColliderBit/analyses/AnalysisContainer.hpp</label>
+        <link refid="AnalysisContainer_8hpp"/>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+      </node>
+      <node id="30">
+        <label>gambit/ColliderBit/analyses/AnalysisData.hpp</label>
+        <link refid="AnalysisData_8hpp"/>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="40" relation="include">
+        </childnode>
+        <childnode refid="41" relation="include">
+        </childnode>
+      </node>
+      <node id="41">
+        <label>gambit/ColliderBit/analyses/EventCounter.hpp</label>
+        <link refid="EventCounter_8hpp"/>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+      </node>
+      <node id="18">
+        <label>gambit/ColliderBit/colliders/BaseCollider.hpp</label>
+        <link refid="BaseCollider_8hpp"/>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="15">
+        <label>gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp</label>
+        <link refid="Py8Collider_8hpp"/>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+      </node>
+      <node id="19">
+        <label>gambit/ColliderBit/colliders/Pythia8/SetHooksClass.hpp</label>
+        <link refid="SetHooksClass_8hpp"/>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+      </node>
+      <node id="23">
+        <label>gambit/ColliderBit/detectors/BaseDetector.hpp</label>
+        <link refid="BaseDetector_8hpp"/>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="22">
+        <label>gambit/ColliderBit/detectors/BuckFast.hpp</label>
+        <link refid="BuckFast_8hpp"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+      </node>
+      <node id="42">
+        <label>gambit/ColliderBit/limits/ALEPHSleptonLimits.hpp</label>
+        <link refid="ALEPHSleptonLimits_8hpp_source"/>
+        <childnode refid="43" relation="include">
+        </childnode>
+      </node>
+      <node id="43">
+        <label>gambit/ColliderBit/limits/BaseLimitContainer.hpp</label>
+        <link refid="BaseLimitContainer_8hpp"/>
+        <childnode refid="40" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="44" relation="include">
+        </childnode>
+        <childnode refid="45" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="46" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="47" relation="include">
+        </childnode>
+      </node>
+      <node id="48">
+        <label>gambit/ColliderBit/limits/L3GauginoLimits.hpp</label>
+        <link refid="L3GauginoLimits_8hpp_source"/>
+        <childnode refid="43" relation="include">
+        </childnode>
+      </node>
+      <node id="49">
+        <label>gambit/ColliderBit/limits/L3SleptonLimits.hpp</label>
+        <link refid="L3SleptonLimits_8hpp_source"/>
+        <childnode refid="43" relation="include">
+        </childnode>
+      </node>
+      <node id="51">
+        <label>gambit/ColliderBit/limits/OPALDegenerateCharginoLimits.hpp</label>
+        <link refid="OPALDegenerateCharginoLimits_8hpp_source"/>
+        <childnode refid="43" relation="include">
+        </childnode>
+      </node>
+      <node id="50">
+        <label>gambit/ColliderBit/limits/OPALGauginoLimits.hpp</label>
+        <link refid="OPALGauginoLimits_8hpp_source"/>
+        <childnode refid="43" relation="include">
+        </childnode>
+      </node>
+      <node id="47">
+        <label>gambit/ColliderBit/limits/PointsAndLines.hpp</label>
+        <link refid="PointsAndLines_8hpp_source"/>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+      </node>
+      <node id="12">
+        <label>gambit/ColliderBit/xsec.hpp</label>
+        <link refid="xsec_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="32">
+        <label>Eigen/Core</label>
+      </node>
+      <node id="26">
+        <label>HEPUtils/Event.h</label>
+      </node>
+      <node id="28">
+        <label>HEPUtils/Jet.h</label>
+      </node>
+      <node id="27">
+        <label>HEPUtils/Particle.h</label>
+      </node>
+      <node id="20">
+        <label>SLHAea/slhaea.h</label>
+      </node>
+      <node id="40">
+        <label>algorithm</label>
+      </node>
+      <node id="37">
+        <label>cfloat</label>
+      </node>
+      <node id="7">
+        <label>chrono</label>
+      </node>
+      <node id="36">
+        <label>cmath</label>
+      </node>
+      <node id="44">
+        <label>cstdlib</label>
+      </node>
+      <node id="24">
+        <label>exception</label>
+      </node>
+      <node id="45">
+        <label>fstream</label>
+      </node>
+      <node id="55">
+        <label>gambit/ColliderBit/ColliderBit_models_rollcall.hpp</label>
+      </node>
+      <node id="21">
+        <label>gambit/ColliderBit/colliders/Pythia8/Py8Collider_typedefs.hpp</label>
+      </node>
+      <node id="2">
+        <label>gambit/Elements/gambit_module_headers.hpp</label>
+      </node>
+      <node id="4">
+        <label>gambit/Elements/shared_types.hpp</label>
+      </node>
+      <node id="8">
+        <label>gambit/Utils/PID_pair.hpp</label>
+      </node>
+      <node id="31">
+        <label>gambit/Utils/begin_ignore_warnings_eigen.hpp</label>
+      </node>
+      <node id="33">
+        <label>gambit/Utils/end_ignore_warnings.hpp</label>
+      </node>
+      <node id="10">
+        <label>gambit/Utils/util_types.hpp</label>
+      </node>
+      <node id="39">
+        <label>iomanip</label>
+      </node>
+      <node id="34">
+        <label>iostream</label>
+      </node>
+      <node id="38">
+        <label>limits</label>
+      </node>
+      <node id="13">
+        <label>map</label>
+      </node>
+      <node id="25">
+        <label>memory</label>
+      </node>
+      <node id="16">
+        <label>ostream</label>
+      </node>
+      <node id="35">
+        <label>sstream</label>
+      </node>
+      <node id="17">
+        <label>stdexcept</label>
+      </node>
+      <node id="14">
+        <label>string</label>
+      </node>
+      <node id="46">
+        <label>utility</label>
+      </node>
+      <node id="6">
+        <label>vector</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="1">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_eventloop.hpp</label>
+        <link refid="ColliderBit__eventloop_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/generateEventPy8Collider.hpp</label>
+        <link refid="generateEventPy8Collider_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/getPy8Collider.hpp</label>
+        <link refid="getPy8Collider_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_eventloop.cpp</label>
+        <link refid="ColliderBit__eventloop_8cpp"/>
+      </node>
+      <node id="7">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/collider_event_weights.cpp</label>
+        <link refid="collider__event__weights_8cpp"/>
+      </node>
+      <node id="8">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getActiveProcessCodes.cpp</label>
+        <link refid="getActiveProcessCodes_8cpp"/>
+      </node>
+      <node id="9">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getAnalysisContainer.cpp</label>
+        <link refid="getAnalysisContainer_8cpp"/>
+      </node>
+      <node id="10">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getBuckFast.cpp</label>
+        <link refid="getBuckFast_8cpp"/>
+      </node>
+      <node id="11">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getHepMCEvent.cpp</label>
+        <link refid="getHepMCEvent_8cpp"/>
+      </node>
+      <node id="12">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getLHEvent.cpp</label>
+        <link refid="getLHEvent_8cpp"/>
+      </node>
+      <node id="13">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getxsec.cpp</label>
+        <link refid="getxsec_8cpp"/>
+      </node>
+      <node id="3">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/models/SUSY.cpp</label>
+        <link refid="SUSY_8cpp"/>
+      </node>
+      <node id="4">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/models/SUSY_extras.cpp</label>
+        <link refid="SUSY__extras_8cpp"/>
+      </node>
+      <node id="14">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/process_code_PID_pair_mapping.cpp</label>
+        <link refid="process__code__PID__pair__mapping_8cpp"/>
+      </node>
+      <node id="15">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/runAnalyses.cpp</label>
+        <link refid="runAnalyses_8cpp"/>
+      </node>
+      <node id="16">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/smearEvent.cpp</label>
+        <link refid="smearEvent_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Declarations common to all ColliderBit event loop functions.</para>
+<para><hruler/>
+</para>
+<para>Authors (add name and date if you modify):</para>
+<para><simplesect kind="author"><para>Abram Krislock (<ulink url="mailto:a.m.b.krislock@fys.uio.no">a.m.b.krislock@fys.uio.no</ulink>)</para>
+</simplesect>
+<simplesect kind="author"><para>Aldo Saavedra</para>
+</simplesect>
+<simplesect kind="author"><para>Andy Buckley</para>
+</simplesect>
+<simplesect kind="author"><para>Chris Rogan (<ulink url="mailto:crogan@cern.ch">crogan@cern.ch</ulink>) </para>
+</simplesect>
+<simplesect kind="date"><para>2014 Aug </para>
+</simplesect>
+<simplesect kind="date"><para>2015 May</para>
+</simplesect>
+<simplesect kind="author"><para>Pat Scott (<ulink url="mailto:p.scott@imperial.ac.uk">p.scott@imperial.ac.uk</ulink>) </para>
+</simplesect>
+<simplesect kind="date"><para>2015 Jul </para>
+</simplesect>
+<simplesect kind="date"><para>2018 Jan </para>
+</simplesect>
+<simplesect kind="date"><para>2019 Jan</para>
+</simplesect>
+<simplesect kind="author"><para>Anders Kvellestad (<ulink url="mailto:anders.kvellestad@fys.uio.no">anders.kvellestad@fys.uio.no</ulink>) </para>
+</simplesect>
+<simplesect kind="date"><para>2017 March </para>
+</simplesect>
+<simplesect kind="date"><para>2018 Jan </para>
+</simplesect>
+<simplesect kind="date"><para>2018 May</para>
+</simplesect>
+<hruler/>
+ </para>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">//<sp/><sp/><sp/>GAMBIT:<sp/>Global<sp/>and<sp/>Modular<sp/>BSM<sp/>Inference<sp/>Tool</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/>*********************************************</highlight></codeline>
+<codeline lineno="37"><highlight class="comment"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;gambit/Elements/gambit_module_headers.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="ColliderBit__rollcall_8hpp" kindref="compound">gambit/ColliderBit/ColliderBit_rollcall.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="ColliderBit__eventloop__utils_8hpp" kindref="compound">gambit/ColliderBit/ColliderBit_eventloop_utils.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_eventloop.hpp"/>
+  </compounddef>
+</doxygen>

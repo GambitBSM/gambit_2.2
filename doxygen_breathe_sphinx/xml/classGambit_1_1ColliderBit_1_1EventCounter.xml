@@ -1,0 +1,403 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classGambit_1_1ColliderBit_1_1EventCounter" kind="class" language="C++" prot="public">
+    <compoundname>Gambit::ColliderBit::EventCounter</compoundname>
+    <includes refid="EventCounter_8hpp" local="no">EventCounter.hpp</includes>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1EventCounter_1a42fbe4203503276ea15128fd310ade7b" prot="private" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string Gambit::ColliderBit::EventCounter::_name</definition>
+        <argsstring></argsstring>
+        <name>_name</name>
+        <qualifiedname>Gambit::ColliderBit::EventCounter::_name</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" line="31" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1EventCounter_1a148981fb8d726958ec91456eb6c0eb55" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Gambit::ColliderBit::EventCounter::_sum</definition>
+        <argsstring></argsstring>
+        <name>_sum</name>
+        <qualifiedname>Gambit::ColliderBit::EventCounter::_sum</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" line="32" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1EventCounter_1a8ed6b7e0d6ac2c0da7647f0d552343b0" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::EventCounter::_weight_sum</definition>
+        <argsstring></argsstring>
+        <name>_weight_sum</name>
+        <qualifiedname>Gambit::ColliderBit::EventCounter::_weight_sum</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" line="33" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1EventCounter_1ac2cf9c4f30dba36c279a5b2a33b636a2" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::EventCounter::_weight_sum_err</definition>
+        <argsstring></argsstring>
+        <name>_weight_sum_err</name>
+        <qualifiedname>Gambit::ColliderBit::EventCounter::_weight_sum_err</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" line="34" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1EventCounter_1a337290e5c5b65ed7da911005d9414fb0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::EventCounter::EventCounter</definition>
+        <argsstring>()</argsstring>
+        <name>EventCounter</name>
+        <qualifiedname>Gambit::ColliderBit::EventCounter::EventCounter</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" line="39" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" bodystart="39" bodyend="44"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1EventCounter_1a4a3b5780ad94e2791042e2e09cb6e008" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::EventCounter::EventCounter</definition>
+        <argsstring>(const std::string name)</argsstring>
+        <name>EventCounter</name>
+        <qualifiedname>Gambit::ColliderBit::EventCounter::EventCounter</qualifiedname>
+        <param>
+          <type>const std::string</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" line="46" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" bodystart="46" bodyend="51"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1EventCounter_1a62239ffa8cccb6bcfebf8903fc298696" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::EventCounter::init</definition>
+        <argsstring>(const std::string name)</argsstring>
+        <name>init</name>
+        <qualifiedname>Gambit::ColliderBit::EventCounter::init</qualifiedname>
+        <param>
+          <type>const std::string</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" line="55" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" bodystart="55" bodyend="61"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1EventCounter_1a6f262a807ac92ae27d701cb485f7e0a5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::EventCounter::reset</definition>
+        <argsstring>()</argsstring>
+        <name>reset</name>
+        <qualifiedname>Gambit::ColliderBit::EventCounter::reset</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" line="64" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" bodystart="64" bodyend="69"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1EventCounter_1a6c89000eae59cf8422c01b6eeb96312e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::EventCounter::set_name</definition>
+        <argsstring>(const std::string name)</argsstring>
+        <name>set_name</name>
+        <qualifiedname>Gambit::ColliderBit::EventCounter::set_name</qualifiedname>
+        <param>
+          <type>const std::string</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" line="72" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" bodystart="72" bodyend="72"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1EventCounter_1aff6f94e0f44c2e81200666a4cbe93d11" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::string</type>
+        <definition>std::string Gambit::ColliderBit::EventCounter::name</definition>
+        <argsstring>() const</argsstring>
+        <name>name</name>
+        <qualifiedname>Gambit::ColliderBit::EventCounter::name</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" line="74" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" bodystart="74" bodyend="74"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1EventCounter_1a20b3cf23bac5836933dfb3f19b388fc7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::EventCounter::set_sum</definition>
+        <argsstring>(int sum)</argsstring>
+        <name>set_sum</name>
+        <qualifiedname>Gambit::ColliderBit::EventCounter::set_sum</qualifiedname>
+        <param>
+          <type>int</type>
+          <declname>sum</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" line="77" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" bodystart="77" bodyend="77"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1EventCounter_1abb38cbdcfa6c662a1aa3902cce2b40a9" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int Gambit::ColliderBit::EventCounter::sum</definition>
+        <argsstring>() const</argsstring>
+        <name>sum</name>
+        <qualifiedname>Gambit::ColliderBit::EventCounter::sum</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" line="79" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" bodystart="79" bodyend="79"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1EventCounter_1a3f58ea694701a2762eb218f89bd9ed2d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::EventCounter::set_weight_sum</definition>
+        <argsstring>(double weight_sum)</argsstring>
+        <name>set_weight_sum</name>
+        <qualifiedname>Gambit::ColliderBit::EventCounter::set_weight_sum</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>weight_sum</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" line="82" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" bodystart="82" bodyend="82"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1EventCounter_1aac05a6cc1a78d6bc30335152a78e1abd" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::EventCounter::weight_sum</definition>
+        <argsstring>() const</argsstring>
+        <name>weight_sum</name>
+        <qualifiedname>Gambit::ColliderBit::EventCounter::weight_sum</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" line="84" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" bodystart="84" bodyend="84"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1EventCounter_1a630afc74449a2704a593c32fb7df327d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::EventCounter::set_weight_sum_err</definition>
+        <argsstring>(double weight_sum_err)</argsstring>
+        <name>set_weight_sum_err</name>
+        <qualifiedname>Gambit::ColliderBit::EventCounter::set_weight_sum_err</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>weight_sum_err</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" line="87" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" bodystart="87" bodyend="87"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1EventCounter_1a5db577bc818585e3829066c2461ed30b" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::EventCounter::weight_sum_err</definition>
+        <argsstring>() const</argsstring>
+        <name>weight_sum_err</name>
+        <qualifiedname>Gambit::ColliderBit::EventCounter::weight_sum_err</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" line="89" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" bodystart="89" bodyend="89"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1EventCounter_1a82b7d15d2e6cce3d7e482abc08e75a0d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::EventCounter::add_event</definition>
+        <argsstring>(double w=1.0, double werr=0.0)</argsstring>
+        <name>add_event</name>
+        <qualifiedname>Gambit::ColliderBit::EventCounter::add_event</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>w</declname>
+          <defval>1.0</defval>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>werr</declname>
+          <defval>0.0</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" line="92" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" bodystart="92" bodyend="97"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1EventCounter_1a77ec2db3f69be38227b784a766ef8d1b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::EventCounter::add_event</definition>
+        <argsstring>(const HEPUtils::Event &amp;event)</argsstring>
+        <name>add_event</name>
+        <qualifiedname>Gambit::ColliderBit::EventCounter::add_event</qualifiedname>
+        <param>
+          <type>const HEPUtils::Event &amp;</type>
+          <declname>event</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" line="100" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" bodystart="100" bodyend="103"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1EventCounter_1a8fc2d9129901e200e4b7df006b78e7ce" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::EventCounter::add_event</definition>
+        <argsstring>(const HEPUtils::Event *event_ptr)</argsstring>
+        <name>add_event</name>
+        <qualifiedname>Gambit::ColliderBit::EventCounter::add_event</qualifiedname>
+        <param>
+          <type>const HEPUtils::Event *</type>
+          <declname>event_ptr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" line="105" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" bodystart="105" bodyend="108"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1EventCounter_1a8dbd18a56f16a7eb4d912dc53f16df1b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classGambit_1_1ColliderBit_1_1EventCounter" kindref="compound">EventCounter</ref> &amp;</type>
+        <definition>EventCounter &amp; Gambit::ColliderBit::EventCounter::operator+=</definition>
+        <argsstring>(const HEPUtils::Event &amp;event)</argsstring>
+        <name>operator+=</name>
+        <qualifiedname>Gambit::ColliderBit::EventCounter::operator+=</qualifiedname>
+        <param>
+          <type>const HEPUtils::Event &amp;</type>
+          <declname>event</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" line="111" column="20" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" bodystart="111" bodyend="115"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1EventCounter_1a72889facbd7ebdf7b334ed60071dbda6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classGambit_1_1ColliderBit_1_1EventCounter" kindref="compound">EventCounter</ref> &amp;</type>
+        <definition>EventCounter &amp; Gambit::ColliderBit::EventCounter::operator+=</definition>
+        <argsstring>(const EventCounter &amp;rhs)</argsstring>
+        <name>operator+=</name>
+        <qualifiedname>Gambit::ColliderBit::EventCounter::operator+=</qualifiedname>
+        <param>
+          <type>const <ref refid="classGambit_1_1ColliderBit_1_1EventCounter" kindref="compound">EventCounter</ref> &amp;</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" line="118" column="20" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" bodystart="118" bodyend="124"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1EventCounter_1ae1d5a81a3d9a2a8272c32a1fcae60028" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classGambit_1_1ColliderBit_1_1EventCounter" kindref="compound">EventCounter</ref> &amp;</type>
+        <definition>EventCounter &amp; Gambit::ColliderBit::EventCounter::combine</definition>
+        <argsstring>(const EventCounter &amp;other)</argsstring>
+        <name>combine</name>
+        <qualifiedname>Gambit::ColliderBit::EventCounter::combine</qualifiedname>
+        <param>
+          <type>const <ref refid="classGambit_1_1ColliderBit_1_1EventCounter" kindref="compound">EventCounter</ref> &amp;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" line="127" column="20" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" bodystart="127" bodyend="136"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>A simple class for counting events of type HEPUtils::Event. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" line="26" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/EventCounter.hpp" bodystart="27" bodyend="138"/>
+    <listofallmembers>
+      <member refid="classGambit_1_1ColliderBit_1_1EventCounter_1a42fbe4203503276ea15128fd310ade7b" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::EventCounter</scope><name>_name</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1EventCounter_1a148981fb8d726958ec91456eb6c0eb55" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::EventCounter</scope><name>_sum</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1EventCounter_1a8ed6b7e0d6ac2c0da7647f0d552343b0" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::EventCounter</scope><name>_weight_sum</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1EventCounter_1ac2cf9c4f30dba36c279a5b2a33b636a2" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::EventCounter</scope><name>_weight_sum_err</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1EventCounter_1a82b7d15d2e6cce3d7e482abc08e75a0d" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::EventCounter</scope><name>add_event</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1EventCounter_1a77ec2db3f69be38227b784a766ef8d1b" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::EventCounter</scope><name>add_event</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1EventCounter_1a8fc2d9129901e200e4b7df006b78e7ce" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::EventCounter</scope><name>add_event</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1EventCounter_1ae1d5a81a3d9a2a8272c32a1fcae60028" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::EventCounter</scope><name>combine</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1EventCounter_1a337290e5c5b65ed7da911005d9414fb0" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::EventCounter</scope><name>EventCounter</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1EventCounter_1a4a3b5780ad94e2791042e2e09cb6e008" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::EventCounter</scope><name>EventCounter</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1EventCounter_1a62239ffa8cccb6bcfebf8903fc298696" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::EventCounter</scope><name>init</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1EventCounter_1aff6f94e0f44c2e81200666a4cbe93d11" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::EventCounter</scope><name>name</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1EventCounter_1a8dbd18a56f16a7eb4d912dc53f16df1b" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::EventCounter</scope><name>operator+=</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1EventCounter_1a72889facbd7ebdf7b334ed60071dbda6" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::EventCounter</scope><name>operator+=</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1EventCounter_1a6f262a807ac92ae27d701cb485f7e0a5" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::EventCounter</scope><name>reset</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1EventCounter_1a6c89000eae59cf8422c01b6eeb96312e" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::EventCounter</scope><name>set_name</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1EventCounter_1a20b3cf23bac5836933dfb3f19b388fc7" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::EventCounter</scope><name>set_sum</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1EventCounter_1a3f58ea694701a2762eb218f89bd9ed2d" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::EventCounter</scope><name>set_weight_sum</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1EventCounter_1a630afc74449a2704a593c32fb7df327d" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::EventCounter</scope><name>set_weight_sum_err</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1EventCounter_1abb38cbdcfa6c662a1aa3902cce2b40a9" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::EventCounter</scope><name>sum</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1EventCounter_1aac05a6cc1a78d6bc30335152a78e1abd" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::EventCounter</scope><name>weight_sum</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1EventCounter_1a5db577bc818585e3829066c2461ed30b" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::EventCounter</scope><name>weight_sum_err</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -6,10 +6,13 @@
 Welcome to GAMBIT's documentation!
 ==================================
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+Contents
+========
 
+.. toctree::
+   :maxdepth: 4
+   
+   api
 
 
 Indices and tables
@@ -18,3 +21,9 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+Docs
+====
+
+.. doxygenclass:: Gambit::ColliderBit::BuckFast
+   :members:

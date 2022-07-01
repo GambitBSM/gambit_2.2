@@ -1,0 +1,613 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="structGambit_1_1ColliderBit_1_1MCLoopInfo" kind="struct" language="C++" prot="public">
+    <compoundname>Gambit::ColliderBit::MCLoopInfo</compoundname>
+    <includes refid="MCLoopInfo_8hpp" local="no">MCLoopInfo.hpp</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a90b674a480b99305bde5ba21ab46f37b" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::MCLoopInfo::event_gen_BYPASS</definition>
+        <argsstring></argsstring>
+        <name>event_gen_BYPASS</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::event_gen_BYPASS</qualifiedname>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="35" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a86fc3523ef0ec22cfd17b21bc1c51c17" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::MCLoopInfo::event_generation_began</definition>
+        <argsstring></argsstring>
+        <name>event_generation_began</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::event_generation_began</qualifiedname>
+        <briefdescription>
+<para>Event generation has started. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="38" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1aef66091196ba1fa30f4392ed05db48b1" prot="public" static="no" mutable="yes">
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::MCLoopInfo::exceeded_maxFailedEvents</definition>
+        <argsstring></argsstring>
+        <name>exceeded_maxFailedEvents</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::exceeded_maxFailedEvents</qualifiedname>
+        <briefdescription>
+<para>Maximum allowed number of failed events has been reached. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="41" column="20" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a13a2decfcc5cdfb73d22fb819ab757e9" prot="public" static="no" mutable="yes">
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::MCLoopInfo::end_of_event_file</definition>
+        <argsstring></argsstring>
+        <name>end_of_event_file</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::end_of_event_file</qualifiedname>
+        <briefdescription>
+<para>Maximum allowed number of failed events has been reached and MC loop terminated. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="44" column="20" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1abb7ffbc1231c843bb858e8470e3e4f1e" prot="public" static="no" mutable="no">
+        <type>std::vector&lt; str &gt;</type>
+        <definition>std::vector&lt;str&gt; Gambit::ColliderBit::MCLoopInfo::collider_names</definition>
+        <argsstring></argsstring>
+        <name>collider_names</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::collider_names</qualifiedname>
+        <briefdescription>
+<para>The names of all colliders. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="47" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a62e2a183470c96e9c6b0a651a8318c4a" prot="public" static="no" mutable="no">
+        <type>std::map&lt; str, int &gt;</type>
+        <definition>std::map&lt;str,int&gt; Gambit::ColliderBit::MCLoopInfo::maxFailedEvents</definition>
+        <argsstring></argsstring>
+        <name>maxFailedEvents</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::maxFailedEvents</qualifiedname>
+        <briefdescription>
+<para>Maximum allowable number of failed events before MC loop is terminated for each collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="50" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1abab9f14e9f7d2c39ec9c4a00cb52f788" prot="public" static="no" mutable="no">
+        <type>std::map&lt; str, bool &gt;</type>
+        <definition>std::map&lt;str,bool&gt; Gambit::ColliderBit::MCLoopInfo::invalidate_failed_points</definition>
+        <argsstring></argsstring>
+        <name>invalidate_failed_points</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::invalidate_failed_points</qualifiedname>
+        <briefdescription>
+<para>Invalidate points where number of failed events &gt; maxFailedEvents? One bool for each collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="53" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a84e89c7e58fe734446499a0fb1cd325f" prot="public" static="no" mutable="yes">
+        <type>std::map&lt; str, int &gt;</type>
+        <definition>std::map&lt;str,int&gt; Gambit::ColliderBit::MCLoopInfo::event_count</definition>
+        <argsstring></argsstring>
+        <name>event_count</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::event_count</qualifiedname>
+        <briefdescription>
+<para>Number of events generated for each collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="56" column="24" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" bodystart="56" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a818bc16a50d3653d7e586bb867258a31" prot="public" static="no" mutable="no">
+        <type>std::map&lt; str, <ref refid="structGambit_1_1ColliderBit_1_1convergence__settings" kindref="compound">convergence_settings</ref> &gt;</type>
+        <definition>std::map&lt;str,convergence_settings&gt; Gambit::ColliderBit::MCLoopInfo::convergence_options</definition>
+        <argsstring></argsstring>
+        <name>convergence_options</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::convergence_options</qualifiedname>
+        <briefdescription>
+<para>Convergence options for each collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="59" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a6f024bfb1181bc749de04ff62a20ab70" prot="public" static="no" mutable="no">
+        <type>std::map&lt; str, std::vector&lt; str &gt; &gt;</type>
+        <definition>std::map&lt;str,std::vector&lt;str&gt; &gt; Gambit::ColliderBit::MCLoopInfo::analyses</definition>
+        <argsstring></argsstring>
+        <name>analyses</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::analyses</qualifiedname>
+        <briefdescription>
+<para><ref refid="classGambit_1_1ColliderBit_1_1Analysis" kindref="compound">Analysis</ref> list for each collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="62" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1aa841fe1447d50d56f5b8e49a67f23309" prot="public" static="no" mutable="no">
+        <type>std::map&lt; str, std::map&lt; str, std::vector&lt; str &gt; &gt; &gt;</type>
+        <definition>std::map&lt;str,std::map&lt;str,std::vector&lt;str&gt; &gt; &gt; Gambit::ColliderBit::MCLoopInfo::detector_analyses</definition>
+        <argsstring></argsstring>
+        <name>detector_analyses</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::detector_analyses</qualifiedname>
+        <briefdescription>
+<para><ref refid="classGambit_1_1ColliderBit_1_1Analysis" kindref="compound">Analysis</ref> list for each detector of each collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="65" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" bodystart="65" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1ada1951bcaa97cae6828d39a3862b442f" prot="private" static="no" mutable="no">
+        <type>str</type>
+        <definition>str Gambit::ColliderBit::MCLoopInfo::_current_collider</definition>
+        <argsstring></argsstring>
+        <name>_current_collider</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::_current_collider</qualifiedname>
+        <briefdescription>
+<para>The name of the current collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="118" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" bodystart="118" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1ae6adcc454cdb09436b0f1cfcdc56fc06" prot="private" static="no" mutable="no">
+        <type>std::map&lt; str, int &gt;::iterator</type>
+        <definition>std::map&lt;str,int&gt;::iterator Gambit::ColliderBit::MCLoopInfo::_current_maxFailedEvents_it</definition>
+        <argsstring></argsstring>
+        <name>_current_maxFailedEvents_it</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::_current_maxFailedEvents_it</qualifiedname>
+        <briefdescription>
+<para>Iterator to the current maxFailedEvents. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="121" column="29" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" bodystart="121" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a2691f1353d7c969dc236a0fb8e61275d" prot="private" static="no" mutable="no">
+        <type>std::map&lt; str, bool &gt;::iterator</type>
+        <definition>std::map&lt;str,bool&gt;::iterator Gambit::ColliderBit::MCLoopInfo::_current_invalidate_failed_points_it</definition>
+        <argsstring></argsstring>
+        <name>_current_invalidate_failed_points_it</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::_current_invalidate_failed_points_it</qualifiedname>
+        <briefdescription>
+<para>Iterator to the current invalidate_failed_points. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="124" column="29" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" bodystart="124" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a8272d481da273b9984d5e199c70937a3" prot="private" static="no" mutable="no">
+        <type>std::map&lt; str, int &gt;::iterator</type>
+        <definition>std::map&lt;str,int&gt;::iterator Gambit::ColliderBit::MCLoopInfo::_current_event_count_it</definition>
+        <argsstring></argsstring>
+        <name>_current_event_count_it</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::_current_event_count_it</qualifiedname>
+        <briefdescription>
+<para>Iterator to the current event count. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="127" column="29" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" bodystart="127" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1aff8fec3e28039eb724b07ab421cedec9" prot="private" static="no" mutable="no">
+        <type>std::map&lt; str, <ref refid="structGambit_1_1ColliderBit_1_1convergence__settings" kindref="compound">convergence_settings</ref> &gt;::iterator</type>
+        <definition>std::map&lt;str,convergence_settings&gt;::iterator Gambit::ColliderBit::MCLoopInfo::_current_convergence_options_it</definition>
+        <argsstring></argsstring>
+        <name>_current_convergence_options_it</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::_current_convergence_options_it</qualifiedname>
+        <briefdescription>
+<para>Iterator to the current set of convergence options. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="130" column="29" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" bodystart="130" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a0326c1f84e1fbf4cffa0de1490122590" prot="private" static="no" mutable="no">
+        <type>std::map&lt; str, std::vector&lt; str &gt; &gt;::iterator</type>
+        <definition>std::map&lt;str,std::vector&lt;str&gt;&gt;::iterator Gambit::ColliderBit::MCLoopInfo::_current_analyses_it</definition>
+        <argsstring></argsstring>
+        <name>_current_analyses_it</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::_current_analyses_it</qualifiedname>
+        <briefdescription>
+<para>Iterator to the current set of analyses. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="133" column="29" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" bodystart="133" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a42c991ea53ea8a6ccc7e4f3ee3f4e99c" prot="private" static="no" mutable="no">
+        <type>std::map&lt; str, std::map&lt; str, std::vector&lt; str &gt; &gt; &gt;::iterator</type>
+        <definition>std::map&lt;str,std::map&lt;str,std::vector&lt;str&gt;&gt;&gt;::iterator Gambit::ColliderBit::MCLoopInfo::_current_detector_analyses_it</definition>
+        <argsstring></argsstring>
+        <name>_current_detector_analyses_it</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::_current_detector_analyses_it</qualifiedname>
+        <briefdescription>
+<para>Iterator to the current set of analyses sorted by detector. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="136" column="29" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" bodystart="136" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a4c7159f6a7075bfafbe28d242e7cd5b4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::MCLoopInfo::set_current_collider</definition>
+        <argsstring>(str &amp;)</argsstring>
+        <name>set_current_collider</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::set_current_collider</qualifiedname>
+        <param>
+          <type>str &amp;</type>
+          <defname>col</defname>
+        </param>
+        <briefdescription>
+<para>Set the current collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="68" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/MCLoopInfo.cpp" bodystart="59" bodyend="118"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a797872c3bb7c015c519866ab32e7b353" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>const str &amp;</type>
+        <definition>const str &amp; Gambit::ColliderBit::MCLoopInfo::current_collider</definition>
+        <argsstring>() const</argsstring>
+        <name>current_collider</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::current_collider</qualifiedname>
+        <briefdescription>
+<para>Get the current collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="71" column="17" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/MCLoopInfo.cpp" bodystart="127" bodyend="127"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1aa702d4b00dafb9e5b660412c4604537e" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>const int &amp;</type>
+        <definition>const int &amp; Gambit::ColliderBit::MCLoopInfo::current_maxFailedEvents</definition>
+        <argsstring>() const</argsstring>
+        <name>current_maxFailedEvents</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::current_maxFailedEvents</qualifiedname>
+        <briefdescription>
+<para>Get maximum allowable number of failed events before MC loop is terminated for the current collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="74" column="17" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/MCLoopInfo.cpp" bodystart="129" bodyend="129"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a54a1a6bff47ea4c0d835a29d7d03f432" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int &amp;</type>
+        <definition>int &amp; Gambit::ColliderBit::MCLoopInfo::current_maxFailedEvents</definition>
+        <argsstring>()</argsstring>
+        <name>current_maxFailedEvents</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::current_maxFailedEvents</qualifiedname>
+        <briefdescription>
+<para>Get/set maximum allowable number of failed events before MC loop is terminated for the current collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="76" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/MCLoopInfo.cpp" bodystart="130" bodyend="130"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a122ee7e96335784b94385881175b7570" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>const bool &amp;</type>
+        <definition>const bool &amp; Gambit::ColliderBit::MCLoopInfo::current_invalidate_failed_points</definition>
+        <argsstring>() const</argsstring>
+        <name>current_invalidate_failed_points</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::current_invalidate_failed_points</qualifiedname>
+        <briefdescription>
+<para>Get invalidate_failed_points bool for the current collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="79" column="18" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/MCLoopInfo.cpp" bodystart="132" bodyend="132"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1ab77ac8662ab4fe76e875afe48fc5b32d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool &amp;</type>
+        <definition>bool &amp; Gambit::ColliderBit::MCLoopInfo::current_invalidate_failed_points</definition>
+        <argsstring>()</argsstring>
+        <name>current_invalidate_failed_points</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::current_invalidate_failed_points</qualifiedname>
+        <briefdescription>
+<para>Get/set invalidate_failed_points for the current collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="81" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/MCLoopInfo.cpp" bodystart="133" bodyend="133"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a749b2423d0b565051be1b8b932d6e2b6" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>const int &amp;</type>
+        <definition>const int &amp; Gambit::ColliderBit::MCLoopInfo::current_event_count</definition>
+        <argsstring>() const</argsstring>
+        <name>current_event_count</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::current_event_count</qualifiedname>
+        <briefdescription>
+<para>Get the number of events generated for the current collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="84" column="17" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/MCLoopInfo.cpp" bodystart="135" bodyend="135"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a10dad76156668449ed673e04971dd715" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int &amp;</type>
+        <definition>int &amp; Gambit::ColliderBit::MCLoopInfo::current_event_count</definition>
+        <argsstring>()</argsstring>
+        <name>current_event_count</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::current_event_count</qualifiedname>
+        <briefdescription>
+<para>Get/set the number of events generated for the current collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="86" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/MCLoopInfo.cpp" bodystart="136" bodyend="136"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a600f3a4a02d80609a70a30fbd89486b9" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>const <ref refid="structGambit_1_1ColliderBit_1_1convergence__settings" kindref="compound">convergence_settings</ref> &amp;</type>
+        <definition>const convergence_settings &amp; Gambit::ColliderBit::MCLoopInfo::current_convergence_options</definition>
+        <argsstring>() const</argsstring>
+        <name>current_convergence_options</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::current_convergence_options</qualifiedname>
+        <briefdescription>
+<para>Get the set of convergence options for the current collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="89" column="34" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/MCLoopInfo.cpp" bodystart="138" bodyend="138"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a21b303973639c25f598fe64d47fc961f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="structGambit_1_1ColliderBit_1_1convergence__settings" kindref="compound">convergence_settings</ref> &amp;</type>
+        <definition>convergence_settings &amp; Gambit::ColliderBit::MCLoopInfo::current_convergence_options</definition>
+        <argsstring>()</argsstring>
+        <name>current_convergence_options</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::current_convergence_options</qualifiedname>
+        <briefdescription>
+<para>Get/set the set of convergence options for the current collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="91" column="28" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/MCLoopInfo.cpp" bodystart="139" bodyend="139"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1ab829e691614a9b939ed9f92f44706e4f" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>const std::vector&lt; str &gt; &amp;</type>
+        <definition>const std::vector&lt; str &gt; &amp; Gambit::ColliderBit::MCLoopInfo::current_analyses</definition>
+        <argsstring>() const</argsstring>
+        <name>current_analyses</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::current_analyses</qualifiedname>
+        <briefdescription>
+<para>Get the set of analyses for the current collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="94" column="25" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/MCLoopInfo.cpp" bodystart="141" bodyend="141"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a08fb6207239d1c050f45af9a3ca47d20" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::vector&lt; str &gt; &amp;</type>
+        <definition>std::vector&lt; str &gt; &amp; Gambit::ColliderBit::MCLoopInfo::current_analyses</definition>
+        <argsstring>()</argsstring>
+        <name>current_analyses</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::current_analyses</qualifiedname>
+        <briefdescription>
+<para>Get/set the set of analyses for the current collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="96" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/MCLoopInfo.cpp" bodystart="142" bodyend="142"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a6294f3efb133b279f66be4fd1c725b1d" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>const std::vector&lt; str &gt; &amp;</type>
+        <definition>const std::vector&lt; str &gt; &amp; Gambit::ColliderBit::MCLoopInfo::current_analyses_for</definition>
+        <argsstring>(const str &amp;) const</argsstring>
+        <name>current_analyses_for</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::current_analyses_for</qualifiedname>
+        <param>
+          <type>const str &amp;</type>
+          <defname>detname</defname>
+        </param>
+        <briefdescription>
+<para>Get the set of analyses for the current collider and a given detector. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="99" column="25" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/MCLoopInfo.cpp" bodystart="144" bodyend="148"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a1e7355494f72b4aefa394186419207d8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::vector&lt; str &gt; &amp;</type>
+        <definition>std::vector&lt; str &gt; &amp; Gambit::ColliderBit::MCLoopInfo::current_analyses_for</definition>
+        <argsstring>(const str &amp;)</argsstring>
+        <name>current_analyses_for</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::current_analyses_for</qualifiedname>
+        <param>
+          <type>const str &amp;</type>
+          <defname>detname</defname>
+        </param>
+        <briefdescription>
+<para>Get/set the set of analyses for the current collider and a given detector. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="101" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/MCLoopInfo.cpp" bodystart="149" bodyend="153"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a5e065555e9fb561a9105173e2f1a1ff6" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::MCLoopInfo::current_analyses_exist_for</definition>
+        <argsstring>(const str &amp;) const</argsstring>
+        <name>current_analyses_exist_for</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::current_analyses_exist_for</qualifiedname>
+        <param>
+          <type>const str &amp;</type>
+          <defname>detname</defname>
+        </param>
+        <briefdescription>
+<para>Query whether any analyses exist for a given detector for the current collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="104" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/MCLoopInfo.cpp" bodystart="120" bodyend="125"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a4a3512bd3e45fcc26cba88ae8dfff3bd" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::MCLoopInfo::report_exceeded_maxFailedEvents</definition>
+        <argsstring>() const</argsstring>
+        <name>report_exceeded_maxFailedEvents</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::report_exceeded_maxFailedEvents</qualifiedname>
+        <briefdescription>
+<para>Set exceeded_maxFailedEvents = true and decrement event counter by 1. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="107" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/MCLoopInfo.cpp" bodystart="29" bodyend="37"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1acfb0f61a817362efa512120bebd3f8a5" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::MCLoopInfo::report_end_of_event_file</definition>
+        <argsstring>() const</argsstring>
+        <name>report_end_of_event_file</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::report_end_of_event_file</qualifiedname>
+        <briefdescription>
+<para>Set end_of_event_file = true and decrement event counter by 1. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="110" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/MCLoopInfo.cpp" bodystart="40" bodyend="48"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a90f1dab2975fa2246c9e3cb2987da312" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::MCLoopInfo::reset_flags</definition>
+        <argsstring>()</argsstring>
+        <name>reset_flags</name>
+        <qualifiedname>Gambit::ColliderBit::MCLoopInfo::reset_flags</qualifiedname>
+        <briefdescription>
+<para>Reset flags. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="113" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/MCLoopInfo.cpp" bodystart="51" bodyend="56"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Container for event loop status data and settings. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" line="31" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MCLoopInfo.hpp" bodystart="32" bodyend="138"/>
+    <listofallmembers>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a0326c1f84e1fbf4cffa0de1490122590" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>_current_analyses_it</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1ada1951bcaa97cae6828d39a3862b442f" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>_current_collider</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1aff8fec3e28039eb724b07ab421cedec9" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>_current_convergence_options_it</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a42c991ea53ea8a6ccc7e4f3ee3f4e99c" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>_current_detector_analyses_it</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a8272d481da273b9984d5e199c70937a3" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>_current_event_count_it</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a2691f1353d7c969dc236a0fb8e61275d" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>_current_invalidate_failed_points_it</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1ae6adcc454cdb09436b0f1cfcdc56fc06" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>_current_maxFailedEvents_it</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a6f024bfb1181bc749de04ff62a20ab70" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>analyses</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1abb7ffbc1231c843bb858e8470e3e4f1e" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>collider_names</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a818bc16a50d3653d7e586bb867258a31" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>convergence_options</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1ab829e691614a9b939ed9f92f44706e4f" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>current_analyses</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a08fb6207239d1c050f45af9a3ca47d20" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>current_analyses</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a5e065555e9fb561a9105173e2f1a1ff6" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>current_analyses_exist_for</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a6294f3efb133b279f66be4fd1c725b1d" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>current_analyses_for</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a1e7355494f72b4aefa394186419207d8" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>current_analyses_for</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a797872c3bb7c015c519866ab32e7b353" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>current_collider</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a600f3a4a02d80609a70a30fbd89486b9" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>current_convergence_options</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a21b303973639c25f598fe64d47fc961f" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>current_convergence_options</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a749b2423d0b565051be1b8b932d6e2b6" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>current_event_count</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a10dad76156668449ed673e04971dd715" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>current_event_count</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a122ee7e96335784b94385881175b7570" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>current_invalidate_failed_points</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1ab77ac8662ab4fe76e875afe48fc5b32d" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>current_invalidate_failed_points</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1aa702d4b00dafb9e5b660412c4604537e" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>current_maxFailedEvents</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a54a1a6bff47ea4c0d835a29d7d03f432" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>current_maxFailedEvents</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1aa841fe1447d50d56f5b8e49a67f23309" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>detector_analyses</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a13a2decfcc5cdfb73d22fb819ab757e9" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>end_of_event_file</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a84e89c7e58fe734446499a0fb1cd325f" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>event_count</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a90b674a480b99305bde5ba21ab46f37b" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>event_gen_BYPASS</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a86fc3523ef0ec22cfd17b21bc1c51c17" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>event_generation_began</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1aef66091196ba1fa30f4392ed05db48b1" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>exceeded_maxFailedEvents</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1abab9f14e9f7d2c39ec9c4a00cb52f788" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>invalidate_failed_points</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a62e2a183470c96e9c6b0a651a8318c4a" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>maxFailedEvents</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1acfb0f61a817362efa512120bebd3f8a5" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>report_end_of_event_file</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a4a3512bd3e45fcc26cba88ae8dfff3bd" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>report_exceeded_maxFailedEvents</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a90f1dab2975fa2246c9e3cb2987da312" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>reset_flags</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1MCLoopInfo_1a4c7159f6a7075bfafbe28d242e7cd5b4" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MCLoopInfo</scope><name>set_current_collider</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

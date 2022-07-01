@@ -1,0 +1,172 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="structmy__func" kind="struct" language="C++" prot="public">
+    <compoundname>my_func</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structmy__func_1abf4bbcda787097c8ba88ee84a06705d8" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_func::pb1[4]</definition>
+        <argsstring>[4]</argsstring>
+        <name>pb1</name>
+        <qualifiedname>my_func::pb1</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="60" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="60" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structmy__func_1a7c9260a3f89bc352bf88939de92ee3da" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_func::pl[4]</definition>
+        <argsstring>[4]</argsstring>
+        <name>pl</name>
+        <qualifiedname>my_func::pl</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="62" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structmy__func_1a12d5ca34e61351388f9ba25bd6b7ce83" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_func::pMET[4]</definition>
+        <argsstring>[4]</argsstring>
+        <name>pMET</name>
+        <qualifiedname>my_func::pMET</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="63" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="63" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structmy__func_1a883062ad650d5d6b0c46fe813caa6b49" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_func::sigmat</definition>
+        <argsstring></argsstring>
+        <name>sigmat</name>
+        <qualifiedname>my_func::sigmat</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="64" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="64" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structmy__func_1ad5d1f90380ec3dc85143a4c9e5331bd5" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_func::sigmaW</definition>
+        <argsstring></argsstring>
+        <name>sigmaW</name>
+        <qualifiedname>my_func::sigmaW</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="64" column="17" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="64" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structmy__func_1a83465277fe3c369f5453e00b17222371" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_func::sign</definition>
+        <argsstring></argsstring>
+        <name>sign</name>
+        <qualifiedname>my_func::sign</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="64" column="24" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="64" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structmy__func_1a9cca53772f487a078cf33e98f20033df" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>my_func::my_func</definition>
+        <argsstring>(double ppb1[4], double ppl[4], double ppMET[4], double sigmatt, double sigmaWW, double ssign)</argsstring>
+        <name>my_func</name>
+        <qualifiedname>my_func::my_func</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>ppb1</declname>
+          <array>[4]</array>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>ppl</declname>
+          <array>[4]</array>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>ppMET</declname>
+          <array>[4]</array>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>sigmatt</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>sigmaWW</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>ssign</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="66" column="3" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="66" bodyend="84"/>
+      </memberdef>
+      <memberdef kind="function" id="structmy__func_1a065db0b762afa99ec9d19bdb5fa36cf5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double my_func::operator()</definition>
+        <argsstring>(double points[], int)</argsstring>
+        <name>operator()</name>
+        <qualifiedname>my_func::operator()</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>points</declname>
+          <array>[]</array>
+        </param>
+        <param>
+          <type>int</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="85" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="85" bodyend="115"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="58" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="59" bodyend="116"/>
+    <listofallmembers>
+      <member refid="structmy__func_1a9cca53772f487a078cf33e98f20033df" prot="public" virt="non-virtual"><scope>my_func</scope><name>my_func</name></member>
+      <member refid="structmy__func_1a065db0b762afa99ec9d19bdb5fa36cf5" prot="public" virt="non-virtual"><scope>my_func</scope><name>operator()</name></member>
+      <member refid="structmy__func_1abf4bbcda787097c8ba88ee84a06705d8" prot="public" virt="non-virtual"><scope>my_func</scope><name>pb1</name></member>
+      <member refid="structmy__func_1a7c9260a3f89bc352bf88939de92ee3da" prot="public" virt="non-virtual"><scope>my_func</scope><name>pl</name></member>
+      <member refid="structmy__func_1a12d5ca34e61351388f9ba25bd6b7ce83" prot="public" virt="non-virtual"><scope>my_func</scope><name>pMET</name></member>
+      <member refid="structmy__func_1a883062ad650d5d6b0c46fe813caa6b49" prot="public" virt="non-virtual"><scope>my_func</scope><name>sigmat</name></member>
+      <member refid="structmy__func_1ad5d1f90380ec3dc85143a4c9e5331bd5" prot="public" virt="non-virtual"><scope>my_func</scope><name>sigmaW</name></member>
+      <member refid="structmy__func_1a83465277fe3c369f5453e00b17222371" prot="public" virt="non-virtual"><scope>my_func</scope><name>sign</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

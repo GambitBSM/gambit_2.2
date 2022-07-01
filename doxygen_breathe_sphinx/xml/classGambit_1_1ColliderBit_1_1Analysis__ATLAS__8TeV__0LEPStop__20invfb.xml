@@ -1,0 +1,379 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb" kind="class" language="C++" prot="public">
+    <compoundname>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</compoundname>
+    <basecompoundref refid="classGambit_1_1ColliderBit_1_1Analysis" prot="public" virt="non-virtual">Gambit::ColliderBit::Analysis</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1aeedf739943cdea3318e3a00293d3fa33" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::_numSRA1</definition>
+        <argsstring></argsstring>
+        <name>_numSRA1</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::_numSRA1</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="36" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1ac10ebf1123ed00ffc68b04cbf3709efd" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::_numSRA2</definition>
+        <argsstring></argsstring>
+        <name>_numSRA2</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::_numSRA2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="36" column="23" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1acabda83bdfa32fa20688b704546657a4" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::_numSRA3</definition>
+        <argsstring></argsstring>
+        <name>_numSRA3</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::_numSRA3</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="36" column="32" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1a10a566680ee5699271e87bda4a28f2d4" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::_numSRA4</definition>
+        <argsstring></argsstring>
+        <name>_numSRA4</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::_numSRA4</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="36" column="41" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1a29b659845c703240b7637aa1852d0320" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::_numSRC1</definition>
+        <argsstring></argsstring>
+        <name>_numSRC1</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::_numSRC1</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="37" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1a53616cada25fc8c46233231ef21e516c" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::_numSRC2</definition>
+        <argsstring></argsstring>
+        <name>_numSRC2</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::_numSRC2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="37" column="23" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1a7606d7c35c9740385304cc6c9c33ad50" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::_numSRC3</definition>
+        <argsstring></argsstring>
+        <name>_numSRC3</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::_numSRC3</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="37" column="32" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1ae99ca84e8c4112b7c201705f55b7383e" prot="private" static="no" mutable="no">
+        <type>vector&lt; int &gt;</type>
+        <definition>vector&lt;int&gt; Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::cutFlowVector</definition>
+        <argsstring></argsstring>
+        <name>cutFlowVector</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::cutFlowVector</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="39" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1a0d2a3ad9fd3086b71f9742133dad668a" prot="private" static="no" mutable="no">
+        <type>vector&lt; string &gt;</type>
+        <definition>vector&lt;string&gt; Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::cutFlowVector_str</definition>
+        <argsstring></argsstring>
+        <name>cutFlowVector_str</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::cutFlowVector_str</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="40" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1ab042fd57a30ce28fd862e3ddcc0aea3c" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::NCUTS</definition>
+        <argsstring></argsstring>
+        <name>NCUTS</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::NCUTS</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="41" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-attrib">
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1a5e08d1791af464c7bfafed495df5c14b" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>constexpr const char *</type>
+        <definition>constexpr const char* Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::detector</definition>
+        <argsstring></argsstring>
+        <name>detector</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::detector</qualifiedname>
+        <initializer>= &quot;ATLAS&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="99" column="35" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="99" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1adeb61c01f8b168e0b77af8aaaea7efc9" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::JetLeptonOverlapRemoval</definition>
+        <argsstring>(vector&lt; const HEPUtils::Jet * &gt; &amp;jetvec, vector&lt; const HEPUtils::Particle * &gt; &amp;lepvec, double DeltaRMax)</argsstring>
+        <name>JetLeptonOverlapRemoval</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::JetLeptonOverlapRemoval</qualifiedname>
+        <param>
+          <type>vector&lt; const HEPUtils::Jet * &gt; &amp;</type>
+          <declname>jetvec</declname>
+        </param>
+        <param>
+          <type>vector&lt; const HEPUtils::Particle * &gt; &amp;</type>
+          <declname>lepvec</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>DeltaRMax</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="45" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="45" bodyend="68"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1a5452802a751cbfa4036f210a08f3737b" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::LeptonJetOverlapRemoval</definition>
+        <argsstring>(vector&lt; const HEPUtils::Particle * &gt; &amp;lepvec, vector&lt; const HEPUtils::Jet * &gt; &amp;jetvec, double DeltaRMax)</argsstring>
+        <name>LeptonJetOverlapRemoval</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::LeptonJetOverlapRemoval</qualifiedname>
+        <param>
+          <type>vector&lt; const HEPUtils::Particle * &gt; &amp;</type>
+          <declname>lepvec</declname>
+        </param>
+        <param>
+          <type>vector&lt; const HEPUtils::Jet * &gt; &amp;</type>
+          <declname>jetvec</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>DeltaRMax</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="70" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="70" bodyend="93"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1a4872d6759ae4d40a96c7f395e32dafb4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::Analysis_ATLAS_8TeV_0LEPStop_20invfb</definition>
+        <argsstring>()</argsstring>
+        <name>Analysis_ATLAS_8TeV_0LEPStop_20invfb</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::Analysis_ATLAS_8TeV_0LEPStop_20invfb</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="101" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="101" bodyend="115"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1aeb6779b4e904129af669f989ab0e7281" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::run</definition>
+        <argsstring>(const HEPUtils::Event *event)</argsstring>
+        <name>run</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::run</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1Analysis_1a0dafd20d05d95ef37fe3389de7b0ae61">run</reimplements>
+        <param>
+          <type>const HEPUtils::Event *</type>
+          <declname>event</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+<para><simplesect kind="note"><para>We assume that b jets have previously been 100% tagged</para>
+</simplesect>
+</para>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="119" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="119" bodyend="659"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1af5920346597160faaa55e062ff7e0345" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::combine</definition>
+        <argsstring>(const Analysis *other)</argsstring>
+        <name>combine</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::combine</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1Analysis_1a16ed2b84d494f63537bd87d145273258">combine</reimplements>
+        <param>
+          <type>const <ref refid="classGambit_1_1ColliderBit_1_1Analysis" kindref="compound">Analysis</ref> *</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+<para>Combine the variables of another copy of this analysis (typically on another thread) into this one. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="662" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="662" bodyend="679"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1ad956d9883b11111028755c625ee9b105" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::collect_results</definition>
+        <argsstring>()</argsstring>
+        <name>collect_results</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::collect_results</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1Analysis_1a7254c3cd2b3aee6981c99edc2103524b">collect_results</reimplements>
+        <briefdescription>
+<para>Gather together the info for likelihood calculation. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="682" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="682" bodyend="695"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-func">
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1ace18e41ad57bba6aa3b7563ff5de1813" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::analysis_specific_reset</definition>
+        <argsstring>()</argsstring>
+        <name>analysis_specific_reset</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb::analysis_specific_reset</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1Analysis_1ad60538ead8451d4c74814c92f241ca08">analysis_specific_reset</reimplements>
+        <briefdescription>
+<para>Reset the analysis-specific variables. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="699" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="699" bodyend="704"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="2">
+        <label>Gambit::ColliderBit::Analysis</label>
+        <link refid="classGambit_1_1ColliderBit_1_1Analysis"/>
+      </node>
+      <node id="1">
+        <label>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</label>
+        <link refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="2">
+        <label>Gambit::ColliderBit::Analysis</label>
+        <link refid="classGambit_1_1ColliderBit_1_1Analysis"/>
+      </node>
+      <node id="1">
+        <label>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</label>
+        <link refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="32" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="32" bodyend="706"/>
+    <listofallmembers>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1aeedf739943cdea3318e3a00293d3fa33" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>_numSRA1</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1ac10ebf1123ed00ffc68b04cbf3709efd" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>_numSRA2</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1acabda83bdfa32fa20688b704546657a4" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>_numSRA3</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1a10a566680ee5699271e87bda4a28f2d4" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>_numSRA4</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1a29b659845c703240b7637aa1852d0320" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>_numSRC1</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1a53616cada25fc8c46233231ef21e516c" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>_numSRC2</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1a7606d7c35c9740385304cc6c9c33ad50" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>_numSRC3</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1aaece33bab954d82337af28138e893bcf" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>add</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a129c783782dbf71bf5920676a6825f82" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>add_result</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a3eeaadd4fec4b19602be715d1403607e" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>Analysis</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1a4872d6759ae4d40a96c7f395e32dafb4" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>Analysis_ATLAS_8TeV_0LEPStop_20invfb</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1af499cb63caf6576d6ad837424b0616ac" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>analysis_name</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1ace18e41ad57bba6aa3b7563ff5de1813" prot="protected" virt="virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>analysis_specific_reset</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a3e58cdb4d72d7bb80cff7d3124aee2c1" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>analyze</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a297020aa68d1f38fe53da210a0ba12df" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>analyze</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1ad956d9883b11111028755c625ee9b105" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>collect_results</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1af5920346597160faaa55e062ff7e0345" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>combine</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1ae99ca84e8c4112b7c201705f55b7383e" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>cutFlowVector</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1a0d2a3ad9fd3086b71f9742133dad668a" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>cutFlowVector_str</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1a5e08d1791af464c7bfafed495df5c14b" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>detector</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a1ec44b31958a10cdaa92c618e77b5461" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>get_results</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a3c258242277f9b6239f7d009b7efb896" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>get_results</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a90730956c35e8ab0538f296612361fbf" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>get_results_ptr</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a04e2235c75dd5adfb5c6276ceb91a278" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>get_results_ptr</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1adeb61c01f8b168e0b77af8aaaea7efc9" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>JetLeptonOverlapRemoval</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1a5452802a751cbfa4036f210a08f3737b" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>LeptonJetOverlapRemoval</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1ab29800db11771a7d786f109b5dbe0140" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>luminosity</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1ab042fd57a30ce28fd862e3ddcc0aea3c" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>NCUTS</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a81b74cf3a8dbc3d9ef0593f9510e3134" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>reset</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1aeb6779b4e904129af669f989ab0e7281" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>run</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a3c6f2c8b6f7069239d3407ba9456003c" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>scale</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a4998785e3f5ebd96a148af8b4fbf575d" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>set_analysis_name</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a85634b0ca3817f602fa53630071879ae" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>set_covariance</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1af72693e91a323d2a7604e029b748564f" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>set_covariance</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1affc00d6a3606fda2e214b99dba9598c6" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>set_luminosity</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1ab3a56e82a29f91e87ad1d12b6b825b2c" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>~Analysis</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

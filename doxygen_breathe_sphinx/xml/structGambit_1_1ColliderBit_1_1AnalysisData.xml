@@ -1,0 +1,387 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="structGambit_1_1ColliderBit_1_1AnalysisData" kind="struct" language="C++" prot="public">
+    <compoundname>Gambit::ColliderBit::AnalysisData</compoundname>
+    <includes refid="AnalysisData_8hpp" local="no">AnalysisData.hpp</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1AnalysisData_1a14ed55704852d5f181da9e326c221c13" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::AnalysisData::event_gen_BYPASS</definition>
+        <argsstring></argsstring>
+        <name>event_gen_BYPASS</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisData::event_gen_BYPASS</qualifiedname>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" line="229" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" bodystart="229" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1AnalysisData_1ad3bbb73eef8db0bf21e758f0a03e01aa" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string Gambit::ColliderBit::AnalysisData::analysis_name</definition>
+        <argsstring></argsstring>
+        <name>analysis_name</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisData::analysis_name</qualifiedname>
+        <briefdescription>
+<para><ref refid="classGambit_1_1ColliderBit_1_1Analysis" kindref="compound">Analysis</ref> name. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" line="237" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" bodystart="237" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1AnalysisData_1a80a0482d32918b99d77214d26d71b273" prot="public" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="structGambit_1_1ColliderBit_1_1SignalRegionData" kindref="compound">SignalRegionData</ref> &gt;</type>
+        <definition>std::vector&lt;SignalRegionData&gt; Gambit::ColliderBit::AnalysisData::srdata</definition>
+        <argsstring></argsstring>
+        <name>srdata</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisData::srdata</qualifiedname>
+        <briefdescription>
+<para>List of signal regions&apos; data summaries. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" line="251" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" bodystart="251" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1AnalysisData_1a7244bf5e6045b822707f5964eebe9daf" prot="public" static="no" mutable="no">
+        <type>std::map&lt; std::string, int &gt;</type>
+        <definition>std::map&lt;std::string, int&gt; Gambit::ColliderBit::AnalysisData::srdata_identifiers</definition>
+        <argsstring></argsstring>
+        <name>srdata_identifiers</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisData::srdata_identifiers</qualifiedname>
+        <briefdescription>
+<para>Map of names and indices of all entries in srdata, for easy lookup. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" line="254" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" bodystart="254" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1AnalysisData_1af98c120f3696d51946ecba30e946116a" prot="public" static="no" mutable="no">
+        <type>Eigen::MatrixXd</type>
+        <definition>Eigen::MatrixXd Gambit::ColliderBit::AnalysisData::srcov</definition>
+        <argsstring></argsstring>
+        <name>srcov</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisData::srcov</qualifiedname>
+        <briefdescription>
+<para>Optional covariance matrix between SRs (0x0 null matrix = no correlation info) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" line="257" column="23" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" bodystart="257" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1AnalysisData_1a2cd6d85738443c2a5c10d8667785c8c5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::AnalysisData::AnalysisData</definition>
+        <argsstring>()</argsstring>
+        <name>AnalysisData</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisData::AnalysisData</qualifiedname>
+        <briefdescription>
+<para>Default constructor. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" line="149" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" bodystart="149" bodyend="152"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1AnalysisData_1a5d40c727faaf2b8b23bc2331c3a0c109" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::AnalysisData::AnalysisData</definition>
+        <argsstring>(const std::string &amp;name)</argsstring>
+        <name>AnalysisData</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisData::AnalysisData</qualifiedname>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+<para>Constructor with analysis name. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" line="155" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" bodystart="155" bodyend="159"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1AnalysisData_1adabc38b544f447f74a457ba980c512a7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::AnalysisData::AnalysisData</definition>
+        <argsstring>(const std::vector&lt; SignalRegionData &gt; &amp;srds, const Eigen::MatrixXd &amp;cov=Eigen::MatrixXd())</argsstring>
+        <name>AnalysisData</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisData::AnalysisData</qualifiedname>
+        <param>
+          <type>const std::vector&lt; <ref refid="structGambit_1_1ColliderBit_1_1SignalRegionData" kindref="compound">SignalRegionData</ref> &gt; &amp;</type>
+          <declname>srds</declname>
+        </param>
+        <param>
+          <type>const Eigen::MatrixXd &amp;</type>
+          <declname>cov</declname>
+          <defval>Eigen::MatrixXd()</defval>
+        </param>
+        <briefdescription>
+<para>Constructor from a list of <ref refid="structGambit_1_1ColliderBit_1_1SignalRegionData" kindref="compound">SignalRegionData</ref> and an optional correlation (or covariance?) matrix. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>If corrs is a null matrix (the default), this <ref refid="structGambit_1_1ColliderBit_1_1AnalysisData" kindref="compound">AnalysisData</ref> is to be interpreted as having no correlation information, and hence the likelihood calculation should use the single best-expected-limit SR. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" line="165" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" bodystart="165" bodyend="169"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1AnalysisData_1a117996f2085894261c7a6d933be3a74c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::AnalysisData::clear</definition>
+        <argsstring>()</argsstring>
+        <name>clear</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisData::clear</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Clear the list of <ref refid="structGambit_1_1ColliderBit_1_1SignalRegionData" kindref="compound">SignalRegionData</ref>, and nullify the covariance matrix <xrefsect id="todo_1_todo000005"><xreftitle>Todo</xreftitle><xrefdescription><para>It&apos;d be good to <emphasis>not</emphasis> have to re-enter most of the SRData and the covariance on every point: they don&apos;t change </para>
+</xrefdescription></xrefsect></para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" line="173" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" bodystart="173" bodyend="182"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1AnalysisData_1a2e008d78f65df55af79ad0749f772e29" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>size_t</type>
+        <definition>size_t Gambit::ColliderBit::AnalysisData::size</definition>
+        <argsstring>() const</argsstring>
+        <name>size</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisData::size</qualifiedname>
+        <briefdescription>
+<para>Number of analyses. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" line="185" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" bodystart="185" bodyend="189"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1AnalysisData_1ad79cee1e2cbff75bd7b4c1e3a2db6686" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::AnalysisData::empty</definition>
+        <argsstring>() const</argsstring>
+        <name>empty</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisData::empty</qualifiedname>
+        <briefdescription>
+<para>Is this container empty of signal regions? </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" line="192" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" bodystart="192" bodyend="192"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1AnalysisData_1a2cfed82797585dc84beddf1c9451c007" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::AnalysisData::hasCorrs</definition>
+        <argsstring>() const</argsstring>
+        <name>hasCorrs</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisData::hasCorrs</qualifiedname>
+        <briefdescription>
+<para>Is there non-null correlation data? </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" line="195" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" bodystart="195" bodyend="199"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1AnalysisData_1a8a1c3a6f8d6bfd713619e37ba83095d2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::AnalysisData::add</definition>
+        <argsstring>(const SignalRegionData &amp;srd)</argsstring>
+        <name>add</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisData::add</qualifiedname>
+        <param>
+          <type>const <ref refid="structGambit_1_1ColliderBit_1_1SignalRegionData" kindref="compound">SignalRegionData</ref> &amp;</type>
+          <declname>srd</declname>
+        </param>
+        <briefdescription>
+<para>Add a <ref refid="structGambit_1_1ColliderBit_1_1SignalRegionData" kindref="compound">SignalRegionData</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><xrefsect id="todo_1_todo000006"><xreftitle>Todo</xreftitle><xrefdescription><para>Allow naming the SRs? </para>
+</xrefdescription></xrefsect></para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" line="203" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" bodystart="203" bodyend="219"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1AnalysisData_1a13c550ae1f60b246a3eac4fafc47d098" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::AnalysisData::check</definition>
+        <argsstring>() const</argsstring>
+        <name>check</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisData::check</qualifiedname>
+        <briefdescription>
+<para>Check that the SRData list and the covariance matrix are consistent. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" line="222" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" bodystart="222" bodyend="227"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1AnalysisData_1ad7fa629210db2601f784b0df3ebbedf8" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::AnalysisData::pythonize_me</definition>
+        <argsstring>() const</argsstring>
+        <name>pythonize_me</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisData::pythonize_me</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>bjf&gt; Experimental! But already useful for helping me convert the key numbers from these analyses to Python for the p-value calculuations.</para>
+<para>bjf&gt; Experimental! But already useful for helping me convert the key numbers from these analyses to Python for the p-value calculuations. This is a dumb place to define this, but there is no cpp file for <ref refid="structGambit_1_1ColliderBit_1_1AnalysisData" kindref="compound">AnalysisData</ref> and I can&apos;t be bothered making one. </para>
+        </detaileddescription>
+        <inbodydescription>
+<para>Could record or something, but for now just dump to stdout</para>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" line="234" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_Covariance.cpp" bodystart="12" bodyend="69"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1AnalysisData_1ac39782193bf4745188364fa00b794a54" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structGambit_1_1ColliderBit_1_1SignalRegionData" kindref="compound">SignalRegionData</ref> &amp;</type>
+        <definition>SignalRegionData &amp; Gambit::ColliderBit::AnalysisData::operator[]</definition>
+        <argsstring>(size_t i)</argsstring>
+        <name>operator[]</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisData::operator[]</qualifiedname>
+        <param>
+          <type>size_t</type>
+          <declname>i</declname>
+        </param>
+        <briefdescription>
+<para>Access the i&apos;th signal region&apos;s data. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" line="240" column="24" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" bodystart="240" bodyend="240"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1AnalysisData_1a2eb0058d261a030ad0fecedce37c606c" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const <ref refid="structGambit_1_1ColliderBit_1_1SignalRegionData" kindref="compound">SignalRegionData</ref> &amp;</type>
+        <definition>const SignalRegionData &amp; Gambit::ColliderBit::AnalysisData::operator[]</definition>
+        <argsstring>(size_t i) const</argsstring>
+        <name>operator[]</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisData::operator[]</qualifiedname>
+        <param>
+          <type>size_t</type>
+          <declname>i</declname>
+        </param>
+        <briefdescription>
+<para>Access the i&apos;th signal region&apos;s data (const) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" line="242" column="30" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" bodystart="242" bodyend="242"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1AnalysisData_1abea174396616d2d159af6872f7f9b24a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::vector&lt; <ref refid="structGambit_1_1ColliderBit_1_1SignalRegionData" kindref="compound">SignalRegionData</ref> &gt;::iterator</type>
+        <definition>std::vector&lt; SignalRegionData &gt;::iterator Gambit::ColliderBit::AnalysisData::begin</definition>
+        <argsstring>()</argsstring>
+        <name>begin</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisData::begin</qualifiedname>
+        <briefdescription>
+<para>Iterators (sugar for direct access to this-&gt;srdata) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" line="245" column="30" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" bodystart="245" bodyend="245"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1AnalysisData_1a6be8ddeb7777c006d1563e2a1f33c58d" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::vector&lt; <ref refid="structGambit_1_1ColliderBit_1_1SignalRegionData" kindref="compound">SignalRegionData</ref> &gt;::const_iterator</type>
+        <definition>std::vector&lt; SignalRegionData &gt;::const_iterator Gambit::ColliderBit::AnalysisData::begin</definition>
+        <argsstring>() const</argsstring>
+        <name>begin</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisData::begin</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" line="246" column="36" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" bodystart="246" bodyend="246"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1AnalysisData_1a9fdf985bccdbd6b745de59549779cdda" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::vector&lt; <ref refid="structGambit_1_1ColliderBit_1_1SignalRegionData" kindref="compound">SignalRegionData</ref> &gt;::iterator</type>
+        <definition>std::vector&lt; SignalRegionData &gt;::iterator Gambit::ColliderBit::AnalysisData::end</definition>
+        <argsstring>()</argsstring>
+        <name>end</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisData::end</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" line="247" column="30" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" bodystart="247" bodyend="247"/>
+      </memberdef>
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1AnalysisData_1a3c25cd8672fb604882f8264a414433f4" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::vector&lt; <ref refid="structGambit_1_1ColliderBit_1_1SignalRegionData" kindref="compound">SignalRegionData</ref> &gt;::const_iterator</type>
+        <definition>std::vector&lt; SignalRegionData &gt;::const_iterator Gambit::ColliderBit::AnalysisData::end</definition>
+        <argsstring>() const</argsstring>
+        <name>end</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisData::end</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" line="248" column="36" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" bodystart="248" bodyend="248"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>A container for the result of an analysis, potentially with many signal regions and correlations</para>
+<para><xrefsect id="todo_1_todo000002"><xreftitle>Todo</xreftitle><xrefdescription><para>Access by name? </para>
+<para>Guarantee ordering? </para>
+<para>How to combine covariance matrices <ndash/> require? </para>
+</xrefdescription></xrefsect></para>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" line="145" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisData.hpp" bodystart="146" bodyend="259"/>
+    <listofallmembers>
+      <member refid="structGambit_1_1ColliderBit_1_1AnalysisData_1a8a1c3a6f8d6bfd713619e37ba83095d2" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisData</scope><name>add</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1AnalysisData_1ad3bbb73eef8db0bf21e758f0a03e01aa" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisData</scope><name>analysis_name</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1AnalysisData_1a2cd6d85738443c2a5c10d8667785c8c5" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisData</scope><name>AnalysisData</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1AnalysisData_1a5d40c727faaf2b8b23bc2331c3a0c109" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisData</scope><name>AnalysisData</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1AnalysisData_1adabc38b544f447f74a457ba980c512a7" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisData</scope><name>AnalysisData</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1AnalysisData_1abea174396616d2d159af6872f7f9b24a" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisData</scope><name>begin</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1AnalysisData_1a6be8ddeb7777c006d1563e2a1f33c58d" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisData</scope><name>begin</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1AnalysisData_1a13c550ae1f60b246a3eac4fafc47d098" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisData</scope><name>check</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1AnalysisData_1a117996f2085894261c7a6d933be3a74c" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisData</scope><name>clear</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1AnalysisData_1ad79cee1e2cbff75bd7b4c1e3a2db6686" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisData</scope><name>empty</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1AnalysisData_1a9fdf985bccdbd6b745de59549779cdda" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisData</scope><name>end</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1AnalysisData_1a3c25cd8672fb604882f8264a414433f4" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisData</scope><name>end</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1AnalysisData_1a14ed55704852d5f181da9e326c221c13" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisData</scope><name>event_gen_BYPASS</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1AnalysisData_1a2cfed82797585dc84beddf1c9451c007" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisData</scope><name>hasCorrs</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1AnalysisData_1ac39782193bf4745188364fa00b794a54" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisData</scope><name>operator[]</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1AnalysisData_1a2eb0058d261a030ad0fecedce37c606c" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisData</scope><name>operator[]</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1AnalysisData_1ad7fa629210db2601f784b0df3ebbedf8" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisData</scope><name>pythonize_me</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1AnalysisData_1a2e008d78f65df55af79ad0749f772e29" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisData</scope><name>size</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1AnalysisData_1af98c120f3696d51946ecba30e946116a" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisData</scope><name>srcov</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1AnalysisData_1a80a0482d32918b99d77214d26d71b273" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisData</scope><name>srdata</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1AnalysisData_1a7244bf5e6045b822707f5964eebe9daf" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisData</scope><name>srdata_identifiers</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

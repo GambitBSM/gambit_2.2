@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classGambit_1_1ColliderBit_1_1ImageLimit" kind="class" language="C++" prot="public">
+    <compoundname>Gambit::ColliderBit::ImageLimit</compoundname>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1ImageLimit_1a4e474dbebee363c295bf525ccc13429e" prot="private" static="no" mutable="no">
+        <type>data_type</type>
+        <definition>data_type Gambit::ColliderBit::ImageLimit::image_data</definition>
+        <argsstring></argsstring>
+        <name>image_data</name>
+        <qualifiedname>Gambit::ColliderBit::ImageLimit::image_data</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/ImageLimit.hpp" line="38" column="17" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/ImageLimit.hpp" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1ImageLimit_1aca4615efa6c4e21a19e4c060dbcf4af2" prot="private" static="no" mutable="no">
+        <type>const double</type>
+        <definition>const double Gambit::ColliderBit::ImageLimit::limit_outside_grid</definition>
+        <argsstring></argsstring>
+        <name>limit_outside_grid</name>
+        <qualifiedname>Gambit::ColliderBit::ImageLimit::limit_outside_grid</qualifiedname>
+        <initializer>= std::numeric_limits&lt;double&gt;::max()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/ImageLimit.hpp" line="44" column="20" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/ImageLimit.hpp" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1ImageLimit_1a87ec4bf18c1085b6ced4ec4e5e02c257" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; double &gt;</type>
+        <definition>std::vector&lt;double&gt; Gambit::ColliderBit::ImageLimit::extent</definition>
+        <argsstring></argsstring>
+        <name>extent</name>
+        <qualifiedname>Gambit::ColliderBit::ImageLimit::extent</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/ImageLimit.hpp" line="47" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/ImageLimit.hpp" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1ImageLimit_1a418afe51e96bd728d3645c9d8a572ad8" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>data_type</type>
+        <definition>data_type Gambit::ColliderBit::ImageLimit::get_image</definition>
+        <argsstring>(std::string name)</argsstring>
+        <name>get_image</name>
+        <qualifiedname>Gambit::ColliderBit::ImageLimit::get_image</qualifiedname>
+        <param>
+          <type>std::string</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/ImageLimit.hpp" line="41" column="17" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits/ImageLimit.cpp" bodystart="23" bodyend="41"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1ImageLimit_1a9376645775bcc1e9deeea4879d2bfd5a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::ImageLimit::ImageLimit</definition>
+        <argsstring>(std::string name, double x_min, double x_max, double y_min, double y_max)</argsstring>
+        <name>ImageLimit</name>
+        <qualifiedname>Gambit::ColliderBit::ImageLimit::ImageLimit</qualifiedname>
+        <param>
+          <type>std::string</type>
+          <declname>name</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>x_min</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>x_max</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>y_min</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>y_max</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/ImageLimit.hpp" line="51" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits/ImageLimit.cpp" bodystart="63" bodyend="68"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1ImageLimit_1a01891e6ccf24817cdb2335855c68a32e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::ImageLimit::get_limit</definition>
+        <argsstring>(double x, double y)</argsstring>
+        <name>get_limit</name>
+        <qualifiedname>Gambit::ColliderBit::ImageLimit::get_limit</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>y</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/ImageLimit.hpp" line="55" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits/ImageLimit.cpp" bodystart="43" bodyend="61"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/ImageLimit.hpp" line="35" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/ImageLimit.hpp" bodystart="35" bodyend="56"/>
+    <listofallmembers>
+      <member refid="classGambit_1_1ColliderBit_1_1ImageLimit_1a87ec4bf18c1085b6ced4ec4e5e02c257" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::ImageLimit</scope><name>extent</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1ImageLimit_1a418afe51e96bd728d3645c9d8a572ad8" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::ImageLimit</scope><name>get_image</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1ImageLimit_1a01891e6ccf24817cdb2335855c68a32e" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::ImageLimit</scope><name>get_limit</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1ImageLimit_1a4e474dbebee363c295bf525ccc13429e" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::ImageLimit</scope><name>image_data</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1ImageLimit_1a9376645775bcc1e9deeea4879d2bfd5a" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::ImageLimit</scope><name>ImageLimit</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1ImageLimit_1aca4615efa6c4e21a19e4c060dbcf4af2" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::ImageLimit</scope><name>limit_outside_grid</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

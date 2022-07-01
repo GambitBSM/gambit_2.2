@@ -1,0 +1,335 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb" kind="class" language="C++" prot="public">
+    <compoundname>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</compoundname>
+    <basecompoundref refid="classGambit_1_1ColliderBit_1_1Analysis" prot="public" virt="non-virtual">Gambit::ColliderBit::Analysis</basecompoundref>
+    <innerclass refid="structGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1_1ptComparison" prot="public">Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::ptComparison</innerclass>
+    <innerclass refid="structGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1_1ptJetComparison" prot="public">Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::ptJetComparison</innerclass>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a570c5dd8fb8ac7d6e97b1169c8f68206" prot="private" static="no" mutable="no">
+        <type>std::map&lt; string, <ref refid="classGambit_1_1ColliderBit_1_1EventCounter" kindref="compound">EventCounter</ref> &gt;</type>
+        <definition>std::map&lt;string, EventCounter&gt; Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::_counters</definition>
+        <argsstring></argsstring>
+        <name>_counters</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::_counters</qualifiedname>
+        <initializer>= {
+        {&quot;SR1&quot;, EventCounter(&quot;SR1&quot;)},
+        {&quot;SR2&quot;, EventCounter(&quot;SR2&quot;)},
+        {&quot;SR3&quot;, EventCounter(&quot;SR3&quot;)},
+        {&quot;SR4&quot;, EventCounter(&quot;SR4&quot;)},
+        {&quot;SR5&quot;, EventCounter(&quot;SR5&quot;)},
+        {&quot;SR6&quot;, EventCounter(&quot;SR6&quot;)},
+        {&quot;SR7&quot;, EventCounter(&quot;SR7&quot;)},
+        {&quot;SR8&quot;, EventCounter(&quot;SR8&quot;)},
+        {&quot;SR9&quot;, EventCounter(&quot;SR9&quot;)},
+      }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="30" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1aac5867a7f34be181bedd80dd8f3ab2df" prot="private" static="no" mutable="no">
+        <type>vector&lt; int &gt;</type>
+        <definition>vector&lt;int&gt; Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::cutFlowVector</definition>
+        <argsstring></argsstring>
+        <name>cutFlowVector</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::cutFlowVector</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="42" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a16dd6be8d92c4fabff990c50ab4436cb" prot="private" static="no" mutable="no">
+        <type>vector&lt; string &gt;</type>
+        <definition>vector&lt;string&gt; Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::cutFlowVector_str</definition>
+        <argsstring></argsstring>
+        <name>cutFlowVector_str</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::cutFlowVector_str</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="43" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="43" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a72e400b5feef8978643b27fe4435be1b" prot="private" static="no" mutable="no">
+        <type>size_t</type>
+        <definition>size_t Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::NCUTS</definition>
+        <argsstring></argsstring>
+        <name>NCUTS</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::NCUTS</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="44" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-attrib">
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a1d83756b631dbe6a133337fa4a066d30" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>constexpr const char *</type>
+        <definition>constexpr const char* Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::detector</definition>
+        <argsstring></argsstring>
+        <name>detector</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::detector</qualifiedname>
+        <initializer>= &quot;CMS&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="53" column="35" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a68e67b15bddde0ebe15913fbc49c9161" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1_1ptComparison" kindref="compound">Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::ptComparison</ref></type>
+        <definition>struct Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::ptComparison Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::comparePt</definition>
+        <argsstring></argsstring>
+        <name>comparePt</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::comparePt</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="57" column="17"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1ab6d519239b67af55c89f359d8ef5a891" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1_1ptJetComparison" kindref="compound">Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::ptJetComparison</ref></type>
+        <definition>struct Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::ptJetComparison Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::compareJetPt</definition>
+        <argsstring></argsstring>
+        <name>compareJetPt</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::compareJetPt</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="61" column="20"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a5a8e2bc45b7a632143db50748ad18207" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</definition>
+        <argsstring>()</argsstring>
+        <name>Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="63" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="63" bodyend="76"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a02f4433c054ffcad5c3887c0c3d4b140" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::run</definition>
+        <argsstring>(const HEPUtils::Event *event)</argsstring>
+        <name>run</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::run</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1Analysis_1a0dafd20d05d95ef37fe3389de7b0ae61">run</reimplements>
+        <param>
+          <type>const HEPUtils::Event *</type>
+          <declname>event</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="79" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="79" bodyend="266"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a41d7d82f263fb735d215a8b767ae0930" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::combine</definition>
+        <argsstring>(const Analysis *other)</argsstring>
+        <name>combine</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::combine</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1Analysis_1a16ed2b84d494f63537bd87d145273258">combine</reimplements>
+        <param>
+          <type>const <ref refid="classGambit_1_1ColliderBit_1_1Analysis" kindref="compound">Analysis</ref> *</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+<para>Combine the variables of another copy of this analysis (typically on another thread) into this one. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="269" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="269" bodyend="281"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1adeaae1b59e5fdacb3fd4c37a8f661a5e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::collect_results</definition>
+        <argsstring>()</argsstring>
+        <name>collect_results</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::collect_results</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1Analysis_1a7254c3cd2b3aee6981c99edc2103524b">collect_results</reimplements>
+        <briefdescription>
+<para>Gather together the info for likelihood calculation. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="284" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="284" bodyend="328"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a45a03f58dad37f0c807c48b31a88f731" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::get_mjj</definition>
+        <argsstring>(vector&lt; const HEPUtils::Jet * &gt; jets)</argsstring>
+        <name>get_mjj</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::get_mjj</qualifiedname>
+        <param>
+          <type>vector&lt; const HEPUtils::Jet * &gt;</type>
+          <declname>jets</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="331" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="331" bodyend="346"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a7e878dbf9098b35d24a4bdbfcdf8a8f8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::get_mT2</definition>
+        <argsstring>(vector&lt; const HEPUtils::Particle * &gt; leptons, vector&lt; const HEPUtils::Jet * &gt; bjets, HEPUtils::P4 met)</argsstring>
+        <name>get_mT2</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::get_mT2</qualifiedname>
+        <param>
+          <type>vector&lt; const HEPUtils::Particle * &gt;</type>
+          <declname>leptons</declname>
+        </param>
+        <param>
+          <type>vector&lt; const HEPUtils::Jet * &gt;</type>
+          <declname>bjets</declname>
+        </param>
+        <param>
+          <type>HEPUtils::P4</type>
+          <declname>met</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="348" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="348" bodyend="379"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-func">
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a387bf2a9afabfd507f880aad0711bc1f" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::analysis_specific_reset</definition>
+        <argsstring>()</argsstring>
+        <name>analysis_specific_reset</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::analysis_specific_reset</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1Analysis_1ad60538ead8451d4c74814c92f241ca08">analysis_specific_reset</reimplements>
+        <briefdescription>
+<para>Reset the analysis-specific variables. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="383" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="383" bodyend="388"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="2">
+        <label>Gambit::ColliderBit::Analysis</label>
+        <link refid="classGambit_1_1ColliderBit_1_1Analysis"/>
+      </node>
+      <node id="1">
+        <label>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</label>
+        <link refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="2">
+        <label>Gambit::ColliderBit::Analysis</label>
+        <link refid="classGambit_1_1ColliderBit_1_1Analysis"/>
+      </node>
+      <node id="1">
+        <label>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</label>
+        <link refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+        <childnode refid="3" relation="usage">
+          <edgelabel>comparePt</edgelabel>
+        </childnode>
+        <childnode refid="4" relation="usage">
+          <edgelabel>compareJetPt</edgelabel>
+        </childnode>
+      </node>
+      <node id="3">
+        <label>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::ptComparison</label>
+        <link refid="structGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1_1ptComparison"/>
+      </node>
+      <node id="4">
+        <label>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::ptJetComparison</label>
+        <link refid="structGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1_1ptJetComparison"/>
+      </node>
+    </collaborationgraph>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="26" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="26" bodyend="390"/>
+    <listofallmembers>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a570c5dd8fb8ac7d6e97b1169c8f68206" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>_counters</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1aaece33bab954d82337af28138e893bcf" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>add</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a129c783782dbf71bf5920676a6825f82" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>add_result</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a3eeaadd4fec4b19602be715d1403607e" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>Analysis</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a5a8e2bc45b7a632143db50748ad18207" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1af499cb63caf6576d6ad837424b0616ac" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>analysis_name</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a387bf2a9afabfd507f880aad0711bc1f" prot="protected" virt="virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>analysis_specific_reset</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a3e58cdb4d72d7bb80cff7d3124aee2c1" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>analyze</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a297020aa68d1f38fe53da210a0ba12df" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>analyze</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1adeaae1b59e5fdacb3fd4c37a8f661a5e" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>collect_results</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a41d7d82f263fb735d215a8b767ae0930" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>combine</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1ab6d519239b67af55c89f359d8ef5a891" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>compareJetPt</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a68e67b15bddde0ebe15913fbc49c9161" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>comparePt</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1aac5867a7f34be181bedd80dd8f3ab2df" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>cutFlowVector</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a16dd6be8d92c4fabff990c50ab4436cb" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>cutFlowVector_str</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a1d83756b631dbe6a133337fa4a066d30" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>detector</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a45a03f58dad37f0c807c48b31a88f731" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>get_mjj</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a7e878dbf9098b35d24a4bdbfcdf8a8f8" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>get_mT2</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a1ec44b31958a10cdaa92c618e77b5461" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>get_results</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a3c258242277f9b6239f7d009b7efb896" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>get_results</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a90730956c35e8ab0538f296612361fbf" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>get_results_ptr</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a04e2235c75dd5adfb5c6276ceb91a278" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>get_results_ptr</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1ab29800db11771a7d786f109b5dbe0140" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>luminosity</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a72e400b5feef8978643b27fe4435be1b" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>NCUTS</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a81b74cf3a8dbc3d9ef0593f9510e3134" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>reset</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a02f4433c054ffcad5c3887c0c3d4b140" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>run</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a3c6f2c8b6f7069239d3407ba9456003c" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>scale</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a4998785e3f5ebd96a148af8b4fbf575d" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>set_analysis_name</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a85634b0ca3817f602fa53630071879ae" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>set_covariance</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1af72693e91a323d2a7604e029b748564f" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>set_covariance</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1affc00d6a3606fda2e214b99dba9598c6" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>set_luminosity</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1ab3a56e82a29f91e87ad1d12b6b825b2c" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>~Analysis</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

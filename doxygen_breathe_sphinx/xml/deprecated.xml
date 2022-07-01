@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="deprecated" kind="page">
+    <compoundname>deprecated</compoundname>
+    <title>Deprecated List</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><variablelist>
+<varlistentry><term>Member <ref refid="structGambit_1_1ColliderBit_1_1Cutflow_1acec1c53abc7d8c40feb7248f4af42e95" kindref="member">Gambit::ColliderBit::Cutflow::filltail</ref>  (const vector&lt; bool &gt; &amp;cutresults, double weight=1.)</term></varlistentry>
+<listitem><para><anchor id="deprecated_1_deprecated000001"/>Now prefer to use vector <ref refid="structGambit_1_1ColliderBit_1_1Cutflow_1a16954505dd5adcd3bf869ab15e56aa6d" kindref="member">fillnext()</ref></para>
+</listitem>
+</variablelist>
+</para>
+    </detaileddescription>
+    <location file="deprecated"/>
+  </compounddef>
+</doxygen>

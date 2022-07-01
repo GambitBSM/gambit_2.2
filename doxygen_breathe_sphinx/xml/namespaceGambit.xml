@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="namespaceGambit" kind="namespace" language="C++">
+    <compoundname>Gambit</compoundname>
+    <innernamespace refid="namespaceGambit_1_1ColliderBit">Gambit::ColliderBit</innernamespace>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="namespaceGambit_1aff3f41b9e6112a6d471a03b2df1f2427" prot="public" static="no">
+        <type>std::string</type>
+        <definition>typedef std::string Gambit::str</definition>
+        <argsstring></argsstring>
+        <name>str</name>
+        <qualifiedname>Gambit::str</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Analysis.hpp" line="35" column="23" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Analysis.hpp" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>TODO: see if we can use this one: </para>
+    </briefdescription>
+    <detaileddescription>
+<para>Simulation of &quot;Search for photonic signatures of gauge-mediated supersymmetry in 13 TeV pp collisions with the ATLAS detector&quot;.</para>
+<para><simplesect kind="author"><para>Anders Kvellestad </para>
+</simplesect>
+<simplesect kind="date"><para>2020 June <hruler/>
+</para>
+</simplesect>
+Based on:<itemizedlist>
+<listitem><para><ulink url="https://atlas.web.cern.ch/Atlas/GROUPS/PHYSICS/PAPERS/SUSY-2016-27/">https://atlas.web.cern.ch/Atlas/GROUPS/PHYSICS/PAPERS/SUSY-2016-27/</ulink></para>
+</listitem></itemizedlist>
+</para>
+<para><simplesect kind="author"><para>Martin White</para>
+</simplesect>
+Known issues:</para>
+<para>1) Photon isolation requirement is missing 2) They use a bizarre HT definition where they don&apos;t apply overlap removal between photons and jets. This might not work for us, since jets won&apos;t be made by photons in our events. </para>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Analysis.hpp" line="33" column="1"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classGambit_1_1ColliderBit_1_1SetHooks" kind="class" language="C++" prot="public">
+    <compoundname>Gambit::ColliderBit::SetHooks</compoundname>
+    <includes refid="SetHooksClass_8hpp" local="no">SetHooksClass.hpp</includes>
+    <templateparamlist>
+      <param>
+        <type>typename PythiaT</type>
+      </param>
+      <param>
+        <type>typename EventT</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1SetHooks_1a9c75c3605ee539873e50acabf091d0ca" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::SetHooks&lt; PythiaT, EventT &gt;::SetHooks</definition>
+        <argsstring>()</argsstring>
+        <name>SetHooks</name>
+        <qualifiedname>Gambit::ColliderBit::SetHooks::SetHooks</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/SetHooksClass.hpp" line="38" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/SetHooksClass.hpp" bodystart="38" bodyend="38"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1SetHooks_1a0aecd5e7a09ea46c77f9f0833b537de7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::SetHooks&lt; PythiaT, EventT &gt;::~SetHooks</definition>
+        <argsstring>()</argsstring>
+        <name>~SetHooks</name>
+        <qualifiedname>Gambit::ColliderBit::SetHooks::~SetHooks</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/SetHooksClass.hpp" line="39" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/SetHooksClass.hpp" bodystart="39" bodyend="39"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1SetHooks_1ae95d367fbbecf531c980e4761ee3188c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::SetHooks&lt; PythiaT, EventT &gt;::SetupHook</definition>
+        <argsstring>(PythiaT *)</argsstring>
+        <name>SetupHook</name>
+        <qualifiedname>Gambit::ColliderBit::SetHooks::SetupHook</qualifiedname>
+        <param>
+          <type>PythiaT *</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/SetHooksClass.hpp" line="42" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/SetHooksClass.hpp" bodystart="42" bodyend="45"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>A templated class specific for the UserHooks. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/SetHooksClass.hpp" line="33" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/SetHooksClass.hpp" bodystart="34" bodyend="46"/>
+    <listofallmembers>
+      <member refid="classGambit_1_1ColliderBit_1_1SetHooks_1a9c75c3605ee539873e50acabf091d0ca" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::SetHooks</scope><name>SetHooks</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1SetHooks_1ae95d367fbbecf531c980e4761ee3188c" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::SetHooks</scope><name>SetupHook</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1SetHooks_1a0aecd5e7a09ea46c77f9f0833b537de7" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::SetHooks</scope><name>~SetHooks</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,118 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__MultiLEP__Full__3Lep__rebinned__36invfb" kind="class" language="C++" prot="public">
+    <compoundname>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</compoundname>
+    <basecompoundref refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__MultiLEP__Full__36invfb" prot="public" virt="non-virtual">Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_36invfb</basecompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__MultiLEP__Full__3Lep__rebinned__36invfb_1a861969a86cfe259959ff3d9c727771fa" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</definition>
+        <argsstring>()</argsstring>
+        <name>Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_MultiLEP_Full_36invfb.cpp" line="1041" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_MultiLEP_Full_36invfb.cpp" bodystart="1041" bodyend="1043"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__MultiLEP__Full__3Lep__rebinned__36invfb_1ab7787c7490402cdab527613361ca6341" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>virtual void Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb::collect_results</definition>
+        <argsstring>()</argsstring>
+        <name>collect_results</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb::collect_results</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__MultiLEP__Full__36invfb_1aa0b62191ce127c7bceb080f7bbed8fa3">collect_results</reimplements>
+        <briefdescription>
+<para>Gather together the info for likelihood calculation. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_MultiLEP_Full_36invfb.cpp" line="1045" column="20" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_MultiLEP_Full_36invfb.cpp" bodystart="1045" bodyend="1170"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="3">
+        <label>Gambit::ColliderBit::Analysis</label>
+        <link refid="classGambit_1_1ColliderBit_1_1Analysis"/>
+      </node>
+      <node id="2">
+        <label>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_36invfb</label>
+        <link refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__MultiLEP__Full__36invfb"/>
+        <childnode refid="3" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</label>
+        <link refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__MultiLEP__Full__3Lep__rebinned__36invfb"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="3">
+        <label>Gambit::ColliderBit::Analysis</label>
+        <link refid="classGambit_1_1ColliderBit_1_1Analysis"/>
+      </node>
+      <node id="2">
+        <label>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_36invfb</label>
+        <link refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__MultiLEP__Full__36invfb"/>
+        <childnode refid="3" relation="public-inheritance">
+        </childnode>
+        <childnode refid="4" relation="usage">
+          <edgelabel>comparePt</edgelabel>
+        </childnode>
+      </node>
+      <node id="4">
+        <label>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_36invfb::ptComparison</label>
+        <link refid="structGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__MultiLEP__Full__36invfb_1_1ptComparison"/>
+      </node>
+      <node id="1">
+        <label>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</label>
+        <link refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__MultiLEP__Full__3Lep__rebinned__36invfb"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_MultiLEP_Full_36invfb.cpp" line="1038" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_MultiLEP_Full_36invfb.cpp" bodystart="1038" bodyend="1172"/>
+    <listofallmembers>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__MultiLEP__Full__36invfb_1ab98a08bf2ee977055fce93ff957a98eb" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>_counters</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1aaece33bab954d82337af28138e893bcf" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>add</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a129c783782dbf71bf5920676a6825f82" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>add_result</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a3eeaadd4fec4b19602be715d1403607e" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>Analysis</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__MultiLEP__Full__36invfb_1ab900fb7aa92e0cf90beaa30f651f22ad" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>Analysis_CMS_13TeV_MultiLEP_Full_36invfb</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__MultiLEP__Full__3Lep__rebinned__36invfb_1a861969a86cfe259959ff3d9c727771fa" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1af499cb63caf6576d6ad837424b0616ac" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>analysis_name</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__MultiLEP__Full__36invfb_1a5f57ba57de90904201c49dad885adb8f" prot="protected" virt="virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>analysis_specific_reset</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a3e58cdb4d72d7bb80cff7d3124aee2c1" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>analyze</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a297020aa68d1f38fe53da210a0ba12df" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>analyze</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__MultiLEP__Full__3Lep__rebinned__36invfb_1ab7787c7490402cdab527613361ca6341" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>collect_results</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__MultiLEP__Full__36invfb_1a681c48b64a53d64b76b98f53b69aad05" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>combine</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__MultiLEP__Full__36invfb_1aa7a4ef9e361cffabf6be9dc9cfb2e7d4" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>comparePt</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__MultiLEP__Full__36invfb_1a1af88a9ff3912304f59cdfb3dfa7740f" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>detector</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__MultiLEP__Full__36invfb_1a789c3543f7223ecb561ee81805cf5a11" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>get_mll_mT</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__MultiLEP__Full__36invfb_1a2e69ba142d44e2fe6b5b3cf4f5eb04b7" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>get_mTmin</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a1ec44b31958a10cdaa92c618e77b5461" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>get_results</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a3c258242277f9b6239f7d009b7efb896" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>get_results</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a90730956c35e8ab0538f296612361fbf" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>get_results_ptr</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a04e2235c75dd5adfb5c6276ceb91a278" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>get_results_ptr</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1ab29800db11771a7d786f109b5dbe0140" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>luminosity</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a81b74cf3a8dbc3d9ef0593f9510e3134" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>reset</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__MultiLEP__Full__36invfb_1adccdf62b7ba72b1209cba616d668cc9b" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>run</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a3c6f2c8b6f7069239d3407ba9456003c" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>scale</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a4998785e3f5ebd96a148af8b4fbf575d" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>set_analysis_name</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a85634b0ca3817f602fa53630071879ae" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>set_covariance</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1af72693e91a323d2a7604e029b748564f" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>set_covariance</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1affc00d6a3606fda2e214b99dba9598c6" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>set_luminosity</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1ab3a56e82a29f91e87ad1d12b6b825b2c" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb</scope><name>~Analysis</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

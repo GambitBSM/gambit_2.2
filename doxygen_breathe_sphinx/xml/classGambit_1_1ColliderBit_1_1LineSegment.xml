@@ -1,0 +1,407 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classGambit_1_1ColliderBit_1_1LineSegment" kind="class" language="C++" prot="public">
+    <compoundname>Gambit::ColliderBit::LineSegment</compoundname>
+    <includes refid="PointsAndLines_8hpp" local="no">PointsAndLines.hpp</includes>
+      <sectiondef kind="user-defined">
+      <header>Storage</header>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1LineSegment_1ada660f0b6b843acb7c2ddf495c351a16" prot="private" static="no" mutable="no">
+        <type><ref refid="classGambit_1_1ColliderBit_1_1P2" kindref="compound">P2</ref></type>
+        <definition>P2 Gambit::ColliderBit::LineSegment::_p1</definition>
+        <argsstring></argsstring>
+        <name>_p1</name>
+        <qualifiedname>Gambit::ColliderBit::LineSegment::_p1</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="102" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="102" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1LineSegment_1a43ac6ce3f0acc36dd2cd924f5d52f9fb" prot="private" static="no" mutable="no">
+        <type><ref refid="classGambit_1_1ColliderBit_1_1P2" kindref="compound">P2</ref></type>
+        <definition>P2 Gambit::ColliderBit::LineSegment::_p2</definition>
+        <argsstring></argsstring>
+        <name>_p2</name>
+        <qualifiedname>Gambit::ColliderBit::LineSegment::_p2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="102" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="102" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1LineSegment_1a50cd70122695444b46070e1c64f16874" prot="private" static="no" mutable="no">
+        <type><ref refid="classGambit_1_1ColliderBit_1_1P2" kindref="compound">P2</ref></type>
+        <definition>P2 Gambit::ColliderBit::LineSegment::_diff</definition>
+        <argsstring></argsstring>
+        <name>_diff</name>
+        <qualifiedname>Gambit::ColliderBit::LineSegment::_diff</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="102" column="20" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="102" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="user-defined">
+      <header>Constructors</header>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1LineSegment_1a6a43f182273f857b05b62adf6c746063" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::LineSegment::init</definition>
+        <argsstring>(double x1, double y1, double x2, double y2, double extendFrac=-1.)</argsstring>
+        <name>init</name>
+        <qualifiedname>Gambit::ColliderBit::LineSegment::init</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>x1</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>y1</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>x2</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>y2</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>extendFrac</declname>
+          <defval>-1.</defval>
+        </param>
+        <briefdescription>
+<para>Coordinate initializer / recycler. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="109" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="109" bodyend="127"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1LineSegment_1a1ab0de3c48ffb6f5e5be565179867e9f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::LineSegment::init</definition>
+        <argsstring>(const P2 &amp;p1, const P2 &amp;p2, double extendFrac=-1.)</argsstring>
+        <name>init</name>
+        <qualifiedname>Gambit::ColliderBit::LineSegment::init</qualifiedname>
+        <param>
+          <type>const <ref refid="classGambit_1_1ColliderBit_1_1P2" kindref="compound">P2</ref> &amp;</type>
+          <declname>p1</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classGambit_1_1ColliderBit_1_1P2" kindref="compound">P2</ref> &amp;</type>
+          <declname>p2</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>extendFrac</declname>
+          <defval>-1.</defval>
+        </param>
+        <briefdescription>
+<para>Point initializer / recycler. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="130" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="130" bodyend="132"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1LineSegment_1ada58f0e12f6ca938eb42930f588947e2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::LineSegment::LineSegment</definition>
+        <argsstring>()</argsstring>
+        <name>LineSegment</name>
+        <qualifiedname>Gambit::ColliderBit::LineSegment::LineSegment</qualifiedname>
+        <briefdescription>
+<para>Default constructor. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="135" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="135" bodyend="137"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1LineSegment_1a1601222ac4456d36bd973eda754b9c85" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::LineSegment::LineSegment</definition>
+        <argsstring>(double x1, double y1, double x2, double y2, double extendFrac=-1.)</argsstring>
+        <name>LineSegment</name>
+        <qualifiedname>Gambit::ColliderBit::LineSegment::LineSegment</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>x1</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>y1</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>x2</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>y2</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>extendFrac</declname>
+          <defval>-1.</defval>
+        </param>
+        <briefdescription>
+<para>Coordinate constructor. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="140" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="140" bodyend="142"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1LineSegment_1a2a1cfad0fbc1fc9acda98e4945c10639" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::LineSegment::LineSegment</definition>
+        <argsstring>(const P2 &amp;p1, const P2 &amp;p2, double extendFrac=0.)</argsstring>
+        <name>LineSegment</name>
+        <qualifiedname>Gambit::ColliderBit::LineSegment::LineSegment</qualifiedname>
+        <param>
+          <type>const <ref refid="classGambit_1_1ColliderBit_1_1P2" kindref="compound">P2</ref> &amp;</type>
+          <declname>p1</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classGambit_1_1ColliderBit_1_1P2" kindref="compound">P2</ref> &amp;</type>
+          <declname>p2</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>extendFrac</declname>
+          <defval>0.</defval>
+        </param>
+        <briefdescription>
+<para>Point constructor. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="145" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="145" bodyend="147"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1LineSegment_1a21b57e12c84fc2fc82d29e7bc4c939f4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::LineSegment::LineSegment</definition>
+        <argsstring>(const LineSegment &amp;other)</argsstring>
+        <name>LineSegment</name>
+        <qualifiedname>Gambit::ColliderBit::LineSegment::LineSegment</qualifiedname>
+        <param>
+          <type>const <ref refid="classGambit_1_1ColliderBit_1_1LineSegment" kindref="compound">LineSegment</ref> &amp;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+<para>Copy constructor. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="150" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="150" bodyend="154"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1LineSegment_1a531dc9a3b2ac3e6361e48fbb672e82b9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classGambit_1_1ColliderBit_1_1LineSegment" kindref="compound">LineSegment</ref> &amp;</type>
+        <definition>LineSegment &amp; Gambit::ColliderBit::LineSegment::operator=</definition>
+        <argsstring>(const LineSegment &amp;other)</argsstring>
+        <name>operator=</name>
+        <qualifiedname>Gambit::ColliderBit::LineSegment::operator=</qualifiedname>
+        <param>
+          <type>const <ref refid="classGambit_1_1ColliderBit_1_1LineSegment" kindref="compound">LineSegment</ref> &amp;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+<para>Copy assignment operator. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="157" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="157" bodyend="162"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="user-defined">
+      <header>Coordinate getters</header>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1LineSegment_1ab198aa4a66902ca32b3c71f23e8bf8dc" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const <ref refid="classGambit_1_1ColliderBit_1_1P2" kindref="compound">P2</ref></type>
+        <definition>const P2 Gambit::ColliderBit::LineSegment::getp1</definition>
+        <argsstring>() const</argsstring>
+        <name>getp1</name>
+        <qualifiedname>Gambit::ColliderBit::LineSegment::getp1</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="168" column="18" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="168" bodyend="168"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1LineSegment_1a96915ee809a5f1660a92c463c7ed8ad0" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const <ref refid="classGambit_1_1ColliderBit_1_1P2" kindref="compound">P2</ref></type>
+        <definition>const P2 Gambit::ColliderBit::LineSegment::getp2</definition>
+        <argsstring>() const</argsstring>
+        <name>getp2</name>
+        <qualifiedname>Gambit::ColliderBit::LineSegment::getp2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="169" column="18" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="169" bodyend="169"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1LineSegment_1a45270b4a61ef8365ac643a4ebda187af" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::LineSegment::slope</definition>
+        <argsstring>() const</argsstring>
+        <name>slope</name>
+        <qualifiedname>Gambit::ColliderBit::LineSegment::slope</qualifiedname>
+        <briefdescription>
+<para>Get the slope of the line segment. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="172" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="172" bodyend="177"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1LineSegment_1a8905495b3996a2f8bfe0ac7cd7be47fc" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::LineSegment::m</definition>
+        <argsstring>() const</argsstring>
+        <name>m</name>
+        <qualifiedname>Gambit::ColliderBit::LineSegment::m</qualifiedname>
+        <briefdescription>
+<para>Alias for slope. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="179" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="179" bodyend="179"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1LineSegment_1a7b7db4d98a228cd01aa9f1b06acc6aef" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::LineSegment::intercept</definition>
+        <argsstring>() const</argsstring>
+        <name>intercept</name>
+        <qualifiedname>Gambit::ColliderBit::LineSegment::intercept</qualifiedname>
+        <briefdescription>
+<para>Get the y-intercept of the full line which contains this segment. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="182" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="182" bodyend="187"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1LineSegment_1a5ea633c552c281e5c409bd6dc5985b01" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::LineSegment::b</definition>
+        <argsstring>() const</argsstring>
+        <name>b</name>
+        <qualifiedname>Gambit::ColliderBit::LineSegment::b</qualifiedname>
+        <briefdescription>
+<para>Alias for intercept. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="189" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="189" bodyend="189"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1LineSegment_1ab9475c1c9f6297adb4e94b73d125933b" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::LineSegment::abs</definition>
+        <argsstring>() const</argsstring>
+        <name>abs</name>
+        <qualifiedname>Gambit::ColliderBit::LineSegment::abs</qualifiedname>
+        <briefdescription>
+<para>Get the length of the vector from the origin to this point. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="192" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="192" bodyend="192"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1LineSegment_1acf9b8d7d717ae3987e928e1936286a3e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::LineSegment::r</definition>
+        <argsstring>() const</argsstring>
+        <name>r</name>
+        <qualifiedname>Gambit::ColliderBit::LineSegment::r</qualifiedname>
+        <briefdescription>
+<para>Alias for abs. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="194" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="194" bodyend="194"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="user-defined">
+      <header>Intersection algorithm</header>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1LineSegment_1a40686c3e5bdcff1fdc2f02056b6d3c16" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classGambit_1_1ColliderBit_1_1P2" kindref="compound">P2</ref></type>
+        <definition>P2 Gambit::ColliderBit::LineSegment::intersectsAt</definition>
+        <argsstring>(const LineSegment &amp;other) const</argsstring>
+        <name>intersectsAt</name>
+        <qualifiedname>Gambit::ColliderBit::LineSegment::intersectsAt</qualifiedname>
+        <param>
+          <type>const <ref refid="classGambit_1_1ColliderBit_1_1LineSegment" kindref="compound">LineSegment</ref> &amp;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+<para>Determine if this intersects with other and where. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="201" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="201" bodyend="230"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>A simple container for a line segment on an xy plane. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>This class depends on the <ref refid="classGambit_1_1ColliderBit_1_1P2" kindref="compound">P2</ref> class above. It has a built in algorithm to detect intersection with another <ref refid="classGambit_1_1ColliderBit_1_1LineSegment" kindref="compound">LineSegment</ref>. </para>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="98" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="98" bodyend="232"/>
+    <listofallmembers>
+      <member refid="classGambit_1_1ColliderBit_1_1LineSegment_1a50cd70122695444b46070e1c64f16874" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::LineSegment</scope><name>_diff</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1LineSegment_1ada660f0b6b843acb7c2ddf495c351a16" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::LineSegment</scope><name>_p1</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1LineSegment_1a43ac6ce3f0acc36dd2cd924f5d52f9fb" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::LineSegment</scope><name>_p2</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1LineSegment_1ab9475c1c9f6297adb4e94b73d125933b" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::LineSegment</scope><name>abs</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1LineSegment_1a5ea633c552c281e5c409bd6dc5985b01" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::LineSegment</scope><name>b</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1LineSegment_1ab198aa4a66902ca32b3c71f23e8bf8dc" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::LineSegment</scope><name>getp1</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1LineSegment_1a96915ee809a5f1660a92c463c7ed8ad0" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::LineSegment</scope><name>getp2</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1LineSegment_1a6a43f182273f857b05b62adf6c746063" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::LineSegment</scope><name>init</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1LineSegment_1a1ab0de3c48ffb6f5e5be565179867e9f" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::LineSegment</scope><name>init</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1LineSegment_1a7b7db4d98a228cd01aa9f1b06acc6aef" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::LineSegment</scope><name>intercept</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1LineSegment_1a40686c3e5bdcff1fdc2f02056b6d3c16" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::LineSegment</scope><name>intersectsAt</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1LineSegment_1ada58f0e12f6ca938eb42930f588947e2" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::LineSegment</scope><name>LineSegment</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1LineSegment_1a1601222ac4456d36bd973eda754b9c85" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::LineSegment</scope><name>LineSegment</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1LineSegment_1a2a1cfad0fbc1fc9acda98e4945c10639" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::LineSegment</scope><name>LineSegment</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1LineSegment_1a21b57e12c84fc2fc82d29e7bc4c939f4" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::LineSegment</scope><name>LineSegment</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1LineSegment_1a8905495b3996a2f8bfe0ac7cd7be47fc" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::LineSegment</scope><name>m</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1LineSegment_1a531dc9a3b2ac3e6361e48fbb672e82b9" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::LineSegment</scope><name>operator=</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1LineSegment_1acf9b8d7d717ae3987e928e1936286a3e" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::LineSegment</scope><name>r</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1LineSegment_1a45270b4a61ef8365ac643a4ebda187af" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::LineSegment</scope><name>slope</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,240 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb" kind="class" language="C++" prot="public">
+    <compoundname>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</compoundname>
+    <basecompoundref refid="classGambit_1_1ColliderBit_1_1Analysis" prot="public" virt="non-virtual">Gambit::ColliderBit::Analysis</basecompoundref>
+    <innerclass refid="structGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_1_1ptComparison" prot="private">Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::ptComparison</innerclass>
+    <innerclass refid="structGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_1_1ptJetComparison" prot="private">Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::ptJetComparison</innerclass>
+      <sectiondef kind="protected-attrib">
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_1a33461916d321614092cd0b206f4d323a" prot="protected" static="no" mutable="no">
+        <type>std::map&lt; string, <ref refid="classGambit_1_1ColliderBit_1_1EventCounter" kindref="compound">EventCounter</ref> &gt;</type>
+        <definition>std::map&lt;string, EventCounter&gt; Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::_counters</definition>
+        <argsstring></argsstring>
+        <name>_counters</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::_counters</qualifiedname>
+        <initializer>= {
+        {&quot;SR1A&quot;, EventCounter(&quot;SR1A&quot;)},
+        {&quot;SR1B&quot;, EventCounter(&quot;SR1B&quot;)},
+        {&quot;SR2A&quot;, EventCounter(&quot;SR2A&quot;)},
+        {&quot;SR2B&quot;, EventCounter(&quot;SR2B&quot;)},
+      }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp" line="37" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_1a859e8ab5f5c1c6c7bf6e9d4147accee9" prot="protected" static="no" mutable="no">
+        <type>vector&lt; <ref refid="structGambit_1_1ColliderBit_1_1Cutflow" kindref="compound">Cutflow</ref> &gt;</type>
+        <definition>vector&lt;Cutflow&gt; Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::_cutflow</definition>
+        <argsstring></argsstring>
+        <name>_cutflow</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::_cutflow</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp" line="44" column="15" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_1ae4f9318fb7e0523e939635301ecb9a91" prot="private" static="no" mutable="no">
+        <type>struct Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::ptComparison</type>
+        <definition>struct Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::ptComparison Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::comparePt</definition>
+        <argsstring></argsstring>
+        <name>comparePt</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::comparePt</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp" line="54" column="17"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_1a065a1794b91e2ed0db6da5b19ea2591b" prot="private" static="no" mutable="no">
+        <type>struct Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::ptJetComparison</type>
+        <definition>struct Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::ptJetComparison Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::compareJetPt</definition>
+        <argsstring></argsstring>
+        <name>compareJetPt</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::compareJetPt</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp" line="59" column="20"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-attrib">
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_1a5768ff4c1cea362b6c2fa345cc6e35c6" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>constexpr const char *</type>
+        <definition>constexpr const char* Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::detector</definition>
+        <argsstring></argsstring>
+        <name>detector</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::detector</qualifiedname>
+        <initializer>= &quot;ATLAS&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp" line="65" column="35" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp" bodystart="65" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_1a37be071d732a6c17cfc4c5f32ead6b77" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</definition>
+        <argsstring>()</argsstring>
+        <name>Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp" line="67" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp" bodystart="67" bodyend="86"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_1adf221042a71d523a44b4c09c58f9efc0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::run</definition>
+        <argsstring>(const HEPUtils::Event *event)</argsstring>
+        <name>run</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::run</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1Analysis_1a0dafd20d05d95ef37fe3389de7b0ae61">run</reimplements>
+        <param>
+          <type>const HEPUtils::Event *</type>
+          <declname>event</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp" line="88" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp" bodystart="88" bodyend="448"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_1aa7e8991266ae74b850e1fe2d8b60a96d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::combine</definition>
+        <argsstring>(const Analysis *other)</argsstring>
+        <name>combine</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::combine</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1Analysis_1a16ed2b84d494f63537bd87d145273258">combine</reimplements>
+        <param>
+          <type>const <ref refid="classGambit_1_1ColliderBit_1_1Analysis" kindref="compound">Analysis</ref> *</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+<para>Combine the variables of another copy of this analysis (typically on another thread) into this one. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp" line="451" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp" bodystart="451" bodyend="457"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_1aa5fbbd4fdff542292f6cb4bd128abb1d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>virtual void Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::collect_results</definition>
+        <argsstring>()</argsstring>
+        <name>collect_results</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::collect_results</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1Analysis_1a7254c3cd2b3aee6981c99edc2103524b">collect_results</reimplements>
+        <briefdescription>
+<para>Gather together the info for likelihood calculation. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp" line="460" column="20" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp" bodystart="460" bodyend="479"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-func">
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_1a1088256fd3736d2c8b37eda76eedc0bd" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::analysis_specific_reset</definition>
+        <argsstring>()</argsstring>
+        <name>analysis_specific_reset</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb::analysis_specific_reset</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1Analysis_1ad60538ead8451d4c74814c92f241ca08">analysis_specific_reset</reimplements>
+        <briefdescription>
+<para>Reset the analysis-specific variables. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp" line="483" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp" bodystart="483" bodyend="486"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="2">
+        <label>Gambit::ColliderBit::Analysis</label>
+        <link refid="classGambit_1_1ColliderBit_1_1Analysis"/>
+      </node>
+      <node id="1">
+        <label>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</label>
+        <link refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="2">
+        <label>Gambit::ColliderBit::Analysis</label>
+        <link refid="classGambit_1_1ColliderBit_1_1Analysis"/>
+      </node>
+      <node id="1">
+        <label>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</label>
+        <link refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp" line="31" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp" bodystart="32" bodyend="488"/>
+    <listofallmembers>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_1a33461916d321614092cd0b206f4d323a" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>_counters</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_1a859e8ab5f5c1c6c7bf6e9d4147accee9" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>_cutflow</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1aaece33bab954d82337af28138e893bcf" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>add</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a129c783782dbf71bf5920676a6825f82" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>add_result</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a3eeaadd4fec4b19602be715d1403607e" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>Analysis</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_1a37be071d732a6c17cfc4c5f32ead6b77" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1af499cb63caf6576d6ad837424b0616ac" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>analysis_name</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_1a1088256fd3736d2c8b37eda76eedc0bd" prot="protected" virt="virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>analysis_specific_reset</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a3e58cdb4d72d7bb80cff7d3124aee2c1" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>analyze</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a297020aa68d1f38fe53da210a0ba12df" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>analyze</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_1aa5fbbd4fdff542292f6cb4bd128abb1d" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>collect_results</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_1aa7e8991266ae74b850e1fe2d8b60a96d" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>combine</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_1a065a1794b91e2ed0db6da5b19ea2591b" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>compareJetPt</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_1ae4f9318fb7e0523e939635301ecb9a91" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>comparePt</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_1a5768ff4c1cea362b6c2fa345cc6e35c6" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>detector</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a1ec44b31958a10cdaa92c618e77b5461" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>get_results</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a3c258242277f9b6239f7d009b7efb896" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>get_results</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a90730956c35e8ab0538f296612361fbf" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>get_results_ptr</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a04e2235c75dd5adfb5c6276ceb91a278" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>get_results_ptr</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1ab29800db11771a7d786f109b5dbe0140" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>luminosity</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a81b74cf3a8dbc3d9ef0593f9510e3134" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>reset</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_1adf221042a71d523a44b4c09c58f9efc0" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>run</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a3c6f2c8b6f7069239d3407ba9456003c" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>scale</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a4998785e3f5ebd96a148af8b4fbf575d" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>set_analysis_name</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1a85634b0ca3817f602fa53630071879ae" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>set_covariance</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1af72693e91a323d2a7604e029b748564f" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>set_covariance</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1affc00d6a3606fda2e214b99dba9598c6" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>set_luminosity</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Analysis_1ab3a56e82a29f91e87ad1d12b6b825b2c" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb</scope><name>~Analysis</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

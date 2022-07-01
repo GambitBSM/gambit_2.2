@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="lep__mssm__xsecs_8hpp" kind="file" language="C++">
+    <compoundname>lep_mssm_xsecs.hpp</compoundname>
+    <includes local="no">vector</includes>
+    <includedby refid="ColliderBit__LEP_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_LEP.cpp</includedby>
+    <includedby refid="lep__mssm__xsecs_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/lep_mssm_xsecs.cpp</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lep_mssm_xsecs.hpp</label>
+        <link refid="lep__mssm__xsecs_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>vector</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="1">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lep_mssm_xsecs.hpp</label>
+        <link refid="lep__mssm__xsecs_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_LEP.cpp</label>
+        <link refid="ColliderBit__LEP_8cpp"/>
+      </node>
+      <node id="3">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/lep_mssm_xsecs.cpp</label>
+        <link refid="lep__mssm__xsecs_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innernamespace refid="namespaceGambit">Gambit</innernamespace>
+    <innernamespace refid="namespaceGambit_1_1ColliderBit">Gambit::ColliderBit</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Sparticle production cross-section calculators for LEP.</para>
+<para>Results are taken from A. Bartl, H. Fraas, W. Majerotto, Z. Phys. C30 (1986) 441 A. Bartl, H. Fraas, W. Majerotto, Nucl. Phys. B278 (1986) 1 S. Dawson, E. Eichten and C. Quigg, Phys. Rev. D31 (1985) 1581 A. Bartl, H. Fraas, W. Majerotto, Z. Phys. C34 (1987) 411</para>
+<para>The Bartl, Fraas and Majerotto (BFM) papers are based on a convention for the neutralino decomposed into photino, zino and two higgsinos a and b: <formula id="0">$\tilde\chi_i^0 = N_{i1} \tilde\gamma + N_{i2} \tilde Z + N_{i3} \tilde H_a + N_{i4} \tilde H_b$</formula> where <formula id="1">$\tilde H_a = \tilde H_1^0 \sin\beta - \tilde H_2^0 \cos\beta$</formula> and <formula id="2">$\tilde H_b = \tilde H_1^0 \cos\beta + \tilde H_2^0 \sin\beta$</formula></para>
+<para>This corresponds to the conventions for N&apos; in Haber &amp; Kane (HK). Haber &amp; Kane in turn have similar conventions to Gunion &amp; Haber which is used in SLHA, however, <formula id="3">$\tan\beta$</formula> is upside down in HK. A conversion routine SLHA2BFM_NN from SLHA to these conventions is included.</para>
+<para>For the charginos a convention similar to HK is followed, which has almost the same mixing matrices V and U as in SLHA, however, BFM uses <formula id="4">$\sigma_3 V$</formula> as the mixing matrix for negative charged states. HK refines this to be dependent on the mass matrix determinant so as to always get positive masses. For conversion from SLHA to BFM use SLHA2BFM_VV.</para>
+<para>For sleptons the SLHA convention is followed. Thus <formula id="5">$F_{11}=\cos\phi$</formula>, <formula id="6">$F_{12}=\sin\phi$</formula>, etc. For <formula id="7">$\phi = 0$</formula> we have <formula id="8">$\tilde l_1 = \tilde l_L$</formula> and <formula id="9">$\tilde l_2 = \tilde l_R$</formula>.</para>
+<para><hruler/>
+</para>
+<para>Authors</para>
+<para><simplesect kind="author"><para>Are Raklev (<ulink url="mailto:ahye@fys.uio.no">ahye@fys.uio.no</ulink>) </para>
+</simplesect>
+<simplesect kind="date"><para>2015 Jun</para>
+</simplesect>
+<simplesect kind="author"><para>Pat Scott (<ulink url="mailto:p.scott@imperial.ac.uk">p.scott@imperial.ac.uk</ulink>) </para>
+</simplesect>
+<simplesect kind="date"><para>2015 Jul</para>
+</simplesect>
+<hruler/>
+ </para>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">//<sp/><sp/><sp/>GAMBIT:<sp/>Global<sp/>and<sp/>Modular<sp/>BSM<sp/>Inference<sp/>Tool</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/>*********************************************</highlight></codeline>
+<codeline lineno="46"><highlight class="comment"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;vector&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespaceGambit" kindref="compound">Gambit</ref></highlight></codeline>
+<codeline lineno="51"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">ColliderBit</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/>std::vector&lt;<sp/>std::vector&lt;double&gt;<sp/>&gt;<sp/>MixMatrix;</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="lep__mssm__xsecs_8hpp_1a989dc93c7fb84645e72819a5986ab7a5" kindref="member">get_sigma_ee_ll</ref>(triplet&lt;double&gt;&amp;<sp/>result,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>sqrts,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>generation,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>l_chirality,<sp/></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>lbar_chirality,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>gtol,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>ftol,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>gpt_error,</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>fpt_error,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Spectrum&amp;<sp/>spec,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>gammaZ,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>l_are_gauge_es);</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="lep__mssm__xsecs_8hpp_1a4ec008f96435ebe11b78eca1aa2126f0" kindref="member">get_sigma_ee_chi00</ref>(triplet&lt;double&gt;&amp;<sp/>result,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>sqrts,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>chi_first,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>chi_second,</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>tol,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>pt_error,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Spectrum&amp;<sp/>spec,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>gammaZ);</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="lep__mssm__xsecs_8hpp_1abbf01c906a8961538f1ea4f79d56fcec" kindref="member">get_sigma_ee_chipm</ref>(triplet&lt;double&gt;&amp;<sp/>result,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>sqrts,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>chi_plus,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>chi_minus,</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>tol,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>pt_error,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Spectrum&amp;<sp/>spec,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>gammaZ);<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="75"></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="lep__mssm__xsecs_8hpp_1a9669178acc1b60140c705ef7749b24db" kindref="member">xsec_sleislej</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pid1,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pid2,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>sqrts,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>m1,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>m2,<sp/>MixMatrix<sp/>F,<sp/></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>MixMatrix<sp/>N,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>mN[4],<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>alpha,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>mZ,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>gZ,</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>sin2thetaW,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>warn_on_CP_violating_masses<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="lep__mssm__xsecs_8hpp_1a259260adac6ba1e9f35d2bdac43d0daa" kindref="member">xsec_neuineuj</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pid1,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pid2,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>sqrts,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>m1,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>m2,<sp/>MixMatrix<sp/>N,</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>mS[2],<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>tanb,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>alpha,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>mZ,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>gZ,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>sin2thetaW);</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="lep__mssm__xsecs_8hpp_1a0a45ecc9f0425ac00881ccbee9667570" kindref="member">xsec_chaichaj</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pid1,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pid2,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>sqrts,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>m1,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>m2,<sp/>MixMatrix<sp/>V,<sp/></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>MixMatrix<sp/>U,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>msn,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>alpha,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>mZ,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>gZ,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>sin2thetaW);</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="lep__mssm__xsecs_8hpp_1a2d9bce10091f76de9afa9815f1cce2bf" kindref="member">SLHA2BFM_NN</ref>(MixMatrix<sp/>&amp;NN,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>tanb,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>sin2thetaW);</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="lep__mssm__xsecs_8hpp_1a185a033e85266930b5e6220b3a149204" kindref="member">SLHA2BFM_VV</ref>(MixMatrix<sp/>&amp;VV);</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="lep__mssm__xsecs_8hpp_1a0f8614fd96d901159ac0d80064ba1f33" kindref="member">BFM2SLHA_NN</ref>(MixMatrix<sp/>&amp;NN,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>tanb,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>sin2thetaW);</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="lep__mssm__xsecs_8hpp_1a2a49411999b394113fffcb395bab148f" kindref="member">BFM2SLHA_VV</ref>(MixMatrix<sp/>&amp;VV);</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/>MixMatrix<sp/><ref refid="lep__mssm__xsecs_8hpp_1a2791d0121d64b32b19da2f1129efdf4d" kindref="member">multiply</ref>(MixMatrix<sp/>A,<sp/>MixMatrix<sp/>B);</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/>MixMatrix<sp/><ref refid="lep__mssm__xsecs_8hpp_1ab5acef007a85c7973d4c6df87a830cc1" kindref="member">transpose</ref>(MixMatrix<sp/>A);</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="lep__mssm__xsecs_8hpp_1ad77ec694b2787bf548b6e9a9c62a259c" kindref="member">print</ref>(MixMatrix<sp/>A);</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/></highlight></codeline>
+<codeline lineno="107"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lep_mssm_xsecs.hpp"/>
+  </compounddef>
+</doxygen>

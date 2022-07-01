@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classGambit_1_1ColliderBit_1_1MT2" kind="class" language="C++" prot="public">
+    <compoundname>Gambit::ColliderBit::MT2</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1MT2_1a1872cb6650c9d43c3779d891e0bca202" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::MT2::MT2tauB</definition>
+        <argsstring></argsstring>
+        <name>MT2tauB</name>
+        <qualifiedname>Gambit::ColliderBit::MT2::MT2tauB</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2bMET_36invfb.cpp" line="34" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2bMET_36invfb.cpp" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1MT2_1aadba7d42e3c1000d0c1180f361d34737" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::MT2::aMT2_BM</definition>
+        <argsstring></argsstring>
+        <name>aMT2_BM</name>
+        <qualifiedname>Gambit::ColliderBit::MT2::aMT2_BM</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2bMET_36invfb.cpp" line="35" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2bMET_36invfb.cpp" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1MT2_1add079982343d16df2c6de64b7a5a03ca" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::MT2::MT2</definition>
+        <argsstring>()</argsstring>
+        <name>MT2</name>
+        <qualifiedname>Gambit::ColliderBit::MT2::MT2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2bMET_36invfb.cpp" line="29" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2bMET_36invfb.cpp" bodystart="29" bodyend="32"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1MT2_1add079982343d16df2c6de64b7a5a03ca" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::MT2::MT2</definition>
+        <argsstring>()</argsstring>
+        <name>MT2</name>
+        <qualifiedname>Gambit::ColliderBit::MT2::MT2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_1LEPStop_20invfb.cpp" line="35" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_1LEPStop_20invfb.cpp" bodystart="35" bodyend="38"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>A useful <ref refid="classGambit_1_1ColliderBit_1_1MT2" kindref="compound">MT2</ref> class for this module. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2bMET_36invfb.cpp" line="27" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2bMET_36invfb.cpp" bodystart="27" bodyend="36"/>
+    <listofallmembers>
+      <member refid="classGambit_1_1ColliderBit_1_1MT2_1aadba7d42e3c1000d0c1180f361d34737" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MT2</scope><name>aMT2_BM</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1MT2_1add079982343d16df2c6de64b7a5a03ca" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MT2</scope><name>MT2</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1MT2_1add079982343d16df2c6de64b7a5a03ca" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MT2</scope><name>MT2</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1MT2_1a1872cb6650c9d43c3779d891e0bca202" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MT2</scope><name>MT2tauB</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

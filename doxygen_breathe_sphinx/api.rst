@@ -1,0 +1,4 @@
+API
+===
+
+.. doxygennamespace:: Gambit

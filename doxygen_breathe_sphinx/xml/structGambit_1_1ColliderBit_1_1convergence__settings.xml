@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="structGambit_1_1ColliderBit_1_1convergence__settings" kind="struct" language="C++" prot="public">
+    <compoundname>Gambit::ColliderBit::convergence_settings</compoundname>
+    <includes refid="MC__convergence_8hpp" local="no">MC_convergence.hpp</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1convergence__settings_1acd895c656c8fcd2285d1298ae9e52b70" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::convergence_settings::target_stat</definition>
+        <argsstring></argsstring>
+        <name>target_stat</name>
+        <qualifiedname>Gambit::ColliderBit::convergence_settings::target_stat</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="38" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1convergence__settings_1a4cc37d99fa7a20ca73bb3a125592cf3e" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::convergence_settings::stop_at_sys</definition>
+        <argsstring></argsstring>
+        <name>stop_at_sys</name>
+        <qualifiedname>Gambit::ColliderBit::convergence_settings::stop_at_sys</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="39" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1convergence__settings_1a1852439f1ac0c139a83d3aef59bbedf4" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::convergence_settings::all_analyses_must_converge</definition>
+        <argsstring></argsstring>
+        <name>all_analyses_must_converge</name>
+        <qualifiedname>Gambit::ColliderBit::convergence_settings::all_analyses_must_converge</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="40" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1convergence__settings_1a080cbd77b0ead4b26b6de542998d4778" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::convergence_settings::all_SR_must_converge</definition>
+        <argsstring></argsstring>
+        <name>all_SR_must_converge</name>
+        <qualifiedname>Gambit::ColliderBit::convergence_settings::all_SR_must_converge</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="41" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Type for holding Monte Carlo convergence settings. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="36" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" bodystart="37" bodyend="42"/>
+    <listofallmembers>
+      <member refid="structGambit_1_1ColliderBit_1_1convergence__settings_1a1852439f1ac0c139a83d3aef59bbedf4" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::convergence_settings</scope><name>all_analyses_must_converge</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1convergence__settings_1a080cbd77b0ead4b26b6de542998d4778" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::convergence_settings</scope><name>all_SR_must_converge</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1convergence__settings_1a4cc37d99fa7a20ca73bb3a125592cf3e" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::convergence_settings</scope><name>stop_at_sys</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1convergence__settings_1acd895c656c8fcd2285d1298ae9e52b70" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::convergence_settings</scope><name>target_stat</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

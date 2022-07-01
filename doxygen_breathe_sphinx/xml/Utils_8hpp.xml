@@ -1,0 +1,499 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="Utils_8hpp" kind="file" language="C++">
+    <compoundname>Utils.hpp</compoundname>
+    <includes local="no">functional</includes>
+    <includes local="no">memory</includes>
+    <includes local="no">cfloat</includes>
+    <includes local="yes">HEPUtils/MathUtils.h</includes>
+    <includes local="yes">HEPUtils/BinnedFn.h</includes>
+    <includes local="yes">HEPUtils/Event.h</includes>
+    <includes local="yes">HEPUtils/FastJet.h</includes>
+    <includedby refid="ATLASEfficiencies_8hpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp</includedby>
+    <includedby refid="CMSEfficiencies_8hpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp</includedby>
+    <includedby refid="AnalysisUtil_8hpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisUtil.hpp</includedby>
+    <includedby refid="Cutflow_8hpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp</includedby>
+    <includedby refid="ColliderBit__InterpolatedYields_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp</includedby>
+    <includedby refid="LHC__likelihoods_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/LHC_likelihoods.cpp</includedby>
+    <includedby refid="Utils_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/Utils.cpp</includedby>
+    <includedby refid="Analysis__ATLAS__7TeV__2LEPStop__4__7invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_2LEPStop_4_7invfb.cpp</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/Utils.hpp</label>
+        <link refid="Utils_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>HEPUtils/BinnedFn.h</label>
+      </node>
+      <node id="7">
+        <label>HEPUtils/Event.h</label>
+      </node>
+      <node id="8">
+        <label>HEPUtils/FastJet.h</label>
+      </node>
+      <node id="5">
+        <label>HEPUtils/MathUtils.h</label>
+      </node>
+      <node id="4">
+        <label>cfloat</label>
+      </node>
+      <node id="2">
+        <label>functional</label>
+      </node>
+      <node id="3">
+        <label>memory</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="2">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp</label>
+        <link refid="ATLASEfficiencies_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp</label>
+        <link refid="CMSEfficiencies_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/Utils.hpp</label>
+        <link refid="Utils_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisUtil.hpp</label>
+        <link refid="AnalysisUtil_8hpp"/>
+      </node>
+      <node id="6">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp</label>
+        <link refid="Cutflow_8hpp"/>
+      </node>
+      <node id="7">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp</label>
+        <link refid="ColliderBit__InterpolatedYields_8cpp"/>
+      </node>
+      <node id="8">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/LHC_likelihoods.cpp</label>
+        <link refid="LHC__likelihoods_8cpp"/>
+      </node>
+      <node id="3">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getBuckFast.cpp</label>
+        <link refid="getBuckFast_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innernamespace refid="namespaceGambit">Gambit</innernamespace>
+    <innernamespace refid="namespaceGambit_1_1ColliderBit">Gambit::ColliderBit</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Util variables and functions for ColliderBit</para>
+<para><hruler/>
+</para>
+<para>Authors (add name and date if you modify):</para>
+<para><simplesect kind="author"><para>Andy Buckley </para>
+</simplesect>
+<simplesect kind="author"><para>Abram Krislock </para>
+</simplesect>
+<simplesect kind="author"><para>Anders Kvellestad </para>
+</simplesect>
+<simplesect kind="author"><para>Pat Scott </para>
+</simplesect>
+<simplesect kind="author"><para>Tomas Gonzalo</para>
+</simplesect>
+<hruler/>
+ </para>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">//<sp/><sp/><sp/>GAMBIT:<sp/>Global<sp/>and<sp/>Modular<sp/>BSM<sp/>Inference<sp/>Tool</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>*********************************************</highlight></codeline>
+<codeline lineno="18"><highlight class="comment"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;functional&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;memory&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cfloat&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;HEPUtils/MathUtils.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;HEPUtils/BinnedFn.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;HEPUtils/Event.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;HEPUtils/FastJet.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespaceGambit" kindref="compound">Gambit</ref></highlight></codeline>
+<codeline lineno="31"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">ColliderBit</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>GeV<sp/>=<sp/>1,<sp/>MeV<sp/>=<sp/>1e-3,<sp/>TeV<sp/>=<sp/>1e3;</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">HEPUtils::Event;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">HEPUtils::Particle;</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">HEPUtils::Jet;</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">HEPUtils::P4;</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">HEPUtils::add_quad;</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="53" refid="Utils_8hpp_1afc91bf707d036dcd1ddc79abcce7081c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/>std::vector&lt;const<sp/>HEPUtils::Particle*&gt;<sp/><ref refid="Utils_8hpp_1afc91bf707d036dcd1ddc79abcce7081c" kindref="member">ParticlePtrs</ref>;</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56" refid="Utils_8hpp_1a806fd1423cb4a2e7e676c6fb4df31e80" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/>std::vector&lt;const<sp/>HEPUtils::Jet*&gt;<sp/><ref refid="Utils_8hpp_1a806fd1423cb4a2e7e676c6fb4df31e80" kindref="member">JetPtrs</ref>;</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"></codeline>
+<codeline lineno="60"></codeline>
+<codeline lineno="62" refid="Utils_8hpp_1a090fae038f9467725561bab4a5286afd" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1a090fae038f9467725561bab4a5286afd" kindref="member">amIaJet</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>HEPUtils::Jet<sp/>*jet)<sp/>{<sp/>(void)jet;<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;<sp/>}</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="65" refid="Utils_8hpp_1a66c6e7dce6ad591eb1569ae6c2c066f5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1a66c6e7dce6ad591eb1569ae6c2c066f5" kindref="member">amIaBJet</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>HEPUtils::Jet<sp/>*jet)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>jet-&gt;btag();<sp/>}</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight></codeline>
+<codeline lineno="68" refid="Utils_8hpp_1a459902a1bc1cb1b8b92a0f9196a0e79f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1a090fae038f9467725561bab4a5286afd" kindref="member">amIaJet</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>HEPUtils::Particle<sp/>*part)<sp/>{<sp/>(void)part;<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;<sp/>}</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="71" refid="Utils_8hpp_1acef57926d6067a635ebf410f5a9e7303" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1a66c6e7dce6ad591eb1569ae6c2c066f5" kindref="member">amIaBJet</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>HEPUtils::Particle<sp/>*part)<sp/>{<sp/>(void)part;<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;<sp/>}</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"></codeline>
+<codeline lineno="76"></codeline>
+<codeline lineno="77"></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>CONTAINER,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>RMFN&gt;</highlight></codeline>
+<codeline lineno="80" refid="Utils_8hpp_1af270c432665b810c5ed3a053ee216a90" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1af270c432665b810c5ed3a053ee216a90" kindref="member">iremoveerase</ref>(CONTAINER&amp;<sp/>c,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>RMFN&amp;<sp/>fn)<sp/>{</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>newend<sp/>=<sp/>std::remove_if(c.begin(),<sp/>c.end(),<sp/>fn);</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>c.erase(newend,<sp/>c.end());</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight></codeline>
+<codeline lineno="86" refid="Utils_8hpp_1a1684b50776a7a5c8ee5dc9184abf81d5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1a1684b50776a7a5c8ee5dc9184abf81d5" kindref="member">ifilter_reject</ref>(<ref refid="Utils_8hpp_1afc91bf707d036dcd1ddc79abcce7081c" kindref="member">ParticlePtrs</ref>&amp;<sp/>particles,</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::function&lt;</highlight><highlight class="keywordtype">bool</highlight><highlight class="normal">(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Particle*)&gt;<sp/>rejfn,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>do_delete=</highlight><highlight class="keyword">true</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="Utils_8hpp_1af270c432665b810c5ed3a053ee216a90" kindref="member">iremoveerase</ref>(particles,<sp/>[&amp;](</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Particle*<sp/>p)<sp/>{</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>rm<sp/>=<sp/>rejfn(p);</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(rm<sp/>&amp;&amp;<sp/>do_delete)<sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal"><sp/>p;</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>rm;</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>});</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"></highlight></codeline>
+<codeline lineno="96" refid="Utils_8hpp_1a20aacf254f32c16e5347ffbb6fedae41" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1a20aacf254f32c16e5347ffbb6fedae41" kindref="member">ifilter_select</ref>(<ref refid="Utils_8hpp_1afc91bf707d036dcd1ddc79abcce7081c" kindref="member">ParticlePtrs</ref>&amp;<sp/>particles,</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::function&lt;</highlight><highlight class="keywordtype">bool</highlight><highlight class="normal">(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Particle*)&gt;<sp/>selfn,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>do_delete=</highlight><highlight class="keyword">true</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="Utils_8hpp_1a1684b50776a7a5c8ee5dc9184abf81d5" kindref="member">ifilter_reject</ref>(particles,<sp/>[&amp;](</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Particle*<sp/>p)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>!selfn(p);<sp/>},<sp/>do_delete);</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight></codeline>
+<codeline lineno="101"><highlight class="normal"></highlight></codeline>
+<codeline lineno="104" refid="Utils_8hpp_1a1a018b09cbd8d1f85e2af56b717a5f6e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1afc91bf707d036dcd1ddc79abcce7081c" kindref="member">ParticlePtrs</ref><sp/><ref refid="Utils_8hpp_1a1a018b09cbd8d1f85e2af56b717a5f6e" kindref="member">filter_reject</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1afc91bf707d036dcd1ddc79abcce7081c" kindref="member">ParticlePtrs</ref>&amp;<sp/>particles,</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::function&lt;</highlight><highlight class="keywordtype">bool</highlight><highlight class="normal">(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Particle*)&gt;<sp/>rejfn,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>do_delete=</highlight><highlight class="keyword">true</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="Utils_8hpp_1afc91bf707d036dcd1ddc79abcce7081c" kindref="member">ParticlePtrs</ref><sp/>rtn<sp/>=<sp/>particles;</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="Utils_8hpp_1a1684b50776a7a5c8ee5dc9184abf81d5" kindref="member">ifilter_reject</ref>(rtn,<sp/>rejfn,<sp/>do_delete);</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>rtn;</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"></highlight></codeline>
+<codeline lineno="112" refid="Utils_8hpp_1a2019408d78d453c480024a58ed872a12" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1afc91bf707d036dcd1ddc79abcce7081c" kindref="member">ParticlePtrs</ref><sp/><ref refid="Utils_8hpp_1a2019408d78d453c480024a58ed872a12" kindref="member">filter_select</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1afc91bf707d036dcd1ddc79abcce7081c" kindref="member">ParticlePtrs</ref>&amp;<sp/>particles,</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::function&lt;</highlight><highlight class="keywordtype">bool</highlight><highlight class="normal">(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Particle*)&gt;<sp/>selfn,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>do_delete=</highlight><highlight class="keyword">true</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1a1a018b09cbd8d1f85e2af56b717a5f6e" kindref="member">filter_reject</ref>(particles,<sp/>[&amp;](</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Particle*<sp/>p)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>!selfn(p);<sp/>},<sp/>do_delete);</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"></highlight></codeline>
+<codeline lineno="118"><highlight class="normal"></highlight></codeline>
+<codeline lineno="119"><highlight class="normal"></highlight></codeline>
+<codeline lineno="120"><highlight class="normal"></highlight></codeline>
+<codeline lineno="122"></codeline>
+<codeline lineno="123"></codeline>
+<codeline lineno="125" refid="Utils_8hpp_1a9745f85f022c50e621511dcb8a14e34e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1a1684b50776a7a5c8ee5dc9184abf81d5" kindref="member">ifilter_reject</ref>(<ref refid="Utils_8hpp_1a806fd1423cb4a2e7e676c6fb4df31e80" kindref="member">JetPtrs</ref>&amp;<sp/>jets,</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::function&lt;</highlight><highlight class="keywordtype">bool</highlight><highlight class="normal">(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Jet*)&gt;<sp/>rejfn,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>do_delete=</highlight><highlight class="keyword">true</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="Utils_8hpp_1af270c432665b810c5ed3a053ee216a90" kindref="member">iremoveerase</ref>(jets,<sp/>[&amp;](</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Jet*<sp/>j)<sp/>{</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>rm<sp/>=<sp/>rejfn(j);</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(rm<sp/>&amp;&amp;<sp/>do_delete)<sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal"><sp/>j;</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>rm;</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>});</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"></highlight></codeline>
+<codeline lineno="135" refid="Utils_8hpp_1a69713e830f67280d1f6578c2df49674b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1a20aacf254f32c16e5347ffbb6fedae41" kindref="member">ifilter_select</ref>(<ref refid="Utils_8hpp_1a806fd1423cb4a2e7e676c6fb4df31e80" kindref="member">JetPtrs</ref>&amp;<sp/>jets,</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::function&lt;</highlight><highlight class="keywordtype">bool</highlight><highlight class="normal">(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Jet*)&gt;<sp/>selfn,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>do_delete=</highlight><highlight class="keyword">true</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="Utils_8hpp_1a1684b50776a7a5c8ee5dc9184abf81d5" kindref="member">ifilter_reject</ref>(jets,<sp/>[&amp;](</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Jet*<sp/>j)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>!selfn(j);<sp/>},<sp/>do_delete);</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"></highlight></codeline>
+<codeline lineno="140"><highlight class="normal"></highlight></codeline>
+<codeline lineno="143" refid="Utils_8hpp_1a2413a535901135a74d4d20f101c78abd" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1a806fd1423cb4a2e7e676c6fb4df31e80" kindref="member">JetPtrs</ref><sp/><ref refid="Utils_8hpp_1a1a018b09cbd8d1f85e2af56b717a5f6e" kindref="member">filter_reject</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1a806fd1423cb4a2e7e676c6fb4df31e80" kindref="member">JetPtrs</ref>&amp;<sp/>jets,</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::function&lt;</highlight><highlight class="keywordtype">bool</highlight><highlight class="normal">(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Jet*)&gt;<sp/>rejfn,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>do_delete=</highlight><highlight class="keyword">true</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="Utils_8hpp_1a806fd1423cb4a2e7e676c6fb4df31e80" kindref="member">JetPtrs</ref><sp/>rtn<sp/>=<sp/>jets;</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="Utils_8hpp_1a1684b50776a7a5c8ee5dc9184abf81d5" kindref="member">ifilter_reject</ref>(rtn,<sp/>rejfn,<sp/>do_delete);</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>rtn;</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"></highlight></codeline>
+<codeline lineno="151" refid="Utils_8hpp_1ad3ed8df8faa85dbfa9e27feac8555b08" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1a806fd1423cb4a2e7e676c6fb4df31e80" kindref="member">JetPtrs</ref><sp/><ref refid="Utils_8hpp_1a2019408d78d453c480024a58ed872a12" kindref="member">filter_select</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1a806fd1423cb4a2e7e676c6fb4df31e80" kindref="member">JetPtrs</ref>&amp;<sp/>jets,</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::function&lt;</highlight><highlight class="keywordtype">bool</highlight><highlight class="normal">(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Jet*)&gt;<sp/>selfn,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>do_delete=</highlight><highlight class="keyword">true</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1a1a018b09cbd8d1f85e2af56b717a5f6e" kindref="member">filter_reject</ref>(jets,<sp/>[&amp;](</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Jet*<sp/>j)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>!selfn(j);<sp/>},<sp/>do_delete);</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"></highlight></codeline>
+<codeline lineno="157"><highlight class="normal"></highlight></codeline>
+<codeline lineno="158"><highlight class="normal"></highlight></codeline>
+<codeline lineno="159"><highlight class="normal"></highlight></codeline>
+<codeline lineno="161"><highlight class="normal"></highlight></codeline>
+<codeline lineno="162"><highlight class="normal"></highlight></codeline>
+<codeline lineno="163"><highlight class="normal"></highlight></codeline>
+<codeline lineno="165"></codeline>
+<codeline lineno="166"></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>random_bool(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>eff);</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"></highlight></codeline>
+<codeline lineno="171" refid="Utils_8hpp_1a78d8549dacfbff00a5d2f0f09667d756" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1a3b59353a7ec6cb32c170baddc17ee4ed" kindref="member">random_bool</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>HEPUtils::BinnedFn1D&lt;double&gt;&amp;<sp/>effmap,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>x)<sp/>{</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1a3b59353a7ec6cb32c170baddc17ee4ed" kindref="member">random_bool</ref>(<sp/>effmap.get_at(x)<sp/>);</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"></highlight></codeline>
+<codeline lineno="176" refid="Utils_8hpp_1ad9b71ef4722c30ca0b0bef6a44516d4c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1a3b59353a7ec6cb32c170baddc17ee4ed" kindref="member">random_bool</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>HEPUtils::BinnedFn2D&lt;double&gt;&amp;<sp/>effmap,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>x,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>y)<sp/>{</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1a3b59353a7ec6cb32c170baddc17ee4ed" kindref="member">random_bool</ref>(<sp/>effmap.get_at(x,<sp/>y)<sp/>);</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"></highlight></codeline>
+<codeline lineno="181"><highlight class="normal"></highlight></codeline>
+<codeline lineno="182"><highlight class="normal"></highlight></codeline>
+<codeline lineno="184"></codeline>
+<codeline lineno="185"></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>filtereff(std::vector&lt;const<sp/>HEPUtils::Particle*&gt;&amp;<sp/>particles,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>eff,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>do_delete=</highlight><highlight class="keyword">false</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="188"><highlight class="normal"></highlight></codeline>
+<codeline lineno="190"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>filtereff(std::vector&lt;const<sp/>HEPUtils::Particle*&gt;&amp;<sp/>particles,<sp/>std::function&lt;</highlight><highlight class="keywordtype">double</highlight><highlight class="normal">(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>HEPUtils::Particle*)&gt;<sp/>eff_fn,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>do_delete=</highlight><highlight class="keyword">false</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="191"><highlight class="normal"></highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>filtereff_pt(std::vector&lt;const<sp/>HEPUtils::Particle*&gt;&amp;<sp/>particles,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>HEPUtils::BinnedFn1D&lt;double&gt;&amp;<sp/>eff_pt,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>do_delete=</highlight><highlight class="keyword">false</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"></highlight></codeline>
+<codeline lineno="196"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>filtereff_etapt(std::vector&lt;const<sp/>HEPUtils::Particle*&gt;&amp;<sp/>particles,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>HEPUtils::BinnedFn2D&lt;double&gt;&amp;<sp/>eff_etapt,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>do_delete=</highlight><highlight class="keyword">false</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="197"><highlight class="normal"></highlight></codeline>
+<codeline lineno="199"><highlight class="normal"></highlight></codeline>
+<codeline lineno="200"><highlight class="normal"></highlight></codeline>
+<codeline lineno="202"></codeline>
+<codeline lineno="203"></codeline>
+<codeline lineno="206" refid="Utils_8hpp_1a3a98b6d22188cdf64b09e866b31cb6f3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1a3a98b6d22188cdf64b09e866b31cb6f3" kindref="member">has_tag</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>HEPUtils::BinnedFn2D&lt;double&gt;&amp;<sp/>effmap,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>eta,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>pt)<sp/>{</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">try</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1a3b59353a7ec6cb32c170baddc17ee4ed" kindref="member">random_bool</ref>(effmap,<sp/>fabs(eta),<sp/>pt);</highlight></codeline>
+<codeline lineno="209"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">catch</highlight><highlight class="normal"><sp/>(...)<sp/>{</highlight></codeline>
+<codeline lineno="210"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;<sp/></highlight><highlight class="comment">//<sp/>No<sp/>tag<sp/>if<sp/>outside<sp/>lookup<sp/>range...<sp/>be<sp/>careful!</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="212"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="213"><highlight class="normal"></highlight></codeline>
+<codeline lineno="215" refid="Utils_8hpp_1a64260a7a70d3e3322f61f256095e76e5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/>std::map&lt;const<sp/>HEPUtils::Jet*,bool&gt;<sp/><ref refid="Utils_8hpp_1a64260a7a70d3e3322f61f256095e76e5" kindref="member">generateBTagsMap</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;const<sp/>HEPUtils::Jet*&gt;&amp;<sp/>jets,<sp/></highlight></codeline>
+<codeline lineno="216"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>bTagEff,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>cMissTagEff,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>otherMissTagEff,</highlight></codeline>
+<codeline lineno="217"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>pTmin<sp/>=<sp/>0.,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>absEtaMax<sp/>=<sp/>DBL_MAX)</highlight></codeline>
+<codeline lineno="218"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="219"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>std::map&lt;const<sp/>HEPUtils::Jet*,bool&gt;<sp/>bTagsMap;</highlight></codeline>
+<codeline lineno="220"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>HEPUtils::Jet*<sp/>j<sp/>:<sp/>jets)</highlight></codeline>
+<codeline lineno="221"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="222"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>genBTag<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="223"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((j-&gt;pT()<sp/>&gt;<sp/>pTmin)<sp/>&amp;&amp;<sp/>(j-&gt;abseta()<sp/>&lt;<sp/>absEtaMax))</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(j-&gt;btag())<sp/></highlight></codeline>
+<codeline lineno="226"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<sp/></highlight></codeline>
+<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="Utils_8hpp_1a3b59353a7ec6cb32c170baddc17ee4ed" kindref="member">random_bool</ref>(bTagEff))<sp/>{<sp/>genBTag<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;<sp/>}</highlight></codeline>
+<codeline lineno="228"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="229"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(j-&gt;ctag())<sp/></highlight></codeline>
+<codeline lineno="230"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<sp/></highlight></codeline>
+<codeline lineno="231"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="Utils_8hpp_1a3b59353a7ec6cb32c170baddc17ee4ed" kindref="member">random_bool</ref>(cMissTagEff))<sp/>{<sp/>genBTag<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;<sp/>}</highlight></codeline>
+<codeline lineno="232"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="233"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="234"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<sp/></highlight></codeline>
+<codeline lineno="235"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="Utils_8hpp_1a3b59353a7ec6cb32c170baddc17ee4ed" kindref="member">random_bool</ref>(otherMissTagEff))<sp/>{<sp/>genBTag<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;<sp/>}</highlight></codeline>
+<codeline lineno="236"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="237"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="238"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>bTagsMap[j]<sp/>=<sp/>genBTag;</highlight></codeline>
+<codeline lineno="239"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="240"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>bTagsMap;</highlight></codeline>
+<codeline lineno="241"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="242"><highlight class="normal"></highlight></codeline>
+<codeline lineno="243"><highlight class="normal"></highlight></codeline>
+<codeline lineno="244"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>NUM1,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>NUM2&gt;</highlight></codeline>
+<codeline lineno="245" refid="Utils_8hpp_1a4fd48029976976354f74213f6b8d264d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1a4fd48029976976354f74213f6b8d264d" kindref="member">binIndex</ref>(NUM1<sp/>val,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;NUM2&gt;&amp;<sp/>binedges,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>allow_overflow=</highlight><highlight class="keyword">false</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="246"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(val<sp/>&lt;<sp/>binedges.front())<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;<sp/></highlight></codeline>
+<codeline lineno="247"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(val<sp/>&gt;=<sp/>binedges.back())<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>allow_overflow<sp/>?<sp/>int(binedges.size())-1<sp/>:<sp/>-1;<sp/></highlight></codeline>
+<codeline lineno="248"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>std::distance(binedges.begin(),<sp/>--std::upper_bound(binedges.begin(),<sp/>binedges.end(),<sp/>val));</highlight></codeline>
+<codeline lineno="249"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="250"><highlight class="normal"></highlight></codeline>
+<codeline lineno="251"><highlight class="normal"></highlight></codeline>
+<codeline lineno="253" refid="Utils_8hpp_1a2956d3a3095ed165a60046dd3918a330" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/>std::vector&lt;double&gt;<sp/><ref refid="Utils_8hpp_1a2956d3a3095ed165a60046dd3918a330" kindref="member">mk_bin_values</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;double&gt;&amp;<sp/>binEdgeValues)<sp/>{</highlight></codeline>
+<codeline lineno="254"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;double&gt;<sp/>results;</highlight></codeline>
+<codeline lineno="255"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>results.reserve(binEdgeValues.size()-1);</highlight></codeline>
+<codeline lineno="256"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>binEdgeValues.size()-1;<sp/>++i)</highlight></codeline>
+<codeline lineno="257"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>results.push_back(<sp/>(binEdgeValues[i]<sp/>+<sp/>binEdgeValues[i+1])/2.0<sp/>);</highlight></codeline>
+<codeline lineno="258"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>results;</highlight></codeline>
+<codeline lineno="259"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="261" refid="Utils_8hpp_1a815f2f22867c52a165aad8f6de2aec24" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/>std::vector&lt;double&gt;<sp/><ref refid="Utils_8hpp_1a815f2f22867c52a165aad8f6de2aec24" kindref="member">makeBinValues</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;double&gt;&amp;<sp/>binEdgeValues)<sp/>{</highlight></codeline>
+<codeline lineno="262"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1a2956d3a3095ed165a60046dd3918a330" kindref="member">mk_bin_values</ref>(binEdgeValues);</highlight></codeline>
+<codeline lineno="263"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="264"><highlight class="normal"></highlight></codeline>
+<codeline lineno="265"><highlight class="normal"></highlight></codeline>
+<codeline lineno="267"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>MOM&gt;</highlight></codeline>
+<codeline lineno="268" refid="Utils_8hpp_1a6b637ed5c7c6e6fe222b389f3a912b44" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/>std::vector&lt;std::shared_ptr&lt;HEPUtils::Jet&gt;&gt;<sp/><ref refid="Utils_8hpp_1a6b637ed5c7c6e6fe222b389f3a912b44" kindref="member">get_jets</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;MOM*&gt;&amp;<sp/>moms,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>R,</highlight></codeline>
+<codeline lineno="269"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>ptmin=0*GeV,<sp/>FJNS::JetAlgorithm<sp/>alg=FJNS::antikt_algorithm)<sp/>{</highlight></codeline>
+<codeline lineno="270"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Make<sp/>PseudoJets</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="271"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;FJNS::PseudoJet&gt;<sp/>constituents;</highlight></codeline>
+<codeline lineno="272"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>MOM*<sp/>p<sp/>:<sp/>moms)<sp/>constituents.push_back(HEPUtils::mk_pseudojet(*p));</highlight></codeline>
+<codeline lineno="273"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Run<sp/>clustering</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="274"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;FJNS::PseudoJet&gt;<sp/>jets<sp/>=<sp/>HEPUtils::get_jets(constituents,<sp/>R,<sp/>ptmin,<sp/>alg);</highlight></codeline>
+<codeline lineno="275"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Make<sp/>newly-allocated<sp/>Jets</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="276"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;std::shared_ptr&lt;HEPUtils::Jet&gt;&gt;<sp/>rtn;</highlight></codeline>
+<codeline lineno="277"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>FJNS::PseudoJet&amp;<sp/>j<sp/>:<sp/>jets)<sp/>rtn.push_back(std::make_shared&lt;HEPUtils::Jet&gt;(HEPUtils::mk_p4(j)));</highlight></codeline>
+<codeline lineno="278"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>rtn;</highlight></codeline>
+<codeline lineno="279"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="280"><highlight class="normal"></highlight></codeline>
+<codeline lineno="281"><highlight class="normal"></highlight></codeline>
+<codeline lineno="283" refid="Utils_8hpp_1af8cafeb2ad8fb99727709a15d7398c8d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1af8cafeb2ad8fb99727709a15d7398c8d" kindref="member">object_in_cone</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>HEPUtils::Event&amp;<sp/>e,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>HEPUtils::P4&amp;<sp/>p4,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>ptmin,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>rmax,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>rmin=0.05)<sp/>{</highlight></codeline>
+<codeline lineno="284"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>HEPUtils::Particle*<sp/>p<sp/>:<sp/>e.visible_particles())</highlight></codeline>
+<codeline lineno="285"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(p-&gt;pT()<sp/>&gt;<sp/>ptmin<sp/>&amp;&amp;<sp/>HEPUtils::in_range(HEPUtils::deltaR_eta(p4,<sp/>*p),<sp/>rmin,<sp/>rmax))<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="286"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>HEPUtils::Jet*<sp/>j<sp/>:<sp/>e.jets())</highlight></codeline>
+<codeline lineno="287"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(j-&gt;pT()<sp/>&gt;<sp/>ptmin<sp/>&amp;&amp;<sp/>HEPUtils::in_range(HEPUtils::deltaR_eta(p4,<sp/>*j),<sp/>rmin,<sp/>rmax))<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="288"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="289"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="290"><highlight class="normal"></highlight></codeline>
+<codeline lineno="291"><highlight class="normal"></highlight></codeline>
+<codeline lineno="297"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>MOMPTRS1,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>MOMPTRS2&gt;</highlight></codeline>
+<codeline lineno="298" refid="Utils_8hpp_1ab09d9a78a703b128a28b63a6c52396a1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1ab09d9a78a703b128a28b63a6c52396a1" kindref="member">removeOverlap</ref>(MOMPTRS1&amp;<sp/>momstofilter,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>MOMPTRS2&amp;<sp/>momstocmp,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>deltaRMax,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>use_rapidity=</highlight><highlight class="keyword">false</highlight><highlight class="normal">,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>pTmax<sp/>=<sp/>DBL_MAX,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>btageff<sp/>=<sp/>0)</highlight></codeline>
+<codeline lineno="299"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="300"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="Utils_8hpp_1a1684b50776a7a5c8ee5dc9184abf81d5" kindref="member">ifilter_reject</ref>(momstofilter,<sp/>[&amp;](</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>MOMPTRS1::value_type&amp;<sp/>mom1)</highlight></codeline>
+<codeline lineno="301"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="302"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>MOMPTRS2::value_type&amp;<sp/>mom2<sp/>:<sp/>momstocmp)<sp/>{</highlight></codeline>
+<codeline lineno="303"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>dR<sp/>=<sp/>(use_rapidity)<sp/>?<sp/>deltaR_rap(mom1-&gt;mom(),<sp/>mom2-&gt;mom())<sp/>:<sp/>deltaR_eta(mom1-&gt;mom(),<sp/>mom2-&gt;mom());</highlight></codeline>
+<codeline lineno="304"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(dR<sp/>&lt;<sp/>deltaRMax<sp/>&amp;&amp;<sp/>mom1-&gt;pT()<sp/>&lt;<sp/>pTmax<sp/>&amp;&amp;<sp/>(<sp/>!<ref refid="Utils_8hpp_1a66c6e7dce6ad591eb1569ae6c2c066f5" kindref="member">amIaBJet</ref>(mom1)<sp/>||<sp/>!<ref refid="Utils_8hpp_1a3b59353a7ec6cb32c170baddc17ee4ed" kindref="member">random_bool</ref>(btageff)<sp/>)<sp/>)<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="305"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="306"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="307"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>},<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="308"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="309"><highlight class="normal"></highlight></codeline>
+<codeline lineno="316"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>MOMPTRS1,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>MOMPTRS2&gt;</highlight></codeline>
+<codeline lineno="317" refid="Utils_8hpp_1a07c3f4250cc6df0bbca9875949bade5e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1ab09d9a78a703b128a28b63a6c52396a1" kindref="member">removeOverlap</ref>(MOMPTRS1&amp;<sp/>momstofilter,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>MOMPTRS2&amp;<sp/>momstocmp,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>(*deltaRMax)(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">),<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>use_rapidity=</highlight><highlight class="keyword">false</highlight><highlight class="normal">,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>pTmax<sp/>=<sp/>DBL_MAX,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>btageff<sp/>=<sp/>0)</highlight></codeline>
+<codeline lineno="318"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="319"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="Utils_8hpp_1a1684b50776a7a5c8ee5dc9184abf81d5" kindref="member">ifilter_reject</ref>(momstofilter,<sp/>[&amp;](</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>MOMPTRS1::value_type&amp;<sp/>mom1)</highlight></codeline>
+<codeline lineno="320"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="321"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>MOMPTRS2::value_type&amp;<sp/>mom2<sp/>:<sp/>momstocmp)<sp/>{</highlight></codeline>
+<codeline lineno="322"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>dR<sp/>=<sp/>(use_rapidity)<sp/>?<sp/>deltaR_rap(mom1-&gt;mom(),<sp/>mom2-&gt;mom())<sp/>:<sp/>deltaR_eta(mom1-&gt;mom(),<sp/>mom2-&gt;mom());</highlight></codeline>
+<codeline lineno="323"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(dR<sp/>&lt;<sp/>deltaRMax(mom1-&gt;pT())<sp/>&amp;&amp;<sp/>mom1-&gt;pT()<sp/>&lt;<sp/>pTmax<sp/>&amp;&amp;<sp/>(<sp/>!<ref refid="Utils_8hpp_1a66c6e7dce6ad591eb1569ae6c2c066f5" kindref="member">amIaBJet</ref>(mom1)<sp/>||<sp/>!<ref refid="Utils_8hpp_1a3b59353a7ec6cb32c170baddc17ee4ed" kindref="member">random_bool</ref>(btageff)<sp/>)<sp/>)<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="324"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="325"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="326"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>},<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="327"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="328"><highlight class="normal"></highlight></codeline>
+<codeline lineno="333"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>MOMPTRS1&gt;</highlight></codeline>
+<codeline lineno="334" refid="Utils_8hpp_1a41b04372dc4483504b6027e23a27542e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1a41b04372dc4483504b6027e23a27542e" kindref="member">removeOverlapIfBjet</ref>(MOMPTRS1&amp;<sp/>momstofilter,<sp/>std::vector&lt;const<sp/>HEPUtils::Jet*&gt;&amp;<sp/>jets,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>deltaRMax,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>use_rapidity=</highlight><highlight class="keyword">false</highlight><highlight class="normal">,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>pTmax<sp/>=<sp/>DBL_MAX)</highlight></codeline>
+<codeline lineno="335"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="336"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="Utils_8hpp_1a1684b50776a7a5c8ee5dc9184abf81d5" kindref="member">ifilter_reject</ref>(momstofilter,<sp/>[&amp;](</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>MOMPTRS1::value_type&amp;<sp/>mom1)</highlight></codeline>
+<codeline lineno="337"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="338"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>HEPUtils::Jet*<sp/>jet<sp/>:<sp/>jets)<sp/>{</highlight></codeline>
+<codeline lineno="339"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>dR<sp/>=<sp/>(use_rapidity)<sp/>?<sp/>deltaR_rap(mom1-&gt;mom(),<sp/>jet-&gt;mom())<sp/>:<sp/>deltaR_eta(mom1-&gt;mom(),<sp/>jet-&gt;mom());</highlight></codeline>
+<codeline lineno="340"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(dR<sp/>&lt;<sp/>deltaRMax<sp/>&amp;&amp;<sp/>mom1-&gt;pT()<sp/>&lt;<sp/>pTmax<sp/>&amp;&amp;<sp/>jet-&gt;btag()<sp/>)<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="341"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="342"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="343"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>},<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="344"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="345"><highlight class="normal"></highlight></codeline>
+<codeline lineno="346"><highlight class="normal"></highlight></codeline>
+<codeline lineno="348"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>CONTAINER,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>FN&gt;</highlight></codeline>
+<codeline lineno="349" refid="Utils_8hpp_1aab1fa0df2dee362f7039e4b9fe0bed4b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1aab1fa0df2dee362f7039e4b9fe0bed4b" kindref="member">all_of</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>CONTAINER&amp;<sp/>c,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>FN&amp;<sp/>f)<sp/>{</highlight></codeline>
+<codeline lineno="350"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>std::all_of(std::begin(c),<sp/>std::end(c),<sp/>f);</highlight></codeline>
+<codeline lineno="351"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="352"><highlight class="normal"></highlight></codeline>
+<codeline lineno="354"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>CONTAINER,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>FN&gt;</highlight></codeline>
+<codeline lineno="355" refid="Utils_8hpp_1a9ec34ac47693aabf0ff2ea6112e9c6a7" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1a9ec34ac47693aabf0ff2ea6112e9c6a7" kindref="member">any_of</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>CONTAINER&amp;<sp/>c,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>FN&amp;<sp/>f)<sp/>{</highlight></codeline>
+<codeline lineno="356"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>std::any_of(std::begin(c),<sp/>std::end(c),<sp/>f);</highlight></codeline>
+<codeline lineno="357"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="358"><highlight class="normal"></highlight></codeline>
+<codeline lineno="360"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>CONTAINER,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>FN&gt;</highlight></codeline>
+<codeline lineno="361" refid="Utils_8hpp_1accb9a97df0082909089686ad0d1bbcd7" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1accb9a97df0082909089686ad0d1bbcd7" kindref="member">none_of</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>CONTAINER&amp;<sp/>c,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>FN&amp;<sp/>f)<sp/>{</highlight></codeline>
+<codeline lineno="362"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>std::none_of(std::begin(c),<sp/>std::end(c),<sp/>f);</highlight></codeline>
+<codeline lineno="363"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="364"><highlight class="normal"></highlight></codeline>
+<codeline lineno="365"><highlight class="normal"></highlight></codeline>
+<codeline lineno="367"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;std::vector&lt;const<sp/>HEPUtils::Particle*&gt;&gt;<sp/>getSFOSpairs(std::vector&lt;const<sp/>HEPUtils::Particle*&gt;<sp/>particles);</highlight></codeline>
+<codeline lineno="368"><highlight class="normal"></highlight></codeline>
+<codeline lineno="370"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;std::vector&lt;const<sp/>HEPUtils::Particle*&gt;&gt;<sp/>getOSpairs(std::vector&lt;const<sp/>HEPUtils::Particle*&gt;<sp/>particles);</highlight></codeline>
+<codeline lineno="371"><highlight class="normal"></highlight></codeline>
+<codeline lineno="373"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;std::vector&lt;const<sp/>HEPUtils::Particle*&gt;&gt;<sp/>getSSpairs(std::vector&lt;const<sp/>HEPUtils::Particle*&gt;<sp/>particles);</highlight></codeline>
+<codeline lineno="374"><highlight class="normal"></highlight></codeline>
+<codeline lineno="375"><highlight class="normal"></highlight></codeline>
+<codeline lineno="377"></codeline>
+<codeline lineno="378"></codeline>
+<codeline lineno="380" refid="Utils_8hpp_1af4fc976689ef014d5a3aeda9a9497d72" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1af4fc976689ef014d5a3aeda9a9497d72" kindref="member">sortBy</ref>(<ref refid="Utils_8hpp_1afc91bf707d036dcd1ddc79abcce7081c" kindref="member">ParticlePtrs</ref>&amp;<sp/>particles,<sp/>std::function&lt;</highlight><highlight class="keywordtype">bool</highlight><highlight class="normal">(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Particle*,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Particle*)&gt;<sp/>cmpfn)<sp/>{</highlight></codeline>
+<codeline lineno="381"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>std::sort(particles.begin(),<sp/>particles.end(),<sp/>cmpfn);</highlight></codeline>
+<codeline lineno="382"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="383"><highlight class="normal"></highlight></codeline>
+<codeline lineno="385" refid="Utils_8hpp_1ab4abea9a2b524471f92960a8e57ca597" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1ab4abea9a2b524471f92960a8e57ca597" kindref="member">cmpParticlesByPt</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>HEPUtils::Particle*<sp/>lep1,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>HEPUtils::Particle*<sp/>lep2)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>lep1-&gt;pT()<sp/>&gt;<sp/>lep2-&gt;pT();<sp/>}</highlight></codeline>
+<codeline lineno="386"><highlight class="normal"></highlight></codeline>
+<codeline lineno="387"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Sort<sp/>a<sp/>particles<sp/>list<sp/>by<sp/>decreasing<sp/>pT</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="388"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>sortByPt(ParticlePtrs&amp;<sp/>particles)<sp/>{<sp/>sortBy(particles,<sp/>cmpParticlesByPt);<sp/>}</highlight></codeline>
+<codeline lineno="389"><highlight class="normal"></highlight></codeline>
+<codeline lineno="390"><highlight class="normal"></highlight></codeline>
+<codeline lineno="392" refid="Utils_8hpp_1a50a2de59bc5a7ddf9b409867d64890fd" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1af4fc976689ef014d5a3aeda9a9497d72" kindref="member">sortBy</ref>(<ref refid="Utils_8hpp_1a806fd1423cb4a2e7e676c6fb4df31e80" kindref="member">JetPtrs</ref>&amp;<sp/>jets,<sp/>std::function&lt;</highlight><highlight class="keywordtype">bool</highlight><highlight class="normal">(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Jet*,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Jet*)&gt;<sp/>cmpfn)<sp/>{</highlight></codeline>
+<codeline lineno="393"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>std::sort(jets.begin(),<sp/>jets.end(),<sp/>cmpfn);</highlight></codeline>
+<codeline lineno="394"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="395"><highlight class="normal"></highlight></codeline>
+<codeline lineno="397" refid="Utils_8hpp_1a4fdf4a31732240b6ec1f4f92cb130a19" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1a4fdf4a31732240b6ec1f4f92cb130a19" kindref="member">cmpJetsByPt</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>HEPUtils::Jet*<sp/>jet1,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>HEPUtils::Jet*<sp/>jet2)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>jet1-&gt;pT()<sp/>&gt;<sp/>jet2-&gt;pT();<sp/>}</highlight></codeline>
+<codeline lineno="398"><highlight class="normal"></highlight></codeline>
+<codeline lineno="399"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Sort<sp/>a<sp/>jets<sp/>list<sp/>by<sp/>decreasing<sp/>pT</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="400"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>sortByPt(JetPtrs&amp;<sp/>jets)<sp/>{<sp/>sortBy(jets,<sp/>cmpJetsByPt);<sp/>}</highlight></codeline>
+<codeline lineno="402"><highlight class="normal"></highlight></codeline>
+<codeline lineno="403"><highlight class="normal"></highlight></codeline>
+<codeline lineno="405"></codeline>
+<codeline lineno="406"></codeline>
+<codeline lineno="408" refid="Utils_8hpp_1ae0ffa8d8fda0bbda592974ccbc0dd27a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1ae0ffa8d8fda0bbda592974ccbc0dd27a" kindref="member">countPt</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;const<sp/>Particle*&gt;&amp;<sp/>particles,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>pTlim)</highlight></codeline>
+<codeline lineno="409"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="410"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>sum<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="411"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Particle*<sp/>p<sp/>:<sp/>particles)</highlight></codeline>
+<codeline lineno="412"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="413"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(p-&gt;pT()<sp/>&gt;<sp/>pTlim)<sp/>{<sp/>sum++;<sp/>}</highlight></codeline>
+<codeline lineno="414"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="415"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>sum;</highlight></codeline>
+<codeline lineno="416"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="417"><highlight class="normal"></highlight></codeline>
+<codeline lineno="419" refid="Utils_8hpp_1a858795fe02f1780e07b8c98625727488" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1ae0ffa8d8fda0bbda592974ccbc0dd27a" kindref="member">countPt</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;const<sp/>Jet*&gt;&amp;<sp/>jets,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>pTlim)</highlight></codeline>
+<codeline lineno="420"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="421"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>sum<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="422"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Jet*<sp/>j<sp/>:<sp/>jets)</highlight></codeline>
+<codeline lineno="423"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="424"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(j-&gt;pT()<sp/>&gt;<sp/>pTlim)<sp/>{<sp/>sum++;<sp/>}</highlight></codeline>
+<codeline lineno="425"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="426"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>sum;</highlight></codeline>
+<codeline lineno="427"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="428"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="430"><highlight class="normal"></highlight></codeline>
+<codeline lineno="431"><highlight class="normal"></highlight></codeline>
+<codeline lineno="433"></codeline>
+<codeline lineno="434"></codeline>
+<codeline lineno="436" refid="Utils_8hpp_1ac8a67a27a9088243be6e3e74430e2b5b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1ac8a67a27a9088243be6e3e74430e2b5b" kindref="member">scalarSumPt</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;const<sp/>Particle*&gt;&amp;<sp/>particles,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>pTlim=0.)</highlight></codeline>
+<codeline lineno="437"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="438"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>sum<sp/>=<sp/>0.;</highlight></codeline>
+<codeline lineno="439"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Particle*<sp/>p<sp/>:<sp/>particles)</highlight></codeline>
+<codeline lineno="440"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<sp/></highlight></codeline>
+<codeline lineno="441"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(p-&gt;pT()<sp/>&gt;<sp/>pTlim)<sp/>{<sp/>sum<sp/>+=<sp/>p-&gt;pT();<sp/>}<sp/></highlight></codeline>
+<codeline lineno="442"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="443"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>sum;</highlight></codeline>
+<codeline lineno="444"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="445"><highlight class="normal"></highlight></codeline>
+<codeline lineno="447" refid="Utils_8hpp_1a2c1002cf9d1ec8b4c5a49ee5f45e0d38" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="Utils_8hpp_1ac8a67a27a9088243be6e3e74430e2b5b" kindref="member">scalarSumPt</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;const<sp/>Jet*&gt;&amp;<sp/>jets,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>pTlim=0.)</highlight></codeline>
+<codeline lineno="448"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="449"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>sum<sp/>=<sp/>0.;</highlight></codeline>
+<codeline lineno="450"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Jet*<sp/>j<sp/>:<sp/>jets)</highlight></codeline>
+<codeline lineno="451"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<sp/></highlight></codeline>
+<codeline lineno="452"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(j-&gt;pT()<sp/>&gt;<sp/>pTlim)<sp/>{<sp/>sum<sp/>+=<sp/>j-&gt;pT();<sp/>}<sp/></highlight></codeline>
+<codeline lineno="453"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="454"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>sum;</highlight></codeline>
+<codeline lineno="455"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="456"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="458"><highlight class="normal"></highlight></codeline>
+<codeline lineno="459"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="460"><highlight class="normal"></highlight></codeline>
+<codeline lineno="461"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/Utils.hpp"/>
+  </compounddef>
+</doxygen>

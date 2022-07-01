@@ -1,0 +1,611 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="ColliderBit__Higgs__rollcall_8hpp" kind="file" language="C++">
+    <compoundname>ColliderBit_Higgs_rollcall.hpp</compoundname>
+    <includedby refid="ColliderBit__rollcall_8hpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_rollcall.hpp</includedby>
+    <invincdepgraph>
+      <node id="1">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp</label>
+        <link refid="ColliderBit__Higgs__rollcall_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_eventloop.hpp</label>
+        <link refid="ColliderBit__eventloop_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_rollcall.hpp</label>
+        <link refid="ColliderBit__rollcall_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/generateEventPy8Collider.hpp</label>
+        <link refid="generateEventPy8Collider_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/getPy8Collider.hpp</label>
+        <link refid="getPy8Collider_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="19">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_Higgs.cpp</label>
+        <link refid="ColliderBit__Higgs_8cpp"/>
+      </node>
+      <node id="20">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp</label>
+        <link refid="ColliderBit__InterpolatedYields_8cpp"/>
+      </node>
+      <node id="21">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_LEP.cpp</label>
+        <link refid="ColliderBit__LEP_8cpp"/>
+      </node>
+      <node id="22">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_dummy.cpp</label>
+        <link refid="ColliderBit__dummy_8cpp"/>
+      </node>
+      <node id="8">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_eventloop.cpp</label>
+        <link refid="ColliderBit__eventloop_8cpp"/>
+      </node>
+      <node id="23">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/LHC_likelihoods.cpp</label>
+        <link refid="LHC__likelihoods_8cpp"/>
+      </node>
+      <node id="9">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/collider_event_weights.cpp</label>
+        <link refid="collider__event__weights_8cpp"/>
+      </node>
+      <node id="10">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getActiveProcessCodes.cpp</label>
+        <link refid="getActiveProcessCodes_8cpp"/>
+      </node>
+      <node id="11">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getAnalysisContainer.cpp</label>
+        <link refid="getAnalysisContainer_8cpp"/>
+      </node>
+      <node id="12">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getBuckFast.cpp</label>
+        <link refid="getBuckFast_8cpp"/>
+      </node>
+      <node id="13">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getHepMCEvent.cpp</label>
+        <link refid="getHepMCEvent_8cpp"/>
+      </node>
+      <node id="14">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getLHEvent.cpp</label>
+        <link refid="getLHEvent_8cpp"/>
+      </node>
+      <node id="15">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getxsec.cpp</label>
+        <link refid="getxsec_8cpp"/>
+      </node>
+      <node id="24">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/lep_mssm_xsecs.cpp</label>
+        <link refid="lep__mssm__xsecs_8cpp"/>
+      </node>
+      <node id="5">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/models/SUSY.cpp</label>
+        <link refid="SUSY_8cpp"/>
+      </node>
+      <node id="6">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/models/SUSY_extras.cpp</label>
+        <link refid="SUSY__extras_8cpp"/>
+      </node>
+      <node id="16">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/process_code_PID_pair_mapping.cpp</label>
+        <link refid="process__code__PID__pair__mapping_8cpp"/>
+      </node>
+      <node id="17">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/runAnalyses.cpp</label>
+        <link refid="runAnalyses_8cpp"/>
+      </node>
+      <node id="18">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/smearEvent.cpp</label>
+        <link refid="smearEvent_8cpp"/>
+      </node>
+    </invincdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="ColliderBit__Higgs__rollcall_8hpp_1a2c63ae95fe7c6106ae1ec9c283afa486" prot="public" static="no">
+        <name>MODULE</name>
+        <initializer>ColliderBit</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="31" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="ColliderBit__Higgs__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" prot="public" static="no">
+        <name>CAPABILITY</name>
+        <initializer>HB_ModelParameters</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="34" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="112" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="ColliderBit__Higgs__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
+        <name>FUNCTION</name>
+        <initializer>SMLikeHiggs_ModelParameters</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="38" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="114" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="ColliderBit__Higgs__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
+        <name>FUNCTION</name>
+        <initializer>MSSMLikeHiggs_ModelParameters</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="48" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="114" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="ColliderBit__Higgs__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" prot="public" static="no">
+        <name>CAPABILITY</name>
+        <initializer>LEP_Higgs_LogLike</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="59" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="112" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="ColliderBit__Higgs__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
+        <name>FUNCTION</name>
+        <initializer>calc_HB_LEP_LogLike</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="62" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="114" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="ColliderBit__Higgs__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" prot="public" static="no">
+        <name>CAPABILITY</name>
+        <initializer>LHC_Higgs_LogLike</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="85" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="112" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="ColliderBit__Higgs__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
+        <name>FUNCTION</name>
+        <initializer>calc_HS_LHC_LogLike</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="88" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="114" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="ColliderBit__Higgs__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" prot="public" static="no">
+        <name>CAPABILITY</name>
+        <initializer>Higgs_Production_Xsecs</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="112" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="112" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="ColliderBit__Higgs__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
+        <name>FUNCTION</name>
+        <initializer>FeynHiggs_HiggsProd</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="114" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="114" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="ColliderBit__Higgs__rollcall_8hpp_1a20c1711a4ff23ebd25d08658dcc141c8" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>double double double double double double double double libhiggsbounds</definition>
+        <argsstring></argsstring>
+        <name>libhiggsbounds</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="72" column="6" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="ColliderBit__Higgs__rollcall_8hpp_1a4d6f9cba7a867b5ab9a7f41353932d9a" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>double double double double double double double double void</definition>
+        <argsstring></argsstring>
+        <name>void</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="72" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="ColliderBit__Higgs__rollcall_8hpp_1a2318686539a3dfadc0634669cbaa02c2" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>double double double double double double double double libhiggssignals</definition>
+        <argsstring></argsstring>
+        <name>libhiggssignals</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="98" column="6" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="98" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="ColliderBit__Higgs__rollcall_8hpp_1ae491e0447495774707f9f5d935c7d28e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>BACKEND_REQ</definition>
+        <argsstring>(HiggsBounds_neutral_input_part,(libhiggsbounds), void,(double *, double *, int *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *)) BACKEND_REQ(HiggsBounds_charged_input</argsstring>
+        <name>BACKEND_REQ</name>
+        <param>
+          <type>HiggsBounds_neutral_input_part</type>
+        </param>
+        <param>
+          <type>(libhiggsbounds)</type>
+        </param>
+        <param>
+          <type>void</type>
+        </param>
+        <param>
+          <type>(double *, double *, int *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *)</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="65" column="5"/>
+      </memberdef>
+      <memberdef kind="function" id="ColliderBit__Higgs__rollcall_8hpp_1a5ea6164ddb0bad4bec961e815e4af3a2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double double double double double double double double *</type>
+        <definition>double double double double double double double double * BACKEND_REQ</definition>
+        <argsstring>(HiggsBounds_set_mass_uncertainties,(libhiggsbounds), void,(double *, double *)) BACKEND_REQ(run_HiggsBounds_classic</argsstring>
+        <name>BACKEND_REQ</name>
+        <param>
+          <type>HiggsBounds_set_mass_uncertainties</type>
+        </param>
+        <param>
+          <type>(libhiggsbounds)</type>
+        </param>
+        <param>
+          <type>void</type>
+        </param>
+        <param>
+          <type>(double *, double *)</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="75" column="5"/>
+      </memberdef>
+      <memberdef kind="function" id="ColliderBit__Higgs__rollcall_8hpp_1ac52848c28e7dc3216830e341c7564434" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double double double double double double double double int int double int &amp;</type>
+        <definition>double double double double double double double double int int double int &amp; BACKEND_REQ</definition>
+        <argsstring>(HB_calc_stats,(libhiggsbounds), void,(double &amp;, double &amp;, double &amp;, int &amp;)) BACKEND_OPTION((HiggsBounds)</argsstring>
+        <name>BACKEND_REQ</name>
+        <param>
+          <type>HB_calc_stats</type>
+        </param>
+        <param>
+          <type>(libhiggsbounds)</type>
+        </param>
+        <param>
+          <type>void</type>
+        </param>
+        <param>
+          <type>(double &amp;, double &amp;, double &amp;, int &amp;)</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="77" column="5"/>
+      </memberdef>
+      <memberdef kind="function" id="ColliderBit__Higgs__rollcall_8hpp_1a5b00f170a307a213d8ff9c222b859fa5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>BACKEND_REQ</definition>
+        <argsstring>(HiggsBounds_neutral_input_part_HS,(libhiggssignals), void,(double *, double *, int *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *)) BACKEND_REQ(HiggsBounds_charged_input_HS</argsstring>
+        <name>BACKEND_REQ</name>
+        <param>
+          <type>HiggsBounds_neutral_input_part_HS</type>
+        </param>
+        <param>
+          <type>(libhiggssignals)</type>
+        </param>
+        <param>
+          <type>void</type>
+        </param>
+        <param>
+          <type>(double *, double *, int *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *, double *)</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="91" column="5"/>
+      </memberdef>
+      <memberdef kind="function" id="ColliderBit__Higgs__rollcall_8hpp_1a63c81cb40f64b6aac260f8e034429169" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double double double double double double double double *</type>
+        <definition>double double double double double double double double * BACKEND_REQ</definition>
+        <argsstring>(run_HiggsSignals,(libhiggssignals), void,(int &amp;, double &amp;, double &amp;, double &amp;, int &amp;, double &amp;)) BACKEND_REQ(HiggsSignals_neutral_input_MassUncertainty</argsstring>
+        <name>BACKEND_REQ</name>
+        <param>
+          <type>run_HiggsSignals</type>
+        </param>
+        <param>
+          <type>(libhiggssignals)</type>
+        </param>
+        <param>
+          <type>void</type>
+        </param>
+        <param>
+          <type>(int &amp;, double &amp;, double &amp;, double &amp;, int &amp;, double &amp;)</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="101" column="5"/>
+      </memberdef>
+      <memberdef kind="function" id="ColliderBit__Higgs__rollcall_8hpp_1a0bb8d141c7ea7998209befa9d16ac1f1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double double double double double double double double double *</type>
+        <definition>double double double double double double double double double * BACKEND_REQ</definition>
+        <argsstring>(setup_rate_uncertainties,(libhiggssignals), void,(double *, double *)) BACKEND_OPTION((HiggsSignals</argsstring>
+        <name>BACKEND_REQ</name>
+        <param>
+          <type>setup_rate_uncertainties</type>
+        </param>
+        <param>
+          <type>(libhiggssignals)</type>
+        </param>
+        <param>
+          <type>void</type>
+        </param>
+        <param>
+          <type>(double *, double *)</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="103" column="5"/>
+      </memberdef>
+      <memberdef kind="function" id="ColliderBit__Higgs__rollcall_8hpp_1a0c73275e08ea80a7ec5a209dcf5cddc7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>BACKEND_REQ</definition>
+        <argsstring>(FHHiggsProd,(libfeynhiggs), void,(int &amp;, fh_real &amp;, Farray&lt; fh_real, 1, 52 &gt; &amp;)) BACKEND_OPTION((FeynHiggs)</argsstring>
+        <name>BACKEND_REQ</name>
+        <param>
+          <type>FHHiggsProd</type>
+        </param>
+        <param>
+          <type>(libfeynhiggs)</type>
+        </param>
+        <param>
+          <type>void</type>
+        </param>
+        <param>
+          <type>(int &amp;, fh_real &amp;, Farray&lt; fh_real, 1, 52 &gt; &amp;)</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="116" column="5"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Rollcall header for ColliderBit module Higgs functions.</para>
+<para><hruler/>
+</para>
+<para>Authors (add name and date if you modify):</para>
+<para><simplesect kind="author"><para>Christopher Rogan (<ulink url="mailto:christophersrogan@gmail.com">christophersrogan@gmail.com</ulink>) </para>
+</simplesect>
+<simplesect kind="date"><para>2015 Apr</para>
+</simplesect>
+<simplesect kind="author"><para>Pat Scott (<ulink url="mailto:p.scott@imperial.ac.uk">p.scott@imperial.ac.uk</ulink>) </para>
+</simplesect>
+<simplesect kind="date"><para>2015 Jul</para>
+</simplesect>
+<simplesect kind="author"><para>Sanjay Bloor (<ulink url="mailto:sanjay.bloor12@imperial.ac.uk">sanjay.bloor12@imperial.ac.uk</ulink>) </para>
+</simplesect>
+<simplesect kind="date"><para>2019 Feb</para>
+</simplesect>
+<simplesect kind="author"><para>Tomas Gonzalo (<ulink url="mailto:tomas.gonzalo@monash.edu">tomas.gonzalo@monash.edu</ulink>) </para>
+</simplesect>
+<simplesect kind="date"><para>2020 Mar</para>
+</simplesect>
+<hruler/>
+ </para>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">//<sp/><sp/><sp/>GAMBIT:<sp/>Global<sp/>and<sp/>Modular<sp/>BSM<sp/>Inference<sp/>Tool</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/>*********************************************</highlight></codeline>
+<codeline lineno="28"><highlight class="comment"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>MODULE<sp/>ColliderBit</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>HiggsBounds<sp/>input<sp/>model<sp/>parameters</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/>#define<sp/>CAPABILITY<sp/>HB_ModelParameters</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/>START_CAPABILITY</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>SM-like<sp/>Higgs<sp/>model<sp/>parameters,<sp/>for<sp/>SM<sp/>and<sp/>BSM<sp/>models<sp/>with<sp/>only<sp/>one<sp/>Higgs.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>FUNCTION<sp/>SMLikeHiggs_ModelParameters</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/>START_FUNCTION(hb_ModelParameters)</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/>MODEL_CONDITIONAL_DEPENDENCY(SM_spectrum,<sp/>Spectrum,<sp/>StandardModel_Higgs,<sp/>StandardModel_Higgs_running)</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/>MODEL_CONDITIONAL_DEPENDENCY(ScalarSingletDM_Z2_spectrum,<sp/>Spectrum,<sp/>ScalarSingletDM_Z2,<sp/>ScalarSingletDM_Z2_running)</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/>MODEL_CONDITIONAL_DEPENDENCY(ScalarSingletDM_Z3_spectrum,<sp/>Spectrum,<sp/>ScalarSingletDM_Z3,<sp/>ScalarSingletDM_Z3_running)</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/>ALLOW_MODELS(StandardModel_Higgs_running,<sp/>ScalarSingletDM_Z3_running,<sp/>ScalarSingletDM_Z2_running)</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/>DEPENDENCY(Higgs_Couplings,<sp/>HiggsCouplingsTable)</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="preprocessor">#undef<sp/>FUNCTION</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>MSSM-like<sp/>Higgs<sp/>model<sp/>parameters,<sp/>for<sp/>BSM<sp/>models<sp/>with<sp/>MSSM-like<sp/>sectors<sp/>(MSSM,<sp/>NMSSM,<sp/>...)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>FUNCTION<sp/>MSSMLikeHiggs_ModelParameters</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/>START_FUNCTION(hb_ModelParameters)</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/>MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum,<sp/>Spectrum,<sp/>MSSM63atQ,<sp/>MSSM63atMGUT)</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/>ALLOW_MODELS(MSSM63atMGUT,<sp/>MSSM63atQ)</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/>DEPENDENCY(Higgs_Couplings,<sp/>HiggsCouplingsTable)</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="preprocessor">#undef<sp/>FUNCTION</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/>#undef<sp/>CAPABILITY</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Get<sp/>a<sp/>LEP<sp/>Higgs<sp/>chisq</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/>#define<sp/>CAPABILITY<sp/>LEP_Higgs_LogLike</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/>START_CAPABILITY</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>FUNCTION<sp/>calc_HB_LEP_LogLike</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/>START_FUNCTION(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/>DEPENDENCY(HB_ModelParameters,<sp/>hb_ModelParameters)</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/>BACKEND_REQ(HiggsBounds_neutral_input_part,<sp/>(libhiggsbounds),<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*))</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/>BACKEND_REQ(HiggsBounds_charged_input,<sp/>(libhiggsbounds),<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*))</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/>BACKEND_REQ(HiggsBounds_set_mass_uncertainties,<sp/>(libhiggsbounds),<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">,<sp/>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*))</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/>BACKEND_REQ(run_HiggsBounds_classic,<sp/>(libhiggsbounds),<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">,<sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal">&amp;,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">&amp;,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">&amp;,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">&amp;))</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/>BACKEND_REQ(HB_calc_stats,<sp/>(libhiggsbounds),<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">,<sp/>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal">&amp;,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">&amp;,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">&amp;,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">&amp;))</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/>BACKEND_OPTION(<sp/>(HiggsBounds),<sp/>(libhiggsbounds)<sp/>)</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="preprocessor">#undef<sp/>FUNCTION</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/>#undef<sp/>CAPABILITY</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Get<sp/>an<sp/>LHC<sp/>Higgs<sp/>chisq</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/>#define<sp/>CAPABILITY<sp/>LHC_Higgs_LogLike</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/>START_CAPABILITY</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>FUNCTION<sp/>calc_HS_LHC_LogLike</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/>START_FUNCTION(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/>DEPENDENCY(HB_ModelParameters,<sp/>hb_ModelParameters)</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/>BACKEND_REQ(HiggsBounds_neutral_input_part_HS,<sp/>(libhiggssignals),<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*))</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/>BACKEND_REQ(HiggsBounds_charged_input_HS,<sp/>(libhiggssignals),<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*))</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/>BACKEND_REQ(run_HiggsSignals,<sp/>(libhiggssignals),<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">,<sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal">&amp;,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">&amp;,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">&amp;,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">&amp;,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">&amp;,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">&amp;))</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/>BACKEND_REQ(HiggsSignals_neutral_input_MassUncertainty,<sp/>(libhiggssignals),<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">,<sp/>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*))</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/>BACKEND_REQ(setup_rate_uncertainties,<sp/>(libhiggssignals),<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">,<sp/>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">*))</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/>BACKEND_OPTION(<sp/>(HiggsSignals,<sp/>1.4),<sp/>(libhiggssignals)<sp/>)</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="preprocessor">#undef<sp/>FUNCTION</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"></highlight></codeline>
+<codeline lineno="107"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/>#undef<sp/>CAPABILITY</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="108"><highlight class="normal"></highlight></codeline>
+<codeline lineno="109"><highlight class="normal"></highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Higgs<sp/>production<sp/>cross-sections<sp/>from<sp/>FeynHiggs.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Not<sp/>presently<sp/>used<sp/>by<sp/>anything,<sp/>but<sp/>maybe<sp/>useful<sp/>in<sp/>the<sp/>future.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="112"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/>#define<sp/>CAPABILITY<sp/>Higgs_Production_Xsecs</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/>START_CAPABILITY</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>FUNCTION<sp/>FeynHiggs_HiggsProd</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/>START_FUNCTION(fh_HiggsProd_container)</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/>BACKEND_REQ(FHHiggsProd,<sp/>(libfeynhiggs),<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">,<sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal">&amp;,<sp/>fh_real&amp;,<sp/>Farray&lt;<sp/>fh_real,1,52&gt;&amp;))</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/>BACKEND_OPTION(<sp/>(FeynHiggs),<sp/>(libfeynhiggs)<sp/>)</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="preprocessor">#undef<sp/>FUNCTION</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="119"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/>#undef<sp/>CAPABILITY</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="120"><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"></highlight></codeline>
+<codeline lineno="122"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>MODULE</highlight></codeline>
+    </programlisting>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp"/>
+  </compounddef>
+</doxygen>

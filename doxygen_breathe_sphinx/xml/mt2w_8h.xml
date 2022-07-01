@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="mt2w_8h" kind="file" language="C++">
+    <compoundname>mt2w.h</compoundname>
+    <includes refid="mt2w__bisect_8h" local="yes">mt2w_bisect.h</includes>
+    <includes local="no">vector</includes>
+    <includes local="yes">HEPUtils/MathUtils.h</includes>
+    <includes local="yes">HEPUtils/Event.h</includes>
+    <includedby refid="Analysis__CMS__8TeV__1LEPDMTOP__20invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_1LEPDMTOP_20invfb.cpp</includedby>
+    <includedby refid="mt2w_8cc" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2w.cc</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w.h</label>
+        <link refid="mt2w_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>mt2w_bisect.h</label>
+        <link refid="mt2w__bisect_8h_source"/>
+      </node>
+      <node id="5">
+        <label>HEPUtils/Event.h</label>
+      </node>
+      <node id="4">
+        <label>HEPUtils/MathUtils.h</label>
+      </node>
+      <node id="3">
+        <label>vector</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="mt2w_8h_1a346d7b146b8ed00957aa22ae2b5693a6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double calculateMT2wHepUtils</definition>
+        <argsstring>(vector&lt; HEPUtils::P4 &gt; &amp;jets, vector&lt; bool &gt; &amp;btag, HEPUtils::P4 &amp;lep, float met, float metphi)</argsstring>
+        <name>calculateMT2wHepUtils</name>
+        <param>
+          <type>vector&lt; HEPUtils::P4 &gt; &amp;</type>
+          <declname>jets</declname>
+        </param>
+        <param>
+          <type>vector&lt; bool &gt; &amp;</type>
+          <declname>btag</declname>
+        </param>
+        <param>
+          <type>HEPUtils::P4 &amp;</type>
+          <declname>lep</declname>
+        </param>
+        <param>
+          <type>float</type>
+          <declname>met</declname>
+        </param>
+        <param>
+          <type>float</type>
+          <declname>metphi</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w.h" line="8" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2w.cc" bodystart="3" bodyend="80" declfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w.h" declline="8" declcolumn="8"/>
+      </memberdef>
+      <memberdef kind="function" id="mt2w_8h_1ad232ca7013f202adc10e0ca14d7a71da" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double mt2wWrapperHepUtils</definition>
+        <argsstring>(HEPUtils::P4 &amp;lep, HEPUtils::P4 &amp;jet_o, HEPUtils::P4 &amp;jet_b, float met, float metphi)</argsstring>
+        <name>mt2wWrapperHepUtils</name>
+        <param>
+          <type>HEPUtils::P4 &amp;</type>
+          <declname>lep</declname>
+        </param>
+        <param>
+          <type>HEPUtils::P4 &amp;</type>
+          <declname>jet_o</declname>
+        </param>
+        <param>
+          <type>HEPUtils::P4 &amp;</type>
+          <declname>jet_b</declname>
+        </param>
+        <param>
+          <type>float</type>
+          <declname>met</declname>
+        </param>
+        <param>
+          <type>float</type>
+          <declname>metphi</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w.h" line="10" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2w.cc" bodystart="84" bodyend="107" declfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w.h" declline="10" declcolumn="8"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&quot;mt2w_bisect.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;vector&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;HEPUtils/MathUtils.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;HEPUtils/Event.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>calculateMT2wHepUtils(vector&lt;HEPUtils::P4&gt;&amp;<sp/>jets,<sp/>vector&lt;bool&gt;&amp;<sp/>btag,<sp/>HEPUtils::P4&amp;<sp/>lep,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>met,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>metphi);</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>mt2wWrapperHepUtils(HEPUtils::P4&amp;<sp/>lep,<sp/>HEPUtils::P4&amp;<sp/>jet_o,<sp/>HEPUtils::P4&amp;<sp/>jet_b,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>met,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>metphi);</highlight></codeline>
+    </programlisting>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w.h"/>
+  </compounddef>
+</doxygen>

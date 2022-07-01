@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="structGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__36invfb_1_1ptComparison" kind="struct" language="C++" prot="public">
+    <compoundname>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_36invfb::ptComparison</compoundname>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__36invfb_1_1ptComparison_1a41fb877d83460ab48d7c4fd8380ad4bd" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_36invfb::ptComparison::operator()</definition>
+        <argsstring>(const HEPUtils::Particle *i, const HEPUtils::Particle *j)</argsstring>
+        <name>operator()</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_36invfb::ptComparison::operator()</qualifiedname>
+        <param>
+          <type>const HEPUtils::Particle *</type>
+          <declname>i</declname>
+        </param>
+        <param>
+          <type>const HEPUtils::Particle *</type>
+          <declname>j</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_36invfb.cpp" line="61" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_36invfb.cpp" bodystart="61" bodyend="61"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_36invfb.cpp" line="60" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_36invfb.cpp" bodystart="60" bodyend="62"/>
+    <listofallmembers>
+      <member refid="structGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__36invfb_1_1ptComparison_1a41fb877d83460ab48d7c4fd8380ad4bd" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_36invfb::ptComparison</scope><name>operator()</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

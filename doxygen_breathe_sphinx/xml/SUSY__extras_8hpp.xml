@@ -1,0 +1,454 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="SUSY__extras_8hpp" kind="file" language="C++">
+    <compoundname>SUSY_extras.hpp</compoundname>
+      <sectiondef kind="user-defined">
+      <memberdef kind="define" id="SUSY__extras_8hpp_1a99414bf65bb722f6204c37c7a507b92f" prot="public" static="no">
+        <name>CAPABILITY</name>
+        <initializer>HardScatteringSim</initializer>
+        <briefdescription>
+<para>A map between PID pairs and cross-sections. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Cross-sections for weighting events by production process</para>
+<para>Get SLHA content from one or more SLHA files</para>
+<para>Extract SLHA file elements (for model ColliderBit_SLHA_file_model)</para>
+<para>Extract an SLHAstruct with the spectrum </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="23" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="163" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="SUSY__extras_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
+        <name>FUNCTION</name>
+        <initializer>getPythia_SLHA</initializer>
+        <briefdescription>
+<para>Get the PIDPairCrossSectionsMap using the Prospino backend. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Get the next SLHA filename and content (for model ColliderBit_SLHA_file_model)</para>
+<para>Read single SLHA file and replace some entries for use with model ColliderBit_SLHA_scan_model </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="25" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="165" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="SUSY__extras_8hpp_1a99414bf65bb722f6204c37c7a507b92f" prot="public" static="no">
+        <name>CAPABILITY</name>
+        <initializer>PIDPairCrossSectionsMap</initializer>
+        <briefdescription>
+<para>A map between PID pairs and cross-sections. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Cross-sections for weighting events by production process</para>
+<para>Get SLHA content from one or more SLHA files</para>
+<para>Extract SLHA file elements (for model ColliderBit_SLHA_file_model)</para>
+<para>Extract an SLHAstruct with the spectrum </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="42" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="163" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="SUSY__extras_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
+        <name>FUNCTION</name>
+        <initializer>getPIDPairCrossSectionsMap_prospino</initializer>
+        <briefdescription>
+<para>Get the PIDPairCrossSectionsMap using the Prospino backend. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Get the next SLHA filename and content (for model ColliderBit_SLHA_file_model)</para>
+<para>Read single SLHA file and replace some entries for use with model ColliderBit_SLHA_scan_model </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="63" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="165" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="SUSY__extras_8hpp_1a99414bf65bb722f6204c37c7a507b92f" prot="public" static="no">
+        <name>CAPABILITY</name>
+        <initializer>SLHAFileNameAndContent</initializer>
+        <briefdescription>
+<para>A map between PID pairs and cross-sections. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Cross-sections for weighting events by production process</para>
+<para>Get SLHA content from one or more SLHA files</para>
+<para>Extract SLHA file elements (for model ColliderBit_SLHA_file_model)</para>
+<para>Extract an SLHAstruct with the spectrum </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="102" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="163" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="SUSY__extras_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
+        <name>FUNCTION</name>
+        <initializer>getNextSLHAFileNameAndContent</initializer>
+        <briefdescription>
+<para>Get the PIDPairCrossSectionsMap using the Prospino backend. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Get the next SLHA filename and content (for model ColliderBit_SLHA_file_model)</para>
+<para>Read single SLHA file and replace some entries for use with model ColliderBit_SLHA_scan_model </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="106" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="165" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="SUSY__extras_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
+        <name>FUNCTION</name>
+        <initializer>getAndReplaceSLHAContent</initializer>
+        <briefdescription>
+<para>Get the PIDPairCrossSectionsMap using the Prospino backend. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Get the next SLHA filename and content (for model ColliderBit_SLHA_file_model)</para>
+<para>Read single SLHA file and replace some entries for use with model ColliderBit_SLHA_scan_model </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="113" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="165" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="SUSY__extras_8hpp_1a99414bf65bb722f6204c37c7a507b92f" prot="public" static="no">
+        <name>CAPABILITY</name>
+        <initializer>SLHAFileElements</initializer>
+        <briefdescription>
+<para>A map between PID pairs and cross-sections. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Cross-sections for weighting events by production process</para>
+<para>Get SLHA content from one or more SLHA files</para>
+<para>Extract SLHA file elements (for model ColliderBit_SLHA_file_model)</para>
+<para>Extract an SLHAstruct with the spectrum </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="124" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="163" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="SUSY__extras_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
+        <name>FUNCTION</name>
+        <initializer>getSLHAFileElements</initializer>
+        <briefdescription>
+<para>Get the PIDPairCrossSectionsMap using the Prospino backend. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Get the next SLHA filename and content (for model ColliderBit_SLHA_file_model)</para>
+<para>Read single SLHA file and replace some entries for use with model ColliderBit_SLHA_scan_model </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="126" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="165" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="SUSY__extras_8hpp_1a99414bf65bb722f6204c37c7a507b92f" prot="public" static="no">
+        <name>CAPABILITY</name>
+        <initializer>SLHA1Spectrum</initializer>
+        <briefdescription>
+<para>A map between PID pairs and cross-sections. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Cross-sections for weighting events by production process</para>
+<para>Get SLHA content from one or more SLHA files</para>
+<para>Extract SLHA file elements (for model ColliderBit_SLHA_file_model)</para>
+<para>Extract an SLHAstruct with the spectrum </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="137" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="163" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="SUSY__extras_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
+        <name>FUNCTION</name>
+        <initializer>getSLHA1Spectrum</initializer>
+        <briefdescription>
+<para>Get the PIDPairCrossSectionsMap using the Prospino backend. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Get the next SLHA filename and content (for model ColliderBit_SLHA_file_model)</para>
+<para>Read single SLHA file and replace some entries for use with model ColliderBit_SLHA_scan_model </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="139" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="165" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="SUSY__extras_8hpp_1a99414bf65bb722f6204c37c7a507b92f" prot="public" static="no">
+        <name>CAPABILITY</name>
+        <initializer>SLHA2Spectrum</initializer>
+        <briefdescription>
+<para>A map between PID pairs and cross-sections. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Cross-sections for weighting events by production process</para>
+<para>Get SLHA content from one or more SLHA files</para>
+<para>Extract SLHA file elements (for model ColliderBit_SLHA_file_model)</para>
+<para>Extract an SLHAstruct with the spectrum </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="149" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="163" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="SUSY__extras_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
+        <name>FUNCTION</name>
+        <initializer>getSLHA2Spectrum</initializer>
+        <briefdescription>
+<para>Get the PIDPairCrossSectionsMap using the Prospino backend. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Get the next SLHA filename and content (for model ColliderBit_SLHA_file_model)</para>
+<para>Read single SLHA file and replace some entries for use with model ColliderBit_SLHA_scan_model </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="151" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="165" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="SUSY__extras_8hpp_1a99414bf65bb722f6204c37c7a507b92f" prot="public" static="no">
+        <name>CAPABILITY</name>
+        <initializer>susy_spectrum_scan_guide</initializer>
+        <briefdescription>
+<para>A map between PID pairs and cross-sections. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Cross-sections for weighting events by production process</para>
+<para>Get SLHA content from one or more SLHA files</para>
+<para>Extract SLHA file elements (for model ColliderBit_SLHA_file_model)</para>
+<para>Extract an SLHAstruct with the spectrum </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="163" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="163" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="SUSY__extras_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
+        <name>FUNCTION</name>
+        <initializer>calc_susy_spectrum_scan_guide</initializer>
+        <briefdescription>
+<para>Get the PIDPairCrossSectionsMap using the Prospino backend. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Get the next SLHA filename and content (for model ColliderBit_SLHA_file_model)</para>
+<para>Read single SLHA file and replace some entries for use with model ColliderBit_SLHA_scan_model </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="165" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="165" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="user-defined">
+      <memberdef kind="variable" id="SUSY__extras_8hpp_1a8c2262ca12ddadc6b0e6d44a3f133a3d" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>libprospino</definition>
+        <argsstring></argsstring>
+        <name>libprospino</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="72" column="6" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="SUSY__extras_8hpp_1ac9c84fa68bbad002983e35ce3663c686" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>void</definition>
+        <argsstring></argsstring>
+        <name>void</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="72" column="18" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="function" id="SUSY__extras_8hpp_1ac4868b56ac0efaa91a49d7c8c761ba79" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>BACKEND_REQ</definition>
+        <argsstring>(prospino_run,(libprospino), map_str_dbl,(const PID_pair &amp;, const Options &amp;)) BACKEND_REQ(prospino_read_slha1_input</argsstring>
+        <name>BACKEND_REQ</name>
+        <param>
+          <type>prospino_run</type>
+        </param>
+        <param>
+          <type>(libprospino)</type>
+        </param>
+        <param>
+          <type>map_str_dbl</type>
+        </param>
+        <param>
+          <type>(const PID_pair &amp;, const Options &amp;)</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><xrefsect id="todo_1_todo000040"><xreftitle>Todo</xreftitle><xrefdescription><para>Extend to also allow models ColliderBit_SLHA_file_model, ColliderBit_SLHA_scan_model </para>
+</xrefdescription></xrefsect></para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="71" column="5"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="SUSY__extras_8hpp_1a2c63ae95fe7c6106ae1ec9c283afa486" prot="public" static="no">
+        <name>MODULE</name>
+        <initializer>ColliderBit</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="20" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Rollcall header for ColliderBit module; extra things for SUSY models</para>
+<para><hruler/>
+</para>
+<para>Authors (add name and date if you modify):</para>
+<para><simplesect kind="author"><para>Anders Kvellestad (<ulink url="mailto:anders.kvellestad@fys.uio.no">anders.kvellestad@fys.uio.no</ulink>) </para>
+</simplesect>
+<simplesect kind="date"><para>2020 Dec</para>
+</simplesect>
+<hruler/>
+ </para>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">//<sp/><sp/><sp/>GAMBIT:<sp/>Global<sp/>and<sp/>Modular<sp/>BSM<sp/>Inference<sp/>Tool</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/>*********************************************</highlight></codeline>
+<codeline lineno="17"><highlight class="comment"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>MODULE<sp/>ColliderBit</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Get<sp/>Monte<sp/>Carlo<sp/>event<sp/>generator<sp/>based<sp/>on<sp/>SLHA<sp/>file<sp/>input</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/>#define<sp/>CAPABILITY<sp/>HardScatteringSim</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>FUNCTION<sp/>getPythia_SLHA</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/>START_FUNCTION(Py8Collider_defaultversion)</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/>NEEDS_MANAGER(RunMC,<sp/>MCLoopInfo)</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/>NEEDS_CLASSES_FROM(Pythia,<sp/></highlight><highlight class="keywordflow">default</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/>ALLOW_MODELS(ColliderBit_SLHA_file_model,<sp/>ColliderBit_SLHA_scan_model)</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/>DEPENDENCY(SLHAFileNameAndContent,<sp/>pair_str_SLHAstruct)</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="preprocessor">#undef<sp/>FUNCTION</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/>#undef<sp/>CAPABILITY</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"></codeline>
+<codeline lineno="42"><highlight class="preprocessor"><sp/><sp/>#define<sp/>CAPABILITY<sp/>PIDPairCrossSectionsMap</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#ifdef<sp/>HAVE_PYBIND11</highlight></codeline>
+<codeline lineno="48"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/>#define<sp/>FUNCTION<sp/>getPIDPairCrossSectionsMap_xsecBE</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>START_FUNCTION(map_PID_pair_PID_pair_xsec)</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>NEEDS_MANAGER(RunMC,<sp/>MCLoopInfo)</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>DEPENDENCY(ActivePIDPairs,<sp/>vec_PID_pair)</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>DEPENDENCY(SLHA1Spectrum,<sp/>SLHAstruct)</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>ALLOW_MODELS(MSSM63atQ,<sp/>MSSM63atMGUT)</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>ALLOW_MODELS(MSSM63atQ_mA,<sp/>MSSM63atMGUT_mA)</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>ALLOW_MODELS(ColliderBit_SLHA_file_model,<sp/>ColliderBit_SLHA_scan_model)</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="SUSY__extras_8hpp_1ac4868b56ac0efaa91a49d7c8c761ba79" kindref="member">BACKEND_REQ</ref>(xsecBE_import_slha_string,<sp/>(),<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">,<sp/>(std::string&amp;))</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="SUSY__extras_8hpp_1ac4868b56ac0efaa91a49d7c8c761ba79" kindref="member">BACKEND_REQ</ref>(xsecBE_set_parameters,<sp/>(),<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">,<sp/>(PyDict&amp;))</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="SUSY__extras_8hpp_1ac4868b56ac0efaa91a49d7c8c761ba79" kindref="member">BACKEND_REQ</ref>(xsecBE_get_xsection,<sp/>(),<sp/>PyDict,<sp/>(iipair&amp;))</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="preprocessor">#undef<sp/>FUNCTION</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>FUNCTION<sp/>getPIDPairCrossSectionsMap_prospino</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/>START_FUNCTION(map_PID_pair_PID_pair_xsec)</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/>NEEDS_MANAGER(RunMC,<sp/>MCLoopInfo)</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/>DEPENDENCY(ActivePIDPairs,<sp/>vec_PID_pair)</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/>DEPENDENCY(SLHA1Spectrum,<sp/>SLHAstruct)</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/>ALLOW_MODELS(MSSM63atQ,<sp/>MSSM63atMGUT)</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/>ALLOW_MODELS(MSSM63atQ_mA,<sp/>MSSM63atMGUT_mA)</highlight></codeline>
+<codeline lineno="71" refid="SUSY__extras_8hpp_1ac4868b56ac0efaa91a49d7c8c761ba79" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="SUSY__extras_8hpp_1ac4868b56ac0efaa91a49d7c8c761ba79" kindref="member">BACKEND_REQ</ref>(prospino_run,<sp/>(libprospino),<sp/>map_str_dbl,<sp/>(const<sp/>PID_pair&amp;,<sp/>const<sp/>Options&amp;))</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="SUSY__extras_8hpp_1ac4868b56ac0efaa91a49d7c8c761ba79" kindref="member">BACKEND_REQ</ref>(prospino_read_slha1_input,<sp/>(libprospino),<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">,<sp/>(const<sp/>SLHAstruct&amp;))</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="preprocessor">#undef<sp/>FUNCTION</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight></codeline>
+<codeline lineno="75"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#ifdef<sp/>HAVE_PYBIND11</highlight></codeline>
+<codeline lineno="79"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/>#define<sp/>FUNCTION<sp/>getPIDPairCrossSectionsMap_salami</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>START_FUNCTION(map_PID_pair_PID_pair_xsec)</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>NEEDS_MANAGER(RunMC,<sp/>MCLoopInfo)</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>DEPENDENCY(ActivePIDPairs,<sp/>vec_PID_pair)</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>DEPENDENCY(SLHA1Spectrum,<sp/>SLHAstruct)</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>ALLOW_MODELS(MSSM63atQ,<sp/>MSSM63atMGUT)</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>ALLOW_MODELS(MSSM63atQ_mA,<sp/>MSSM63atMGUT_mA)</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>ALLOW_MODELS(ColliderBit_SLHA_file_model,<sp/>ColliderBit_SLHA_scan_model)</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="SUSY__extras_8hpp_1ac4868b56ac0efaa91a49d7c8c761ba79" kindref="member">BACKEND_REQ</ref>(salami_import_slha_string,<sp/>(),<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">,<sp/>(std::string&amp;))</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="SUSY__extras_8hpp_1ac4868b56ac0efaa91a49d7c8c761ba79" kindref="member">BACKEND_REQ</ref>(salami_set_parameters,<sp/>(),<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">,<sp/>(PyDict&amp;))</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="SUSY__extras_8hpp_1ac4868b56ac0efaa91a49d7c8c761ba79" kindref="member">BACKEND_REQ</ref>(salami_get_xsection,<sp/>(),<sp/>PyDict,<sp/>(iipair&amp;,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">&amp;,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">&amp;))</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Needs<sp/>Prospino<sp/>to<sp/>get<sp/>LO<sp/>cross-section</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="SUSY__extras_8hpp_1ac4868b56ac0efaa91a49d7c8c761ba79" kindref="member">BACKEND_REQ</ref>(prospino_run_alloptions,<sp/>(libprospino),<sp/>map_str_dbl,<sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>PID_pair&amp;,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">&amp;,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">&amp;,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">&amp;,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">&amp;,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">&amp;,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal">&amp;))</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="SUSY__extras_8hpp_1ac4868b56ac0efaa91a49d7c8c761ba79" kindref="member">BACKEND_REQ</ref>(prospino_read_slha1_input,<sp/>(libprospino),<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">,<sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>SLHAstruct&amp;))</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="preprocessor">#undef<sp/>FUNCTION</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="95"><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/>#undef<sp/>CAPABILITY</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"></highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight></codeline>
+<codeline lineno="102"><highlight class="preprocessor"><sp/><sp/>#define<sp/>CAPABILITY<sp/>SLHAFileNameAndContent</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/>START_CAPABILITY</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight></codeline>
+<codeline lineno="106"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>FUNCTION<sp/>getNextSLHAFileNameAndContent</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/>START_FUNCTION(pair_str_SLHAstruct)</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/>ALLOW_MODELS(ColliderBit_SLHA_file_model)</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="preprocessor">#undef<sp/>FUNCTION</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="110"><highlight class="normal"></highlight></codeline>
+<codeline lineno="113"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>FUNCTION<sp/>getAndReplaceSLHAContent</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/>START_FUNCTION(pair_str_SLHAstruct)</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/>ALLOW_MODELS(ColliderBit_SLHA_scan_model)</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="preprocessor">#undef<sp/>FUNCTION</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="117"><highlight class="normal"></highlight></codeline>
+<codeline lineno="118"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/>#undef<sp/>CAPABILITY</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"></highlight></codeline>
+<codeline lineno="124"><highlight class="preprocessor"><sp/><sp/>#define<sp/>CAPABILITY<sp/>SLHAFileElements</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/>START_CAPABILITY</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>FUNCTION<sp/>getSLHAFileElements</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/>START_FUNCTION(map_str_dbl)</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/>ALLOW_MODELS(ColliderBit_SLHA_file_model,<sp/>ColliderBit_SLHA_scan_model)</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/>DEPENDENCY(SLHAFileNameAndContent,<sp/>pair_str_SLHAstruct)</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="preprocessor">#undef<sp/>FUNCTION</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="131"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/>#undef<sp/>CAPABILITY</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"></highlight></codeline>
+<codeline lineno="134"><highlight class="normal"></highlight></codeline>
+<codeline lineno="137"><highlight class="preprocessor"><sp/><sp/>#define<sp/>CAPABILITY<sp/>SLHA1Spectrum</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/>START_CAPABILITY</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>FUNCTION<sp/>getSLHA1Spectrum</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/>START_FUNCTION(SLHAstruct)</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/>ALLOW_MODELS(MSSM63atQ,<sp/>MSSM63atMGUT)</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/>ALLOW_MODELS(MSSM63atQ_mA,<sp/>MSSM63atMGUT_mA)</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/>ALLOW_MODELS(ColliderBit_SLHA_file_model,<sp/>ColliderBit_SLHA_scan_model)</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/>MODEL_CONDITIONAL_DEPENDENCY(SLHAFileNameAndContent,<sp/>pair_str_SLHAstruct,<sp/>ColliderBit_SLHA_file_model,<sp/>ColliderBit_SLHA_scan_model)</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/>MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum,<sp/>Spectrum,<sp/>MSSM63atQ,<sp/>MSSM63atMGUT,<sp/>MSSM63atQ_mA,<sp/>MSSM63atMGUT_mA)</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="preprocessor">#undef<sp/>FUNCTION</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="147"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/>#undef<sp/>CAPABILITY</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="148"><highlight class="normal"></highlight></codeline>
+<codeline lineno="149"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/>#define<sp/>CAPABILITY<sp/>SLHA2Spectrum</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/>START_CAPABILITY</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>FUNCTION<sp/>getSLHA2Spectrum</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/>START_FUNCTION(SLHAstruct)</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/>ALLOW_MODELS(MSSM63atQ,<sp/>MSSM63atMGUT)</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/>ALLOW_MODELS(MSSM63atQ_mA,<sp/>MSSM63atMGUT_mA)</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/>ALLOW_MODELS(ColliderBit_SLHA_file_model,<sp/>ColliderBit_SLHA_scan_model)</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/>MODEL_CONDITIONAL_DEPENDENCY(SLHAFileNameAndContent,<sp/>pair_str_SLHAstruct,<sp/>ColliderBit_SLHA_file_model,<sp/>ColliderBit_SLHA_scan_model)</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/>MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum,<sp/>Spectrum,<sp/>MSSM63atQ,<sp/>MSSM63atMGUT,<sp/>MSSM63atQ_mA,<sp/>MSSM63atMGUT_mA)</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="preprocessor">#undef<sp/>FUNCTION</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="159"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/>#undef<sp/>CAPABILITY</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"></highlight></codeline>
+<codeline lineno="162"><highlight class="normal"></highlight></codeline>
+<codeline lineno="163" refid="SUSY__extras_8hpp_1a99414bf65bb722f6204c37c7a507b92f" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/>#define<sp/>CAPABILITY<sp/>susy_spectrum_scan_guide</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/>START_CAPABILITY</highlight></codeline>
+<codeline lineno="165" refid="SUSY__extras_8hpp_1aee0cf83ee6d754df700e396da8987f1f" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>FUNCTION<sp/>calc_susy_spectrum_scan_guide</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/>START_FUNCTION(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/>ALLOW_MODELS(MSSM63atQ,<sp/>MSSM63atMGUT)</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/>ALLOW_MODELS(MSSM63atQ_mA,<sp/>MSSM63atMGUT_mA)</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/>DEPENDENCY(SLHA_pseudonyms,<sp/>mass_es_pseudonyms)</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/>MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum,<sp/>Spectrum,<sp/>MSSM63atQ,<sp/>MSSM63atMGUT,<sp/>MSSM63atQ_mA,<sp/>MSSM63atMGUT_mA)</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="preprocessor">#undef<sp/>FUNCTION</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="172"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/>#undef<sp/>CAPABILITY</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="173"><highlight class="normal"></highlight></codeline>
+<codeline lineno="174"><highlight class="normal"></highlight></codeline>
+<codeline lineno="175"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>MODULE</highlight></codeline>
+    </programlisting>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp"/>
+  </compounddef>
+</doxygen>

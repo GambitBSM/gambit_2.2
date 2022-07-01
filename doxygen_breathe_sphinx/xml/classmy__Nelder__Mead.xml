@@ -1,0 +1,244 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classmy__Nelder__Mead" kind="class" language="C++" prot="public">
+    <compoundname>my_Nelder_Mead</compoundname>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classmy__Nelder__Mead_1a67902e62240c4778e2aff56e39ceba7b" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int my_Nelder_Mead::d</definition>
+        <argsstring></argsstring>
+        <name>d</name>
+        <qualifiedname>my_Nelder_Mead::d</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="209" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="209" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__Nelder__Mead_1aaebebd19b9b52e28e95ddb2352c437ae" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int my_Nelder_Mead::Ntry</definition>
+        <argsstring></argsstring>
+        <name>Ntry</name>
+        <qualifiedname>my_Nelder_Mead::Ntry</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="210" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="210" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__Nelder__Mead_1a658c6b5aa62f00bd5135f90170a20110" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_Nelder_Mead::eps</definition>
+        <argsstring></argsstring>
+        <name>eps</name>
+        <qualifiedname>my_Nelder_Mead::eps</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="211" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="211" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classmy__Nelder__Mead_1ae6f186898f01c5fcd3c24744b6145548" prot="public" static="no" mutable="no">
+        <type><ref refid="structmy__func" kindref="compound">my_func</ref> *</type>
+        <definition>my_func* my_Nelder_Mead::f</definition>
+        <argsstring></argsstring>
+        <name>f</name>
+        <qualifiedname>my_Nelder_Mead::f</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="214" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="214" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__Nelder__Mead_1a6ccb0b9ce5958e714ce49c9e928d41dd" prot="public" static="no" mutable="no">
+        <type><ref refid="classmy__simplex" kindref="compound">my_simplex</ref></type>
+        <definition>my_simplex my_Nelder_Mead::simplex</definition>
+        <argsstring></argsstring>
+        <name>simplex</name>
+        <qualifiedname>my_Nelder_Mead::simplex</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="215" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="215" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__Nelder__Mead_1aa48a5c71861c2d7847e8ac49a43fe02b" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool my_Nelder_Mead::convergeYes</definition>
+        <argsstring></argsstring>
+        <name>convergeYes</name>
+        <qualifiedname>my_Nelder_Mead::convergeYes</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="216" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="216" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__Nelder__Mead_1a4f4028b37aad998467cb612680892920" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_Nelder_Mead::yfinal</definition>
+        <argsstring></argsstring>
+        <name>yfinal</name>
+        <qualifiedname>my_Nelder_Mead::yfinal</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="220" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="220" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classmy__Nelder__Mead_1a361c60223d643f757913c63b26177c90" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double my_Nelder_Mead::xfinal[DMAX *(DMAX+1)]</definition>
+        <argsstring>[DMAX *(DMAX+1)]</argsstring>
+        <name>xfinal</name>
+        <qualifiedname>my_Nelder_Mead::xfinal</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="221" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="221" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classmy__Nelder__Mead_1a86e4f3f1eff1c6596494eb64bf51b005" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>my_Nelder_Mead::my_Nelder_Mead</definition>
+        <argsstring>(int, double, double, double, int, double, my_func *)</argsstring>
+        <name>my_Nelder_Mead</name>
+        <qualifiedname>my_Nelder_Mead::my_Nelder_Mead</qualifiedname>
+        <param>
+          <type>int</type>
+          <defname>dd</defname>
+        </param>
+        <param>
+          <type>double</type>
+          <defname>alpha</defname>
+        </param>
+        <param>
+          <type>double</type>
+          <defname>beta</defname>
+        </param>
+        <param>
+          <type>double</type>
+          <defname>gamma</defname>
+        </param>
+        <param>
+          <type>int</type>
+          <defname>NNtry</defname>
+        </param>
+        <param>
+          <type>double</type>
+          <defname>eeps</defname>
+        </param>
+        <param>
+          <type><ref refid="structmy__func" kindref="compound">my_func</ref> *</type>
+          <defname>ff</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="217" column="3" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="620" bodyend="620"/>
+      </memberdef>
+      <memberdef kind="function" id="classmy__Nelder__Mead_1a2c1cf39bbcbf4be0412e51e305eb1cf0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool my_Nelder_Mead::one_cycle</definition>
+        <argsstring>(my_simplex *)</argsstring>
+        <name>one_cycle</name>
+        <qualifiedname>my_Nelder_Mead::one_cycle</qualifiedname>
+        <param>
+          <type><ref refid="classmy__simplex" kindref="compound">my_simplex</ref> *</type>
+          <defname>s</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="218" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="622" bodyend="681"/>
+      </memberdef>
+      <memberdef kind="function" id="classmy__Nelder__Mead_1a6758d99554f07aff9f0f371d6d9f8d1e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool my_Nelder_Mead::find_global_min</definition>
+        <argsstring>(double xin[DMAX *(DMAX+1)])</argsstring>
+        <name>find_global_min</name>
+        <qualifiedname>my_Nelder_Mead::find_global_min</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>xin</declname>
+          <array>[DMAX *(DMAX+1)]</array>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="219" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="683" bodyend="738"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>my_Nelder_Mead</label>
+        <link refid="classmy__Nelder__Mead"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>f</edgelabel>
+        </childnode>
+        <childnode refid="3" relation="usage">
+          <edgelabel>simplex</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>my_func</label>
+        <link refid="structmy__func"/>
+      </node>
+      <node id="3">
+        <label>my_simplex</label>
+        <link refid="classmy__simplex"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>f</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="207" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="207" bodyend="222"/>
+    <listofallmembers>
+      <member refid="classmy__Nelder__Mead_1aa48a5c71861c2d7847e8ac49a43fe02b" prot="public" virt="non-virtual"><scope>my_Nelder_Mead</scope><name>convergeYes</name></member>
+      <member refid="classmy__Nelder__Mead_1a67902e62240c4778e2aff56e39ceba7b" prot="private" virt="non-virtual"><scope>my_Nelder_Mead</scope><name>d</name></member>
+      <member refid="classmy__Nelder__Mead_1a658c6b5aa62f00bd5135f90170a20110" prot="private" virt="non-virtual"><scope>my_Nelder_Mead</scope><name>eps</name></member>
+      <member refid="classmy__Nelder__Mead_1ae6f186898f01c5fcd3c24744b6145548" prot="public" virt="non-virtual"><scope>my_Nelder_Mead</scope><name>f</name></member>
+      <member refid="classmy__Nelder__Mead_1a6758d99554f07aff9f0f371d6d9f8d1e" prot="public" virt="non-virtual"><scope>my_Nelder_Mead</scope><name>find_global_min</name></member>
+      <member refid="classmy__Nelder__Mead_1a86e4f3f1eff1c6596494eb64bf51b005" prot="public" virt="non-virtual"><scope>my_Nelder_Mead</scope><name>my_Nelder_Mead</name></member>
+      <member refid="classmy__Nelder__Mead_1aaebebd19b9b52e28e95ddb2352c437ae" prot="private" virt="non-virtual"><scope>my_Nelder_Mead</scope><name>Ntry</name></member>
+      <member refid="classmy__Nelder__Mead_1a2c1cf39bbcbf4be0412e51e305eb1cf0" prot="public" virt="non-virtual"><scope>my_Nelder_Mead</scope><name>one_cycle</name></member>
+      <member refid="classmy__Nelder__Mead_1a6ccb0b9ce5958e714ce49c9e928d41dd" prot="public" virt="non-virtual"><scope>my_Nelder_Mead</scope><name>simplex</name></member>
+      <member refid="classmy__Nelder__Mead_1a361c60223d643f757913c63b26177c90" prot="public" virt="non-virtual"><scope>my_Nelder_Mead</scope><name>xfinal</name></member>
+      <member refid="classmy__Nelder__Mead_1a4f4028b37aad998467cb612680892920" prot="public" virt="non-virtual"><scope>my_Nelder_Mead</scope><name>yfinal</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

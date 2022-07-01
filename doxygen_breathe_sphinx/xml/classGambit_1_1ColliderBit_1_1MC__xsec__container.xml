@@ -1,0 +1,359 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classGambit_1_1ColliderBit_1_1MC__xsec__container" kind="class" language="C++" prot="public">
+    <compoundname>Gambit::ColliderBit::MC_xsec_container</compoundname>
+    <basecompoundref refid="classGambit_1_1ColliderBit_1_1xsec__container" prot="public" virt="non-virtual">Gambit::ColliderBit::xsec_container</basecompoundref>
+    <includes refid="xsec_8hpp" local="no">xsec.hpp</includes>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1MC__xsec__container_1ab23a99d79c24f66b6880f57d34eac980" prot="private" static="no" mutable="no">
+        <type>long long</type>
+        <definition>long long Gambit::ColliderBit::MC_xsec_container::_ntot</definition>
+        <argsstring></argsstring>
+        <name>_ntot</name>
+        <qualifiedname>Gambit::ColliderBit::MC_xsec_container::_ntot</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/xsec.hpp" line="139" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/xsec.hpp" bodystart="139" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-attrib">
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1MC__xsec__container_1a3f157e13b5b507cd4d326834ff03cbfb" prot="private" static="yes" mutable="no">
+        <type>std::map&lt; int, const <ref refid="classGambit_1_1ColliderBit_1_1MC__xsec__container" kindref="compound">MC_xsec_container</ref> * &gt;</type>
+        <definition>std::map&lt; int, const MC_xsec_container * &gt; Gambit::ColliderBit::MC_xsec_container::instances_map</definition>
+        <argsstring></argsstring>
+        <name>instances_map</name>
+        <qualifiedname>Gambit::ColliderBit::MC_xsec_container::instances_map</qualifiedname>
+        <briefdescription>
+<para>A map with pointers to all instances of this class. The key is the OMP thread number. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>A map with pointers to all instances of this class. The key is the thread number. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/xsec.hpp" line="142" column="25" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/xsec.hpp" bodystart="142" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1MC__xsec__container_1a24cc2986ede938013af8e99bb6311fef" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::MC_xsec_container::MC_xsec_container</definition>
+        <argsstring>()</argsstring>
+        <name>MC_xsec_container</name>
+        <qualifiedname>Gambit::ColliderBit::MC_xsec_container::MC_xsec_container</qualifiedname>
+        <briefdescription>
+<para>Constructor. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Definitions of <ref refid="classGambit_1_1ColliderBit_1_1MC__xsec__container" kindref="compound">MC_xsec_container</ref> members </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/xsec.hpp" line="101" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/xsec.cpp" bodystart="160" bodyend="163"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1MC__xsec__container_1ab4da451cbc5cea377a30bd0f2f5b2045" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type></type>
+        <definition>virtual Gambit::ColliderBit::MC_xsec_container::~MC_xsec_container</definition>
+        <argsstring>()</argsstring>
+        <name>~MC_xsec_container</name>
+        <qualifiedname>Gambit::ColliderBit::MC_xsec_container::~MC_xsec_container</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/xsec.hpp" line="102" column="17" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/xsec.hpp" bodystart="102" bodyend="102"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1MC__xsec__container_1af4bf3e5be4718f5c732012375c9a326c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::MC_xsec_container::reset</definition>
+        <argsstring>()</argsstring>
+        <name>reset</name>
+        <qualifiedname>Gambit::ColliderBit::MC_xsec_container::reset</qualifiedname>
+        <briefdescription>
+<para>Reset this instance for reuse. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Public method to reset this instance for reuse, avoiding the need for &quot;new&quot; or &quot;delete&quot;. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/xsec.hpp" line="105" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/xsec.cpp" bodystart="166" bodyend="180"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1MC__xsec__container_1a39fd74e12ddd714e088bcf965006a31c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::MC_xsec_container::log_event</definition>
+        <argsstring>()</argsstring>
+        <name>log_event</name>
+        <qualifiedname>Gambit::ColliderBit::MC_xsec_container::log_event</qualifiedname>
+        <briefdescription>
+<para>Tell the xsec object that there has been a new event. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Increment the number of events seen so far. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/xsec.hpp" line="108" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/xsec.cpp" bodystart="183" bodyend="183"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1MC__xsec__container_1a461b3e3e87cc7157c2e07ca33930a0e1" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>long long</type>
+        <definition>long long Gambit::ColliderBit::MC_xsec_container::num_events</definition>
+        <argsstring>() const</argsstring>
+        <name>num_events</name>
+        <qualifiedname>Gambit::ColliderBit::MC_xsec_container::num_events</qualifiedname>
+        <briefdescription>
+<para>Return the total number of events seen so far. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/xsec.hpp" line="111" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/xsec.cpp" bodystart="186" bodyend="186"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1MC__xsec__container_1a0ff05e17486e2d90553bfd167933deb8" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::MC_xsec_container::xsec_per_event</definition>
+        <argsstring>() const</argsstring>
+        <name>xsec_per_event</name>
+        <qualifiedname>Gambit::ColliderBit::MC_xsec_container::xsec_per_event</qualifiedname>
+        <briefdescription>
+<para>Return the cross-section per event seen (in fb). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/xsec.hpp" line="114" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/xsec.cpp" bodystart="189" bodyend="189"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1MC__xsec__container_1a6dc1511d891954f2e48fd91fcd918cf9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::MC_xsec_container::set_num_events</definition>
+        <argsstring>(long long)</argsstring>
+        <name>set_num_events</name>
+        <qualifiedname>Gambit::ColliderBit::MC_xsec_container::set_num_events</qualifiedname>
+        <param>
+          <type>long long</type>
+          <defname>n</defname>
+        </param>
+        <briefdescription>
+<para>Set the total number of events seen so far. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/xsec.hpp" line="117" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/xsec.cpp" bodystart="192" bodyend="192"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1MC__xsec__container_1a29803b63f47b1cb15dbca39bfaa44b76" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::MC_xsec_container::average_xsec</definition>
+        <argsstring>(double, double, long long)</argsstring>
+        <name>average_xsec</name>
+        <qualifiedname>Gambit::ColliderBit::MC_xsec_container::average_xsec</qualifiedname>
+        <param>
+          <type>double</type>
+          <defname>other_xsec</defname>
+        </param>
+        <param>
+          <type>double</type>
+          <defname>other_xsecerr</defname>
+        </param>
+        <param>
+          <type>long long</type>
+          <defname>other_ntot</defname>
+        </param>
+        <briefdescription>
+<para>Average cross-sections and combine errors. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/xsec.hpp" line="121" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/xsec.cpp" bodystart="195" bodyend="206"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1MC__xsec__container_1a36cca846defd345d857b486c687866f0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::MC_xsec_container::average_xsec</definition>
+        <argsstring>(const MC_xsec_container &amp;)</argsstring>
+        <name>average_xsec</name>
+        <qualifiedname>Gambit::ColliderBit::MC_xsec_container::average_xsec</qualifiedname>
+        <param>
+          <type>const <ref refid="classGambit_1_1ColliderBit_1_1MC__xsec__container" kindref="compound">MC_xsec_container</ref> &amp;</type>
+          <defname>other</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/xsec.hpp" line="122" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/xsec.cpp" bodystart="208" bodyend="211"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1MC__xsec__container_1a24cfc6253cfcc4ba3354479f3f91f3f8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::MC_xsec_container::sum_xsecs</definition>
+        <argsstring>(double, double, long long)</argsstring>
+        <name>sum_xsecs</name>
+        <qualifiedname>Gambit::ColliderBit::MC_xsec_container::sum_xsecs</qualifiedname>
+        <param>
+          <type>double</type>
+          <defname>other_xsec</defname>
+        </param>
+        <param>
+          <type>double</type>
+          <defname>other_xsecerr</defname>
+        </param>
+        <param>
+          <type>long long</type>
+          <defname>other_ntot</defname>
+        </param>
+        <briefdescription>
+<para>Sum cross-sections and add errors in quadrature. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/xsec.hpp" line="125" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/xsec.cpp" bodystart="214" bodyend="225"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1MC__xsec__container_1a716d43a58045824061829b1e027fe0ff" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::MC_xsec_container::sum_xsecs</definition>
+        <argsstring>(const MC_xsec_container &amp;)</argsstring>
+        <name>sum_xsecs</name>
+        <qualifiedname>Gambit::ColliderBit::MC_xsec_container::sum_xsecs</qualifiedname>
+        <param>
+          <type>const <ref refid="classGambit_1_1ColliderBit_1_1MC__xsec__container" kindref="compound">MC_xsec_container</ref> &amp;</type>
+          <defname>other</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/xsec.hpp" line="126" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/xsec.cpp" bodystart="227" bodyend="230"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1MC__xsec__container_1ab078e2ce6574bcfeecac8000dd154e31" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::MC_xsec_container::gather_xsecs</definition>
+        <argsstring>()</argsstring>
+        <name>gather_xsecs</name>
+        <qualifiedname>Gambit::ColliderBit::MC_xsec_container::gather_xsecs</qualifiedname>
+        <briefdescription>
+<para>Collect xsec predictions from other threads and do a weighted combination. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/xsec.hpp" line="129" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/xsec.cpp" bodystart="234" bodyend="243"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1MC__xsec__container_1a8b9a26b81f378f36e0046e6b1c57120b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::MC_xsec_container::gather_num_events</definition>
+        <argsstring>()</argsstring>
+        <name>gather_num_events</name>
+        <qualifiedname>Gambit::ColliderBit::MC_xsec_container::gather_num_events</qualifiedname>
+        <briefdescription>
+<para>Collect total events seen on all threads. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/xsec.hpp" line="132" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/xsec.cpp" bodystart="246" bodyend="255"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1MC__xsec__container_1a219cbbd7aa70e4c3b6d87ad7840c8552" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>std::map&lt; std::string, double &gt;</type>
+        <definition>std::map&lt; std::string, double &gt; Gambit::ColliderBit::MC_xsec_container::get_content_as_map</definition>
+        <argsstring>() const</argsstring>
+        <name>get_content_as_map</name>
+        <qualifiedname>Gambit::ColliderBit::MC_xsec_container::get_content_as_map</qualifiedname>
+        <briefdescription>
+<para>Get content as map &lt;string,double&gt; map (for easy printing). </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Get content as a &lt;string,double&gt; map (for easy printing). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/xsec.hpp" line="135" column="18" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/xsec.cpp" bodystart="258" bodyend="276"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>A class for holding a total cross-section calculated via MC across multiple threads. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1">
+        <label>Gambit::ColliderBit::MC_xsec_container</label>
+        <link refid="classGambit_1_1ColliderBit_1_1MC__xsec__container"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>Gambit::ColliderBit::xsec_container</label>
+        <link refid="classGambit_1_1ColliderBit_1_1xsec__container"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1">
+        <label>Gambit::ColliderBit::MC_xsec_container</label>
+        <link refid="classGambit_1_1ColliderBit_1_1MC__xsec__container"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>Gambit::ColliderBit::xsec_container</label>
+        <link refid="classGambit_1_1ColliderBit_1_1xsec__container"/>
+      </node>
+    </collaborationgraph>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/xsec.hpp" line="96" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/xsec.hpp" bodystart="97" bodyend="143"/>
+    <listofallmembers>
+      <member refid="classGambit_1_1ColliderBit_1_1xsec__container_1a88dfe49a8540273573981e296790338e" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>_info_string</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1MC__xsec__container_1ab23a99d79c24f66b6880f57d34eac980" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>_ntot</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1xsec__container_1a7cb9562bdc18ec1d43f739230628843b" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>_trust_level</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1xsec__container_1a1c6450cb785d1fd9a69435949583e03c" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>_xsec</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1xsec__container_1a66742cc2e3b9395988f96d0346076a3e" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>_xsecerr</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1MC__xsec__container_1a29803b63f47b1cb15dbca39bfaa44b76" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>average_xsec</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1MC__xsec__container_1a36cca846defd345d857b486c687866f0" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>average_xsec</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1xsec__container_1a466d5dec22321977750a608965d8ddfa" prot="public" virt="non-virtual" ambiguityscope="Gambit::ColliderBit::xsec_container::"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>average_xsec</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1xsec__container_1acbc9e8b45c221a0a7ed07a029430bd62" prot="public" virt="non-virtual" ambiguityscope="Gambit::ColliderBit::xsec_container::"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>average_xsec</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1MC__xsec__container_1a8b9a26b81f378f36e0046e6b1c57120b" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>gather_num_events</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1MC__xsec__container_1ab078e2ce6574bcfeecac8000dd154e31" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>gather_xsecs</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1MC__xsec__container_1a219cbbd7aa70e4c3b6d87ad7840c8552" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>get_content_as_map</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1xsec__container_1a30f94b3e2158d3874840565e21a0c94f" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>info_string</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1MC__xsec__container_1a3f157e13b5b507cd4d326834ff03cbfb" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>instances_map</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1MC__xsec__container_1a39fd74e12ddd714e088bcf965006a31c" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>log_event</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1MC__xsec__container_1a24cc2986ede938013af8e99bb6311fef" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>MC_xsec_container</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1MC__xsec__container_1a461b3e3e87cc7157c2e07ca33930a0e1" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>num_events</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1xsec__container_1a55be69894c9741d43d2f90f244be35cd" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>operator()</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1MC__xsec__container_1af4bf3e5be4718f5c732012375c9a326c" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>reset</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1xsec__container_1ad3f0543c9154673f8ad0e5bd16202dbd" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>set_info_string</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1MC__xsec__container_1a6dc1511d891954f2e48fd91fcd918cf9" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>set_num_events</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1xsec__container_1a3f4df134ac7d25f6db87bc42f2eda034" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>set_trust_level</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1xsec__container_1a491b03935df95942624e96abb9e7fc2b" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>set_xsec</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1MC__xsec__container_1a24cfc6253cfcc4ba3354479f3f91f3f8" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>sum_xsecs</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1MC__xsec__container_1a716d43a58045824061829b1e027fe0ff" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>sum_xsecs</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1xsec__container_1ae53c69965b02aabf9963dac11333f2bf" prot="public" virt="non-virtual" ambiguityscope="Gambit::ColliderBit::xsec_container::"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>sum_xsecs</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1xsec__container_1a357b7d3ee5b469bf207002f9962f7c59" prot="public" virt="non-virtual" ambiguityscope="Gambit::ColliderBit::xsec_container::"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>sum_xsecs</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1xsec__container_1af0f86c265741b9bcf355f7061bd576c2" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>trust_level</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1xsec__container_1a9d2d095b89a100c4833af9fd48befe5b" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>unit</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1xsec__container_1add249076be1f4b48511982700433eb3d" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>xsec</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1xsec__container_1aab2872d2923d37be797f29d4841afea5" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>xsec_container</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1xsec__container_1a35f0025dc8bd3c4a3f8831805f054e35" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>xsec_err</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1MC__xsec__container_1a0ff05e17486e2d90553bfd167933deb8" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>xsec_per_event</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1xsec__container_1a8aa1d8bc152147b32d407a1b9b499918" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>xsec_relerr</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1MC__xsec__container_1ab4da451cbc5cea377a30bd0f2f5b2045" prot="public" virt="virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>~MC_xsec_container</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1xsec__container_1a61331dee2a5f8bfdf79d0fde9d6cc450" prot="public" virt="virtual"><scope>Gambit::ColliderBit::MC_xsec_container</scope><name>~xsec_container</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

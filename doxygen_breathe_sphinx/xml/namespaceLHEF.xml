@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="namespaceLHEF" kind="namespace" language="C++">
+    <compoundname>LHEF</compoundname>
+    <briefdescription>
+<para>Forward declaration to cut down on includes. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>lhef2heputils: a Les Houches Event Format (<ref refid="namespaceLHEF" kindref="compound">LHEF</ref>) -&gt; HEPUtils::Event MC generator event file converter, based on lhef2hepmc.</para>
+<para><hruler/>
+</para>
+<para>Authors (add name and date if you modify):</para>
+<para><simplesect kind="author"><para>Andy Buckley (<ulink url="mailto:andy.buckley@cern.ch">andy.buckley@cern.ch</ulink>) </para>
+</simplesect>
+<simplesect kind="date"><para>May 2019</para>
+</simplesect>
+<simplesect kind="author"><para>Pat Scott (<ulink url="mailto:p.scott@imperial.ac.uk">p.scott@imperial.ac.uk</ulink>) </para>
+</simplesect>
+<simplesect kind="date"><para>May 2019</para>
+</simplesect>
+Hat tip: Leif Lonnblad for writing the <ref refid="namespaceLHEF" kindref="compound">LHEF</ref> parser that actually makes this possible!</para>
+<para><hruler/>
+ </para>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lhef2heputils.hpp" line="33" column="1"/>
+  </compounddef>
+</doxygen>

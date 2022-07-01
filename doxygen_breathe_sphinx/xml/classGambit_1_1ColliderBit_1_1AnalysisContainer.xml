@@ -1,0 +1,684 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classGambit_1_1ColliderBit_1_1AnalysisContainer" kind="class" language="C++" prot="public">
+    <compoundname>Gambit::ColliderBit::AnalysisContainer</compoundname>
+    <includes refid="AnalysisContainer_8hpp" local="no">AnalysisContainer.hpp</includes>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a004407c9e910847391ef49cb95f64b4d" prot="private" static="no" mutable="no">
+        <type>std::map&lt; str, std::map&lt; str, <ref refid="classGambit_1_1ColliderBit_1_1Analysis" kindref="compound">Analysis</ref> * &gt; &gt;</type>
+        <definition>std::map&lt;str,std::map&lt;str,Analysis*&gt; &gt; Gambit::ColliderBit::AnalysisContainer::analyses_map</definition>
+        <argsstring></argsstring>
+        <name>analyses_map</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::analyses_map</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>A map of maps of pointer-to-Analysis. First key is the collider name, second key is the analysis name. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="63" column="18" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" bodystart="63" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a560f5a91a1d9f076ca42ce499028ccbd" prot="private" static="no" mutable="no">
+        <type>str</type>
+        <definition>str Gambit::ColliderBit::AnalysisContainer::current_collider</definition>
+        <argsstring></argsstring>
+        <name>current_collider</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::current_collider</qualifiedname>
+        <briefdescription>
+<para>String identifying the currently active collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="66" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" bodystart="66" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a1b9a118a91177370c6e2afab9dc8fe23" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::AnalysisContainer::is_registered</definition>
+        <argsstring></argsstring>
+        <name>is_registered</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::is_registered</qualifiedname>
+        <briefdescription>
+<para>Has this instance been registered in the instances_map? </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="69" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" bodystart="69" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1aabb068f1962e21fa122d6df9a6b57cc4" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Gambit::ColliderBit::AnalysisContainer::n_threads</definition>
+        <argsstring></argsstring>
+        <name>n_threads</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::n_threads</qualifiedname>
+        <briefdescription>
+<para>OpenMP info. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="72" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a64dd9c7c9371ade021d9524717085af2" prot="private" static="no" mutable="no">
+        <type>str</type>
+        <definition>str Gambit::ColliderBit::AnalysisContainer::base_key</definition>
+        <argsstring></argsstring>
+        <name>base_key</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::base_key</qualifiedname>
+        <briefdescription>
+<para>Key for the instances_map. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="75" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" bodystart="75" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-attrib">
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a13184532a38cb7ccb224df408a2c2e45" prot="private" static="yes" mutable="no">
+        <type>std::map&lt; str, std::map&lt; int, <ref refid="classGambit_1_1ColliderBit_1_1AnalysisContainer" kindref="compound">AnalysisContainer</ref> * &gt; &gt;</type>
+        <definition>std::map&lt; str, std::map&lt; int, AnalysisContainer * &gt; &gt; Gambit::ColliderBit::AnalysisContainer::instances_map</definition>
+        <argsstring></argsstring>
+        <name>instances_map</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::instances_map</qualifiedname>
+        <briefdescription>
+<para>A map with pointers to all instances of this class. The key is the thread number. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>A map with pointers to all instances of this class. The key is the OMP thread number. (There should only be one instance of this class per OMP thread.) </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="79" column="25" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" bodystart="79" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a9fc754ef3a8ea67d4be4a0b0c73bbf70" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::AnalysisContainer::AnalysisContainer</definition>
+        <argsstring>()</argsstring>
+        <name>AnalysisContainer</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::AnalysisContainer</qualifiedname>
+        <briefdescription>
+<para>Constructor. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="85" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="195" bodyend="203"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a2e36fc70ff190b042e1674018842616f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::AnalysisContainer::~AnalysisContainer</definition>
+        <argsstring>()</argsstring>
+        <name>~AnalysisContainer</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::~AnalysisContainer</qualifiedname>
+        <briefdescription>
+<para>Destructor. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="88" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="207" bodyend="210"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a64e3cb761c1152ba366e86f253fed780" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::AnalysisContainer::register_thread</definition>
+        <argsstring>(str)</argsstring>
+        <name>register_thread</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::register_thread</qualifiedname>
+        <param>
+          <type>str</type>
+          <defname>base_key_in</defname>
+        </param>
+        <briefdescription>
+<para>Add container to instances map. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="91" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="214" bodyend="244"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a66122d3e492814070c73a1c13d4215b3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::AnalysisContainer::clear</definition>
+        <argsstring>()</argsstring>
+        <name>clear</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::clear</qualifiedname>
+        <briefdescription>
+<para>Delete and clear the analyses contained within this instance. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+<para><xrefsect id="todo_1_todo000080"><xreftitle>Todo</xreftitle><xrefdescription><para>Storing smart ptrs to <ref refid="classGambit_1_1ColliderBit_1_1Analysis" kindref="compound">Analysis</ref> would make this way easier </para>
+</xrefdescription></xrefsect></para>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="94" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="248" bodyend="263"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1aa3d1414339332ac85822809a7db0bc96" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::AnalysisContainer::set_current_collider</definition>
+        <argsstring>(str)</argsstring>
+        <name>set_current_collider</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::set_current_collider</qualifiedname>
+        <param>
+          <type>str</type>
+          <defname>collider_name</defname>
+        </param>
+        <briefdescription>
+<para>Set name of current collider. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Set name of the current collider. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="97" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="267" bodyend="270"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a45dc9ed85147d9eb4d4e4cf0f1a31d27" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>str</type>
+        <definition>str Gambit::ColliderBit::AnalysisContainer::get_current_collider</definition>
+        <argsstring>() const</argsstring>
+        <name>get_current_collider</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::get_current_collider</qualifiedname>
+        <briefdescription>
+<para>Get name of current collider. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Get the name of the current collider. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="100" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="274" bodyend="277"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a68b5d813d330366bd99913165ab55643" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::AnalysisContainer::has_analyses</definition>
+        <argsstring>(str) const</argsstring>
+        <name>has_analyses</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::has_analyses</qualifiedname>
+        <param>
+          <type>str</type>
+          <defname>collider_name</defname>
+        </param>
+        <briefdescription>
+<para>Does this instance contain analyses for the given collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="103" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="281" bodyend="294"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a18b81ab6ea6b5f01d91167c0fc5bfa05" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::AnalysisContainer::has_analyses</definition>
+        <argsstring>() const</argsstring>
+        <name>has_analyses</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::has_analyses</qualifiedname>
+        <briefdescription>
+<para>Does this instance contain analyses for the current collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="105" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="297" bodyend="300"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1ade3a147b509a6e2ebbeac58c249b5191" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::AnalysisContainer::init</definition>
+        <argsstring>(const std::vector&lt; str &gt; &amp;, str)</argsstring>
+        <name>init</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::init</qualifiedname>
+        <param>
+          <type>const std::vector&lt; str &gt; &amp;</type>
+          <defname>analysis_names</defname>
+        </param>
+        <param>
+          <type>str</type>
+          <defname>collider_name</defname>
+        </param>
+        <briefdescription>
+<para>Initialize analyses (by names) for a specified collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="108" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="304" bodyend="317"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1abf8efd7d9f83914e4dadb23409999d0a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::AnalysisContainer::init</definition>
+        <argsstring>(const std::vector&lt; str &gt; &amp;)</argsstring>
+        <name>init</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::init</qualifiedname>
+        <param>
+          <type>const std::vector&lt; str &gt; &amp;</type>
+          <defname>analysis_names</defname>
+        </param>
+        <briefdescription>
+<para>Initialize analyses (by names) for the current collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="110" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="320" bodyend="323"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1ae7548b1144db82b163239e877b3a73ed" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::AnalysisContainer::reset</definition>
+        <argsstring>(str, str)</argsstring>
+        <name>reset</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::reset</qualifiedname>
+        <param>
+          <type>str</type>
+          <defname>collider_name</defname>
+        </param>
+        <param>
+          <type>str</type>
+          <defname>analysis_name</defname>
+        </param>
+        <briefdescription>
+<para>Reset specific analysis. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="113" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="327" bodyend="330"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1aaccd27284090433610c770d948163261" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::AnalysisContainer::reset</definition>
+        <argsstring>(str)</argsstring>
+        <name>reset</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::reset</qualifiedname>
+        <param>
+          <type>str</type>
+          <defname>collider_name</defname>
+        </param>
+        <briefdescription>
+<para>Reset all analyses for given collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="115" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="333" bodyend="339"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a170597f40a95f2edf8b69bd028f7a671" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::AnalysisContainer::reset</definition>
+        <argsstring>()</argsstring>
+        <name>reset</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::reset</qualifiedname>
+        <briefdescription>
+<para>Reset all analyses for the current collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="117" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="342" bodyend="345"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a67043c7ca5fe266aa4d7476ed7e9452c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::AnalysisContainer::reset_all</definition>
+        <argsstring>()</argsstring>
+        <name>reset_all</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::reset_all</qualifiedname>
+        <briefdescription>
+<para>Reset all analyses for all colliders. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="119" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="348" bodyend="354"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a0be3d366564e2520b8a25e9c8350fdf4" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>const <ref refid="classGambit_1_1ColliderBit_1_1Analysis" kindref="compound">Analysis</ref> *</type>
+        <definition>const Analysis * Gambit::ColliderBit::AnalysisContainer::get_analysis_pointer</definition>
+        <argsstring>(str, str) const</argsstring>
+        <name>get_analysis_pointer</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::get_analysis_pointer</qualifiedname>
+        <param>
+          <type>str</type>
+          <defname>collider_name</defname>
+        </param>
+        <param>
+          <type>str</type>
+          <defname>analysis_name</defname>
+        </param>
+        <briefdescription>
+<para>Get pointer to specific analysis. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="122" column="24" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="358" bodyend="361"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a5c50e503e4640ce8eae408e167e53cb8" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>const std::map&lt; str, <ref refid="classGambit_1_1ColliderBit_1_1Analysis" kindref="compound">Analysis</ref> * &gt; &amp;</type>
+        <definition>const std::map&lt; str, Analysis * &gt; &amp; Gambit::ColliderBit::AnalysisContainer::get_collider_analyses_map</definition>
+        <argsstring>(str) const</argsstring>
+        <name>get_collider_analyses_map</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::get_collider_analyses_map</qualifiedname>
+        <param>
+          <type>str</type>
+          <defname>collider_name</defname>
+        </param>
+        <briefdescription>
+<para>Get analyses map for a specific collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="124" column="24" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="364" bodyend="367"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1ae918282166ace09e2491f4f529962350" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>const std::map&lt; str, <ref refid="classGambit_1_1ColliderBit_1_1Analysis" kindref="compound">Analysis</ref> * &gt; &amp;</type>
+        <definition>const std::map&lt; str, Analysis * &gt; &amp; Gambit::ColliderBit::AnalysisContainer::get_current_analyses_map</definition>
+        <argsstring>() const</argsstring>
+        <name>get_current_analyses_map</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::get_current_analyses_map</qualifiedname>
+        <briefdescription>
+<para>Get analyses map for the current collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="126" column="24" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="370" bodyend="373"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1afc01bb6f68a4b87e59e0fbc0e082f0c5" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>const std::map&lt; str, std::map&lt; str, <ref refid="classGambit_1_1ColliderBit_1_1Analysis" kindref="compound">Analysis</ref> * &gt; &gt; &amp;</type>
+        <definition>const std::map&lt; str, std::map&lt; str, Analysis * &gt; &gt; &amp; Gambit::ColliderBit::AnalysisContainer::get_full_analyses_map</definition>
+        <argsstring>() const</argsstring>
+        <name>get_full_analyses_map</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::get_full_analyses_map</qualifiedname>
+        <briefdescription>
+<para>Get the full analyses map. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="128" column="24" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="376" bodyend="379"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a2e8f74ac791510f96dce737695a48911" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::AnalysisContainer::analyze</definition>
+        <argsstring>(const HEPUtils::Event &amp;, str, str) const</argsstring>
+        <name>analyze</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::analyze</qualifiedname>
+        <param>
+          <type>const HEPUtils::Event &amp;</type>
+          <defname>event</defname>
+        </param>
+        <param>
+          <type>str</type>
+          <defname>collider_name</defname>
+        </param>
+        <param>
+          <type>str</type>
+          <defname>analysis_name</defname>
+        </param>
+        <briefdescription>
+<para>Pass event through specific analysis. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="131" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="382" bodyend="385"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a67ece56885f549b8bffacdb9b899ff8f" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::AnalysisContainer::analyze</definition>
+        <argsstring>(const HEPUtils::Event &amp;, str) const</argsstring>
+        <name>analyze</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::analyze</qualifiedname>
+        <param>
+          <type>const HEPUtils::Event &amp;</type>
+          <defname>event</defname>
+        </param>
+        <param>
+          <type>str</type>
+          <defname>collider_name</defname>
+        </param>
+        <briefdescription>
+<para>Pass event through all analysis for a specific collider. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Pass event through all analyses for a specific collider. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="133" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="388" bodyend="394"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1aa9d1b5be574977e35fda4e2e45cf1647" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::AnalysisContainer::analyze</definition>
+        <argsstring>(const HEPUtils::Event &amp;) const</argsstring>
+        <name>analyze</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::analyze</qualifiedname>
+        <param>
+          <type>const HEPUtils::Event &amp;</type>
+          <defname>event</defname>
+        </param>
+        <briefdescription>
+<para>Pass event through all analysis for the current collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="135" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="397" bodyend="400"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a12723af95c2e31d77d0c17d36ebeb5af" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::AnalysisContainer::collect_and_add_signal</definition>
+        <argsstring>(str, str)</argsstring>
+        <name>collect_and_add_signal</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::collect_and_add_signal</qualifiedname>
+        <param>
+          <type>str</type>
+          <defname>collider_name</defname>
+        </param>
+        <param>
+          <type>str</type>
+          <defname>analysis_name</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Collect signal predictions from other threads and add to this one, for specific analysis</para>
+<para>Collect signal predictions from other threads and add to this one, for specific analysis. Note: <ref refid="classGambit_1_1ColliderBit_1_1Analysis_1aaece33bab954d82337af28138e893bcf" kindref="member">Analysis::add</ref> will not add analyses to themselves. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="139" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="404" bodyend="412"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a8c91278b5f2d7acf39650961cce2bf6b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::AnalysisContainer::collect_and_add_signal</definition>
+        <argsstring>(str)</argsstring>
+        <name>collect_and_add_signal</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::collect_and_add_signal</qualifiedname>
+        <param>
+          <type>str</type>
+          <defname>collider_name</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Collect signal predictions from other threads and add to this one, for all analyses for given collider </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="142" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="416" bodyend="423"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a557e59b4124c5065a8854ca485191283" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::AnalysisContainer::collect_and_add_signal</definition>
+        <argsstring>()</argsstring>
+        <name>collect_and_add_signal</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::collect_and_add_signal</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Collect signal predictions from other threads and add to this one, for all analyses for the current collider </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="145" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="427" bodyend="430"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1aa699218b22ed8ce58792130f64ff811d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::AnalysisContainer::scale</definition>
+        <argsstring>(str, str, double)</argsstring>
+        <name>scale</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::scale</qualifiedname>
+        <param>
+          <type>str</type>
+          <defname>collider_name</defname>
+        </param>
+        <param>
+          <type>str</type>
+          <defname>analysis_name</defname>
+        </param>
+        <param>
+          <type>double</type>
+          <defname>xsec_per_event</defname>
+        </param>
+        <briefdescription>
+<para>Scale results for specific analysis. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="148" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="433" bodyend="436"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1aaaf060bce94f21acb1064b9d3c4888bc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::AnalysisContainer::scale</definition>
+        <argsstring>(str, double)</argsstring>
+        <name>scale</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::scale</qualifiedname>
+        <param>
+          <type>str</type>
+          <defname>collider_name</defname>
+        </param>
+        <param>
+          <type>double</type>
+          <defname>xsec_per_event</defname>
+        </param>
+        <briefdescription>
+<para>Scale results for all analyses for given collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="150" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="439" bodyend="446"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a6b607e6b8815cce61ae958da12c2de91" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::AnalysisContainer::scale</definition>
+        <argsstring>(double)</argsstring>
+        <name>scale</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::scale</qualifiedname>
+        <param>
+          <type>double</type>
+          <defname>xsec_per_event</defname>
+        </param>
+        <briefdescription>
+<para>Scale results for all analyses for the current collider. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="152" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="449" bodyend="452"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a2ed26e615f0245f4152105065b8249ec" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::AnalysisContainer::scale_all</definition>
+        <argsstring>(double)</argsstring>
+        <name>scale_all</name>
+        <qualifiedname>Gambit::ColliderBit::AnalysisContainer::scale_all</qualifiedname>
+        <param>
+          <type>double</type>
+          <defname>xsec_per_event</defname>
+        </param>
+        <briefdescription>
+<para>Scale results for all analyses across all colliders. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="154" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="455" bodyend="462"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>A class for managing collections of <ref refid="classGambit_1_1ColliderBit_1_1Analysis" kindref="compound">Analysis</ref> instances. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="56" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" bodystart="57" bodyend="156"/>
+    <listofallmembers>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a004407c9e910847391ef49cb95f64b4d" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>analyses_map</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a9fc754ef3a8ea67d4be4a0b0c73bbf70" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>AnalysisContainer</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a2e8f74ac791510f96dce737695a48911" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>analyze</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a67ece56885f549b8bffacdb9b899ff8f" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>analyze</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1aa9d1b5be574977e35fda4e2e45cf1647" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>analyze</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a64dd9c7c9371ade021d9524717085af2" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>base_key</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a66122d3e492814070c73a1c13d4215b3" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>clear</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a12723af95c2e31d77d0c17d36ebeb5af" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>collect_and_add_signal</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a8c91278b5f2d7acf39650961cce2bf6b" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>collect_and_add_signal</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a557e59b4124c5065a8854ca485191283" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>collect_and_add_signal</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a560f5a91a1d9f076ca42ce499028ccbd" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>current_collider</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a0be3d366564e2520b8a25e9c8350fdf4" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>get_analysis_pointer</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a5c50e503e4640ce8eae408e167e53cb8" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>get_collider_analyses_map</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1ae918282166ace09e2491f4f529962350" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>get_current_analyses_map</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a45dc9ed85147d9eb4d4e4cf0f1a31d27" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>get_current_collider</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1afc01bb6f68a4b87e59e0fbc0e082f0c5" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>get_full_analyses_map</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a68b5d813d330366bd99913165ab55643" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>has_analyses</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a18b81ab6ea6b5f01d91167c0fc5bfa05" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>has_analyses</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1ade3a147b509a6e2ebbeac58c249b5191" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>init</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1abf8efd7d9f83914e4dadb23409999d0a" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>init</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a13184532a38cb7ccb224df408a2c2e45" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>instances_map</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a1b9a118a91177370c6e2afab9dc8fe23" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>is_registered</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1aabb068f1962e21fa122d6df9a6b57cc4" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>n_threads</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a64e3cb761c1152ba366e86f253fed780" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>register_thread</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1ae7548b1144db82b163239e877b3a73ed" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>reset</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1aaccd27284090433610c770d948163261" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>reset</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a170597f40a95f2edf8b69bd028f7a671" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>reset</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a67043c7ca5fe266aa4d7476ed7e9452c" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>reset_all</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1aa699218b22ed8ce58792130f64ff811d" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>scale</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1aaaf060bce94f21acb1064b9d3c4888bc" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>scale</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a6b607e6b8815cce61ae958da12c2de91" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>scale</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a2ed26e615f0245f4152105065b8249ec" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>scale_all</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1aa3d1414339332ac85822809a7db0bc96" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>set_current_collider</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a2e36fc70ff190b042e1674018842616f" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>~AnalysisContainer</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

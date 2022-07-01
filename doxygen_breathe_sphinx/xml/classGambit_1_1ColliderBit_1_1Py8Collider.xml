@@ -1,0 +1,601 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="classGambit_1_1ColliderBit_1_1Py8Collider" kind="class" language="C++" prot="public">
+    <compoundname>Gambit::ColliderBit::Py8Collider</compoundname>
+    <basecompoundref refid="classGambit_1_1ColliderBit_1_1BaseCollider" prot="public" virt="non-virtual">Gambit::ColliderBit::BaseCollider</basecompoundref>
+    <includes refid="Py8Collider_8hpp" local="no">Py8Collider.hpp</includes>
+    <innerclass refid="classGambit_1_1ColliderBit_1_1Py8Collider_1_1EventGenerationError" prot="public">Gambit::ColliderBit::Py8Collider::EventGenerationError</innerclass>
+    <innerclass refid="classGambit_1_1ColliderBit_1_1Py8Collider_1_1InitializationError" prot="public">Gambit::ColliderBit::Py8Collider::InitializationError</innerclass>
+    <templateparamlist>
+      <param>
+        <type>typename PythiaT</type>
+      </param>
+      <param>
+        <type>typename EventT</type>
+      </param>
+      <param>
+        <type>typename hepmc_writerT</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="user-defined">
+      <header>Construction, Destruction, and Recycling:</header>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Py8Collider_1a9ac1bddfb0bc6f1fc42525bfb26befce" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::Py8Collider</definition>
+        <argsstring>()</argsstring>
+        <name>Py8Collider</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::Py8Collider</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="85" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="85" bodyend="85"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Py8Collider_1a35e34f6114bd7940a95dcef00f48a740" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::~Py8Collider</definition>
+        <argsstring>()</argsstring>
+        <name>~Py8Collider</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::~Py8Collider</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="87" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="87" bodyend="92"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Py8Collider_1ac02bb06d51ba26df044bd535e6429e2b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::clear</definition>
+        <argsstring>()</argsstring>
+        <name>clear</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::clear</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a9bfda44ae01c04766f4eeeab405ff718">clear</reimplements>
+        <briefdescription>
+<para>Reset this instance for reuse, avoiding the need for &quot;new&quot; or &quot;delete&quot;. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="94" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="94" bodyend="102"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="user-defined">
+      <header>(Re-)Initialization functions</header>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Py8Collider_1a6ff3d6eda58c8236d818e0336802414b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::addToSettings</definition>
+        <argsstring>(const std::string &amp;command)</argsstring>
+        <name>addToSettings</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::addToSettings</qualifiedname>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>command</declname>
+        </param>
+        <briefdescription>
+<para>Add a command to the list of settings used by &quot;init&quot;. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="111" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="111" bodyend="111"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Py8Collider_1a89df5232d4b46999a0899e7cdfb231e4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::banner</definition>
+        <argsstring>(const std::string pythiaDocPath)</argsstring>
+        <name>banner</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::banner</qualifiedname>
+        <param>
+          <type>const std::string</type>
+          <declname>pythiaDocPath</declname>
+        </param>
+        <briefdescription>
+<para>Create a useless Pythia instance just to print the banner. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="113" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="113" bodyend="113"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Py8Collider_1aeae80e144f0889e0d5fb42e44c43ffdd" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::init</definition>
+        <argsstring>()</argsstring>
+        <name>init</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::init</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a7b8431d21b44966ec97962a371ba1abf">init</reimplements>
+        <briefdescription>
+<para>Initialize with no settings (error): override version. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="115" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="115" bodyend="115"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Py8Collider_1aa0e506de7f07e74bef7594c3eedfd1a1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::init</definition>
+        <argsstring>(const std::vector&lt; std::string &gt; &amp;externalSettings)</argsstring>
+        <name>init</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::init</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1BaseCollider_1adda9bdab7e968f6509eb107318d252b5">init</reimplements>
+        <param>
+          <type>const std::vector&lt; std::string &gt; &amp;</type>
+          <declname>externalSettings</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Initialize from some external settings: override version. <simplesect kind="note"><para>A string denoting the path to Pythia&apos;s xmldoc directory is </para>
+</simplesect>
+<simplesect kind="note"><para>assumed to be at the end of the settings vector: </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="120" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="120" bodyend="126"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Py8Collider_1a3c51b0f7ca87a71cc5c2f7f386b4e868" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::init</definition>
+        <argsstring>(const std::string pythiaDocPath, const std::vector&lt; std::string &gt; &amp;externalSettings, const SLHAea::Coll *slhaea=nullptr, std::ostream &amp;os=std::cout)</argsstring>
+        <name>init</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::init</qualifiedname>
+        <param>
+          <type>const std::string</type>
+          <declname>pythiaDocPath</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; std::string &gt; &amp;</type>
+          <declname>externalSettings</declname>
+        </param>
+        <param>
+          <type>const SLHAea::Coll *</type>
+          <declname>slhaea</declname>
+          <defval>nullptr</defval>
+        </param>
+        <param>
+          <type>std::ostream &amp;</type>
+          <declname>os</declname>
+          <defval>std::cout</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Initialize from some external settings. <simplesect kind="note"><para>This override is most commonly used in ColliderBit. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="130" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="130" bodyend="159"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Py8Collider_1a7a85a588fc16aaee649d6feaf584b329" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::init_user_model</definition>
+        <argsstring>(const std::string pythiaDocPath, const std::vector&lt; std::string &gt; &amp;externalSettings, const SLHAea::Coll *slhaea=nullptr, std::ostream &amp;os=std::cout)</argsstring>
+        <name>init_user_model</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::init_user_model</qualifiedname>
+        <param>
+          <type>const std::string</type>
+          <declname>pythiaDocPath</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; std::string &gt; &amp;</type>
+          <declname>externalSettings</declname>
+        </param>
+        <param>
+          <type>const SLHAea::Coll *</type>
+          <declname>slhaea</declname>
+          <defval>nullptr</defval>
+        </param>
+        <param>
+          <type>std::ostream &amp;</type>
+          <declname>os</declname>
+          <defval>std::cout</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Initialize from some external settings. Special version of the init function for user defined models Needs to directly construct the new matrix elements (rather than use flags) </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="164" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="164" bodyend="187"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Py8Collider_1add0ca6d3cdbf992ef680c55746fa6f5d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::init</definition>
+        <argsstring>(const std::string pythiaDocPath, const std::vector&lt; std::string &gt; &amp;externalSettings, std::ostream &amp;os)</argsstring>
+        <name>init</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::init</qualifiedname>
+        <param>
+          <type>const std::string</type>
+          <declname>pythiaDocPath</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; std::string &gt; &amp;</type>
+          <declname>externalSettings</declname>
+        </param>
+        <param>
+          <type>std::ostream &amp;</type>
+          <declname>os</declname>
+        </param>
+        <briefdescription>
+<para>Initialize from some external settings, assuming no given SLHAea instance. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="190" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="190" bodyend="194"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Py8Collider_1a5a528c25a241352ad3cc5a56ce9ebdf7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::init_user_model</definition>
+        <argsstring>(const std::string pythiaDocPath, const std::vector&lt; std::string &gt; &amp;externalSettings, std::ostream &amp;os)</argsstring>
+        <name>init_user_model</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::init_user_model</qualifiedname>
+        <param>
+          <type>const std::string</type>
+          <declname>pythiaDocPath</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; std::string &gt; &amp;</type>
+          <declname>externalSettings</declname>
+        </param>
+        <param>
+          <type>std::ostream &amp;</type>
+          <declname>os</declname>
+        </param>
+        <briefdescription>
+<para>Initialize from some external settings, assuming no given SLHAea instance. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="197" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="197" bodyend="201"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="user-defined">
+      <header>Event generation and cross section functions</header>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Py8Collider_1a6526db446fe9d9211b171377da856d40" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::nextEvent</definition>
+        <argsstring>(EventT &amp;event) const</argsstring>
+        <name>nextEvent</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::nextEvent</qualifiedname>
+        <param>
+          <type>EventT &amp;</type>
+          <declname>event</declname>
+        </param>
+        <briefdescription>
+<para>Event generation for any Pythia interface to <ref refid="namespaceGambit" kindref="compound">Gambit</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="210" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="210" bodyend="219"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Py8Collider_1a140a68f9f9181c4af6abdaf6b2728dd6" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="virtual">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::xsec_fb</definition>
+        <argsstring>() const</argsstring>
+        <name>xsec_fb</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::xsec_fb</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a51e5e169ab6ad3c5e937046d8213a2b9">xsec_fb</reimplements>
+        <briefdescription>
+<para>Report the total or process-specific cross section (in fb or pb). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="222" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="222" bodyend="222"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Py8Collider_1a9d5000a64828612ddee0fb1733c8bde7" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="virtual">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::xsec_fb</definition>
+        <argsstring>(int process_code) const</argsstring>
+        <name>xsec_fb</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::xsec_fb</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a39c14ee12a602a337d24ff1d7635ecba">xsec_fb</reimplements>
+        <param>
+          <type>int</type>
+          <declname>process_code</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="223" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="223" bodyend="223"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Py8Collider_1a77dce3d6ebdc654f04fa523943281391" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="virtual">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::xsec_pb</definition>
+        <argsstring>() const</argsstring>
+        <name>xsec_pb</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::xsec_pb</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a87acc06518241b88d9083cda640bdf0e">xsec_pb</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="224" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="224" bodyend="224"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Py8Collider_1a77873f5eee4cc5a0c485789099e01679" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="virtual">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::xsec_pb</definition>
+        <argsstring>(int process_code) const</argsstring>
+        <name>xsec_pb</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::xsec_pb</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a89d71e1f8015234ffcbd4e3cf237f8b9">xsec_pb</reimplements>
+        <param>
+          <type>int</type>
+          <declname>process_code</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="225" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="225" bodyend="225"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Py8Collider_1a0790014470d018de91a3c9abece7859a" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="virtual">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::xsecErr_fb</definition>
+        <argsstring>() const</argsstring>
+        <name>xsecErr_fb</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::xsecErr_fb</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a7430cf7800a82f16b6f15a83db98fee6">xsecErr_fb</reimplements>
+        <briefdescription>
+<para>Report the uncertainty in the total or process-specific cross section (in fb or pb). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="228" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="228" bodyend="228"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Py8Collider_1ad560f82f420244285376c75e013cab1a" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="virtual">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::xsecErr_fb</definition>
+        <argsstring>(int process_code) const</argsstring>
+        <name>xsecErr_fb</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::xsecErr_fb</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1BaseCollider_1abb15f7bd2914f06ea12ce3239626260a">xsecErr_fb</reimplements>
+        <param>
+          <type>int</type>
+          <declname>process_code</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="229" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="229" bodyend="229"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Py8Collider_1a151fafe2a64f5c4abe7e4a03428dc79c" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="virtual">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::xsecErr_pb</definition>
+        <argsstring>() const</argsstring>
+        <name>xsecErr_pb</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::xsecErr_pb</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1BaseCollider_1ae58e9a6ae2631f92c0ac9769a82c5424">xsecErr_pb</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="230" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="230" bodyend="230"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Py8Collider_1afb12aeee546b015dcf120fe55ae75ffb" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="virtual">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::xsecErr_pb</definition>
+        <argsstring>(int process_code) const</argsstring>
+        <name>xsecErr_pb</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::xsecErr_pb</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1BaseCollider_1ac777ece98d0a00da1fc323ea6688a718">xsecErr_pb</reimplements>
+        <param>
+          <type>int</type>
+          <declname>process_code</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="231" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="231" bodyend="231"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Py8Collider_1af0a0e267ea5fced895a34e729609c8ef" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="virtual">
+        <type>int</type>
+        <definition>int Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::process_code</definition>
+        <argsstring>() const</argsstring>
+        <name>process_code</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::process_code</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a34f259dd52ec118da2e6e57217b9f8d1">process_code</reimplements>
+        <briefdescription>
+<para>Report an integer process code for the last generated event. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="234" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="234" bodyend="234"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Py8Collider_1aff94f87efa8800793a1bb3fc11834801" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="virtual">
+        <type>std::vector&lt; int &gt;</type>
+        <definition>std::vector&lt; int &gt; Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::all_active_process_codes</definition>
+        <argsstring>() const</argsstring>
+        <name>all_active_process_codes</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::all_active_process_codes</qualifiedname>
+        <reimplements refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a52c3ee9941f4d209a5eefc444794d33e">all_active_process_codes</reimplements>
+        <briefdescription>
+<para>Report the list of all active process codes. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="237" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="237" bodyend="237"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-attrib">
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Py8Collider_1af41412e3402ddda9dac423336a3d1e22" prot="protected" static="no" mutable="no">
+        <type>PythiaT *</type>
+        <definition>PythiaT* Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::_pythiaInstance</definition>
+        <argsstring></argsstring>
+        <name>_pythiaInstance</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::_pythiaInstance</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="41" column="17" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Py8Collider_1a29ed0f06f0b9e87255106e1fda9f4830" prot="protected" static="no" mutable="no">
+        <type>PythiaT *</type>
+        <definition>PythiaT* Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::_pythiaBase</definition>
+        <argsstring></argsstring>
+        <name>_pythiaBase</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::_pythiaBase</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="42" column="17" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Py8Collider_1aca77d2bc2d4f26856eb618807018f5bc" prot="protected" static="no" mutable="no">
+        <type>std::vector&lt; std::string &gt;</type>
+        <definition>std::vector&lt;std::string&gt; Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::_pythiaSettings</definition>
+        <argsstring></argsstring>
+        <name>_pythiaSettings</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::_pythiaSettings</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="43" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="43" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Py8Collider_1a010d849869c2d54eb83ef4d68f18f88e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const PythiaT *</type>
+        <definition>const PythiaT * Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::pythia</definition>
+        <argsstring>() const</argsstring>
+        <name>pythia</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::pythia</qualifiedname>
+        <briefdescription>
+<para>Get the Pythia instance. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="49" column="23" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="49" bodyend="49"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Py8Collider_1aeadb7bca5ebff284bb26320264f72130" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;::SetupMatchingUserHook</definition>
+        <argsstring>()</argsstring>
+        <name>SetupMatchingUserHook</name>
+        <qualifiedname>Gambit::ColliderBit::Py8Collider::SetupMatchingUserHook</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="52" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="52" bodyend="57"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>A specializable, recyclable class interfacing ColliderBit and Pythia. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="2">
+        <label>Gambit::ColliderBit::BaseCollider</label>
+        <link refid="classGambit_1_1ColliderBit_1_1BaseCollider"/>
+      </node>
+      <node id="1">
+        <label>Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;</label>
+        <link refid="classGambit_1_1ColliderBit_1_1Py8Collider"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="2">
+        <label>Gambit::ColliderBit::BaseCollider</label>
+        <link refid="classGambit_1_1ColliderBit_1_1BaseCollider"/>
+      </node>
+      <node id="1">
+        <label>Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;</label>
+        <link refid="classGambit_1_1ColliderBit_1_1Py8Collider"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" line="36" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp" bodystart="37" bodyend="241"/>
+    <listofallmembers>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1a29ed0f06f0b9e87255106e1fda9f4830" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>_pythiaBase</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1af41412e3402ddda9dac423336a3d1e22" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>_pythiaInstance</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1aca77d2bc2d4f26856eb618807018f5bc" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>_pythiaSettings</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1a6ff3d6eda58c8236d818e0336802414b" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>addToSettings</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1aff94f87efa8800793a1bb3fc11834801" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>all_active_process_codes</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a5081cf86ba1a4fd8ddd9a02b07e6c66c" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>antiktR</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1a89df5232d4b46999a0899e7cdfb231e4" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>banner</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a343ec91eb872b66b16f1dd92ae56a270" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>BaseCollider</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1ac02bb06d51ba26df044bd535e6429e2b" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>clear</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1aeae80e144f0889e0d5fb42e44c43ffdd" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>init</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1aa0e506de7f07e74bef7594c3eedfd1a1" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>init</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1a3c51b0f7ca87a71cc5c2f7f386b4e868" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>init</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1add0ca6d3cdbf992ef680c55746fa6f5d" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>init</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1a7a85a588fc16aaee649d6feaf584b329" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>init_user_model</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1a5a528c25a241352ad3cc5a56ce9ebdf7" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>init_user_model</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1a6526db446fe9d9211b171377da856d40" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>nextEvent</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a9425492cd832b3ffcbcf03aeaf1b6755" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>partonOnly</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1af0a0e267ea5fced895a34e729609c8ef" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>process_code</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1a9ac1bddfb0bc6f1fc42525bfb26befce" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>Py8Collider</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1a010d849869c2d54eb83ef4d68f18f88e" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>pythia</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1aeadb7bca5ebff284bb26320264f72130" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>SetupMatchingUserHook</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1a140a68f9f9181c4af6abdaf6b2728dd6" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>xsec_fb</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1a9d5000a64828612ddee0fb1733c8bde7" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>xsec_fb</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1a77dce3d6ebdc654f04fa523943281391" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>xsec_pb</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1a77873f5eee4cc5a0c485789099e01679" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>xsec_pb</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1a0790014470d018de91a3c9abece7859a" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>xsecErr_fb</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1ad560f82f420244285376c75e013cab1a" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>xsecErr_fb</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1a151fafe2a64f5c4abe7e4a03428dc79c" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>xsecErr_pb</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1afb12aeee546b015dcf120fe55ae75ffb" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>xsecErr_pb</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1BaseCollider_1ab6f9a876625fb205bb8171a7ca322343" prot="public" virt="virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>~BaseCollider</name></member>
+      <member refid="classGambit_1_1ColliderBit_1_1Py8Collider_1a35e34f6114bd7940a95dcef00f48a740" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Py8Collider</scope><name>~Py8Collider</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

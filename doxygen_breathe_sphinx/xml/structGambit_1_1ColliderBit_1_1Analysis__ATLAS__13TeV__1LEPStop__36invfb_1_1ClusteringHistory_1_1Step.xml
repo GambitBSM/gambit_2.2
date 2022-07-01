@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+  <compounddef id="structGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__1LEPStop__36invfb_1_1ClusteringHistory_1_1Step" kind="struct" language="C++" prot="public">
+    <compoundname>Gambit::ColliderBit::Analysis_ATLAS_13TeV_1LEPStop_36invfb::ClusteringHistory::Step</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__1LEPStop__36invfb_1_1ClusteringHistory_1_1Step_1a7ad90af668a135661ff6330a6852dde3" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::Analysis_ATLAS_13TeV_1LEPStop_36invfb::ClusteringHistory::Step::pt</definition>
+        <argsstring></argsstring>
+        <name>pt</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_13TeV_1LEPStop_36invfb::ClusteringHistory::Step::pt</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_1LEPStop_36invfb.cpp" line="205" column="18" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_1LEPStop_36invfb.cpp" bodystart="205" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__1LEPStop__36invfb_1_1ClusteringHistory_1_1Step_1a3f402a61712ddb60009f13b6b1ce09ad" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Gambit::ColliderBit::Analysis_ATLAS_13TeV_1LEPStop_36invfb::ClusteringHistory::Step::r</definition>
+        <argsstring></argsstring>
+        <name>r</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_13TeV_1LEPStop_36invfb::ClusteringHistory::Step::r</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_1LEPStop_36invfb.cpp" line="206" column="18" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_1LEPStop_36invfb.cpp" bodystart="206" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__1LEPStop__36invfb_1_1ClusteringHistory_1_1Step_1a7ecdf057b27dcca5b06a7f521008040a" prot="public" static="no" mutable="no">
+        <type>size_t</type>
+        <definition>size_t Gambit::ColliderBit::Analysis_ATLAS_13TeV_1LEPStop_36invfb::ClusteringHistory::Step::constit</definition>
+        <argsstring></argsstring>
+        <name>constit</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_13TeV_1LEPStop_36invfb::ClusteringHistory::Step::constit</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_1LEPStop_36invfb.cpp" line="207" column="18" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_1LEPStop_36invfb.cpp" bodystart="207" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__1LEPStop__36invfb_1_1ClusteringHistory_1_1Step_1a390bf4f0419b8900daa122fde3c7db72" prot="public" static="no" mutable="no">
+        <type>Status</type>
+        <definition>Status Gambit::ColliderBit::Analysis_ATLAS_13TeV_1LEPStop_36invfb::ClusteringHistory::Step::status</definition>
+        <argsstring></argsstring>
+        <name>status</name>
+        <qualifiedname>Gambit::ColliderBit::Analysis_ATLAS_13TeV_1LEPStop_36invfb::ClusteringHistory::Step::status</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_1LEPStop_36invfb.cpp" line="208" column="18" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_1LEPStop_36invfb.cpp" bodystart="208" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_1LEPStop_36invfb.cpp" line="203" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_1LEPStop_36invfb.cpp" bodystart="204" bodyend="209"/>
+    <listofallmembers>
+      <member refid="structGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__1LEPStop__36invfb_1_1ClusteringHistory_1_1Step_1a7ecdf057b27dcca5b06a7f521008040a" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_1LEPStop_36invfb::ClusteringHistory::Step</scope><name>constit</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__1LEPStop__36invfb_1_1ClusteringHistory_1_1Step_1a7ad90af668a135661ff6330a6852dde3" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_1LEPStop_36invfb::ClusteringHistory::Step</scope><name>pt</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__1LEPStop__36invfb_1_1ClusteringHistory_1_1Step_1a3f402a61712ddb60009f13b6b1ce09ad" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_1LEPStop_36invfb::ClusteringHistory::Step</scope><name>r</name></member>
+      <member refid="structGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__1LEPStop__36invfb_1_1ClusteringHistory_1_1Step_1a390bf4f0419b8900daa122fde3c7db72" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_1LEPStop_36invfb::ClusteringHistory::Step</scope><name>status</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>
