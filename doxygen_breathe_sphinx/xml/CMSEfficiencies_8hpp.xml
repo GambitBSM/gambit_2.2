@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="CMSEfficiencies_8hpp" kind="file" language="C++">
     <compoundname>CMSEfficiencies.hpp</compoundname>
     <includes local="no">cfloat</includes>
@@ -10,31 +10,31 @@
     <includes local="yes">HEPUtils/Event.h</includes>
     <includes local="no">iomanip</includes>
     <includes local="no">algorithm</includes>
-    <includedby refid="Analysis__CMS__13TeV__0LEP__137invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__0LEP__13invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_13invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__0LEP__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_36invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__1LEPStop__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_1LEPStop_36invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__1LEPbb__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_1LEPbb_36invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__1Photon1Lepton__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_1Photon1Lepton_36invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__2LEPsoft__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2LEPsoft_36invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__2OSLEP__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_36invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__2OSLEP__chargino__stop__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_chargino_stop_36invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__2Photon__GMSB__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2Photon_GMSB_36invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__2SSLEP__Stop__137invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2SSLEP_Stop_137invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__2SSLEP__Stop__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2SSLEP_Stop_36invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__MONOJET__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_MONOJET_36invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__MultiLEP__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_MultiLEP_36invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__MultiLEP__Full__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_MultiLEP_Full_36invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__Photon__GMSB__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__8TeV__1LEPDMTOP__20invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_1LEPDMTOP_20invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__8TeV__2LEPDMTOP__20invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_2LEPDMTOP_20invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__8TeV__MONOJET__20invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MONOJET_20invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__8TeV__MultiLEP__20invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp</includedby>
-    <includedby refid="getBuckFast_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getBuckFast.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__0LEP__137invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__0LEP__13invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_13invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__0LEP__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_36invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__1LEPStop__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_1LEPStop_36invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__1LEPbb__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_1LEPbb_36invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__1Photon1Lepton__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_1Photon1Lepton_36invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__2LEPsoft__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2LEPsoft_36invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__2OSLEP__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_36invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__2OSLEP__chargino__stop__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_chargino_stop_36invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__2Photon__GMSB__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2Photon_GMSB_36invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__2SSLEP__Stop__137invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2SSLEP_Stop_137invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__2SSLEP__Stop__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2SSLEP_Stop_36invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__MONOJET__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_MONOJET_36invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__MultiLEP__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_MultiLEP_36invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__MultiLEP__Full__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_MultiLEP_Full_36invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__Photon__GMSB__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__8TeV__1LEPDMTOP__20invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_1LEPDMTOP_20invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__8TeV__2LEPDMTOP__20invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_2LEPDMTOP_20invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__8TeV__MONOJET__20invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MONOJET_20invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__8TeV__MultiLEP__20invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp</includedby>
+    <includedby refid="getBuckFast_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/getBuckFast.cpp</includedby>
     <incdepgraph>
       <node id="1">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp</label>
         <link refid="CMSEfficiencies_8hpp"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -104,13 +104,13 @@
     </incdepgraph>
     <invincdepgraph>
       <node id="1">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp</label>
         <link refid="CMSEfficiencies_8hpp"/>
         <childnode refid="2" relation="include">
         </childnode>
       </node>
       <node id="2">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getBuckFast.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/getBuckFast.cpp</label>
         <link refid="getBuckFast_8cpp"/>
       </node>
     </invincdepgraph>
@@ -218,7 +218,7 @@
 <codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="107"><highlight class="normal"></highlight></codeline>
 <codeline lineno="108"><highlight class="normal"></highlight></codeline>
-<codeline lineno="113" refid="namespaceGambit_1_1ColliderBit_1_1CMS_1a6e1e42a2d443facf5dc9e9558cd3cc53" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>smearElectronEnergy(std::vector&lt;HEPUtils::Particle*&gt;&amp;<sp/>electrons)<sp/>{</highlight></codeline>
+<codeline lineno="113" refid="namespaceGambit_1_1ColliderBit_1_1CMS_1a6e1e42a2d443facf5dc9e9558cd3cc53" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespaceGambit_1_1ColliderBit_1_1CMS_1a6e1e42a2d443facf5dc9e9558cd3cc53" kindref="member">smearElectronEnergy</ref>(std::vector&lt;HEPUtils::Particle*&gt;&amp;<sp/>electrons)<sp/>{</highlight></codeline>
 <codeline lineno="114"><highlight class="normal"></highlight></codeline>
 <codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Now<sp/>loop<sp/>over<sp/>the<sp/>electrons<sp/>and<sp/>smear<sp/>the<sp/>4-vectors</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(HEPUtils::Particle*<sp/>e<sp/>:<sp/>electrons)<sp/>{</highlight></codeline>
@@ -251,7 +251,7 @@
 <codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="144"><highlight class="normal"></highlight></codeline>
 <codeline lineno="145"><highlight class="normal"></highlight></codeline>
-<codeline lineno="150" refid="namespaceGambit_1_1ColliderBit_1_1CMS_1a5b468afca764b653736efbdde08caa9c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>smearMuonMomentum(std::vector&lt;HEPUtils::Particle*&gt;&amp;<sp/>muons)<sp/>{</highlight></codeline>
+<codeline lineno="150" refid="namespaceGambit_1_1ColliderBit_1_1CMS_1a5b468afca764b653736efbdde08caa9c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespaceGambit_1_1ColliderBit_1_1CMS_1a5b468afca764b653736efbdde08caa9c" kindref="member">smearMuonMomentum</ref>(std::vector&lt;HEPUtils::Particle*&gt;&amp;<sp/>muons)<sp/>{</highlight></codeline>
 <codeline lineno="151"><highlight class="normal"></highlight></codeline>
 <codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Now<sp/>loop<sp/>over<sp/>the<sp/>muons<sp/>and<sp/>smear<sp/>the<sp/>4-vectors</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(HEPUtils::Particle*<sp/>p<sp/>:<sp/>muons)<sp/>{</highlight></codeline>
@@ -283,7 +283,7 @@
 <codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="180"><highlight class="normal"></highlight></codeline>
 <codeline lineno="181"><highlight class="normal"></highlight></codeline>
-<codeline lineno="188" refid="namespaceGambit_1_1ColliderBit_1_1CMS_1aa82b5cc950fdb91e31c9bb3ac7d26d80" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>smearJets(std::vector&lt;HEPUtils::Jet*&gt;&amp;<sp/>jets)<sp/>{</highlight></codeline>
+<codeline lineno="188" refid="namespaceGambit_1_1ColliderBit_1_1CMS_1aa82b5cc950fdb91e31c9bb3ac7d26d80" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespaceGambit_1_1ColliderBit_1_1CMS_1aa82b5cc950fdb91e31c9bb3ac7d26d80" kindref="member">smearJets</ref>(std::vector&lt;HEPUtils::Jet*&gt;&amp;<sp/>jets)<sp/>{</highlight></codeline>
 <codeline lineno="189"><highlight class="normal"></highlight></codeline>
 <codeline lineno="190"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Const<sp/>resolution<sp/>for<sp/>now</highlight></codeline>
 <codeline lineno="195"><highlight class="comment"></highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//const<sp/>double<sp/>resolution<sp/>=<sp/>0.03;</highlight><highlight class="normal"></highlight></codeline>
@@ -308,7 +308,7 @@
 <codeline lineno="214"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="215"><highlight class="normal"></highlight></codeline>
 <codeline lineno="216"><highlight class="normal"></highlight></codeline>
-<codeline lineno="223" refid="namespaceGambit_1_1ColliderBit_1_1CMS_1ac1abbb95c9de02059ac9b59bfdea20a2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>smearTaus(std::vector&lt;HEPUtils::Particle*&gt;&amp;<sp/>taus)<sp/>{</highlight></codeline>
+<codeline lineno="223" refid="namespaceGambit_1_1ColliderBit_1_1CMS_1ac1abbb95c9de02059ac9b59bfdea20a2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespaceGambit_1_1ColliderBit_1_1CMS_1ac1abbb95c9de02059ac9b59bfdea20a2" kindref="member">smearTaus</ref>(std::vector&lt;HEPUtils::Particle*&gt;&amp;<sp/>taus)<sp/>{</highlight></codeline>
 <codeline lineno="224"><highlight class="normal"></highlight></codeline>
 <codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Const<sp/>resolution<sp/>for<sp/>now</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="226"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>resolution<sp/>=<sp/>0.03;</highlight></codeline>
@@ -436,6 +436,6 @@
 <codeline lineno="361"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
 <codeline lineno="362"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/CMSEfficiencies.hpp"/>
   </compounddef>
 </doxygen>

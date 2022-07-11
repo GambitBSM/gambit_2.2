@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb" kind="class" language="C++" prot="public">
     <compoundname>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</compoundname>
     <basecompoundref refid="classGambit_1_1ColliderBit_1_1Analysis" prot="public" virt="non-virtual">Gambit::ColliderBit::Analysis</basecompoundref>
@@ -29,7 +29,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="30" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="30" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="30" column="16" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="30" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1aac5867a7f34be181bedd80dd8f3ab2df" prot="private" static="no" mutable="no">
         <type>vector&lt; int &gt;</type>
@@ -43,7 +43,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="42" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="42" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="42" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="42" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a16dd6be8d92c4fabff990c50ab4436cb" prot="private" static="no" mutable="no">
         <type>vector&lt; string &gt;</type>
@@ -57,7 +57,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="43" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="43" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="43" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="43" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a72e400b5feef8978643b27fe4435be1b" prot="private" static="no" mutable="no">
         <type>size_t</type>
@@ -71,7 +71,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="44" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="44" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="44" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="44" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-static-attrib">
@@ -88,7 +88,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="53" column="35" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="53" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="53" column="35" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="53" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-attrib">
@@ -104,7 +104,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="57" column="17"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="57" column="17"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1ab6d519239b67af55c89f359d8ef5a891" prot="public" static="no" mutable="no">
         <type>struct <ref refid="structGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1_1ptJetComparison" kindref="compound">Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb::ptJetComparison</ref></type>
@@ -118,7 +118,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="61" column="20"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="61" column="20"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-func">
@@ -134,7 +134,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="63" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="63" bodyend="76"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="63" column="7" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="63" bodyend="76"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a02f4433c054ffcad5c3887c0c3d4b140" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
         <type>void</type>
@@ -153,7 +153,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="79" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="79" bodyend="266"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="79" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="79" bodyend="266"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a41d7d82f263fb735d215a8b767ae0930" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
         <type>void</type>
@@ -173,7 +173,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="269" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="269" bodyend="281"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="269" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="269" bodyend="281"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1adeaae1b59e5fdacb3fd4c37a8f661a5e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
         <type>void</type>
@@ -189,7 +189,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="284" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="284" bodyend="328"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="284" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="284" bodyend="328"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a45a03f58dad37f0c807c48b31a88f731" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>double</type>
@@ -207,7 +207,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="331" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="331" bodyend="346"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="331" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="331" bodyend="346"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a7e878dbf9098b35d24a4bdbfcdf8a8f8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>double</type>
@@ -233,7 +233,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="348" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="348" bodyend="379"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="348" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="348" bodyend="379"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="protected-func">
@@ -251,7 +251,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="383" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="383" bodyend="388"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="383" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="383" bodyend="388"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -296,7 +296,7 @@
         <link refid="structGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1_1ptJetComparison"/>
       </node>
     </collaborationgraph>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="26" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="26" bodyend="390"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" line="26" column="5" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp" bodystart="26" bodyend="390"/>
     <listofallmembers>
       <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_1a570c5dd8fb8ac7d6e97b1169c8f68206" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>_counters</name></member>
       <member refid="classGambit_1_1ColliderBit_1_1Analysis_1aaece33bab954d82337af28138e893bcf" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_confnote_36invfb</scope><name>add</name></member>

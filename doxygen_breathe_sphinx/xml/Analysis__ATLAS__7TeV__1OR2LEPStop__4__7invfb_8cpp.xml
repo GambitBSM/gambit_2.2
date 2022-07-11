@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="Analysis__ATLAS__7TeV__1OR2LEPStop__4__7invfb_8cpp" kind="file" language="C++">
     <compoundname>Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp</compoundname>
     <includes refid="Analysis_8hpp" local="yes">gambit/ColliderBit/analyses/Analysis.hpp</includes>
@@ -118,7 +118,7 @@
         </childnode>
       </node>
       <node id="1">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp</label>
         <link refid="Analysis__ATLAS__7TeV__1OR2LEPStop__4__7invfb_8cpp"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -218,7 +218,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp" line="26" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp" bodystart="26" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp" line="26" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp" bodystart="26" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="Analysis__ATLAS__7TeV__1OR2LEPStop__4__7invfb_8cpp_1a754dc203b3c5b6f63a5a4a305d927092" prot="public" static="no">
         <name>f</name>
@@ -230,7 +230,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp" line="42" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp" bodystart="55" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp" line="42" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp" bodystart="55" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="Analysis__ATLAS__7TeV__1OR2LEPStop__4__7invfb_8cpp_1a22da07d2825526c618062b683dfa3eb7" prot="public" static="no">
         <name>g</name>
@@ -242,7 +242,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp" line="43" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp" bodystart="56" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp" line="43" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp" bodystart="56" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="Analysis__ATLAS__7TeV__1OR2LEPStop__4__7invfb_8cpp_1a9ad800bc501d46ad1561531eea4a2c3a" prot="public" static="no">
         <name>VARMAP</name>
@@ -257,7 +257,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp" line="50" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp" bodystart="50" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp" line="50" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp" bodystart="50" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="Analysis__ATLAS__7TeV__1OR2LEPStop__4__7invfb_8cpp_1a754dc203b3c5b6f63a5a4a305d927092" prot="public" static="no">
         <name>f</name>
@@ -269,7 +269,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp" line="55" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp" bodystart="55" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp" line="55" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp" bodystart="55" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="Analysis__ATLAS__7TeV__1OR2LEPStop__4__7invfb_8cpp_1a22da07d2825526c618062b683dfa3eb7" prot="public" static="no">
         <name>g</name>
@@ -281,7 +281,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp" line="56" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp" bodystart="56" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp" line="56" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp" bodystart="56" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -766,6 +766,6 @@
 <codeline lineno="489"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="490"><highlight class="normal"></highlight></codeline>
     </programlisting>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb.cpp"/>
   </compounddef>
 </doxygen>

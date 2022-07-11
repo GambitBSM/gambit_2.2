@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="classGambit_1_1ColliderBit_1_1BuckFast" kind="class" language="C++" prot="public">
     <compoundname>Gambit::ColliderBit::BuckFast</compoundname>
     <basecompoundref refid="classGambit_1_1ColliderBit_1_1BaseDetector" prot="public" virt="non-virtual">Gambit::ColliderBit::BaseDetector</basecompoundref>
@@ -18,7 +18,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" line="40" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" bodystart="40" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" line="40" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" bodystart="40" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1BuckFast_1ad9a4be930d279934fb4656ae2b3b6278" prot="public" static="no" mutable="no">
         <type>void(*</type>
@@ -32,7 +32,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" line="41" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" bodystart="41" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" line="41" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" bodystart="41" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1BuckFast_1a24104d26641549ccb1f4b2ccb430778f" prot="public" static="no" mutable="no">
         <type>void(*</type>
@@ -46,7 +46,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" line="42" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" bodystart="42" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" line="42" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" bodystart="42" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1BuckFast_1a221ff5fc02cfac3139c3a07439449391" prot="public" static="no" mutable="no">
         <type>void(*</type>
@@ -60,7 +60,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" line="43" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" bodystart="43" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" line="43" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" bodystart="43" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="user-defined">
@@ -82,7 +82,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" line="65" column="22" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" bodystart="65" bodyend="65"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" line="65" column="22" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" bodystart="65" bodyend="65"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BuckFast_1a299949863c2f6f61c5e7aac6ce3cb4fc" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
         <type>void</type>
@@ -98,7 +98,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" line="68" column="22" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" bodystart="68" bodyend="68"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" line="68" column="22" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" bodystart="68" bodyend="68"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-func">
@@ -124,7 +124,7 @@
 <para><xrefsect id="todo_1_todo000082"><xreftitle>Todo</xreftitle><xrefdescription><para>Run-dependence? </para>
 </xrefdescription></xrefsect></para>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" line="47" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/detectors/BuckFast.cpp" bodystart="28" bodyend="49"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" line="47" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/detectors/BuckFast.cpp" bodystart="28" bodyend="49"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BuckFast_1aaaa29c92b9071d90b0635d44df22ad2b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type></type>
@@ -139,7 +139,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" line="52" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" bodystart="52" bodyend="56"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" line="52" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" bodystart="52" bodyend="56"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BuckFast_1a8cad765d8f26e203291f2c732881ea2b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
         <type></type>
@@ -154,7 +154,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" line="59" column="17" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" bodystart="59" bodyend="59"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" line="59" column="17" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" bodystart="59" bodyend="59"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -186,7 +186,7 @@
         </childnode>
       </node>
     </collaborationgraph>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" line="33" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" bodystart="34" bodyend="72"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" line="33" column="5" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BuckFast.hpp" bodystart="34" bodyend="72"/>
     <listofallmembers>
       <member refid="classGambit_1_1ColliderBit_1_1BaseDetector_1a43059e9b5a38d1f395d45fe21a95a46c" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::BuckFast</scope><name>BaseDetector</name></member>
       <member refid="classGambit_1_1ColliderBit_1_1BuckFast_1aaaa29c92b9071d90b0635d44df22ad2b" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::BuckFast</scope><name>BuckFast</name></member>

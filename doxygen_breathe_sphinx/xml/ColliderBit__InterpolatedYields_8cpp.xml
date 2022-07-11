@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="ColliderBit__InterpolatedYields_8cpp" kind="file" language="C++">
     <compoundname>ColliderBit_InterpolatedYields.cpp</compoundname>
     <includes local="no">gsl/gsl_math.h</includes>
@@ -334,7 +334,7 @@
         </childnode>
       </node>
       <node id="1">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp</label>
         <link refid="ColliderBit__InterpolatedYields_8cpp"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -1520,6 +1520,6 @@ Analyses based on: arxiv:1711.03301 and <ulink url="https://journals.aps.org/prd
 <codeline lineno="1043"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
 <codeline lineno="1044"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>Gambit</highlight><highlight class="normal"></highlight></codeline>
     </programlisting>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp"/>
   </compounddef>
 </doxygen>

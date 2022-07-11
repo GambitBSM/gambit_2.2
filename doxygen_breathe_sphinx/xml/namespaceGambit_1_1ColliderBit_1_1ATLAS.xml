@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="namespaceGambit_1_1ColliderBit_1_1ATLAS" kind="namespace" language="C++">
     <compoundname>Gambit::ColliderBit::ATLAS</compoundname>
       <sectiondef kind="user-defined">
@@ -23,7 +23,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="62" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="62" bodyend="69"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="62" column="21" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="62" bodyend="69"/>
       </memberdef>
       <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1aed15b411a9dd1525f4c429001c30e2a9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -42,7 +42,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="85" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="85" bodyend="92"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="85" column="21" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="85" bodyend="92"/>
       </memberdef>
       <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a6210e1c1e1bc6608f69993b0706ae8c0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -61,7 +61,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="96" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="96" bodyend="102"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="96" column="21" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="96" bodyend="102"/>
       </memberdef>
       <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a7f1d0f561ef2bb959ce676241583c33e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -83,7 +83,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="108" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="108" bodyend="110"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="108" column="21" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="108" bodyend="110"/>
       </memberdef>
       <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a9adc55ce219844b065be0eeaf11fdf29" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -106,7 +106,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="116" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="116" bodyend="148"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="116" column="21" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="116" bodyend="148"/>
       </memberdef>
       <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a7fed72d230ec295af7d49ff61621a8c6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -124,7 +124,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="152" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="152" bodyend="164"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="152" column="21" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="152" bodyend="164"/>
       </memberdef>
       <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a507de27fec530a6e39e3b8011b7113fb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -143,7 +143,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="168" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="168" bodyend="207"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="168" column="21" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="168" bodyend="207"/>
       </memberdef>
       <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1ad58906fcb8d039c94e1fa423a76e70a6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -162,7 +162,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="211" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="211" bodyend="235"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="211" column="21" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="211" bodyend="235"/>
       </memberdef>
       <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a43ab61722c904642c08b935644dbd0d9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -183,7 +183,7 @@
 <para><xrefsect id="todo_1_todo000009"><xreftitle>Todo</xreftitle><xrefdescription><para>Is this the best way to smear? Should we preserve the mean jet energy, or pT, or direction? </para>
 </xrefdescription></xrefsect></para>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="239" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="239" bodyend="262"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="239" column="21" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="239" bodyend="262"/>
       </memberdef>
       <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a8e7ceb91b11cb38469b7f264b8503bb1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -206,7 +206,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="266" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="266" bodyend="281"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="266" column="21" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="266" bodyend="281"/>
       </memberdef>
       <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a788362cce2744e7839f03f6db3950b90" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -227,7 +227,7 @@
 <para><xrefsect id="todo_1_todo000010"><xreftitle>Todo</xreftitle><xrefdescription><para>Is this the best way to smear? Should we preserve the mean jet energy, or pT, or direction? </para>
 </xrefdescription></xrefsect></para>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="285" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="285" bodyend="299"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="285" column="21" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="285" bodyend="299"/>
       </memberdef>
       <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1ab03047d9d6f4f1dae6fdd0389a8e57ac" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -249,7 +249,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="305" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="305" bodyend="327"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="305" column="21" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="305" bodyend="327"/>
       </memberdef>
       <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1ae43a82fc034584efbd3cc1eac2f4fb5b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -268,7 +268,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="330" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="330" bodyend="332"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="330" column="21" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="330" bodyend="332"/>
       </memberdef>
       <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a8b216d9e4efc7df991880ec63234b234" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -289,7 +289,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="336" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="336" bodyend="358"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="336" column="21" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="336" bodyend="358"/>
       </memberdef>
       <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1ab9a06c7b74a0a6fb60a3f4631aea30fc" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -308,7 +308,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="361" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="361" bodyend="363"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="361" column="21" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="361" bodyend="363"/>
       </memberdef>
       <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a0a1f1fd449b607e29c209e3b457e7d7e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -333,7 +333,7 @@
 <xrefsect id="todo_1_todo000012"><xreftitle>Todo</xreftitle><xrefdescription><para>This is an exact duplication of the below filtering code <ndash/> split into a single util fn (in unnamed namespace?) when binned fns are static </para>
 </xrefdescription></xrefsect></para>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="367" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="367" bodyend="435"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="367" column="21" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="367" bodyend="435"/>
       </memberdef>
       <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a983c53a960850a544394eb2a54ec2f8c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -352,7 +352,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="439" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="439" bodyend="441"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="439" column="21" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="439" bodyend="441"/>
       </memberdef>
       <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a02e070dc82bdc10cf8d4d07477cd111c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -377,7 +377,7 @@
 <xrefsect id="todo_1_todo000013"><xreftitle>Todo</xreftitle><xrefdescription><para>This is an exact duplication of the above filtering code <ndash/> split into a single util fn (in unnamed namespace?) when binned fns are static </para>
 </xrefdescription></xrefsect></para>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="446" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="446" bodyend="513"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="446" column="21" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="446" bodyend="513"/>
       </memberdef>
       <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a007d73ea93df5516dae8e99a99d23a40" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -396,7 +396,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="517" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="517" bodyend="519"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="517" column="21" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="517" bodyend="519"/>
       </memberdef>
       <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a9020cc2ad2fd30a62f5e69105b48c1a1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -421,7 +421,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="524" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="524" bodyend="548"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="524" column="21" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="524" bodyend="548"/>
       </memberdef>
       <memberdef kind="function" id="namespaceGambit_1_1ColliderBit_1_1ATLAS_1a6411ca61a81ce789e3a480801ef7d565" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -446,7 +446,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="552" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="552" bodyend="578"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="552" column="21" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" bodystart="552" bodyend="578"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -454,6 +454,6 @@
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="42" column="5"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ATLASEfficiencies.hpp" line="42" column="5"/>
   </compounddef>
 </doxygen>

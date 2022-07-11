@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="classGambit_1_1ColliderBit_1_1BaseLimitContainer" kind="class" language="C++" prot="public" abstract="yes">
     <compoundname>Gambit::ColliderBit::BaseLimitContainer</compoundname>
     <derivedcompoundref refid="classGambit_1_1ColliderBit_1_1ALEPHSelectronLimitAt208GeV" prot="public" virt="non-virtual">Gambit::ColliderBit::ALEPHSelectronLimitAt208GeV</derivedcompoundref>
@@ -37,7 +37,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="53" column="29" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" bodystart="53" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="53" column="29" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" bodystart="53" bodyend="-1"/>
       </memberdef>
       <memberdef kind="typedef" id="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1af0a62b0113edab7c63d419044f4fbb30" prot="protected" static="no">
         <type>std::vector&lt; <ref refid="classGambit_1_1ColliderBit_1_1LineSegment" kindref="compound">LineSegment</ref> &gt;</type>
@@ -51,7 +51,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="54" column="29" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" bodystart="54" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="54" column="29" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" bodystart="54" bodyend="-1"/>
       </memberdef>
       <memberdef kind="typedef" id="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a01f125e9632da4bafc0d8cfce3c67916" prot="protected" static="no">
         <type>Contours *</type>
@@ -65,7 +65,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="55" column="26" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" bodystart="55" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="55" column="26" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" bodystart="55" bodyend="-1"/>
       </memberdef>
       <memberdef kind="typedef" id="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a40cede06c7138118bc911dff1fa83099" prot="protected" static="no">
         <type>std::map&lt; unsigned, Contours * &gt;</type>
@@ -79,7 +79,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="56" column="26" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" bodystart="56" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="56" column="26" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" bodystart="56" bodyend="-1"/>
       </memberdef>
       <memberdef kind="typedef" id="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1af03ddeccbc3e882935ee023362726d20" prot="protected" static="no">
         <type>std::pair&lt; unsigned, Contours * &gt;</type>
@@ -93,7 +93,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="57" column="27" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" bodystart="57" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="57" column="27" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" bodystart="57" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a2e41f565834c702b7dc3407edfce0c58" prot="protected" static="no" mutable="no">
         <type>std::vector&lt; double &gt;</type>
@@ -110,7 +110,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="61" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" bodystart="61" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="61" column="21" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" bodystart="61" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1ab5612b14cb0afa257d734db994f4cf9e" prot="protected" static="no" mutable="no">
         <type>LimitContours</type>
@@ -124,7 +124,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="64" column="23" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" bodystart="64" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="64" column="23" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" bodystart="64" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a92ac7a894497bba1d5ebb54bcc0cfe32" prot="protected" static="no" mutable="no">
         <type><ref refid="classGambit_1_1ColliderBit_1_1P2" kindref="compound">P2</ref></type>
@@ -138,7 +138,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="67" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" bodystart="67" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="67" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" bodystart="67" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="user-defined">
@@ -155,7 +155,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="76" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" bodystart="76" bodyend="76"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="76" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" bodystart="76" bodyend="76"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a0c6085c4694ec3da44a399b911fceb14" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type></type>
@@ -169,7 +169,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="78" column="17" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits/BaseLimitContainer.cpp" bodystart="28" bodyend="35"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="78" column="17" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/limits/BaseLimitContainer.cpp" bodystart="28" bodyend="35"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="user-defined">
@@ -215,7 +215,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="88" column="20"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="88" column="20"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a7868f6d2819b3851808f4a03edb8a05e" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
         <type>bool</type>
@@ -262,7 +262,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="91" column="22"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="91" column="22"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a719fe557148f5e84f5e00198d62b5a02" prot="public" static="no" const="yes" explicit="no" inline="no" virt="virtual">
         <type>double</type>
@@ -283,7 +283,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="94" column="24" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits/BaseLimitContainer.cpp" bodystart="37" bodyend="40"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="94" column="24" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/limits/BaseLimitContainer.cpp" bodystart="37" bodyend="40"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1ada1ec947a57acf8cec088822940b4ce2" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type>double</type>
@@ -310,7 +310,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="97" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits/BaseLimitContainer.cpp" bodystart="42" bodyend="122"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="97" column="16" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/limits/BaseLimitContainer.cpp" bodystart="42" bodyend="122"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a4ffeb04551bd95c730a9725abdcf59bb" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -354,7 +354,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="100" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits/BaseLimitContainer.cpp" bodystart="125" bodyend="139"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="100" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/limits/BaseLimitContainer.cpp" bodystart="125" bodyend="139"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1aee6a44b01a17bd3b91ca5542428da10b" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -378,7 +378,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="104" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits/BaseLimitContainer.cpp" bodystart="142" bodyend="157"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="104" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/limits/BaseLimitContainer.cpp" bodystart="142" bodyend="157"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -525,7 +525,7 @@
         <link refid="classGambit_1_1ColliderBit_1_1P2"/>
       </node>
     </collaborationgraph>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="46" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" bodystart="47" bodyend="107"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" line="46" column="5" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/BaseLimitContainer.hpp" bodystart="47" bodyend="107"/>
     <listofallmembers>
       <member refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a92ac7a894497bba1d5ebb54bcc0cfe32" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::BaseLimitContainer</scope><name>_externalPoint</name></member>
       <member refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1ab5612b14cb0afa257d734db994f4cf9e" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::BaseLimitContainer</scope><name>_limitContours</name></member>

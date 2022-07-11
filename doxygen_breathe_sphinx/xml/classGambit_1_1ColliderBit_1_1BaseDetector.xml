@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="classGambit_1_1ColliderBit_1_1BaseDetector" kind="class" language="C++" prot="public" abstract="yes">
     <compoundname>Gambit::ColliderBit::BaseDetector</compoundname>
     <derivedcompoundref refid="classGambit_1_1ColliderBit_1_1BuckFast" prot="public" virt="non-virtual">Gambit::ColliderBit::BuckFast</derivedcompoundref>
@@ -24,7 +24,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" line="63" column="22" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" bodystart="63" bodyend="63"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" line="63" column="22" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" bodystart="63" bodyend="63"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseDetector_1a30ff7f6b2468fb7425ab461ffe93c82c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
         <type>void</type>
@@ -40,7 +40,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" line="65" column="22" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" bodystart="65" bodyend="65"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" line="65" column="22" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" bodystart="65" bodyend="65"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-func">
@@ -57,7 +57,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" line="51" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" bodystart="51" bodyend="51"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" line="51" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" bodystart="51" bodyend="51"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseDetector_1abeb0944a917583cd386069aa3be18acc" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
         <type></type>
@@ -72,7 +72,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" line="53" column="17" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" bodystart="53" bodyend="53"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" line="53" column="17" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" bodystart="53" bodyend="53"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseDetector_1a29a2425364aa9778c37ffffc5b6a2eb1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
         <type>void</type>
@@ -87,7 +87,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" line="55" column="22" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" bodystart="55" bodyend="55"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" line="55" column="22" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" bodystart="55" bodyend="55"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseDetector_1af54fbafcfc406121532d925ea06ff476" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
         <type>void</type>
@@ -106,7 +106,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" line="58" column="22"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" line="58" column="22"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -126,7 +126,7 @@
         </childnode>
       </node>
     </inheritancegraph>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" line="45" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" bodystart="46" bodyend="68"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" line="45" column="5" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors/BaseDetector.hpp" bodystart="46" bodyend="68"/>
     <listofallmembers>
       <member refid="classGambit_1_1ColliderBit_1_1BaseDetector_1a43059e9b5a38d1f395d45fe21a95a46c" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::BaseDetector</scope><name>BaseDetector</name></member>
       <member refid="classGambit_1_1ColliderBit_1_1BaseDetector_1a29a2425364aa9778c37ffffc5b6a2eb1" prot="public" virt="virtual"><scope>Gambit::ColliderBit::BaseDetector</scope><name>clear</name></member>

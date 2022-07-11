@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__PhotonGGM__36invfb" kind="class" language="C++" prot="public">
     <compoundname>Gambit::ColliderBit::Analysis_ATLAS_13TeV_PhotonGGM_36invfb</compoundname>
     <basecompoundref refid="classGambit_1_1ColliderBit_1_1Analysis" prot="public" virt="non-virtual">Gambit::ColliderBit::Analysis</basecompoundref>
@@ -25,7 +25,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" line="42" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" bodystart="42" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" line="42" column="16" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" bodystart="42" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-static-attrib">
@@ -42,7 +42,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" line="110" column="35" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" bodystart="110" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" line="110" column="35" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" bodystart="110" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-func">
@@ -58,7 +58,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" line="112" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" bodystart="112" bodyend="126"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" line="112" column="7" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" bodystart="112" bodyend="126"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__PhotonGGM__36invfb_1a292d9cfc72c8831b237c0625853fccdd" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
         <type>void</type>
@@ -77,7 +77,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" line="128" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" bodystart="128" bodyend="554"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" line="128" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" bodystart="128" bodyend="554"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__PhotonGGM__36invfb_1ab5dce4b8dbfc230ee150256c068112c9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
         <type>void</type>
@@ -97,7 +97,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" line="557" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" bodystart="557" bodyend="572"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" line="557" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" bodystart="557" bodyend="572"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__PhotonGGM__36invfb_1a94a7d9c826fc7e62a06dbbc10e78d2d1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
         <type>void</type>
@@ -113,7 +113,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" line="575" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" bodystart="575" bodyend="603"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" line="575" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" bodystart="575" bodyend="603"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="protected-func">
@@ -131,7 +131,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" line="607" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" bodystart="607" bodyend="614"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" line="607" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" bodystart="607" bodyend="614"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -162,7 +162,7 @@
         </childnode>
       </node>
     </collaborationgraph>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" line="38" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" bodystart="38" bodyend="616"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" line="38" column="5" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp" bodystart="38" bodyend="616"/>
     <listofallmembers>
       <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__PhotonGGM__36invfb_1ad8c0551c28ce5f7b6b436e0b21749d4f" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_PhotonGGM_36invfb</scope><name>_counters</name></member>
       <member refid="classGambit_1_1ColliderBit_1_1Analysis_1aaece33bab954d82337af28138e893bcf" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_PhotonGGM_36invfb</scope><name>add</name></member>

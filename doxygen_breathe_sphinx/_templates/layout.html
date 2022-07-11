@@ -1,0 +1,20 @@
+{% extends "!layout.html" %}
+{% block sidebartitle %}
+  <div class="col-lg-9 col-xl-8 text-center">
+    <p class="meta"><a href="/">⇦ Back to GAMBIT homepage</a></p>
+  </div>
+{%- include "searchbox.html" %} 
+{% endblock %}
+{% block footer %} {{ super() }}
+<style>
+  /* Sidebar header (and topbar for mobile) */
+  .wy-side-nav-search, .wy-nav-top, .wy-nav-side {
+    background: #efefef;
+  }
+
+  /* Sidebar text */
+  .wy-menu-vertical a {
+    color: #000000;
+  }
+</style>
+{% endblock %}

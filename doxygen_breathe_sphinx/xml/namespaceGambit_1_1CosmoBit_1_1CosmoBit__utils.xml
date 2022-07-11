@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="namespaceGambit_1_1CosmoBit_1_1CosmoBit__utils" kind="namespace" language="C++">
+    <compoundname>Gambit::CosmoBit::CosmoBit_utils</compoundname>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="CosmoBit__utils_8hpp_1ab492fde4aa3d3c40ef541beb878d9f91" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::CosmoBit::CosmoBit_utils::entropy_density_SM</definition>
+        <argsstring>(double T, bool T_in_eV=false)</argsstring>
+        <name>entropy_density_SM</name>
+        <qualifiedname>Gambit::CosmoBit::CosmoBit_utils::entropy_density_SM</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>T</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>T_in_eV</declname>
+          <defval>false</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit_utils.cpp" line="28" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit_utils.cpp" bodystart="28" bodyend="36" declfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_utils.hpp" declline="40" declcolumn="14"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_utils.hpp" line="37" column="5"/>
+  </compounddef>
+</doxygen>

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.9.5" xml:lang="en-US">
+<doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.9.4" xml:lang="en-US">
   <compound refid="structGambit_1_1ColliderBit_1_1__gsl__target__func__params" kind="struct"><name>Gambit::ColliderBit::_gsl_target_func_params</name>
     <member refid="structGambit_1_1ColliderBit_1_1__gsl__target__func__params_1a7171cdfa0cf120e1aa48d3788e23c03f" kind="variable"><name>lambda</name></member>
     <member refid="structGambit_1_1ColliderBit_1_1__gsl__target__func__params_1ad9d31c2f9d07f94b2a78aeeb0ec7ca04" kind="variable"><name>adata_ptrs_original</name></member>
@@ -1776,6 +1776,23 @@
     <member refid="classGambit_1_1ColliderBit_1_1P2_1ae62f27ca7a76e685cde654a4abf54533" kind="function"><name>operator*=</name></member>
     <member refid="classGambit_1_1ColliderBit_1_1P2_1a1fc688205e15402f342cd50d02f61eea" kind="function"><name>operator/=</name></member>
   </compound>
+  <compound refid="classGambit_1_1CosmoBit_1_1Parametrised__ps" kind="class"><name>Gambit::CosmoBit::Parametrised_ps</name>
+    <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1abe60547b686e3b03a48694f87f8294e7" kind="variable"><name>N_pivot</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a255d6473164ae59b7966e7897f45777d" kind="variable"><name>n_s</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a8463763ae1204dcc479bd56db7ff9bc9" kind="variable"><name>ln10A_s</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a1afa0fdf3f1e7c64d08d32977cb04191" kind="variable"><name>r</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a756b098212d08598fdd38ea31090c640" kind="function"><name>Parametrised_ps</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a2470db8483e391a1ae352634a0c47ae6" kind="function"><name>~Parametrised_ps</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a7c41165e2916fc4e62731a5497289e76" kind="function"><name>set_N_pivot</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1ab1362c45fe6b7c069585cbb5fae044b6" kind="function"><name>set_n_s</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a8badc6616b7d73a00f8916bce5818e1b" kind="function"><name>set_ln10A_s</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1afa6675b0367ef7fbfbce3bde87cca48f" kind="function"><name>set_r</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a2abc51a322c35510f6c43224161fe804" kind="function"><name>get_N_pivot</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1ac6702c67dff57fa93948cb578b139095" kind="function"><name>get_n_s</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a5dbacc2581babe1d8703028d16e55472" kind="function"><name>get_ln10A_s</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a928d7bac85ab47a6fdfe1ea5481481d1" kind="function"><name>get_r</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a467899c27f2db98ee7c243936c05d610" kind="function"><name>get_parametrised_ps_map</name></member>
+  </compound>
   <compound refid="structGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__1LEPbb__20invfb_1_1particleComparison" kind="struct"><name>Gambit::ColliderBit::Analysis_ATLAS_8TeV_1LEPbb_20invfb::particleComparison</name>
     <member refid="structGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__1LEPbb__20invfb_1_1particleComparison_1a2d0bb71a0d00cc368f961b7469fcbf85" kind="function"><name>operator()</name></member>
   </compound>
@@ -1807,6 +1824,27 @@
     <member refid="classGambit_1_1ColliderBit_1_1PID__pair__xsec__container_1ae35643d325260a63273f734533e9d606" kind="function"><name>register_pid_pair_sharing_xsec</name></member>
     <member refid="classGambit_1_1ColliderBit_1_1PID__pair__xsec__container_1a1858a7f676726a1adfe8afab701e7b00" kind="function"><name>related_processes</name></member>
     <member refid="classGambit_1_1ColliderBit_1_1PID__pair__xsec__container_1a7d7177e1bb578a1e2c95d2072899a8c8" kind="function"><name>register_related_process</name></member>
+  </compound>
+  <compound refid="classGambit_1_1CosmoBit_1_1Primordial__ps" kind="class"><name>Gambit::CosmoBit::Primordial_ps</name>
+    <member refid="classGambit_1_1CosmoBit_1_1Primordial__ps_1a09461a8906fbb8e899acc87222ee4f18" kind="variable"><name>N_pivot</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Primordial__ps_1abd12a74a84d7cc23c1976d7c7a977a25" kind="variable"><name>k</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Primordial__ps_1aa95095b0fdb485c513bfa5c50c400c67" kind="variable"><name>P_s</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Primordial__ps_1ac31b5a8aa25c73e030169a93abf88a0d" kind="variable"><name>P_s_iso</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Primordial__ps_1a811b4a8c619a2069a41087720ebe5151" kind="variable"><name>P_t</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Primordial__ps_1aaa90e479a0524c083c391cdd940378cb" kind="variable"><name>vec_size</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Primordial__ps_1a745ac74287e4b41ceb11613c3753b519" kind="function"><name>Primordial_ps</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Primordial__ps_1a6de03e2dae5fc6c02ea084c2a95d595b" kind="function"><name>~Primordial_ps</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Primordial__ps_1aab73d55d6d0a2fef49d8cad8da236246" kind="function"><name>set_N_pivot</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Primordial__ps_1a2285d3a60ea2894445d296f76a7c221c" kind="function"><name>fill_k</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Primordial__ps_1aefb8a587c3063eb2086daf56a69f26e0" kind="function"><name>fill_P_s</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Primordial__ps_1a71468b130ba3c8c57ad29ebacf735b86" kind="function"><name>fill_P_s_iso</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Primordial__ps_1a008c2ef45c2bbc4a22a6e0fee05c1f73" kind="function"><name>fill_P_t</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Primordial__ps_1a613aab1db9078a6048c437063d598ed3" kind="function"><name>get_N_pivot</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Primordial__ps_1ae64766da83c84421e2c60af516dd81b1" kind="function"><name>get_k</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Primordial__ps_1a9c9891f339e670c01f0d25776859c2f8" kind="function"><name>get_P_s</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Primordial__ps_1a5ce96c926574c9614702bf678ae474ee" kind="function"><name>get_P_t</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Primordial__ps_1a6450c276bde00e0d69de1ca8247042dd" kind="function"><name>get_P_s_iso</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1Primordial__ps_1ac1ea0d8d237024522424b762f893a6d2" kind="function"><name>get_vec_size</name></member>
   </compound>
   <compound refid="classGambit_1_1ColliderBit_1_1process__xsec__container" kind="class"><name>Gambit::ColliderBit::process_xsec_container</name>
     <member refid="classGambit_1_1ColliderBit_1_1process__xsec__container_1a17644b8706af72883e862852268f61f4" kind="variable"><name>_process_code</name></member>
@@ -1953,6 +1991,38 @@
     <member refid="structGambit_1_1ColliderBit_1_1SignalRegionData_1a099ee0717475475575e134c56dd3b2e0" kind="function"><name>calc_n_sig_scaled_sys</name></member>
     <member refid="structGambit_1_1ColliderBit_1_1SignalRegionData_1a049e9fef87b373ddad7066bd0227ae96" kind="function"><name>calc_n_sig_scaled_err</name></member>
     <member refid="structGambit_1_1ColliderBit_1_1SignalRegionData_1a73a616e7029b318754df21f6671daa64" kind="function"><name>calc_n_sigbkg_err</name></member>
+  </compound>
+  <compound refid="classGambit_1_1CosmoBit_1_1SM__time__evo" kind="class"><name>Gambit::CosmoBit::SM_time_evo</name>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1af41d9896a3fad0f53550d7ba09ac515b" kind="variable"><name>grid_size</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1ac177edc0878e133dc086876198f0933a" kind="variable"><name>Neff</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1adc901a347036511f7f7f079cbff6c70f" kind="variable"><name>t_grid</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1adf84b9a2dcaf78e7e4204f869c4fc5d0" kind="variable"><name>T_grid</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a9df2ed7c91be4aea79ae56b35eed4fc2" kind="variable"><name>Tnu_grid</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a67b4d440335558f06816c2db0710d4d1" kind="variable"><name>H_grid</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a70b274c851a14af98cdb34e95b777bb2" kind="variable"><name>lnR_grid</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a1a3ebdb41368b61c696020f1b1f93445" kind="variable"><name>T_spline</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a425a3664d722ffc2144433eed63fdde9" kind="variable"><name>Tnu_spline</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1ad3b70f05e46838f9f43e19bd1eff2424" kind="variable"><name>H_spline</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1af0779276033fbb358c4ac4235665cea9" kind="variable"><name>lnR_spline</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a8a94cbf7fcbbf945bdc9690dc5f43117" kind="function"><name>SM_time_evo</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1aa966ab800f393be2e615cc406ffde4bb" kind="function"><name>~SM_time_evo</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a341c83bf0114b185da18bf93d3e4779f" kind="function"><name>get_t_grid</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a89ba9796b433f8f40615688e3a1a7908" kind="function"><name>get_T_grid</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a9adbeae34222bfb257f748481a19b958" kind="function"><name>get_Tnu_grid</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a5adad75d4269c7a8d46aa8c7cee57271" kind="function"><name>get_H_grid</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a68b137493e1a21d4e5527815ad526030" kind="function"><name>get_lnR_grid</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a13882adec37d0efcbb6d37ece58d7084" kind="function"><name>T_at_t</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a104b37e4f6f7a9111e986735a3b835e0" kind="function"><name>Tnu_at_t</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a8506079f0bf13be8f4fb4b31614dd08c" kind="function"><name>H_at_t</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1ae4c719626e78deaba944d407b376467d" kind="function"><name>lnR_at_t</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a4b603154ac9977336f1e475106dd88f4" kind="function"><name>t0</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a01f2ec4a385fcd7e8d10769459901af7" kind="function"><name>tf</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a7dfb04f04046553a76ff0d690d65982c" kind="function"><name>size</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a677eaefb7a8f5947e4fb35dbd852a88b" kind="function"><name>update_grid</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1af50d78e9103492f75658dc45a88556fb" kind="function"><name>H_at_T_and_Tnu</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a5089073be6db206a77be66c8a7135c49" kind="function"><name>interpolation_range_check</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1aca597469365088fe4b7b68c7c55cec14" kind="function"><name>safe_interpolation</name></member>
+    <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a4535f2af4d40c2919443d5f39ce038f9" kind="function"><name>check_size</name></member>
   </compound>
   <compound refid="structGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__1LEPStop__36invfb_1_1ClusteringHistory_1_1Step" kind="struct"><name>Gambit::ColliderBit::Analysis_ATLAS_13TeV_1LEPStop_36invfb::ClusteringHistory::Step</name>
     <member refid="structGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__1LEPStop__36invfb_1_1ClusteringHistory_1_1Step_1a7ad90af668a135661ff6330a6852dde3" kind="variable"><name>pt</name></member>
@@ -2443,6 +2513,101 @@
     <member refid="EventConversionUtils_8hpp_1a770e75c5700bcba64f3f274010403168" kind="function"><name>get_unified_mother2_pid</name></member>
     <member refid="EventConversionUtils_8hpp_1af921a7edeca1d7d217e277440c9cb8e9" kind="function"><name>get_unified_child_ids</name></member>
   </compound>
+  <compound refid="namespaceGambit_1_1CosmoBit" kind="namespace"><name>Gambit::CosmoBit</name>
+    <member refid="CosmoBit__types_8hpp_1a2af98ce9a357489cc8afbef0f10dc435" kind="function"><name>CosmoBit_error</name></member>
+    <member refid="CosmoBit__types_8hpp_1a087a176fd5e519f64ea30545a3717597" kind="function"><name>CosmoBit_warning</name></member>
+    <member refid="BBN_8cpp_1a3ebf770baad7bb35da04fbee353cd878" kind="function"><name>AlterBBN_Input</name></member>
+    <member refid="BBN_8cpp_1a95f5ae56e3bf55300e89cecc069bf419" kind="function"><name>populate_correlation_matrix</name></member>
+    <member refid="BBN_8cpp_1a8ce69c1dbb535a29b938cf3ab124b576" kind="function"><name>compute_primordial_abundances_BBN</name></member>
+    <member refid="BBN_8cpp_1ab2e86b23acefc249ca2d62a7ac9c083f" kind="function"><name>primordial_abundances</name></member>
+    <member refid="BBN_8cpp_1af3e331c0d680697fa425af7876b19a38" kind="function"><name>primordial_abundances_decayingDM</name></member>
+    <member refid="BBN_8cpp_1a47ef444534fbbbc9ad910bdd9ff8c61e" kind="function"><name>extract_helium_abundance</name></member>
+    <member refid="BBN_8cpp_1ad6c83a8c28c9f9140b212ee305448be9" kind="function"><name>compute_BBN_LogLike</name></member>
+    <member refid="CMB_8cpp_1afb447e2cabe6b1d54da0e0b3a6159b87" kind="function"><name>class_get_unlensed_Cl_TT</name></member>
+    <member refid="CMB_8cpp_1ac41dcccd4104d65aef0ea2050198efcc" kind="function"><name>class_get_unlensed_Cl_TE</name></member>
+    <member refid="CMB_8cpp_1a0a19d07a7d9f580b99a16319ad948cd5" kind="function"><name>class_get_unlensed_Cl_EE</name></member>
+    <member refid="CMB_8cpp_1aca14b68823505f2748df073977d2db6e" kind="function"><name>class_get_unlensed_Cl_BB</name></member>
+    <member refid="CMB_8cpp_1ad4bfe9ed2a010bc707b5e03d8edb9522" kind="function"><name>class_get_unlensed_Cl_PhiPhi</name></member>
+    <member refid="CMB_8cpp_1a571c3eab020d229468d2279b940da018" kind="function"><name>class_get_lensed_Cl_TT</name></member>
+    <member refid="CMB_8cpp_1a1454a8e415fe257d9ff8e9394d51a39d" kind="function"><name>class_get_lensed_Cl_TE</name></member>
+    <member refid="CMB_8cpp_1aca4a50d8a2f1586c89af5502f494b895" kind="function"><name>class_get_lensed_Cl_EE</name></member>
+    <member refid="CMB_8cpp_1a7dd47b138db77fd0879764c2d8043611" kind="function"><name>class_get_lensed_Cl_BB</name></member>
+    <member refid="CMB_8cpp_1a0bfe5469c39cfe0f4e652391b0c95b5a" kind="function"><name>class_get_lensed_Cl_PhiPhi</name></member>
+    <member refid="CMB_8cpp_1ab1f3872e42d748b1af2eb07871a4b2f1" kind="function"><name>energy_injection_efficiency_func</name></member>
+    <member refid="CMB_8cpp_1a0b5355bb26b9572bb6d11ac17cd32ec7" kind="function"><name>f_eff_weighted</name></member>
+    <member refid="CMB_8cpp_1a57e43e66a1b97bb3745780e2deae5d9b" kind="function"><name>f_eff_at_z</name></member>
+    <member refid="CMB_8cpp_1aab23e289803d72601caeffe4fe210907" kind="function"><name>f_eff_constant</name></member>
+    <member refid="CMB_8cpp_1aef38406c8553199b6dbe322658fb6259" kind="function"><name>p_ann</name></member>
+    <member refid="CMB_8cpp_1a006fec795eb5d414602b7415a1176cb6" kind="function"><name>lnL_p_ann_P18_TTTEEE_lowE_lensing_BAO</name></member>
+    <member refid="CMB_8cpp_1acb5dfbc21e6c1127adf37f493ca04c93" kind="function"><name>energy_injection_spectrum_AnnihilatingDM_mixture</name></member>
+    <member refid="CMB_8cpp_1a6c40184a628a57b0f32c0e7d01bbc0c6" kind="function"><name>energy_injection_spectrum_DecayingDM_mixture</name></member>
+    <member refid="CosmoALPs_8cpp_1a0474ff60b3331feb935de5ac6b05add1" kind="function"><name>lifetime_ALP_agg</name></member>
+    <member refid="CosmoALPs_8cpp_1aa2b2523653512c9cf7caea55f2c09028" kind="function"><name>minimum_abundance_ALP_analytical</name></member>
+    <member refid="CosmoALPs_8cpp_1aa9e6ea7bc54effdbd72fe1ec5b8bf33e" kind="function"><name>minimum_abundance_ALP_numerical</name></member>
+    <member refid="CosmoALPs_8cpp_1adb4acdcb56ca1d9a69a8e3b4e7d2c601" kind="function"><name>minimum_fraction_ALP</name></member>
+    <member refid="CosmoALPs_8cpp_1a601ea554b4e0a8eadebb4b429993f454" kind="function"><name>DM_fraction_ALP</name></member>
+    <member refid="CosmoALPs_8cpp_1af4df8e1502b1bd760568b9076c482afc" kind="function"><name>total_DM_abundance_ALP</name></member>
+    <member refid="CosmoALPs_8cpp_1aa952767d5dbc77e15c1a06f2b9af12c4" kind="function"><name>compute_dNeff_etaBBN_ALP</name></member>
+    <member refid="CosmoALPs_8cpp_1a7001accb67f2a8b5dd66a429526ebaa1" kind="function"><name>eta_ratio_ALP</name></member>
+    <member refid="CosmoALPs_8cpp_1abdadbda737b569e81406c3e2cbc7e1c5" kind="function"><name>Neff_evolution_ALP</name></member>
+    <member refid="CosmoBit_8cpp_1a5a0a8523cc8027be8a6e2b5c6dc0a952" kind="function"><name>set_k_pivot</name></member>
+    <member refid="CosmoBit_8cpp_1a438bb65390f62e34afd4e88519c6f3b3" kind="function"><name>get_Neff_SM</name></member>
+    <member refid="CosmoBit_8cpp_1a0ae5b166829b45f44af6f982b826db82" kind="function"><name>get_mNu_tot</name></member>
+    <member refid="CosmoBit_8cpp_1ae2f550d3ba0a5fef8e465f3fbdcf0c4f" kind="function"><name>get_N_ur</name></member>
+    <member refid="CosmoBit_8cpp_1a18164b87eda42e4ac97c41f835a5086b" kind="function"><name>T_ncdm_SM</name></member>
+    <member refid="CosmoBit_8cpp_1a33caefbdcf53a0acb927b388bb859e4c" kind="function"><name>T_ncdm</name></member>
+    <member refid="CosmoBit_8cpp_1abe44a9568eba8ec263653a25a83fd876" kind="function"><name>eta0_LCDM</name></member>
+    <member refid="CosmoBit_8cpp_1afd08eb6a7cfcb77c451edbffdcd339db" kind="function"><name>compute_Omega0_b</name></member>
+    <member refid="CosmoBit_8cpp_1a95066f8346ced17d98c88e438771fa61" kind="function"><name>compute_Omega0_cdm</name></member>
+    <member refid="CosmoBit_8cpp_1a00c4b35843eb635280709b23bd9d736d" kind="function"><name>compute_Omega0_g</name></member>
+    <member refid="CosmoBit_8cpp_1ab1a2fdff0c64d34da5e4cfe9f31ed9ae" kind="function"><name>compute_n0_g</name></member>
+    <member refid="CosmoBit_8cpp_1abf2009730e77b857c809dc8f9a6d104e" kind="function"><name>compute_Omega0_ur</name></member>
+    <member refid="CosmoBit_8cpp_1a6df4c09d7778f1b6c186f7def7e9981b" kind="function"><name>get_H0_classy</name></member>
+    <member refid="CosmoBit_8cpp_1ab860fb70388eef108998c536f45f6f5f" kind="function"><name>get_H_at_z_classy</name></member>
+    <member refid="CosmoBit_8cpp_1ac8f03a4f9b7ab5c45c859b3b5aa809f8" kind="function"><name>get_time_at_z_classy</name></member>
+    <member refid="CosmoBit_8cpp_1a2dddbdb45048037d102957d49f39d912" kind="function"><name>get_age_universe_from_time_at_z</name></member>
+    <member refid="CosmoBit_8cpp_1a3df8338fc877e3bde7385dd592fe0908" kind="function"><name>get_Omega0_m_classy</name></member>
+    <member refid="CosmoBit_8cpp_1a518bc8084ee91e5a0f9ba590fb2e2e9d" kind="function"><name>get_Omega0_r_classy</name></member>
+    <member refid="CosmoBit_8cpp_1ad4b2082dba3a47c5bb4d4a6935b13f83" kind="function"><name>get_Omega0_ur_classy</name></member>
+    <member refid="CosmoBit_8cpp_1a7aa627982cef08cb1d48b3384b239aad" kind="function"><name>get_Omega0_ncdm_classy</name></member>
+    <member refid="CosmoBit_8cpp_1ace1118abbab14eef38bec6a6f4a0cd1e" kind="function"><name>get_S8_classy</name></member>
+    <member refid="CosmoBit_8cpp_1a2a88f8f81841fe52398c93027b7299db" kind="function"><name>get_Neff_classy</name></member>
+    <member refid="CosmoBit_8cpp_1a42ce44adb1bfba7e5175bace0293b9f4" kind="function"><name>get_tau_reio_classy</name></member>
+    <member refid="CosmoBit_8cpp_1a3ba104c88040ebcd675c0aab10a7af90" kind="function"><name>get_z_reio_classy</name></member>
+    <member refid="CosmoBit_8cpp_1a0794f21c09bf6f8a4ebde48fbd77e612" kind="function"><name>get_rs_drag_classy</name></member>
+    <member refid="Inflation_8cpp_1a66206feaa2d5b45f0eb3898420e02679" kind="function"><name>multimode_error_handling</name></member>
+    <member refid="Inflation_8cpp_1a4916d381f2135badaa9c3866b7913246" kind="function"><name>set_multimode_inputs</name></member>
+    <member refid="Inflation_8cpp_1ab01c57be2efb6cdfe6e554f319bbffc2" kind="function"><name>get_multimode_primordial_ps</name></member>
+    <member refid="Inflation_8cpp_1a340938b83d9a3517bd08f3ea85640271" kind="function"><name>get_multimode_parametrised_ps</name></member>
+    <member refid="Planck_8cpp_1ac2a44d84a758e217b50af980871012fc" kind="function"><name>compute_Planck_nuisance_prior_loglike</name></member>
+    <member refid="Planck_8cpp_1ae58bd4da27a0bffaf9fcbd2e8d3de3f4" kind="function"><name>compute_Planck_sz_prior</name></member>
+    <member refid="Planck_8cpp_1a0ca4664f4c9128c0289e3fb894d5a190" kind="function"><name>function_Planck_lowl_TT_2018_loglike</name></member>
+    <member refid="Planck_8cpp_1abc0fa87b95f2e64c171885f44605b6df" kind="function"><name>function_Planck_lowl_EE_2018_loglike</name></member>
+    <member refid="Planck_8cpp_1a3ecedea9b896e34954f04f13b27bc36e" kind="function"><name>function_Planck_lowl_TTEE_2018_loglike</name></member>
+    <member refid="Planck_8cpp_1aae61cd39a1f1246295a643a9cc8bc8eb" kind="function"><name>function_Planck_highl_TT_2018_loglike</name></member>
+    <member refid="Planck_8cpp_1ac30bba4e1e7456e313411d88cb3a5ad5" kind="function"><name>function_Planck_highl_TT_lite_2018_loglike</name></member>
+    <member refid="Planck_8cpp_1abe8ecf200cc96fb9bc969d79a23f8287" kind="function"><name>function_Planck_highl_TTTEEE_2018_loglike</name></member>
+    <member refid="Planck_8cpp_1ad5927068e2c1880de0a8b31b890ecf05" kind="function"><name>function_Planck_highl_TTTEEE_lite_2018_loglike</name></member>
+    <member refid="Planck_8cpp_1a880be75a1ac214558429281796cceda2" kind="function"><name>function_Planck_lensing_2018_loglike</name></member>
+    <member refid="Planck_8cpp_1ab35a48f3c9ded8dc953be192f11f6421" kind="function"><name>function_Planck_lensing_marged_2018_loglike</name></member>
+    <member refid="Planck_8cpp_1a6352dae0e140dff563a2a595e2a385a5" kind="function"><name>function_Planck_lowl_TT_2015_loglike</name></member>
+    <member refid="Planck_8cpp_1a4e6a74f4fa163b17c253633ba09167dc" kind="function"><name>function_Planck_lowl_TEB_2015_loglike</name></member>
+    <member refid="Planck_8cpp_1a3fe77b6f4072f60816422426a3305d89" kind="function"><name>function_Planck_highl_TT_2015_loglike</name></member>
+    <member refid="Planck_8cpp_1a754e46d253f28f3c7e3bbd6ce85bbdd3" kind="function"><name>function_Planck_highl_TT_lite_2015_loglike</name></member>
+    <member refid="Planck_8cpp_1a6f661de89156663708fce4d603e54f1e" kind="function"><name>function_Planck_highl_TTTEEE_2015_loglike</name></member>
+    <member refid="Planck_8cpp_1a7bdada8272e97fe1d0d52d1cbc5b5ba7" kind="function"><name>function_Planck_highl_TTTEEE_lite_2015_loglike</name></member>
+    <member refid="Planck_8cpp_1a40235ca6e28e5f160397ace93232227a" kind="function"><name>function_Planck_lensing_2015_loglike</name></member>
+  </compound>
+  <compound refid="namespaceGambit_1_1CosmoBit_1_1_0d146" kind="namespace"><name>Gambit::CosmoBit::@146</name>
+    <member refid="namespaceGambit_1_1CosmoBit_1_1_0d146_1af56eb4fdf1fbc7a781a107fc8c2fcb7f" kind="enum"><name>interpolation_bound</name></member>
+  </compound>
+  <compound refid="namespaceGambit_1_1CosmoBit_1_1_0d151" kind="namespace"><name>Gambit::CosmoBit::@151</name>
+  </compound>
+  <compound refid="namespaceGambit_1_1CosmoBit_1_1_0d158" kind="namespace"><name>Gambit::CosmoBit::@158</name>
+  </compound>
+  <compound refid="namespaceGambit_1_1CosmoBit_1_1CosmoBit__utils" kind="namespace"><name>Gambit::CosmoBit::CosmoBit_utils</name>
+    <member refid="CosmoBit__utils_8hpp_1ab492fde4aa3d3c40ef541beb878d9f91" kind="function"><name>entropy_density_SM</name></member>
+  </compound>
   <compound refid="namespacegenerate__raster__scan__settings" kind="namespace"><name>generate_raster_scan_settings</name>
     <member refid="generate__raster__scan__settings_8py_1af5a2a5ce10262f684004ba2327d55fa9" kind="variable"><name>m2_data</name></member>
     <member refid="generate__raster__scan__settings_8py_1aa76c27c66f751438f155fec3bde6ebc0" kind="variable"><name>xsec_fb_data</name></member>
@@ -2473,6 +2638,8 @@
     <member refid="lester__mt2__bisect_8h_1a4d176db4292aa9dd6ace9b5206effe2c" kind="function"><name>__private_ellipsesAreDisjoint</name></member>
   </compound>
   <compound refid="namespaceLHEF" kind="namespace"><name>LHEF</name>
+  </compound>
+  <compound refid="namespaceLogTags" kind="namespace"><name>LogTags</name>
   </compound>
   <compound refid="namespacemt2__bisect" kind="namespace"><name>mt2_bisect</name>
   </compound>
@@ -2661,7 +2828,7 @@
     <member refid="ColliderBit__LEP__rollcall_8hpp_1a3cd3a25c1f16544ae5b3e41546eaf254" kind="variable"><name>LEP188_SLHA1_convention_xsec_chipm_22</name></member>
     <member refid="ColliderBit__LEP__rollcall_8hpp_1a0c4294ac133e871ad27313ec252e0165" kind="variable"><name>ALEPH_Selectron_LLike</name></member>
     <member refid="ColliderBit__LEP__rollcall_8hpp_1abec2732e97b008b701f3451b249fbd90" kind="variable"><name>ALEPH_Selectron_Conservative_LLike</name></member>
-    <member refid="ColliderBit__LEP__rollcall_8hpp_1a188b1e9931f7efbbd5ad7a8fc4eb17eb" kind="variable"><name>double</name></member>
+    <member refid="ColliderBit__LEP__rollcall_8hpp_1a8868d78910aa75da769db51d45e81bb2" kind="variable"><name>double</name></member>
     <member refid="ColliderBit__LEP__rollcall_8hpp_1a026026adc97a546e6ef1d63683061924" kind="variable"><name>selectron_l_decay_rates</name></member>
     <member refid="ColliderBit__LEP__rollcall_8hpp_1a37aa59d27712ae1255d9c0bfbde72058" kind="variable"><name>selectron_r_decay_rates</name></member>
     <member refid="ColliderBit__LEP__rollcall_8hpp_1ae02a0053e9a3c6fdc2b89dbb31c82888" kind="variable"><name>ALEPH_Stau_LLike</name></member>
@@ -3209,44 +3376,254 @@
   </compound>
   <compound refid="xsec_8cpp" kind="file"><name>xsec.cpp</name>
   </compound>
+  <compound refid="CosmoBit__rollcall_8hpp" kind="file"><name>CosmoBit_rollcall.hpp</name>
+    <member refid="CosmoBit__rollcall_8hpp_1a2c63ae95fe7c6106ae1ec9c283afa486" kind="define"><name>MODULE</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a62a0f8a0b822f31ff84bc8252b33e7c8" kind="define"><name>REFERENCE</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" kind="define"><name>CAPABILITY</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" kind="define"><name>FUNCTION</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1ae15be2234879c56ace3a61ea9446adae" kind="variable"><name>gambit_inflation_observables</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a8868d78910aa75da769db51d45e81bb2" kind="variable"><name>double</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1ac61dfa3fb7b3c174c928fd90218f44a8" kind="variable"><name>plc_tag</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1aaa745ffbb62c237cc97fa9da72e75ef6" kind="variable"><name>alterbbn_tag</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a61569f2965b7a369eb10b6d75d410d11" kind="variable"><name>int</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1abc0a38c858980a7fe13865e50759a827" kind="variable"><name>map_str_int</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1ac9c84fa68bbad002983e35ce3663c686" kind="variable"><name>void</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a6558abd3d8eea459c295f1c24d25e7a3" kind="function"><name>BACKEND_REQ</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a4131a1ff9d9d0f23be21ed4804300764" kind="function"><name>BACKEND_REQ</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1ac58255aa57676931dea0aa043f9e22df" kind="function"><name>BACKEND_REQ</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a0776d7f78b591d5ce5fe8679df6e5a37" kind="function"><name>BACKEND_REQ</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a26ee7ea286bfcd253f145d1e5a85fbbc" kind="function"><name>BACKEND_REQ</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a5a0ec5a34d4e92eb272eaaed646dce1b" kind="function"><name>BACKEND_REQ</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1ab4e32f54e406870c48cbb25820a56791" kind="function"><name>BACKEND_REQ</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a5ee7001c2c908685bed03673c7f375d9" kind="function"><name>BACKEND_REQ</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a6e26b5434a3aa468a060e344de693c92" kind="function"><name>BACKEND_REQ</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a9ce38e4726e36a2199d6ae1a061fff6c" kind="function"><name>BACKEND_REQ</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a1db895c29b5ec1d75520070719763adb" kind="function"><name>BACKEND_REQ</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a496bca566cf71697e416b7b6720f0a48" kind="function"><name>BACKEND_REQ</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a602a4611821588cc9381c18e71a13863" kind="function"><name>BACKEND_REQ</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a2f01703c59442cd7c3e16e882d27336e" kind="function"><name>BACKEND_REQ</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a7504e5bb9b2999106418d4f9a012f10f" kind="function"><name>BACKEND_REQ</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a007097b62c0bfb2bd398eb4657625146" kind="function"><name>BACKEND_REQ</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a4e34f80c6d54d9c22ad7d9d29e928d91" kind="function"><name>BACKEND_REQ</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a75c232bcdb6bcb546152587546ff67a6" kind="function"><name>BACKEND_REQ</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a93eab5723c037e8be64cb27ad9d11d50" kind="function"><name>BACKEND_REQ</name></member>
+    <member refid="CosmoBit__rollcall_8hpp_1a51b98edec9dabfd7a39105630a0a6ab1" kind="function"><name>BACKEND_REQ</name></member>
+  </compound>
+  <compound refid="CosmoBit__types_8hpp" kind="file"><name>CosmoBit_types.hpp</name>
+  </compound>
+  <compound refid="CosmoBit__utils_8hpp" kind="file"><name>CosmoBit_utils.hpp</name>
+  </compound>
+  <compound refid="BBN_8cpp" kind="file"><name>BBN.cpp</name>
+  </compound>
+  <compound refid="Boltzmann_8cpp" kind="file"><name>Boltzmann.cpp</name>
+  </compound>
+  <compound refid="CMB_8cpp" kind="file"><name>CMB.cpp</name>
+  </compound>
+  <compound refid="CosmoALPs_8cpp" kind="file"><name>CosmoALPs.cpp</name>
+    <member refid="CosmoALPs_8cpp_1a6f935064101908cb9dac7c34bc80e1fb" kind="variable"><name>na0</name></member>
+    <member refid="CosmoALPs_8cpp_1a244bf42c46054cf1113be44d55f2156d" kind="variable"><name>mass</name></member>
+    <member refid="CosmoALPs_8cpp_1ae5f7c26321910a384f6f0d37910858a2" kind="variable"><name>tau</name></member>
+    <member refid="CosmoALPs_8cpp_1aa9a9f15087bbd6bbdeafc128fbfaeb77" kind="variable"><name>SM_quantities</name></member>
+  </compound>
+  <compound refid="CosmoBit_8cpp" kind="file"><name>CosmoBit.cpp</name>
+  </compound>
+  <compound refid="CosmoBit__types_8cpp" kind="file"><name>CosmoBit_types.cpp</name>
+    <member refid="CosmoBit__types_8cpp_1a2baf64af0a58812d148a39021bdf6e5a" kind="define"><name>GSL_SPLINE_TYPE</name></member>
+  </compound>
+  <compound refid="CosmoBit__utils_8cpp" kind="file"><name>CosmoBit_utils.cpp</name>
+  </compound>
+  <compound refid="Inflation_8cpp" kind="file"><name>Inflation.cpp</name>
+  </compound>
+  <compound refid="ModGrav_8cpp" kind="file"><name>ModGrav.cpp</name>
+  </compound>
+  <compound refid="MontePython_8cpp" kind="file"><name>MontePython.cpp</name>
+  </compound>
+  <compound refid="Planck_8cpp" kind="file"><name>Planck.cpp</name>
+  </compound>
   <compound refid="todo" kind="page"><name>todo</name>
   </compound>
   <compound refid="deprecated" kind="page"><name>deprecated</name>
   </compound>
-  <compound refid="dir_262b43c519d43214d405683c7e3a8f39" kind="dir"><name>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses</name>
+  <compound refid="dir_262b43c519d43214d405683c7e3a8f39" kind="dir"><name>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses</name>
   </compound>
-  <compound refid="dir_ebf4efc09232e9b3baff73345d00af17" kind="dir"><name>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses</name>
+  <compound refid="dir_ebf4efc09232e9b3baff73345d00af17" kind="dir"><name>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses</name>
   </compound>
-  <compound refid="dir_e33afb057d1d4a1228c8c4d05c43b8ff" kind="dir"><name>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit</name>
+  <compound refid="dir_e33afb057d1d4a1228c8c4d05c43b8ff" kind="dir"><name>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit</name>
   </compound>
-  <compound refid="dir_18844a962068c5ffc5567e7b65967bca" kind="dir"><name>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit</name>
+  <compound refid="dir_18844a962068c5ffc5567e7b65967bca" kind="dir"><name>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit</name>
   </compound>
-  <compound refid="dir_fd68025055671e0d2e19b14e75b158f3" kind="dir"><name>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders</name>
+  <compound refid="dir_fd68025055671e0d2e19b14e75b158f3" kind="dir"><name>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders</name>
   </compound>
-  <compound refid="dir_12b2d02957c73176617de2a81a1a001d" kind="dir"><name>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors</name>
+  <compound refid="dir_b1a5fa1245cbf0e22758453297d4af82" kind="dir"><name>C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit</name>
   </compound>
-  <compound refid="dir_ec0001d0a47d8f5e87814a0c290a00e6" kind="dir"><name>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/detectors</name>
+  <compound refid="dir_1093d180d56907fe9a1c021de5d6c81e" kind="dir"><name>C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit</name>
   </compound>
-  <compound refid="dir_5ec7ed99c429be57649080f5572cb885" kind="dir"><name>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/examples</name>
+  <compound refid="dir_12b2d02957c73176617de2a81a1a001d" kind="dir"><name>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/detectors</name>
   </compound>
-  <compound refid="dir_23cb615865cdef5cc6f1be63d4618712" kind="dir"><name>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit</name>
+  <compound refid="dir_ec0001d0a47d8f5e87814a0c290a00e6" kind="dir"><name>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/detectors</name>
   </compound>
-  <compound refid="dir_a1b5d117b782d273ac11f3902b68d1a6" kind="dir"><name>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/examples/HepMC_example</name>
+  <compound refid="dir_5ec7ed99c429be57649080f5572cb885" kind="dir"><name>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/examples</name>
   </compound>
-  <compound refid="dir_86971f7a3e033a44fdd79643f3070191" kind="dir"><name>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include</name>
+  <compound refid="dir_23cb615865cdef5cc6f1be63d4618712" kind="dir"><name>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit</name>
   </compound>
-  <compound refid="dir_2fff4dab633ec20c000165c1106151f7" kind="dir"><name>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits</name>
+  <compound refid="dir_5b8774dd36e9577e60f8101be4192fe3" kind="dir"><name>C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit</name>
   </compound>
-  <compound refid="dir_43317e43f0d2f00527788176b6ed19bf" kind="dir"><name>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits</name>
+  <compound refid="dir_a1b5d117b782d273ac11f3902b68d1a6" kind="dir"><name>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/examples/HepMC_example</name>
   </compound>
-  <compound refid="dir_b2272b1f38710d84426e6269e8974172" kind="dir"><name>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models</name>
+  <compound refid="dir_86971f7a3e033a44fdd79643f3070191" kind="dir"><name>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include</name>
   </compound>
-  <compound refid="dir_6a2ef1661f87480de03fb9e3f0a6d5bc" kind="dir"><name>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/models</name>
+  <compound refid="dir_1ef626acfeeefe186ec3cc93aa0083c5" kind="dir"><name>C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include</name>
   </compound>
-  <compound refid="dir_1f7cbebc080ad51a0fd4bd5825e55e9f" kind="dir"><name>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8</name>
+  <compound refid="dir_2fff4dab633ec20c000165c1106151f7" kind="dir"><name>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits</name>
   </compound>
-  <compound refid="dir_8d8d78fa40d3abc744d88b85d344fbd6" kind="dir"><name>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts</name>
+  <compound refid="dir_43317e43f0d2f00527788176b6ed19bf" kind="dir"><name>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/limits</name>
   </compound>
-  <compound refid="dir_ebc0d8ef92b132863f07a78e664e2ed5" kind="dir"><name>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src</name>
+  <compound refid="dir_b2272b1f38710d84426e6269e8974172" kind="dir"><name>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models</name>
+  </compound>
+  <compound refid="dir_6a2ef1661f87480de03fb9e3f0a6d5bc" kind="dir"><name>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/models</name>
+  </compound>
+  <compound refid="dir_1f7cbebc080ad51a0fd4bd5825e55e9f" kind="dir"><name>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8</name>
+  </compound>
+  <compound refid="dir_8d8d78fa40d3abc744d88b85d344fbd6" kind="dir"><name>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/scripts</name>
+  </compound>
+  <compound refid="dir_ebc0d8ef92b132863f07a78e664e2ed5" kind="dir"><name>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src</name>
+  </compound>
+  <compound refid="dir_c6c8e7eb6ca38d0550273d68b4b9515a" kind="dir"><name>C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src</name>
   </compound>
 </doxygenindex>

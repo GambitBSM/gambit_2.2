@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb" kind="class" language="C++" prot="public">
     <compoundname>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</compoundname>
     <basecompoundref refid="classGambit_1_1ColliderBit_1_1Analysis" prot="public" virt="non-virtual">Gambit::ColliderBit::Analysis</basecompoundref>
@@ -16,7 +16,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="36" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="36" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="36" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="36" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1ac10ebf1123ed00ffc68b04cbf3709efd" prot="private" static="no" mutable="no">
         <type>double</type>
@@ -30,7 +30,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="36" column="23" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="36" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="36" column="23" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="36" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1acabda83bdfa32fa20688b704546657a4" prot="private" static="no" mutable="no">
         <type>double</type>
@@ -44,7 +44,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="36" column="32" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="36" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="36" column="32" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="36" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1a10a566680ee5699271e87bda4a28f2d4" prot="private" static="no" mutable="no">
         <type>double</type>
@@ -58,7 +58,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="36" column="41" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="36" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="36" column="41" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="36" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1a29b659845c703240b7637aa1852d0320" prot="private" static="no" mutable="no">
         <type>double</type>
@@ -72,7 +72,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="37" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="37" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="37" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="37" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1a53616cada25fc8c46233231ef21e516c" prot="private" static="no" mutable="no">
         <type>double</type>
@@ -86,7 +86,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="37" column="23" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="37" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="37" column="23" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="37" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1a7606d7c35c9740385304cc6c9c33ad50" prot="private" static="no" mutable="no">
         <type>double</type>
@@ -100,7 +100,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="37" column="32" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="37" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="37" column="32" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="37" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1ae99ca84e8c4112b7c201705f55b7383e" prot="private" static="no" mutable="no">
         <type>vector&lt; int &gt;</type>
@@ -114,7 +114,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="39" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="39" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="39" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="39" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1a0d2a3ad9fd3086b71f9742133dad668a" prot="private" static="no" mutable="no">
         <type>vector&lt; string &gt;</type>
@@ -128,7 +128,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="40" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="40" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="40" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="40" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1ab042fd57a30ce28fd862e3ddcc0aea3c" prot="private" static="no" mutable="no">
         <type>int</type>
@@ -142,7 +142,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="41" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="41" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="41" column="11" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="41" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-static-attrib">
@@ -159,7 +159,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="99" column="35" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="99" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="99" column="35" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="99" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="private-func">
@@ -187,7 +187,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="45" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="45" bodyend="68"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="45" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="45" bodyend="68"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1a5452802a751cbfa4036f210a08f3737b" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -213,7 +213,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="70" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="70" bodyend="93"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="70" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="70" bodyend="93"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-func">
@@ -229,7 +229,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="101" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="101" bodyend="115"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="101" column="7" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="101" bodyend="115"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1aeb6779b4e904129af669f989ab0e7281" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
         <type>void</type>
@@ -251,7 +251,7 @@
 </simplesect>
 </para>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="119" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="119" bodyend="659"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="119" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="119" bodyend="659"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1af5920346597160faaa55e062ff7e0345" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
         <type>void</type>
@@ -271,7 +271,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="662" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="662" bodyend="679"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="662" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="662" bodyend="679"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1ad956d9883b11111028755c625ee9b105" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
         <type>void</type>
@@ -287,7 +287,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="682" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="682" bodyend="695"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="682" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="682" bodyend="695"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="protected-func">
@@ -305,7 +305,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="699" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="699" bodyend="704"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="699" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="699" bodyend="704"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -336,7 +336,7 @@
         </childnode>
       </node>
     </collaborationgraph>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="32" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="32" bodyend="706"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" line="32" column="5" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp" bodystart="32" bodyend="706"/>
     <listofallmembers>
       <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1aeedf739943cdea3318e3a00293d3fa33" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>_numSRA1</name></member>
       <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__8TeV__0LEPStop__20invfb_1ac10ebf1123ed00ffc68b04cbf3709efd" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_8TeV_0LEPStop_20invfb</scope><name>_numSRA2</name></member>

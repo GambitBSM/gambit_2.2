@@ -1,0 +1,392 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="MontePython_8cpp" kind="file" language="C++">
+    <compoundname>MontePython.cpp</compoundname>
+    <includes local="yes">gambit/Elements/gambit_module_headers.hpp</includes>
+    <includes refid="CosmoBit__rollcall_8hpp" local="yes">gambit/CosmoBit/CosmoBit_rollcall.hpp</includes>
+    <includes refid="CosmoBit__types_8hpp" local="yes">gambit/CosmoBit/CosmoBit_types.hpp</includes>
+    <incdepgraph>
+      <node id="3">
+        <label>gambit/CosmoBit/CosmoBit_rollcall.hpp</label>
+        <link refid="CosmoBit__rollcall_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>gambit/CosmoBit/CosmoBit_types.hpp</label>
+        <link refid="CosmoBit__types_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/MontePython.cpp</label>
+        <link refid="MontePython_8cpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>cmath</label>
+      </node>
+      <node id="12">
+        <label>gambit/Backends/backend_types/MontePythonLike.hpp</label>
+      </node>
+      <node id="2">
+        <label>gambit/Elements/gambit_module_headers.hpp</label>
+      </node>
+      <node id="11">
+        <label>gambit/Utils/numerical_constants.hpp</label>
+      </node>
+      <node id="10">
+        <label>gambit/Utils/util_types.hpp</label>
+      </node>
+      <node id="13">
+        <label>gsl/gsl_spline.h</label>
+      </node>
+      <node id="9">
+        <label>limits</label>
+      </node>
+      <node id="8">
+        <label>sstream</label>
+      </node>
+      <node id="5">
+        <label>tuple</label>
+      </node>
+      <node id="7">
+        <label>vector</label>
+      </node>
+    </incdepgraph>
+    <innernamespace refid="namespaceGambit">Gambit</innernamespace>
+    <innernamespace refid="namespaceGambit_1_1CosmoBit">Gambit::CosmoBit</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>CosmoBit routines relating to MontePython interface.</para>
+<para><hruler/>
+</para>
+<para>Authors (add name and date if you modify):</para>
+<para><simplesect kind="author"><para>Selim C. Hotinli (<ulink url="mailto:selim.hotinli14@pimperial.ac.uk">selim.hotinli14@pimperial.ac.uk</ulink>) </para>
+</simplesect>
+<simplesect kind="date"><para>2017 Jul </para>
+</simplesect>
+<simplesect kind="date"><para>2018 May </para>
+</simplesect>
+<simplesect kind="date"><para>2018 Aug - Sep</para>
+</simplesect>
+<simplesect kind="author"><para>Patrick Stoecker (<ulink url="mailto:stoecker@physik.rwth-aachen.de">stoecker@physik.rwth-aachen.de</ulink>) </para>
+</simplesect>
+<simplesect kind="date"><para>2017 Nov </para>
+</simplesect>
+<simplesect kind="date"><para>2018 Jan - May </para>
+</simplesect>
+<simplesect kind="date"><para>2019 Jan, Feb, June, Nov</para>
+</simplesect>
+<simplesect kind="author"><para>Janina Renk (<ulink url="mailto:janina.renk@fysik.su.se">janina.renk@fysik.su.se</ulink>) </para>
+</simplesect>
+<simplesect kind="date"><para>2018 June </para>
+</simplesect>
+<simplesect kind="date"><para>2019 Mar,June</para>
+</simplesect>
+<simplesect kind="author"><para>Sanjay Bloor (<ulink url="mailto:sanjay.bloor12@imperial.ac.uk">sanjay.bloor12@imperial.ac.uk</ulink>) </para>
+</simplesect>
+<simplesect kind="date"><para>2019 June, Nov</para>
+</simplesect>
+<simplesect kind="author"><para>Sebastian Hoof (<ulink url="mailto:hoof@uni-goettingen.de">hoof@uni-goettingen.de</ulink>) </para>
+</simplesect>
+<simplesect kind="date"><para>2020 Mar</para>
+</simplesect>
+<simplesect kind="author"><para>Pat Scott (<ulink url="mailto:pat.scott@uq.edu.au">pat.scott@uq.edu.au</ulink>) </para>
+</simplesect>
+<simplesect kind="date"><para>2018 Mar </para>
+</simplesect>
+<simplesect kind="date"><para>2019 Jul </para>
+</simplesect>
+<simplesect kind="date"><para>2020 Apr</para>
+</simplesect>
+<hruler/>
+ </para>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">//<sp/><sp/><sp/>GAMBIT:<sp/>Global<sp/>and<sp/>Modular<sp/>BSM<sp/>Inference<sp/>Tool</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/>*********************************************</highlight></codeline>
+<codeline lineno="43"><highlight class="comment"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;gambit/Elements/gambit_module_headers.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="CosmoBit__rollcall_8hpp" kindref="compound">gambit/CosmoBit/CosmoBit_rollcall.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="CosmoBit__types_8hpp" kindref="compound">gambit/CosmoBit/CosmoBit_types.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespaceGambit" kindref="compound">Gambit</ref></highlight></codeline>
+<codeline lineno="50"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">CosmoBit</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">LogTags;</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#ifdef<sp/>HAVE_PYBIND11</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>/***************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>MontePython<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>/***************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>set_parameter_dict_for_MPLike(pybind11::dict<sp/>&amp;<sp/>result)</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">Pipes::set_parameter_dict_for_MPLike;</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">pybind11::literals;</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>The<sp/>loop<sp/>has<sp/>to<sp/>be<sp/>executed<sp/>for<sp/>every<sp/>parameter<sp/>point.<sp/>It<sp/>takes<sp/>about<sp/>0.00023s<sp/>-&gt;<sp/>~4<sp/>minutes<sp/>for<sp/>1e6<sp/>points</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>it=Param.begin();<sp/>it<sp/>!=<sp/>Param.end();<sp/>it++)</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::string<sp/>name<sp/>=<sp/>it-&gt;first;</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>value<sp/>=<sp/>*Param[name];</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Check<sp/>if<sp/>any<sp/>models<sp/>are<sp/>scanned<sp/>for<sp/>which<sp/>we<sp/>had<sp/>to<sp/>rename<sp/>the<sp/>nuisance<sp/>parameters<sp/>due<sp/>to:</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/>a)<sp/>parameters<sp/>having<sp/>the<sp/>same<sp/>name<sp/><sp/>-&gt;<sp/>e.g.<sp/>&apos;epsilon&apos;<sp/>and<sp/>&apos;sigma_NL&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/>b)<sp/>parameter<sp/>names<sp/>containing<sp/>symbols<sp/>that<sp/>can&apos;t<sp/>be<sp/>used<sp/>in<sp/>macros<sp/>-&gt;<sp/>e.g.<sp/>&quot;^&quot;<sp/>in<sp/>&apos;beta_0^Euclid&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>a)<sp/>have<sp/>to<sp/>rename<sp/>parameters<sp/>epsilon_ska,<sp/>epsilon_euclid,..<sp/>to<sp/>&quot;epsilon&quot;<sp/>as<sp/>they<sp/>are<sp/>implemented<sp/>in<sp/>MontePython</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(name.find(</highlight><highlight class="stringliteral">&quot;epsilon&quot;</highlight><highlight class="normal">)<sp/>!=<sp/>std::string::npos){name=</highlight><highlight class="stringliteral">&quot;epsilon&quot;</highlight><highlight class="normal">;}</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>a)<sp/>have<sp/>to<sp/>rename<sp/>parameters<sp/>sigma_NL_ska,<sp/>sigma_NL_euclid,..<sp/>to<sp/>&quot;sigma_NL&quot;<sp/>as<sp/>they<sp/>are<sp/>implemented<sp/>in<sp/>MontePython</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(name.find(</highlight><highlight class="stringliteral">&quot;sigma_NL&quot;</highlight><highlight class="normal">)<sp/>!=<sp/>std::string::npos){name=</highlight><highlight class="stringliteral">&quot;sigma_NL&quot;</highlight><highlight class="normal">;}</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>b)<sp/>get<sp/>the<sp/>&quot;^&quot;<sp/>characters<sp/>back<sp/>into<sp/>the<sp/>parameter<sp/>names</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/>-&gt;<sp/>beta_x&lt;experiment&gt;<sp/>has<sp/>to<sp/>be<sp/>beta_x^&lt;experiment&gt;<sp/>where<sp/>x<sp/>=<sp/>0<sp/>or<sp/>1<sp/>and<sp/>&lt;experiment&gt;<sp/>=<sp/>Euclid,<sp/>SKA1<sp/>or<sp/>SKA2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>ATM<sp/>this<sp/>is<sp/>the<sp/>case<sp/>for<sp/><sp/>&quot;cosmo_nuisance_euclid_pk&quot;<sp/>and<sp/>&quot;cosmo_nuisance_ska&quot;<sp/>models</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(name.find(</highlight><highlight class="stringliteral">&quot;beta_0&quot;</highlight><highlight class="normal">)!=<sp/>std::string::npos<sp/>||<sp/>name.find(</highlight><highlight class="stringliteral">&quot;beta_1&quot;</highlight><highlight class="normal">)!=<sp/>std::string::npos)</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>name<sp/>=<sp/>name.insert(6,</highlight><highlight class="stringliteral">&quot;^&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>result[name.c_str()]<sp/>=<sp/>pybind11::dict(</highlight><highlight class="stringliteral">&quot;current&quot;</highlight><highlight class="normal">_a=value,</highlight><highlight class="stringliteral">&quot;scale&quot;</highlight><highlight class="normal">_a=1.);<sp/></highlight><highlight class="comment">//<sp/>scale<sp/>always<sp/>1<sp/>in<sp/>GAMBIT</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"></highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>pass_empty_parameter_dict_for_MPLike(pybind11::dict<sp/>&amp;<sp/>result)</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">Pipes::pass_empty_parameter_dict_for_MPLike;</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>first<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(first)</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>result<sp/>=<sp/>pybind11::dict();</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>first<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Nothing<sp/>to<sp/>do<sp/>here.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"></highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>create_MP_objects(MPLike_objects_container<sp/>&amp;result)</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">Pipes::create_MP_objects;</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>map_str_pyobj<sp/>likelihoods;</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>first<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"></highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Determine<sp/>which<sp/>likelihoods<sp/>to<sp/>compute<sp/>and<sp/>initialise<sp/>the<sp/>relevant<sp/>MontePython<sp/>objects.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(first)</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Set<sp/>up<sp/>some<sp/>references<sp/>for<sp/>easier<sp/>reading</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal">&amp;<sp/>data<sp/>=<sp/>std::get&lt;0&gt;(result);</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal">&amp;<sp/>experiments<sp/>=<sp/>std::get&lt;1&gt;(result);</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal">&amp;<sp/>likelihoods<sp/>=<sp/>std::get&lt;2&gt;(result);</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"></highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Get<sp/>list<sp/>of<sp/>likelihoods<sp/>implemented<sp/>in<sp/>MP</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;str&gt;<sp/>avail_likes<sp/>=<sp/>BEreq::get_MP_available_likelihoods();</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"></highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Get<sp/>the<sp/>list<sp/>of<sp/>the<sp/>experiments<sp/>and<sp/>datafiles<sp/>given<sp/>in<sp/>the<sp/>YAML<sp/>file<sp/>as<sp/>sub-capabilities.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Using<sp/>the<sp/>default<sp/>datafile<sp/>can<sp/>be<sp/>achieved<sp/>by<sp/>leaving<sp/>the<sp/>datafile<sp/>out,<sp/>or<sp/>setting<sp/>it<sp/>to<sp/>&quot;default&quot;.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>YAML::Node<sp/>subcaps<sp/>=<sp/>Downstream::subcaps-&gt;getNode();</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;YAML::Node&gt;<sp/>empties;</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal">&amp;<sp/>x<sp/>:<sp/>subcaps)<sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(x.second.IsNull())<sp/>empties.push_back(x.first);</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal">&amp;<sp/>x<sp/>:<sp/>empties)<sp/>subcaps[x]<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;default&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(subcaps.IsNull())</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(Downstream::neededFor(</highlight><highlight class="stringliteral">&quot;MP_LogLikes&quot;</highlight><highlight class="normal">))</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::ostringstream<sp/>ss;</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ss<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;No<sp/>sub-capabilities<sp/>found<sp/>when<sp/>attempting<sp/>to<sp/>create<sp/>MontePython<sp/>objects.&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>endl</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;This<sp/>can<sp/>happen<sp/>because<sp/>you<sp/>either<sp/>forgot<sp/>to<sp/>choose<sp/>any<sp/>experiments,&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>endl</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;or<sp/>because<sp/>you<sp/>used<sp/>incorrect<sp/>syntax<sp/>to<sp/>choose<sp/>them<sp/>as<sp/>sub-capabilities.&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>endl</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;You<sp/>can<sp/>do<sp/>this<sp/>in<sp/>the<sp/>relevant<sp/>entry<sp/>of<sp/>the<sp/>ObsLikes<sp/>section<sp/>of<sp/>your<sp/>YAML<sp/>file,&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>endl</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;by<sp/>setting<sp/>sub_capabilities<sp/>as<sp/>a<sp/>scalar<sp/>(if<sp/>you<sp/>only<sp/>want<sp/>one<sp/>experiment),<sp/>e.g.&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>endl</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/>sub_capabilities:<sp/>bao_smallz_2014&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>endl</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;or<sp/>as<sp/>a<sp/>sequence<sp/>(if<sp/>you<sp/>don&apos;t<sp/>need<sp/>to<sp/>specify<sp/>data<sp/>files),<sp/>e.g.&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>endl</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/>sub_capabilities:&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>endl</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/><sp/><sp/>-<sp/>bao_smallz_2014&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>endl</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/><sp/><sp/>-<sp/>Pantheon&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>endl</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;or<sp/>even<sp/>as<sp/>a<sp/>map<sp/>(if<sp/>you<sp/>want<sp/>to<sp/>specify<sp/>data<sp/>files),<sp/>e.g.&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>endl</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/>sub_capabilities:&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>endl</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/><sp/><sp/>bao_smallz_2014:<sp/>default&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>endl</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/><sp/><sp/>Pantheon:<sp/>default&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>CosmoBit_error().raise(LOCAL_INFO,<sp/>ss.str());</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>experiments<sp/>=<sp/>subcaps.as&lt;map_str_str&gt;();</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"></highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Check<sp/>that<sp/>all<sp/>the<sp/>requested<sp/>likelihoods<sp/>can<sp/>actually<sp/>be<sp/>provided<sp/>by<sp/>MP</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal">&amp;<sp/>x<sp/>:<sp/>experiments)</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(std::find(avail_likes.begin(),<sp/>avail_likes.end(),<sp/>x.first)<sp/>==<sp/>avail_likes.end())</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>str<sp/>errmsg<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;Likelihood<sp/>&apos;&quot;</highlight><highlight class="normal"><sp/>+<sp/>x.first<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;&apos;<sp/>is<sp/>not<sp/>implemented<sp/>in<sp/>MontePython.<sp/>Check<sp/>for<sp/>typos<sp/>or<sp/>implement<sp/>it.\nLikelihoods<sp/>currently<sp/>available<sp/>are:\n&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal">&amp;<sp/>value<sp/>:<sp/>avail_likes)<sp/>errmsg<sp/>+=<sp/>(</highlight><highlight class="stringliteral">&quot;\t&quot;</highlight><highlight class="normal">+value+</highlight><highlight class="stringliteral">&quot;\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>CosmoBit_error().raise(LOCAL_INFO,<sp/>errmsg);</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>logger()<sp/>&lt;&lt;<sp/>LogTags::debug<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;Read<sp/>MontePythonLike<sp/>option<sp/>&quot;</highlight><highlight class="normal">&lt;&lt;<sp/>x.first<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;,<sp/>using<sp/>data<sp/>file<sp/>&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>x.second<sp/>&lt;&lt;<sp/>EOM;</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"></highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>MPLike_data_container<sp/>should<sp/>only<sp/>be<sp/>created<sp/>and<sp/>set<sp/>once,<sp/>when<sp/>calculating<sp/>the<sp/>first<sp/>point.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>After<sp/>that<sp/>it<sp/>has<sp/>to<sp/>be<sp/>kept<sp/>alive<sp/>since<sp/>it<sp/>contains<sp/>a<sp/>vector<sp/>with<sp/>the<sp/>initialised<sp/>MPLike<sp/>Likelihood<sp/>objects.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>data<sp/>=<sp/>BEreq::create_MP_data_object(experiments);</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"></highlight></codeline>
+<codeline lineno="180"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Add<sp/>current<sp/>parameters<sp/>to<sp/>data<sp/>object<sp/>to<sp/>enable<sp/>check<sp/>if<sp/>all<sp/>nuisance<sp/>parameters<sp/>are</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="181"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>scanned<sp/>upon<sp/>initialisation<sp/>of<sp/>likelihood<sp/>objects</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>data.attr(</highlight><highlight class="stringliteral">&quot;mcmc_parameters&quot;</highlight><highlight class="normal">)<sp/>=<sp/>*Dep::parameter_dict_for_MPLike;</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>likelihoods<sp/>=<sp/>BEreq::create_MP_likelihood_objects(data,<sp/>experiments);</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"></highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>It&apos;s<sp/>been<sp/>nice,<sp/>but<sp/>let&apos;s<sp/>not<sp/>do<sp/>this<sp/>again.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>first<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"></highlight></codeline>
+<codeline lineno="191"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>compute_MP_LogLikes(map_str_dbl<sp/>&amp;<sp/>result)</highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">Pipes::compute_MP_LogLikes;</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"></highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>first_run<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="196"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>pybind11::object<sp/>data<sp/>=<sp/>std::get&lt;0&gt;(*Dep::MP_objects);</highlight></codeline>
+<codeline lineno="197"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>map_str_str&amp;<sp/>experiments<sp/>=<sp/>std::get&lt;1&gt;(*Dep::MP_objects);</highlight></codeline>
+<codeline lineno="198"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>map_str_pyobj&amp;<sp/>likelihoods<sp/>=<sp/>std::get&lt;2&gt;(*Dep::MP_objects);</highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>MPLike_data_container<sp/>mplike_cont(data,<sp/>likelihoods);</highlight></codeline>
+<codeline lineno="200"><highlight class="normal"></highlight></codeline>
+<codeline lineno="201"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>in<sp/>the<sp/>first<sp/>run<sp/>test<sp/>if<sp/>any<sp/>unused<sp/>nuisance<sp/>parameters<sp/>are<sp/>passed</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="202"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>to<sp/>MontePython.<sp/>If<sp/>so<sp/>this<sp/>function<sp/>will<sp/>throw<sp/>an<sp/>error<sp/>identifying</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="203"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>the<sp/>parameter<sp/>that<sp/>is<sp/>scanned<sp/>over<sp/>but<sp/>not<sp/>in<sp/>use.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="204"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(first_run)<sp/>mplike_cont.data.attr(</highlight><highlight class="stringliteral">&quot;check_nuisance_params&quot;</highlight><highlight class="normal">)();</highlight></codeline>
+<codeline lineno="205"><highlight class="normal"></highlight></codeline>
+<codeline lineno="206"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>get<sp/>classy<sp/>backend<sp/>directory.<sp/>The<sp/>only<sp/>reason<sp/>we<sp/>need<sp/>to<sp/>pass<sp/>this</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="207"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>to<sp/>MP<sp/>is<sp/>because<sp/>the<sp/>likelihood<sp/>&apos;sdss_lrgDR7&apos;<sp/>requires<sp/>pre-computed<sp/>fiducial<sp/>spectra.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>These<sp/>can,<sp/>in<sp/>general,<sp/>depend<sp/>on<sp/>the<sp/>CLASS<sp/>version<sp/>they<sp/>were<sp/>calculated<sp/>with<sp/>(if<sp/>the<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="209"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>treatment<sp/>of<sp/>non-linearities<sp/>changes).<sp/>To<sp/>make<sp/>sure<sp/>the<sp/>fiducial<sp/>spectra<sp/>and<sp/>the<sp/>ones</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="210"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>for<sp/>each<sp/>point<sp/>in<sp/>parameter<sp/>space<sp/>are<sp/>computed<sp/>with<sp/>the<sp/>same<sp/>CLASS<sp/>version,<sp/>we<sp/>pass<sp/>the<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>CLASS<sp/>version<sp/>to<sp/>MP.<sp/>The<sp/>fiducial<sp/>spectra<sp/>are<sp/>automatically<sp/>calculated<sp/>when<sp/>CLASS<sp/>is<sp/>build.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="212"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>std::string<sp/>backendDir<sp/>=<sp/>BEreq::get_classy_backendDir();</highlight></codeline>
+<codeline lineno="213"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mplike_cont.data.attr(</highlight><highlight class="stringliteral">&quot;set_class_version&quot;</highlight><highlight class="normal">)(backendDir);</highlight></codeline>
+<codeline lineno="214"><highlight class="normal"></highlight></codeline>
+<codeline lineno="215"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Pass<sp/>current<sp/>values<sp/>of<sp/>nuisance<sp/>parameters<sp/>to<sp/>data.mcmc_parameters<sp/>dictionary<sp/>for<sp/>likelihood<sp/>computation<sp/>in<sp/>MP</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="216"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mplike_cont.data.attr(</highlight><highlight class="stringliteral">&quot;mcmc_parameters&quot;</highlight><highlight class="normal">)<sp/>=<sp/>*Dep::parameter_dict_for_MPLike;</highlight></codeline>
+<codeline lineno="217"><highlight class="normal"></highlight></codeline>
+<codeline lineno="218"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Create<sp/>instance<sp/>of<sp/>classy<sp/>class<sp/>Class</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="219"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pybind11::object<sp/>cosmo<sp/>=<sp/>BEreq::get_classy_cosmo_object();</highlight></codeline>
+<codeline lineno="220"><highlight class="normal"></highlight></codeline>
+<codeline lineno="221"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Loop<sp/>through<sp/>the<sp/>list<sp/>of<sp/>experiments,<sp/>and<sp/>query<sp/>the<sp/>lnL<sp/>from<sp/>the<sp/>MontePython<sp/>backend.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="222"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(sspair<sp/>it<sp/>:<sp/>experiments)</highlight></codeline>
+<codeline lineno="223"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>perform<sp/>check<sp/>if<sp/>all<sp/>requested<sp/>MP<sp/>likelihoods<sp/>are<sp/>compatible<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>with<sp/>CLASS<sp/>version<sp/>in<sp/>use.<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="226"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Got<sp/>to<sp/>do<sp/>that<sp/>here,<sp/>as<sp/>the<sp/>MP<sp/>data<sp/>object<sp/>gets<sp/>the<sp/>information<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>about<sp/>the<sp/>classy<sp/>version<sp/>a<sp/>few<sp/>lines<sp/>above<sp/>through<sp/>the<sp/>BEreq</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="228"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>get_classy_backendDir()</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="229"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(first_run)</highlight></codeline>
+<codeline lineno="230"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="231"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>BEreq::check_likelihood_classy_combi(it.first,backendDir);</highlight></codeline>
+<codeline lineno="232"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="233"><highlight class="normal"></highlight></codeline>
+<codeline lineno="234"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Likelihood<sp/>names<sp/>are<sp/>keys<sp/>of<sp/>experiment<sp/>map<sp/>(str,<sp/>str<sp/>map<sp/>mapping<sp/>likelihood<sp/>name<sp/>to<sp/>.data<sp/>file)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="235"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>logLike<sp/>=<sp/>BEreq::get_MP_loglike(mplike_cont,<sp/>cosmo,<sp/>it.first);</highlight></codeline>
+<codeline lineno="236"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>result[it.first]<sp/>=<sp/>logLike;</highlight></codeline>
+<codeline lineno="237"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>logger()<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;(compute_MP_LogLikes):<sp/><sp/>name:<sp/>&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>it.first<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;\tvalue:<sp/>&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>logLike<sp/>&lt;&lt;<sp/>EOM;</highlight></codeline>
+<codeline lineno="238"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="239"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>first_run<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="240"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="241"><highlight class="normal"></highlight></codeline>
+<codeline lineno="244"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>compute_MP_combined_LogLike(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal">&amp;<sp/>result)</highlight></codeline>
+<codeline lineno="245"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="246"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">Pipes::compute_MP_combined_LogLike;</highlight></codeline>
+<codeline lineno="247"><highlight class="normal"></highlight></codeline>
+<codeline lineno="248"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Get<sp/>likelihoods<sp/>computed<sp/>by<sp/>MontePython</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="249"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>map_str_dbl<sp/>MP_lnLs<sp/>=<sp/>*Dep::MP_LogLikes;</highlight></codeline>
+<codeline lineno="250"><highlight class="normal"></highlight></codeline>
+<codeline lineno="251"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Retrieve<sp/>the<sp/>sub-capabilities<sp/>requested<sp/>in<sp/>the<sp/>YAML<sp/>file</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="252"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;str&gt;<sp/>subcaps<sp/>=<sp/>Downstream::subcaps-&gt;getNames();</highlight></codeline>
+<codeline lineno="253"><highlight class="normal"></highlight></codeline>
+<codeline lineno="254"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Iterate<sp/>through<sp/>map<sp/>of<sp/>doubles<sp/>and<sp/>return<sp/>one<sp/>big<sp/>fat<sp/>double,</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="255"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>selecting<sp/>only<sp/>those<sp/>entries<sp/>specified<sp/>as<sp/>sub-capabilities.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="256"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>lnL<sp/>=<sp/>0.;</highlight></codeline>
+<codeline lineno="257"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>logger()<sp/>&lt;&lt;<sp/>LogTags::debug<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;(compute_MP_combined_LogLike):&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="258"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>&amp;p<sp/>:<sp/>MP_lnLs)</highlight></codeline>
+<codeline lineno="259"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="260"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(std::find(subcaps.begin(),<sp/>subcaps.end(),<sp/>p.first)<sp/>!=<sp/>subcaps.end())</highlight></codeline>
+<codeline lineno="261"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="262"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>logger()<sp/>&lt;&lt;<sp/>endl<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/>name:<sp/>&quot;</highlight><highlight class="normal"><sp/><sp/>&lt;&lt;<sp/>p.first<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;\tvalue:<sp/>&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>p.second;</highlight></codeline>
+<codeline lineno="263"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>lnL<sp/>+=<sp/>p.second;</highlight></codeline>
+<codeline lineno="264"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="265"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="266"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>logger()<sp/>&lt;&lt;<sp/>EOM;</highlight></codeline>
+<codeline lineno="267"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>result<sp/>=<sp/>lnL;</highlight></codeline>
+<codeline lineno="268"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="269"><highlight class="normal"></highlight></codeline>
+<codeline lineno="273"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>get_bao_like_correlation(map_str_dbl&amp;<sp/>result)</highlight></codeline>
+<codeline lineno="274"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="275"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">Pipes::get_bao_like_correlation;</highlight></codeline>
+<codeline lineno="276"><highlight class="normal"></highlight></codeline>
+<codeline lineno="277"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>This<sp/>function<sp/>has<sp/>a<sp/>dependency<sp/>on<sp/>MP_LogLikes<sp/>even<sp/>though<sp/>it<sp/>is<sp/>not<sp/>directly</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="278"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>needed<sp/>in<sp/>the<sp/>calculation.<sp/>However,<sp/>through<sp/>this<sp/>dependency<sp/>we<sp/>make<sp/>sure<sp/>that</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="279"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>MP<sp/>was<sp/>called<sp/>before<sp/>this<sp/>function<sp/>is<sp/>executed<sp/>-&gt;<sp/>don&apos;t<sp/>remove<sp/>it!</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="280"><highlight class="normal"></highlight></codeline>
+<codeline lineno="281"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Get<sp/>map<sp/>containing<sp/>python<sp/>likelihood<sp/>objects</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="282"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>map_str_pyobj&amp;<sp/>likelihoods<sp/>=<sp/>std::get&lt;2&gt;(*Dep::MP_objects);</highlight></codeline>
+<codeline lineno="283"><highlight class="normal"></highlight></codeline>
+<codeline lineno="284"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Check<sp/>if<sp/>&quot;bao_correlations&quot;<sp/>likelihood<sp/>was<sp/>computed,<sp/>if<sp/>so</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="285"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>retrieve<sp/>correlation<sp/>coefficients<sp/>and<sp/>uncorrelated<sp/>likelihood<sp/>value</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="286"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(likelihoods.find(</highlight><highlight class="stringliteral">&quot;bao_correlations&quot;</highlight><highlight class="normal">)<sp/>!=<sp/>likelihoods.end())</highlight></codeline>
+<codeline lineno="287"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="288"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>result[</highlight><highlight class="stringliteral">&quot;uncorrelated_loglike&quot;</highlight><highlight class="normal">]<sp/>=<sp/>likelihoods.at(</highlight><highlight class="stringliteral">&quot;bao_correlations&quot;</highlight><highlight class="normal">).attr(</highlight><highlight class="stringliteral">&quot;uncorrelated_loglike&quot;</highlight><highlight class="normal">).cast&lt;</highlight><highlight class="keywordtype">double</highlight><highlight class="normal">&gt;();</highlight></codeline>
+<codeline lineno="289"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pybind11::list<sp/>corr_coeffs<sp/>=<sp/><sp/>likelihoods.at(</highlight><highlight class="stringliteral">&quot;bao_correlations&quot;</highlight><highlight class="normal">).attr(</highlight><highlight class="stringliteral">&quot;correlation_coeffs&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="290"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>result[</highlight><highlight class="stringliteral">&quot;correlation_coeffs_0&quot;</highlight><highlight class="normal">]<sp/>=<sp/>corr_coeffs[0].cast&lt;</highlight><highlight class="keywordtype">double</highlight><highlight class="normal">&gt;();</highlight></codeline>
+<codeline lineno="291"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>result[</highlight><highlight class="stringliteral">&quot;correlation_coeffs_1&quot;</highlight><highlight class="normal">]<sp/>=<sp/>corr_coeffs[1].cast&lt;</highlight><highlight class="keywordtype">double</highlight><highlight class="normal">&gt;();</highlight></codeline>
+<codeline lineno="292"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>result[</highlight><highlight class="stringliteral">&quot;correlation_coeffs_2&quot;</highlight><highlight class="normal">]<sp/>=<sp/>corr_coeffs[2].cast&lt;</highlight><highlight class="keywordtype">double</highlight><highlight class="normal">&gt;();</highlight></codeline>
+<codeline lineno="293"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="294"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="295"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="296"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>str<sp/>errmsg<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;Likelihood<sp/>&apos;bao_correlations&apos;<sp/>was<sp/>not<sp/>requested<sp/>in<sp/>the<sp/>YAML<sp/>file,<sp/>but<sp/>you<sp/>are<sp/>asking<sp/>for\n&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="297"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>errmsg<sp/>+=<sp/></highlight><highlight class="stringliteral">&quot;the<sp/>correlation<sp/>coefficients<sp/>from<sp/>this<sp/>likelihood.<sp/>Either<sp/>remove<sp/>&apos;bao_like_correlation&apos;<sp/>from<sp/>the<sp/>ObsLikes<sp/>section\n&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="298"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>errmsg<sp/>+=<sp/></highlight><highlight class="stringliteral">&quot;in<sp/>your<sp/>YAML<sp/>file<sp/>or<sp/>include<sp/>the<sp/>computation<sp/>of<sp/>the<sp/>&apos;bao_correlations&apos;<sp/>likelihood<sp/>by<sp/>adding:\n\n&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="299"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>errmsg<sp/>+=<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/>-<sp/>purpose:<sp/><sp/><sp/><sp/><sp/><sp/>LogLike\n&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="300"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>errmsg<sp/>+=<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/>capability:<sp/><sp/><sp/>MP_Combined_LogLike\n&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="301"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>errmsg<sp/>+=<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/>sub_capabilities:\n&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="302"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>errmsg<sp/>+=<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/><sp/><sp/><sp/><sp/>-<sp/>bao_correlations\n\n&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="303"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>errmsg<sp/>+=<sp/></highlight><highlight class="stringliteral">&quot;to<sp/>the<sp/>YAML<sp/>file.&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="304"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>CosmoBit_error().raise(LOCAL_INFO,<sp/>errmsg);</highlight></codeline>
+<codeline lineno="305"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="306"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="307"><highlight class="normal"></highlight></codeline>
+<codeline lineno="308"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/>#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="309"><highlight class="normal"></highlight></codeline>
+<codeline lineno="310"><highlight class="normal"><sp/><sp/>}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>CosmoBit</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="311"><highlight class="normal"></highlight></codeline>
+<codeline lineno="312"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>Gambit</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/MontePython.cpp"/>
+  </compounddef>
+</doxygen>

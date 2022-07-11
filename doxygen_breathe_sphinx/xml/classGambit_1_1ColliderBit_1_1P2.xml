@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="classGambit_1_1ColliderBit_1_1P2" kind="class" language="C++" prot="public">
     <compoundname>Gambit::ColliderBit::P2</compoundname>
     <includes refid="PointsAndLines_8hpp" local="no">PointsAndLines.hpp</includes>
@@ -17,7 +17,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="27" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="27" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="27" column="16" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="27" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1P2_1a34cc4be1e444b097dbbe5b76150ceaa8" prot="private" static="no" mutable="no">
         <type>double</type>
@@ -31,7 +31,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="27" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="27" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="27" column="19" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="27" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="user-defined">
@@ -49,7 +49,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="34" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="34" bodyend="34"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="34" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="34" bodyend="34"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1P2_1a76ad6829eeff35f30864f4f28c66466c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type></type>
@@ -72,7 +72,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="36" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="36" bodyend="36"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="36" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="36" bodyend="36"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1P2_1af8e37779e0eb3986595af71773ab9ce8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type></type>
@@ -91,7 +91,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="38" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="38" bodyend="38"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="38" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="38" bodyend="38"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1P2_1ad8a8bfe5a1400e085a48b280fba4cee6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classGambit_1_1ColliderBit_1_1P2" kindref="compound">P2</ref> &amp;</type>
@@ -110,7 +110,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="40" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="40" bodyend="40"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="40" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="40" bodyend="40"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="user-defined">
@@ -131,7 +131,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="46" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="46" bodyend="46"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="46" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="46" bodyend="46"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1P2_1aec72132ce9ae4b1ab500d6cef1b9d256" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classGambit_1_1ColliderBit_1_1P2" kindref="compound">P2</ref> &amp;</type>
@@ -149,7 +149,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="47" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="47" bodyend="47"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="47" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="47" bodyend="47"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1P2_1a865c7962497c94fc22f4c27c7e5d3235" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classGambit_1_1ColliderBit_1_1P2" kindref="compound">P2</ref> &amp;</type>
@@ -171,7 +171,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="48" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="48" bodyend="48"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="48" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="48" bodyend="48"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="user-defined">
@@ -188,7 +188,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="54" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="54" bodyend="54"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="54" column="16" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="54" bodyend="54"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1P2_1a38a14cae2de886cc1964d3f91aa5e72f" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>double</type>
@@ -202,7 +202,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="55" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="55" bodyend="55"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="55" column="16" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="55" bodyend="55"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1P2_1a3df9b191c67adc974d1f449ad32fde1b" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>double</type>
@@ -217,7 +217,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="57" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="57" bodyend="57"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="57" column="16" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="57" bodyend="57"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1P2_1a0aef456a5b30c89a9624ddc5061407e3" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>double</type>
@@ -232,7 +232,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="59" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="59" bodyend="59"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="59" column="16" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="59" bodyend="59"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="user-defined">
@@ -253,7 +253,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="65" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="65" bodyend="65"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="65" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="65" bodyend="65"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1P2_1a966cf22cc3f10024d8a710bd145069e5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classGambit_1_1ColliderBit_1_1P2" kindref="compound">P2</ref> &amp;</type>
@@ -271,7 +271,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="66" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="66" bodyend="66"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="66" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="66" bodyend="66"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1P2_1ae62f27ca7a76e685cde654a4abf54533" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classGambit_1_1ColliderBit_1_1P2" kindref="compound">P2</ref> &amp;</type>
@@ -289,7 +289,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="67" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="67" bodyend="67"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="67" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="67" bodyend="67"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1P2_1a1fc688205e15402f342cd50d02f61eea" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classGambit_1_1ColliderBit_1_1P2" kindref="compound">P2</ref> &amp;</type>
@@ -307,7 +307,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="68" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="68" bodyend="68"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="68" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="68" bodyend="68"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -317,7 +317,7 @@
 <para>This class is largely based upon the structure of the P4 class which is part of HEPUtils <ndash/> <ulink url="https://bitbucket.org/andybuckley/heputils">https://bitbucket.org/andybuckley/heputils</ulink> Copyright (C) 2013-2015 Andy Buckley <ulink url="mailto:andy.buckley@cern.ch">andy.buckley@cern.ch</ulink></para>
 <para>Modified to a simple point on a 2d-plane by Abram Krislock <ulink url="mailto:a.m.b.krislock@fys.uio.no">a.m.b.krislock@fys.uio.no</ulink> </para>
     </detaileddescription>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="23" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="23" bodyend="70"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" line="23" column="5" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/PointsAndLines.hpp" bodystart="23" bodyend="70"/>
     <listofallmembers>
       <member refid="classGambit_1_1ColliderBit_1_1P2_1a9753063d242ace4c87c7ee1680556203" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::P2</scope><name>_x</name></member>
       <member refid="classGambit_1_1ColliderBit_1_1P2_1a34cc4be1e444b097dbbe5b76150ceaa8" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::P2</scope><name>_y</name></member>

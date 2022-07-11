@@ -1,41 +1,41 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="mt2__bisect_8h" kind="file" language="C++">
     <compoundname>mt2_bisect.h</compoundname>
-    <includedby refid="Analysis__ATLAS__13TeV__0LEPStop__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_0LEPStop_36invfb.cpp</includedby>
-    <includedby refid="Analysis__ATLAS__13TeV__1LEPStop__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_1LEPStop_36invfb.cpp</includedby>
-    <includedby refid="Analysis__ATLAS__13TeV__2LEPStop__139invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2LEPStop_139invfb.cpp</includedby>
-    <includedby refid="Analysis__ATLAS__13TeV__2LEPStop__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2LEPStop_36invfb.cpp</includedby>
-    <includedby refid="Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp</includedby>
-    <includedby refid="Analysis__ATLAS__13TeV__2OSLEP__chargino__139invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_chargino_139invfb.cpp</includedby>
-    <includedby refid="Analysis__ATLAS__13TeV__2OSLEP__chargino__80invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_chargino_80invfb.cpp</includedby>
-    <includedby refid="Analysis__ATLAS__13TeV__2bMET__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2bMET_36invfb.cpp</includedby>
-    <includedby refid="Analysis__ATLAS__13TeV__4LEP__139invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_4LEP_139invfb.cpp</includedby>
-    <includedby refid="Analysis__ATLAS__13TeV__4LEP__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_4LEP_36invfb.cpp</includedby>
-    <includedby refid="Analysis__ATLAS__13TeV__MultiLEP__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_MultiLEP_36invfb.cpp</includedby>
-    <includedby refid="Analysis__ATLAS__13TeV__MultiLEP__confnote__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_MultiLEP_confnote_36invfb.cpp</includedby>
-    <includedby refid="Analysis__ATLAS__13TeV__PhotonGGM__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp</includedby>
-    <includedby refid="Analysis__ATLAS__13TeV__RJ3L__lowmass__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_RJ3L_lowmass_36invfb.cpp</includedby>
-    <includedby refid="Analysis__ATLAS__13TeV__ZGammaGrav__CONFNOTE__80invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_ZGammaGrav_CONFNOTE_80invfb.cpp</includedby>
-    <includedby refid="Analysis__ATLAS__8TeV__0LEPStop__20invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp</includedby>
-    <includedby refid="Analysis__ATLAS__8TeV__1LEPStop__20invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_1LEPStop_20invfb.cpp</includedby>
-    <includedby refid="Analysis__ATLAS__8TeV__2LEPEW__20invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_2LEPEW_20invfb.cpp</includedby>
-    <includedby refid="Analysis__ATLAS__8TeV__2LEPStop__20invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_2LEPStop_20invfb.cpp</includedby>
-    <includedby refid="Analysis__ATLAS__8TeV__2bStop__20invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_2bStop_20invfb.cpp</includedby>
-    <includedby refid="Analysis__ATLAS__8TeV__3LEPEW__20invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_3LEPEW_20invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__1Photon1Lepton__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_1Photon1Lepton_36invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__2LEPStop__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2LEPStop_36invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__2LEPsoft__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2LEPsoft_36invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__2OSLEP__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_36invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__2OSLEP__chargino__stop__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_chargino_stop_36invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__2Photon__GMSB__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2Photon_GMSB_36invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__2SSLEP__Stop__137invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2SSLEP_Stop_137invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__2SSLEP__Stop__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2SSLEP_Stop_36invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__MultiLEP__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_MultiLEP_36invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__MultiLEP__Full__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_MultiLEP_Full_36invfb.cpp</includedby>
-    <includedby refid="Analysis__CMS__13TeV__Photon__GMSB__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp</includedby>
-    <includedby refid="mt2__bisect_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2_bisect.cpp</includedby>
+    <includedby refid="Analysis__ATLAS__13TeV__0LEPStop__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_0LEPStop_36invfb.cpp</includedby>
+    <includedby refid="Analysis__ATLAS__13TeV__1LEPStop__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_1LEPStop_36invfb.cpp</includedby>
+    <includedby refid="Analysis__ATLAS__13TeV__2LEPStop__139invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2LEPStop_139invfb.cpp</includedby>
+    <includedby refid="Analysis__ATLAS__13TeV__2LEPStop__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2LEPStop_36invfb.cpp</includedby>
+    <includedby refid="Analysis__ATLAS__13TeV__2OSLEP__Z__139invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb.cpp</includedby>
+    <includedby refid="Analysis__ATLAS__13TeV__2OSLEP__chargino__139invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_chargino_139invfb.cpp</includedby>
+    <includedby refid="Analysis__ATLAS__13TeV__2OSLEP__chargino__80invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_chargino_80invfb.cpp</includedby>
+    <includedby refid="Analysis__ATLAS__13TeV__2bMET__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2bMET_36invfb.cpp</includedby>
+    <includedby refid="Analysis__ATLAS__13TeV__4LEP__139invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_4LEP_139invfb.cpp</includedby>
+    <includedby refid="Analysis__ATLAS__13TeV__4LEP__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_4LEP_36invfb.cpp</includedby>
+    <includedby refid="Analysis__ATLAS__13TeV__MultiLEP__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_MultiLEP_36invfb.cpp</includedby>
+    <includedby refid="Analysis__ATLAS__13TeV__MultiLEP__confnote__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_MultiLEP_confnote_36invfb.cpp</includedby>
+    <includedby refid="Analysis__ATLAS__13TeV__PhotonGGM__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_PhotonGGM_36invfb.cpp</includedby>
+    <includedby refid="Analysis__ATLAS__13TeV__RJ3L__lowmass__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_RJ3L_lowmass_36invfb.cpp</includedby>
+    <includedby refid="Analysis__ATLAS__13TeV__ZGammaGrav__CONFNOTE__80invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_ZGammaGrav_CONFNOTE_80invfb.cpp</includedby>
+    <includedby refid="Analysis__ATLAS__8TeV__0LEPStop__20invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_0LEPStop_20invfb.cpp</includedby>
+    <includedby refid="Analysis__ATLAS__8TeV__1LEPStop__20invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_1LEPStop_20invfb.cpp</includedby>
+    <includedby refid="Analysis__ATLAS__8TeV__2LEPEW__20invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_2LEPEW_20invfb.cpp</includedby>
+    <includedby refid="Analysis__ATLAS__8TeV__2LEPStop__20invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_2LEPStop_20invfb.cpp</includedby>
+    <includedby refid="Analysis__ATLAS__8TeV__2bStop__20invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_2bStop_20invfb.cpp</includedby>
+    <includedby refid="Analysis__ATLAS__8TeV__3LEPEW__20invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_8TeV_3LEPEW_20invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__1Photon1Lepton__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_1Photon1Lepton_36invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__2LEPStop__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2LEPStop_36invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__2LEPsoft__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2LEPsoft_36invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__2OSLEP__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_36invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__2OSLEP__chargino__stop__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_chargino_stop_36invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__2OSLEP__confnote__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_confnote_36invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__2Photon__GMSB__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2Photon_GMSB_36invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__2SSLEP__Stop__137invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2SSLEP_Stop_137invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__2SSLEP__Stop__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2SSLEP_Stop_36invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__MultiLEP__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_MultiLEP_36invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__MultiLEP__Full__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_MultiLEP_Full_36invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__Photon__GMSB__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp</includedby>
+    <includedby refid="mt2__bisect_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/mt2_bisect.cpp</includedby>
     <innerclass refid="classmt2__bisect_1_1mt2" prot="public">mt2_bisect::mt2</innerclass>
     <innernamespace refid="namespacemt2__bisect">mt2_bisect</innernamespace>
       <sectiondef kind="define">
@@ -48,7 +48,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="7" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="7" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="7" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="7" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="mt2__bisect_8h_1a303ff380dba5697d8936ccd2f26b8e90" prot="public" static="no">
         <name>ABSOLUTE_PRECISION</name>
@@ -59,7 +59,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="8" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="8" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="8" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="8" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="mt2__bisect_8h_1a30a155674f82d88a66a9ff85d50181e1" prot="public" static="no">
         <name>MIN_MASS</name>
@@ -70,7 +70,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="12" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="12" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="12" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="12" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="mt2__bisect_8h_1a3dacdf62281eb2686f0c6ea523365d56" prot="public" static="no">
         <name>ZERO_MASS</name>
@@ -81,7 +81,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="13" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="13" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="13" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="13" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="mt2__bisect_8h_1a1a50e4da730328e9c6d78af5e0b18b03" prot="public" static="no">
         <name>SCANSTEP</name>
@@ -92,7 +92,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="14" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="14" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" line="14" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h" bodystart="14" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -164,6 +164,6 @@
 <codeline lineno="62"><highlight class="normal"></highlight></codeline>
 <codeline lineno="63"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
     </programlisting>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2_bisect.h"/>
   </compounddef>
 </doxygen>

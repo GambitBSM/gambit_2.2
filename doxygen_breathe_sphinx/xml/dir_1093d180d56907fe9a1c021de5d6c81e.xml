@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="dir_1093d180d56907fe9a1c021de5d6c81e" kind="dir">
+    <compoundname>C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit</compoundname>
+    <innerfile refid="CosmoBit__rollcall_8hpp">CosmoBit_rollcall.hpp</innerfile>
+    <innerfile refid="CosmoBit__types_8hpp">CosmoBit_types.hpp</innerfile>
+    <innerfile refid="CosmoBit__utils_8hpp">CosmoBit_utils.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/"/>
+  </compounddef>
+</doxygen>

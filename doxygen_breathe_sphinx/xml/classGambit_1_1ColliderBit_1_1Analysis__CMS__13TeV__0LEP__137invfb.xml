@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__0LEP__137invfb" kind="class" language="C++" prot="public">
     <compoundname>Gambit::ColliderBit::Analysis_CMS_13TeV_0LEP_137invfb</compoundname>
     <basecompoundref refid="classGambit_1_1ColliderBit_1_1Analysis" prot="public" virt="non-virtual">Gambit::ColliderBit::Analysis</basecompoundref>
@@ -17,7 +17,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" line="21" column="35" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" bodystart="21" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" line="21" column="35" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" bodystart="21" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__0LEP__137invfb_1adbeed330889bf4a05f165cc883a45217" prot="public" static="yes" mutable="no">
         <type>const size_t</type>
@@ -32,7 +32,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" line="39" column="27" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" bodystart="39" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" line="39" column="27" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" bodystart="39" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-attrib">
@@ -62,7 +62,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" line="24" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" bodystart="24" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" line="24" column="16" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" bodystart="24" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__0LEP__137invfb_1ab01188879d096fbd6fa7091097db3537" prot="public" static="no" mutable="no">
         <type><ref refid="structGambit_1_1ColliderBit_1_1Cutflow" kindref="compound">Cutflow</ref></type>
@@ -76,7 +76,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" line="41" column="15" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" bodystart="41" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" line="41" column="15" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" bodystart="41" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-func">
@@ -92,7 +92,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" line="44" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" bodystart="44" bodyend="53"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" line="44" column="7" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" bodystart="44" bodyend="53"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__0LEP__137invfb_1ad49f1a2b3f8e677d1785d2764b20fa19" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -116,7 +116,7 @@
 <para><xrefsect id="todo_1_todo000067"><xreftitle>Todo</xreftitle><xrefdescription><para>Sum should actually be over all non-e/mu calo particles </para>
 </xrefdescription></xrefsect></para>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" line="56" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" bodystart="56" bodyend="194"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" line="56" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" bodystart="56" bodyend="194"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__0LEP__137invfb_1a857a03539eaf8689d12b49e7b4cc1595" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
         <type>void</type>
@@ -136,7 +136,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" line="198" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" bodystart="198" bodyend="202"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" line="198" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" bodystart="198" bodyend="202"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__0LEP__137invfb_1a51a55b132220d706f74dce1ec2b3f2dd" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
         <type>void</type>
@@ -152,7 +152,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" line="206" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" bodystart="206" bodyend="230"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" line="206" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" bodystart="206" bodyend="230"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="protected-func">
@@ -170,7 +170,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" line="235" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" bodystart="235" bodyend="237"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" line="235" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" bodystart="235" bodyend="237"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -210,7 +210,7 @@
         <link refid="structGambit_1_1ColliderBit_1_1Cutflow"/>
       </node>
     </collaborationgraph>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" line="17" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" bodystart="17" bodyend="241"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" line="17" column="5" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_0LEP_137invfb.cpp" bodystart="17" bodyend="241"/>
     <listofallmembers>
       <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__0LEP__137invfb_1ac0ec238f257192ffcc6a4293fde710c8" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_0LEP_137invfb</scope><name>_counters</name></member>
       <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__0LEP__137invfb_1ab01188879d096fbd6fa7091097db3537" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_0LEP_137invfb</scope><name>_cutflow</name></member>

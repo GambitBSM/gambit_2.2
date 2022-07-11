@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__Photon__GMSB__36invfb" kind="class" language="C++" prot="public">
     <compoundname>Gambit::ColliderBit::Analysis_CMS_13TeV_Photon_GMSB_36invfb</compoundname>
     <basecompoundref refid="classGambit_1_1ColliderBit_1_1Analysis" prot="public" virt="non-virtual">Gambit::ColliderBit::Analysis</basecompoundref>
@@ -17,7 +17,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" line="37" column="35" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" bodystart="37" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" line="37" column="35" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" bodystart="37" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-attrib">
@@ -39,7 +39,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" line="40" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" bodystart="40" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" line="40" column="16" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" bodystart="40" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__Photon__GMSB__36invfb_1ad5b881e4f9c3dc111314e09e8787b252" prot="public" static="no" mutable="no">
         <type><ref refid="structGambit_1_1ColliderBit_1_1Cutflow" kindref="compound">Cutflow</ref></type>
@@ -53,7 +53,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" line="48" column="15" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" bodystart="48" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" line="48" column="15" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" bodystart="48" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-func">
@@ -69,7 +69,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" line="50" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" bodystart="50" bodyend="55"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" line="50" column="7" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" bodystart="50" bodyend="55"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__Photon__GMSB__36invfb_1ab3702de02699d3f3c3e8a1ee3caa932e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
         <type>void</type>
@@ -88,7 +88,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" line="58" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" bodystart="58" bodyend="141"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" line="58" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" bodystart="58" bodyend="141"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__Photon__GMSB__36invfb_1aaa235ca33f4bdf85d8d3da861fbc7547" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
         <type>void</type>
@@ -108,7 +108,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" line="144" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" bodystart="144" bodyend="149"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" line="144" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" bodystart="144" bodyend="149"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__Photon__GMSB__36invfb_1aaad7fef57dda756585c5855a1fef0b8f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
         <type>void</type>
@@ -124,7 +124,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" line="152" column="20" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" bodystart="152" bodyend="168"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" line="152" column="20" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" bodystart="152" bodyend="168"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="protected-func">
@@ -142,7 +142,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" line="172" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" bodystart="172" bodyend="174"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" line="172" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" bodystart="172" bodyend="174"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -180,7 +180,7 @@
         <link refid="structGambit_1_1ColliderBit_1_1Cutflow"/>
       </node>
     </collaborationgraph>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" line="34" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" bodystart="34" bodyend="176"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" line="34" column="5" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_Photon_GMSB_36invfb.cpp" bodystart="34" bodyend="176"/>
     <listofallmembers>
       <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__Photon__GMSB__36invfb_1ad401d0d041bbd1757622c4c77cdf3ae0" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_Photon_GMSB_36invfb</scope><name>_counters</name></member>
       <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__Photon__GMSB__36invfb_1ad5b881e4f9c3dc111314e09e8787b252" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_Photon_GMSB_36invfb</scope><name>_cutflow</name></member>

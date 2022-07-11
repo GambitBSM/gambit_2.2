@@ -1,16 +1,16 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="mt2w__bisect_8h" kind="file" language="C++">
     <compoundname>mt2w_bisect.h</compoundname>
-    <includedby refid="mt2w_8h" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w.h</includedby>
-    <includedby refid="mt2w__bisect_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2w_bisect.cpp</includedby>
+    <includedby refid="mt2w_8h" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w.h</includedby>
+    <includedby refid="mt2w__bisect_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/mt2w_bisect.cpp</includedby>
     <invincdepgraph>
       <node id="2">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w.h</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w.h</label>
         <link refid="mt2w_8h_source"/>
       </node>
       <node id="1">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w_bisect.h</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w_bisect.h</label>
         <link refid="mt2w__bisect_8h"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -28,7 +28,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w_bisect.h" line="18" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w_bisect.h" bodystart="18" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w_bisect.h" line="18" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w_bisect.h" bodystart="18" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="mt2w__bisect_8h_1a303ff380dba5697d8936ccd2f26b8e90" prot="public" static="no">
         <name>ABSOLUTE_PRECISION</name>
@@ -39,7 +39,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w_bisect.h" line="19" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w_bisect.h" bodystart="19" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w_bisect.h" line="19" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w_bisect.h" bodystart="19" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="mt2w__bisect_8h_1a30a155674f82d88a66a9ff85d50181e1" prot="public" static="no">
         <name>MIN_MASS</name>
@@ -50,7 +50,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w_bisect.h" line="23" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w_bisect.h" bodystart="23" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w_bisect.h" line="23" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w_bisect.h" bodystart="23" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="mt2w__bisect_8h_1a3dacdf62281eb2686f0c6ea523365d56" prot="public" static="no">
         <name>ZERO_MASS</name>
@@ -61,7 +61,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w_bisect.h" line="24" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w_bisect.h" bodystart="24" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w_bisect.h" line="24" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w_bisect.h" bodystart="24" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="mt2w__bisect_8h_1a1a50e4da730328e9c6d78af5e0b18b03" prot="public" static="no">
         <name>SCANSTEP</name>
@@ -72,7 +72,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w_bisect.h" line="25" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w_bisect.h" bodystart="25" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w_bisect.h" line="25" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w_bisect.h" bodystart="25" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -169,6 +169,6 @@
 <codeline lineno="87"><highlight class="normal"></highlight></codeline>
 <codeline lineno="88"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
     </programlisting>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w_bisect.h"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w_bisect.h"/>
   </compounddef>
 </doxygen>

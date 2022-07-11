@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="classGambit_1_1ColliderBit_1_1BaseCollider" kind="class" language="C++" prot="public" abstract="yes">
     <compoundname>Gambit::ColliderBit::BaseCollider</compoundname>
     <derivedcompoundref refid="classGambit_1_1ColliderBit_1_1Py8Collider" prot="public" virt="non-virtual">Gambit::ColliderBit::Py8Collider&lt; PythiaT, EventT, hepmc_writerT &gt;</derivedcompoundref>
@@ -21,7 +21,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="45" column="24"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="45" column="24"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1a39c14ee12a602a337d24ff1d7635ecba" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
         <type>double</type>
@@ -39,7 +39,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="46" column="24"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="46" column="24"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1a87acc06518241b88d9083cda640bdf0e" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
         <type>double</type>
@@ -54,7 +54,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="47" column="24"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="47" column="24"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1a89d71e1f8015234ffcbd4e3cf237f8b9" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
         <type>double</type>
@@ -72,7 +72,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="48" column="24"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="48" column="24"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1a7430cf7800a82f16b6f15a83db98fee6" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
         <type>double</type>
@@ -88,7 +88,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="50" column="24"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="50" column="24"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1abb15f7bd2914f06ea12ce3239626260a" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
         <type>double</type>
@@ -106,7 +106,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="51" column="24"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="51" column="24"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1ae58e9a6ae2631f92c0ac9769a82c5424" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
         <type>double</type>
@@ -121,7 +121,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="52" column="24"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="52" column="24"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1ac777ece98d0a00da1fc323ea6688a718" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
         <type>double</type>
@@ -139,7 +139,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="53" column="24"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="53" column="24"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1a34f259dd52ec118da2e6e57217b9f8d1" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
         <type>int</type>
@@ -155,7 +155,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="55" column="21"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="55" column="21"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1a52c3ee9941f4d209a5eefc444794d33e" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
         <type>std::vector&lt; int &gt;</type>
@@ -171,7 +171,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="57" column="29"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="57" column="29"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="user-defined">
@@ -194,7 +194,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="63" column="22" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" bodystart="63" bodyend="63"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="63" column="22" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" bodystart="63" bodyend="63"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1a7b8431d21b44966ec97962a371ba1abf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
         <type>void</type>
@@ -210,7 +210,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="65" column="22" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" bodystart="65" bodyend="65"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="65" column="22" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" bodystart="65" bodyend="65"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-attrib">
@@ -227,7 +227,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="69" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" bodystart="69" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="69" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" bodystart="69" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1BaseCollider_1a5081cf86ba1a4fd8ddd9a02b07e6c66c" prot="public" static="no" mutable="no">
         <type>double</type>
@@ -242,7 +242,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="71" column="16" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" bodystart="71" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="71" column="16" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" bodystart="71" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-func">
@@ -259,7 +259,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="36" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" bodystart="36" bodyend="36"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="36" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" bodystart="36" bodyend="36"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1ab6f9a876625fb205bb8171a7ca322343" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
         <type></type>
@@ -274,7 +274,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="38" column="17" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" bodystart="38" bodyend="38"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="38" column="17" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" bodystart="38" bodyend="38"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1BaseCollider_1a9bfda44ae01c04766f4eeeab405ff718" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
         <type>void</type>
@@ -290,7 +290,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="40" column="22" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" bodystart="40" bodyend="40"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="40" column="22" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" bodystart="40" bodyend="40"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -310,7 +310,7 @@
         </childnode>
       </node>
     </inheritancegraph>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="30" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" bodystart="31" bodyend="73"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" line="30" column="5" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/BaseCollider.hpp" bodystart="31" bodyend="73"/>
     <listofallmembers>
       <member refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a52c3ee9941f4d209a5eefc444794d33e" prot="public" virt="pure-virtual"><scope>Gambit::ColliderBit::BaseCollider</scope><name>all_active_process_codes</name></member>
       <member refid="classGambit_1_1ColliderBit_1_1BaseCollider_1a5081cf86ba1a4fd8ddd9a02b07e6c66c" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::BaseCollider</scope><name>antiktR</name></member>

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="mt2w_8cc" kind="file" language="C++">
     <compoundname>mt2w.cc</compoundname>
     <includes refid="mt2w_8h" local="yes">gambit/ColliderBit/mt2w.h</includes>
@@ -21,7 +21,7 @@
         <link refid="mt2w__bisect_8h_source"/>
       </node>
       <node id="1">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2w.cc</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/mt2w.cc</label>
         <link refid="mt2w_8cc"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -68,7 +68,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2w.cc" line="3" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2w.cc" bodystart="3" bodyend="80"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/mt2w.cc" line="3" column="8" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/mt2w.cc" bodystart="3" bodyend="80"/>
       </memberdef>
       <memberdef kind="function" id="mt2w_8cc_1ad232ca7013f202adc10e0ca14d7a71da" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>double</type>
@@ -101,7 +101,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2w.cc" line="84" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2w.cc" bodystart="84" bodyend="107"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/mt2w.cc" line="84" column="8" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/mt2w.cc" bodystart="84" bodyend="107"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -218,6 +218,6 @@
 <codeline lineno="107"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="108"><highlight class="normal"></highlight></codeline>
     </programlisting>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2w.cc"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/mt2w.cc"/>
   </compounddef>
 </doxygen>

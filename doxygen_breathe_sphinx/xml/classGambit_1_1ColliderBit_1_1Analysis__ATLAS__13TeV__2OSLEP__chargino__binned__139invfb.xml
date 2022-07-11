@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__chargino__binned__139invfb" kind="class" language="C++" prot="public">
     <compoundname>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_chargino_binned_139invfb</compoundname>
     <basecompoundref refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__chargino__139invfb" prot="public" virt="non-virtual">Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_chargino_139invfb</basecompoundref>
@@ -16,7 +16,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_chargino_139invfb.cpp" line="479" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_chargino_139invfb.cpp" bodystart="479" bodyend="481"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_chargino_139invfb.cpp" line="479" column="7" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_chargino_139invfb.cpp" bodystart="479" bodyend="481"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__chargino__binned__139invfb_1aef857e61c46ac67cfed21724eac3fd47" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
         <type>void</type>
@@ -32,7 +32,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_chargino_139invfb.cpp" line="483" column="20" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_chargino_139invfb.cpp" bodystart="483" bodyend="522"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_chargino_139invfb.cpp" line="483" column="20" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_chargino_139invfb.cpp" bodystart="483" bodyend="522"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -89,7 +89,7 @@
         <link refid="structGambit_1_1ColliderBit_1_1Cutflow"/>
       </node>
     </collaborationgraph>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_chargino_139invfb.cpp" line="476" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_chargino_139invfb.cpp" bodystart="476" bodyend="524"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_chargino_139invfb.cpp" line="476" column="5" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_ATLAS_13TeV_2OSLEP_chargino_139invfb.cpp" bodystart="476" bodyend="524"/>
     <listofallmembers>
       <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__chargino__139invfb_1ac0dd4d8af07bf2304a77f56cd16a9b3a" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_chargino_binned_139invfb</scope><name>_counters</name></member>
       <member refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__2OSLEP__chargino__139invfb_1a0e2bc2c3c1f85a507f57c6e42327876d" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_ATLAS_13TeV_2OSLEP_chargino_binned_139invfb</scope><name>_counters_bin</name></member>

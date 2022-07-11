@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="AnalysisContainer_8cpp" kind="file" language="C++">
     <compoundname>AnalysisContainer.cpp</compoundname>
     <includes local="no">stdexcept</includes>
@@ -76,7 +76,7 @@
         </childnode>
       </node>
       <node id="1">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp</label>
         <link refid="AnalysisContainer_8cpp"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -164,7 +164,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" line="47" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="47" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" line="47" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="47" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="AnalysisContainer_8cpp_1a57b8d8ab78fd20c1cfc6c05d5430a04a" prot="public" static="no">
         <name>MAP_ANALYSES_WITH_ROOT</name>
@@ -176,7 +176,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" line="52" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="52" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" line="52" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="52" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="AnalysisContainer_8cpp_1a4d05cdf5b9bb900208db9e8f27f588bd" prot="public" static="no">
         <name>MAP_ANALYSES</name>
@@ -187,7 +187,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" line="55" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="55" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" line="55" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="55" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="AnalysisContainer_8cpp_1ae875139c7c5bedf84eb11ffcb2bc407b" prot="public" static="no">
         <name>DECLARE_ANALYSIS_FACTORY</name>
@@ -201,7 +201,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" line="138" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="138" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" line="138" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="138" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="AnalysisContainer_8cpp_1aa128a2a210ea9b0a2dd4c4e46614b536" prot="public" static="no">
         <name>IF_X_RTN_CREATE_ANA_X</name>
@@ -211,11 +211,11 @@
 <para>Forward declarations using <ref refid="AnalysisContainer_8cpp_1ae875139c7c5bedf84eb11ffcb2bc407b" kindref="member">DECLARE_ANALYSIS_FACTORY(ANAME)</ref> </para>
         </briefdescription>
         <detaileddescription>
-<para>For the string-based factory function mkAnalysis() </para>
+<para>For the string-based factory function <ref refid="AnalysisContainer_8hpp_1a02a869bd87c56deb16a32a91e08342be" kindref="member">mkAnalysis()</ref> </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" line="152" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="152" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" line="152" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="152" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="AnalysisContainer_8cpp_1ae146f47b2169f5e9147631858b409d4f" prot="public" static="no">
         <name>IF_X_RTN_DETECTOR</name>
@@ -228,7 +228,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" line="172" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="172" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" line="172" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="172" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -659,6 +659,6 @@
 <codeline lineno="464"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
 <codeline lineno="465"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp"/>
   </compounddef>
 </doxygen>

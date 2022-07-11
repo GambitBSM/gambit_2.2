@@ -1,29 +1,16 @@
-.. GAMBIT documentation master file, created by
-   sphinx-quickstart on Thu Jun 30 10:44:02 2022.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-Welcome to GAMBIT's documentation!
+Welcome to GAMBIT's Documentation!
 ==================================
-
-Contents
-========
 
 .. toctree::
    :maxdepth: 4
+   :hidden:
    
-   api
+   colliderbit
+   cosmobit
+   genindex
 
+Here you will find documentation for each ``Bit`` that makes up GAMBIT.
 
-Indices and tables
-==================
+.. note::
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
-Docs
-====
-
-.. doxygenclass:: Gambit::ColliderBit::BuckFast
-   :members:
+   This documentation is intended to be purely for reference only. For detailed walkthroughs and installation instructions, please see the tutorials section of the main GAMBIT site. 

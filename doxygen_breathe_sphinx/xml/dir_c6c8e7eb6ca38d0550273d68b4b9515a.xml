@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="dir_c6c8e7eb6ca38d0550273d68b4b9515a" kind="dir">
+    <compoundname>C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src</compoundname>
+    <innerfile refid="BBN_8cpp">BBN.cpp</innerfile>
+    <innerfile refid="Boltzmann_8cpp">Boltzmann.cpp</innerfile>
+    <innerfile refid="CMB_8cpp">CMB.cpp</innerfile>
+    <innerfile refid="CosmoALPs_8cpp">CosmoALPs.cpp</innerfile>
+    <innerfile refid="CosmoBit_8cpp">CosmoBit.cpp</innerfile>
+    <innerfile refid="CosmoBit__types_8cpp">CosmoBit_types.cpp</innerfile>
+    <innerfile refid="CosmoBit__utils_8cpp">CosmoBit_utils.cpp</innerfile>
+    <innerfile refid="Inflation_8cpp">Inflation.cpp</innerfile>
+    <innerfile refid="ModGrav_8cpp">ModGrav.cpp</innerfile>
+    <innerfile refid="MontePython_8cpp">MontePython.cpp</innerfile>
+    <innerfile refid="Planck_8cpp">Planck.cpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/"/>
+  </compounddef>
+</doxygen>

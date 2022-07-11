@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="classGambit_1_1ColliderBit_1_1OPALDegenerateCharginoLimitAt208GeV" kind="class" language="C++" prot="public">
     <compoundname>Gambit::ColliderBit::OPALDegenerateCharginoLimitAt208GeV</compoundname>
     <basecompoundref refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer" prot="public" virt="non-virtual">Gambit::ColliderBit::BaseLimitContainer</basecompoundref>
@@ -18,7 +18,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/OPALDegenerateCharginoLimits.hpp" line="26" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits/OPALDegenerateCharginoLimits.cpp" bodystart="57" bodyend="97"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/OPALDegenerateCharginoLimits.hpp" line="26" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/limits/OPALDegenerateCharginoLimits.cpp" bodystart="57" bodyend="97"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-func">
@@ -44,7 +44,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/OPALDegenerateCharginoLimits.hpp" line="14" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits/OPALDegenerateCharginoLimits.cpp" bodystart="8" bodyend="11"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/OPALDegenerateCharginoLimits.hpp" line="14" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/limits/OPALDegenerateCharginoLimits.cpp" bodystart="8" bodyend="11"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1OPALDegenerateCharginoLimitAt208GeV_1a566c7a178cbef9190849fad182656dbb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classGambit_1_1ColliderBit_1_1P2" kindref="compound">P2</ref> &gt;</type>
@@ -63,7 +63,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/OPALDegenerateCharginoLimits.hpp" line="17" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits/OPALDegenerateCharginoLimits.cpp" bodystart="13" bodyend="49"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/OPALDegenerateCharginoLimits.hpp" line="17" column="21" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/limits/OPALDegenerateCharginoLimits.cpp" bodystart="13" bodyend="49"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1OPALDegenerateCharginoLimitAt208GeV_1aa71aa4e6dfb70b71c22d40ff95cde1f4" prot="public" static="no" const="yes" explicit="no" inline="no" virt="virtual">
         <type>bool</type>
@@ -93,7 +93,7 @@
 </simplesect>
 </para>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/OPALDegenerateCharginoLimits.hpp" line="20" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits/OPALDegenerateCharginoLimits.cpp" bodystart="51" bodyend="55"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/OPALDegenerateCharginoLimits.hpp" line="20" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/limits/OPALDegenerateCharginoLimits.cpp" bodystart="51" bodyend="55"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -132,7 +132,7 @@
         <link refid="classGambit_1_1ColliderBit_1_1P2"/>
       </node>
     </collaborationgraph>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/OPALDegenerateCharginoLimits.hpp" line="9" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/OPALDegenerateCharginoLimits.hpp" bodystart="9" bodyend="28"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/OPALDegenerateCharginoLimits.hpp" line="9" column="5" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/OPALDegenerateCharginoLimits.hpp" bodystart="9" bodyend="28"/>
     <listofallmembers>
       <member refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a92ac7a894497bba1d5ebb54bcc0cfe32" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::OPALDegenerateCharginoLimitAt208GeV</scope><name>_externalPoint</name></member>
       <member refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1ab5612b14cb0afa257d734db994f4cf9e" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::OPALDegenerateCharginoLimitAt208GeV</scope><name>_limitContours</name></member>

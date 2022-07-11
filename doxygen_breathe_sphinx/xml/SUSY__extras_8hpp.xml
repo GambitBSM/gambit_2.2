@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="SUSY__extras_8hpp" kind="file" language="C++">
     <compoundname>SUSY_extras.hpp</compoundname>
       <sectiondef kind="user-defined">
@@ -17,7 +17,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="23" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="163" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="23" column="11" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="163" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="SUSY__extras_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
         <name>FUNCTION</name>
@@ -31,7 +31,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="25" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="165" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="25" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="165" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="SUSY__extras_8hpp_1a99414bf65bb722f6204c37c7a507b92f" prot="public" static="no">
         <name>CAPABILITY</name>
@@ -47,7 +47,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="42" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="163" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="42" column="11" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="163" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="SUSY__extras_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
         <name>FUNCTION</name>
@@ -61,7 +61,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="63" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="165" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="63" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="165" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="SUSY__extras_8hpp_1a99414bf65bb722f6204c37c7a507b92f" prot="public" static="no">
         <name>CAPABILITY</name>
@@ -77,7 +77,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="102" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="163" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="102" column="11" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="163" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="SUSY__extras_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
         <name>FUNCTION</name>
@@ -91,7 +91,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="106" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="165" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="106" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="165" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="SUSY__extras_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
         <name>FUNCTION</name>
@@ -105,7 +105,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="113" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="165" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="113" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="165" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="SUSY__extras_8hpp_1a99414bf65bb722f6204c37c7a507b92f" prot="public" static="no">
         <name>CAPABILITY</name>
@@ -121,7 +121,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="124" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="163" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="124" column="11" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="163" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="SUSY__extras_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
         <name>FUNCTION</name>
@@ -135,7 +135,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="126" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="165" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="126" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="165" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="SUSY__extras_8hpp_1a99414bf65bb722f6204c37c7a507b92f" prot="public" static="no">
         <name>CAPABILITY</name>
@@ -151,7 +151,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="137" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="163" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="137" column="11" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="163" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="SUSY__extras_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
         <name>FUNCTION</name>
@@ -165,7 +165,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="139" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="165" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="139" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="165" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="SUSY__extras_8hpp_1a99414bf65bb722f6204c37c7a507b92f" prot="public" static="no">
         <name>CAPABILITY</name>
@@ -181,7 +181,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="149" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="163" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="149" column="11" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="163" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="SUSY__extras_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
         <name>FUNCTION</name>
@@ -195,7 +195,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="151" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="165" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="151" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="165" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="SUSY__extras_8hpp_1a99414bf65bb722f6204c37c7a507b92f" prot="public" static="no">
         <name>CAPABILITY</name>
@@ -211,7 +211,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="163" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="163" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="163" column="11" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="163" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="SUSY__extras_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
         <name>FUNCTION</name>
@@ -225,7 +225,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="165" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="165" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="165" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="165" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="user-defined">
@@ -240,7 +240,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="72" column="6" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="72" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="72" column="6" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="72" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="SUSY__extras_8hpp_1ac9c84fa68bbad002983e35ce3663c686" prot="public" static="no" mutable="no">
         <type></type>
@@ -253,7 +253,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="72" column="18" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="72" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="72" column="18" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="72" bodyend="-1"/>
       </memberdef>
       <memberdef kind="function" id="SUSY__extras_8hpp_1ac4868b56ac0efaa91a49d7c8c761ba79" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -280,7 +280,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="71" column="5"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="71" column="5"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="define">
@@ -293,7 +293,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="20" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="20" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" line="20" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp" bodystart="20" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -449,6 +449,6 @@
 <codeline lineno="174"><highlight class="normal"></highlight></codeline>
 <codeline lineno="175"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>MODULE</highlight></codeline>
     </programlisting>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/models/SUSY_extras.hpp"/>
   </compounddef>
 </doxygen>

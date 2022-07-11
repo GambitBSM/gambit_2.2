@@ -1,13 +1,13 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="dir_8d8d78fa40d3abc744d88b85d344fbd6" kind="dir">
-    <compoundname>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts</compoundname>
+    <compoundname>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/scripts</compoundname>
     <innerfile refid="collider__harvester_8py">collider_harvester.py</innerfile>
     <innerfile refid="generate__raster__scan__settings_8py">generate_raster_scan_settings.py</innerfile>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/scripts/"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/scripts/"/>
   </compounddef>
 </doxygen>

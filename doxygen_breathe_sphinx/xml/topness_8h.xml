@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="topness_8h" kind="file" language="C++">
     <compoundname>topness.h</compoundname>
     <includes local="no">iostream</includes>
@@ -7,10 +7,10 @@
     <includes local="no">cstdlib</includes>
     <includes local="no">cmath</includes>
     <includes local="yes">gambit/Utils/threadsafe_rng.hpp</includes>
-    <includedby refid="Analysis__CMS__13TeV__1LEPStop__36invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_1LEPStop_36invfb.cpp</includedby>
+    <includedby refid="Analysis__CMS__13TeV__1LEPStop__36invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_1LEPStop_36invfb.cpp</includedby>
     <incdepgraph>
       <node id="1">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h</label>
         <link refid="topness_8h"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -55,7 +55,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="39" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="39" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="39" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="39" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="topness_8h_1a95ee0548b54948dd2899bc53c0e60098" prot="public" static="no" mutable="no">
         <type>const double</type>
@@ -69,7 +69,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="40" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="40" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="40" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="40" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="topness_8h_1aef70d4582db36d026673b90839df04e2" prot="public" static="no" mutable="no">
         <type>const int</type>
@@ -83,7 +83,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="120" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="120" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="120" column="11" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="120" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="func">
@@ -108,7 +108,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="41" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="41" bodyend="50"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="41" column="8" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="41" bodyend="50"/>
       </memberdef>
       <memberdef kind="function" id="topness_8h_1ac3ddc6c2b61a4ce9c0aae495efe9a287" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -136,7 +136,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="51" column="6" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="51" bodyend="57"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="51" column="6" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="51" bodyend="57"/>
       </memberdef>
       <memberdef kind="function" id="topness_8h_1acd35f9ea93c5d6a374556cf783a7c11c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>double</type>
@@ -163,7 +163,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="121" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="121" bodyend="132"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="121" column="8" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="121" bodyend="132"/>
       </memberdef>
       <memberdef kind="function" id="topness_8h_1acb6246bab375772ba27f6ff0a6631feb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>double</type>
@@ -195,7 +195,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="133" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="133" bodyend="143"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="133" column="8" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="133" bodyend="143"/>
       </memberdef>
       <memberdef kind="function" id="topness_8h_1a85c13dfa358423de6517315bb3f3abc7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>double</type>
@@ -217,7 +217,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="144" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="144" bodyend="162"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="144" column="8" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="144" bodyend="162"/>
       </memberdef>
       <memberdef kind="function" id="topness_8h_1a061d622ee47a18395d2930c5b412b15c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>double</type>
@@ -253,7 +253,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="744" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="744" bodyend="847"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" line="744" column="8" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h" bodystart="744" bodyend="847"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -485,7 +485,7 @@
 <codeline lineno="222"><highlight class="normal">};</highlight></codeline>
 <codeline lineno="223"><highlight class="normal"></highlight></codeline>
 <codeline lineno="224"><highlight class="normal"></highlight></codeline>
-<codeline lineno="225"><highlight class="normal"><ref refid="classmy__simplex" kindref="compound">my_simplex::my_simplex</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>dd,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>aalpha,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>bbeta,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>ggamma,<sp/><sp/><ref refid="structmy__func" kindref="compound">my_func</ref><sp/>(*ff))<sp/>:<sp/>d(dd),<sp/>alpha(aalpha),<sp/>beta(bbeta),<sp/>gamma(ggamma),<sp/>f(ff){}</highlight></codeline>
+<codeline lineno="225"><highlight class="normal">my_simplex::my_simplex(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>dd,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>aalpha,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>bbeta,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>ggamma,<sp/><sp/><ref refid="structmy__func" kindref="compound">my_func</ref><sp/>(*ff))<sp/>:<sp/>d(dd),<sp/>alpha(aalpha),<sp/>beta(bbeta),<sp/>gamma(ggamma),<sp/>f(ff){}</highlight></codeline>
 <codeline lineno="226"><highlight class="normal"></highlight><highlight class="comment">//<sp/>check<sp/>d<sp/>and<sp/>size<sp/>of<sp/>xin<sp/>agree</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="227"><highlight class="normal"></highlight></codeline>
 <codeline lineno="228"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>my_simplex::my_SetUp(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>xin[DMAX*(DMAX+1)])</highlight></codeline>
@@ -880,7 +880,7 @@
 <codeline lineno="617"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="618"><highlight class="normal"></highlight></codeline>
 <codeline lineno="619"><highlight class="normal"></highlight></codeline>
-<codeline lineno="620"><highlight class="normal"><ref refid="classmy__Nelder__Mead" kindref="compound">my_Nelder_Mead::my_Nelder_Mead</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>dd,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>alpha,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>beta,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>gamma,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>NNtry,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>eeps,<sp/><ref refid="structmy__func" kindref="compound">my_func</ref><sp/>*ff):<sp/>d(dd),<sp/>Ntry(NNtry),<sp/>eps(eeps),<sp/>f(ff),<sp/>simplex(dd,<sp/>alpha,<sp/>beta,<sp/>gamma,<sp/>f){}</highlight></codeline>
+<codeline lineno="620"><highlight class="normal">my_Nelder_Mead::my_Nelder_Mead(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>dd,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>alpha,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>beta,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>gamma,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>NNtry,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>eeps,<sp/><ref refid="structmy__func" kindref="compound">my_func</ref><sp/>*ff):<sp/>d(dd),<sp/>Ntry(NNtry),<sp/>eps(eeps),<sp/>f(ff),<sp/>simplex(dd,<sp/>alpha,<sp/>beta,<sp/>gamma,<sp/>f){}</highlight></codeline>
 <codeline lineno="621"><highlight class="normal"></highlight></codeline>
 <codeline lineno="622"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>my_Nelder_Mead::one_cycle(<ref refid="classmy__simplex" kindref="compound">my_simplex</ref><sp/>*s)</highlight></codeline>
 <codeline lineno="623"><highlight class="normal">{</highlight></codeline>
@@ -1109,6 +1109,6 @@
 <codeline lineno="846"><highlight class="normal"></highlight></codeline>
 <codeline lineno="847"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/topness.h"/>
   </compounddef>
 </doxygen>

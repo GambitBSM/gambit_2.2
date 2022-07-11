@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__for__stop__36invfb" kind="class" language="C++" prot="public">
     <compoundname>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_for_stop_36invfb</compoundname>
     <basecompoundref refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__chargino__stop__36invfb" prot="public" virt="non-virtual">Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_chargino_stop_36invfb</basecompoundref>
@@ -16,7 +16,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_chargino_stop_36invfb.cpp" line="937" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_chargino_stop_36invfb.cpp" bodystart="937" bodyend="939"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_chargino_stop_36invfb.cpp" line="937" column="7" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_chargino_stop_36invfb.cpp" bodystart="937" bodyend="939"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__for__stop__36invfb_1a463a790d45eb22a75b72ae26677fd245" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
         <type>void</type>
@@ -32,7 +32,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_chargino_stop_36invfb.cpp" line="941" column="20" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_chargino_stop_36invfb.cpp" bodystart="941" bodyend="1118"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_chargino_stop_36invfb.cpp" line="941" column="20" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_chargino_stop_36invfb.cpp" bodystart="941" bodyend="1118"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -89,7 +89,7 @@
         <link refid="structGambit_1_1ColliderBit_1_1Cutflow"/>
       </node>
     </collaborationgraph>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_chargino_stop_36invfb.cpp" line="934" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_chargino_stop_36invfb.cpp" bodystart="934" bodyend="1120"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_chargino_stop_36invfb.cpp" line="934" column="5" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_13TeV_2OSLEP_chargino_stop_36invfb.cpp" bodystart="934" bodyend="1120"/>
     <listofallmembers>
       <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__chargino__stop__36invfb_1ac23b7cfa63c4a9d1c23d29d045967d53" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_for_stop_36invfb</scope><name>_counters</name></member>
       <member refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__2OSLEP__chargino__stop__36invfb_1a0727738f635c974f914f427a381ac1cf" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::Analysis_CMS_13TeV_2OSLEP_for_stop_36invfb</scope><name>_cutflow</name></member>

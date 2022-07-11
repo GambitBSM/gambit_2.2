@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="classGambit_1_1ColliderBit_1_1MC__convergence__checker" kind="class" language="C++" prot="public">
     <compoundname>Gambit::ColliderBit::MC_convergence_checker</compoundname>
     <includes refid="MC__convergence_8hpp" local="no">MC_convergence.hpp</includes>
@@ -17,7 +17,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="50" column="36" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" bodystart="50" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="50" column="36" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" bodystart="50" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1MC__convergence__checker_1aed8ad7171fd9f97bcda34309d151bf6d" prot="private" static="no" mutable="no">
         <type>std::vector&lt; int &gt; *</type>
@@ -32,7 +32,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="53" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" bodystart="53" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="53" column="21" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" bodystart="53" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1MC__convergence__checker_1af1bcb21f70c9fd6b3d66bf09de506802" prot="private" static="no" mutable="no">
         <type>int</type>
@@ -47,7 +47,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="56" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" bodystart="56" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="56" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" bodystart="56" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1MC__convergence__checker_1a5a20f17aaa3c08c18a49670637728362" prot="private" static="no" mutable="no">
         <type>bool</type>
@@ -62,7 +62,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="59" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" bodystart="59" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="59" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" bodystart="59" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="private-static-attrib">
@@ -79,7 +79,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="62" column="25" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" bodystart="62" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="62" column="25" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" bodystart="62" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-func">
@@ -96,7 +96,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="67" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/MC_convergence.cpp" bodystart="39" bodyend="43"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="67" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/MC_convergence.cpp" bodystart="39" bodyend="43"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1MC__convergence__checker_1ae7dee5a7171188ee380a5fb580941dc9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -112,7 +112,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="70" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/MC_convergence.cpp" bodystart="46" bodyend="49"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="70" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/MC_convergence.cpp" bodystart="46" bodyend="49"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1MC__convergence__checker_1af1627825cc43b8645a84820ee0fda145" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -131,7 +131,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="73" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/MC_convergence.cpp" bodystart="52" bodyend="56"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="73" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/MC_convergence.cpp" bodystart="52" bodyend="56"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1MC__convergence__checker_1a16910fb826bc1670239f83f589b7423e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -150,7 +150,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="76" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/MC_convergence.cpp" bodystart="59" bodyend="63"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="76" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/MC_convergence.cpp" bodystart="59" bodyend="63"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1MC__convergence__checker_1ab0296c712c6b33d1479ef419897b1706" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -165,7 +165,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="79" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/MC_convergence.cpp" bodystart="66" bodyend="75"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="79" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/MC_convergence.cpp" bodystart="66" bodyend="75"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1MC__convergence__checker_1acf03d9e109000753dcdcd223378624ba" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -184,7 +184,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="82" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/MC_convergence.cpp" bodystart="79" bodyend="98"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="82" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/MC_convergence.cpp" bodystart="79" bodyend="98"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1MC__convergence__checker_1a0d93bbdd3677854192e6bf6b1acb28e3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>bool</type>
@@ -203,7 +203,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="85" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/MC_convergence.cpp" bodystart="102" bodyend="222"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="85" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/MC_convergence.cpp" bodystart="102" bodyend="222"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -211,7 +211,7 @@
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="45" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" bodystart="46" bodyend="86"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" line="45" column="5" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/MC_convergence.hpp" bodystart="46" bodyend="86"/>
     <listofallmembers>
       <member refid="classGambit_1_1ColliderBit_1_1MC__convergence__checker_1a4093449f6add51f15b668e34a6f185c4" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::MC_convergence_checker</scope><name>_settings</name></member>
       <member refid="classGambit_1_1ColliderBit_1_1MC__convergence__checker_1a0d93bbdd3677854192e6bf6b1acb28e3" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::MC_convergence_checker</scope><name>achieved</name></member>

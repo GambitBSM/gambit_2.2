@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="L3GauginoLimits_8cpp" kind="file" language="C++">
     <compoundname>L3GauginoLimits.cpp</compoundname>
     <includes refid="L3GauginoLimits_8hpp" local="yes">gambit/ColliderBit/limits/L3GauginoLimits.hpp</includes>
@@ -51,7 +51,7 @@
         </childnode>
       </node>
       <node id="1">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits/L3GauginoLimits.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/limits/L3GauginoLimits.cpp</label>
         <link refid="L3GauginoLimits_8cpp"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -734,6 +734,6 @@
 <codeline lineno="659"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
 <codeline lineno="660"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits/L3GauginoLimits.cpp"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/limits/L3GauginoLimits.cpp"/>
   </compounddef>
 </doxygen>

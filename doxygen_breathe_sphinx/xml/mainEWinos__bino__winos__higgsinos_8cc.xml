@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="mainEWinos__bino__winos__higgsinos_8cc" kind="file" language="C++">
     <compoundname>mainEWinos_bino_winos_higgsinos.cc</compoundname>
     <includes local="yes">Pythia8/Pythia.h</includes>
     <includes local="yes">Pythia8Plugins/HepMC2.h</includes>
     <incdepgraph>
       <node id="1">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/examples/HepMC_example/mainEWinos_bino_winos_higgsinos.cc</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/examples/HepMC_example/mainEWinos_bino_winos_higgsinos.cc</label>
         <link refid="mainEWinos__bino__winos__higgsinos_8cc"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -33,7 +33,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/examples/HepMC_example/mainEWinos_bino_winos_higgsinos.cc" line="16" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/examples/HepMC_example/mainEWinos_bino_winos_higgsinos.cc" bodystart="16" bodyend="57"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/examples/HepMC_example/mainEWinos_bino_winos_higgsinos.cc" line="16" column="5" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/examples/HepMC_example/mainEWinos_bino_winos_higgsinos.cc" bodystart="16" bodyend="57"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -99,6 +99,6 @@
 <codeline lineno="56"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
 <codeline lineno="57"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/examples/HepMC_example/mainEWinos_bino_winos_higgsinos.cc"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/examples/HepMC_example/mainEWinos_bino_winos_higgsinos.cc"/>
   </compounddef>
 </doxygen>

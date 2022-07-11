@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="classGambit_1_1ColliderBit_1_1AnalysisContainer" kind="class" language="C++" prot="public">
     <compoundname>Gambit::ColliderBit::AnalysisContainer</compoundname>
     <includes refid="AnalysisContainer_8hpp" local="no">AnalysisContainer.hpp</includes>
@@ -17,7 +17,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="63" column="18" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" bodystart="63" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="63" column="18" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" bodystart="63" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a560f5a91a1d9f076ca42ce499028ccbd" prot="private" static="no" mutable="no">
         <type>str</type>
@@ -32,7 +32,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="66" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" bodystart="66" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="66" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" bodystart="66" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a1b9a118a91177370c6e2afab9dc8fe23" prot="private" static="no" mutable="no">
         <type>bool</type>
@@ -47,7 +47,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="69" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" bodystart="69" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="69" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" bodystart="69" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1aabb068f1962e21fa122d6df9a6b57cc4" prot="private" static="no" mutable="no">
         <type>int</type>
@@ -62,7 +62,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="72" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" bodystart="72" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="72" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" bodystart="72" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a64dd9c7c9371ade021d9524717085af2" prot="private" static="no" mutable="no">
         <type>str</type>
@@ -77,7 +77,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="75" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" bodystart="75" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="75" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" bodystart="75" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="private-static-attrib">
@@ -95,7 +95,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="79" column="25" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" bodystart="79" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="79" column="25" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" bodystart="79" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-func">
@@ -112,7 +112,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="85" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="195" bodyend="203"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="85" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="195" bodyend="203"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a2e36fc70ff190b042e1674018842616f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -127,7 +127,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="88" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="207" bodyend="210"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="88" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="207" bodyend="210"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a64e3cb761c1152ba366e86f253fed780" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -146,7 +146,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="91" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="214" bodyend="244"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="91" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="214" bodyend="244"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a66122d3e492814070c73a1c13d4215b3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -163,7 +163,7 @@
 <para><xrefsect id="todo_1_todo000080"><xreftitle>Todo</xreftitle><xrefdescription><para>Storing smart ptrs to <ref refid="classGambit_1_1ColliderBit_1_1Analysis" kindref="compound">Analysis</ref> would make this way easier </para>
 </xrefdescription></xrefsect></para>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="94" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="248" bodyend="263"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="94" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="248" bodyend="263"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1aa3d1414339332ac85822809a7db0bc96" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -183,7 +183,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="97" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="267" bodyend="270"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="97" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="267" bodyend="270"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a45dc9ed85147d9eb4d4e4cf0f1a31d27" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type>str</type>
@@ -199,7 +199,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="100" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="274" bodyend="277"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="100" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="274" bodyend="277"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a68b5d813d330366bd99913165ab55643" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type>bool</type>
@@ -218,7 +218,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="103" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="281" bodyend="294"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="103" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="281" bodyend="294"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a18b81ab6ea6b5f01d91167c0fc5bfa05" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type>bool</type>
@@ -233,7 +233,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="105" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="297" bodyend="300"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="105" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="297" bodyend="300"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1ade3a147b509a6e2ebbeac58c249b5191" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -256,7 +256,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="108" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="304" bodyend="317"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="108" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="304" bodyend="317"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1abf8efd7d9f83914e4dadb23409999d0a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -275,7 +275,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="110" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="320" bodyend="323"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="110" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="320" bodyend="323"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1ae7548b1144db82b163239e877b3a73ed" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -298,7 +298,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="113" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="327" bodyend="330"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="113" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="327" bodyend="330"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1aaccd27284090433610c770d948163261" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -317,7 +317,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="115" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="333" bodyend="339"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="115" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="333" bodyend="339"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a170597f40a95f2edf8b69bd028f7a671" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -332,7 +332,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="117" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="342" bodyend="345"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="117" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="342" bodyend="345"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a67043c7ca5fe266aa4d7476ed7e9452c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -347,7 +347,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="119" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="348" bodyend="354"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="119" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="348" bodyend="354"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a0be3d366564e2520b8a25e9c8350fdf4" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type>const <ref refid="classGambit_1_1ColliderBit_1_1Analysis" kindref="compound">Analysis</ref> *</type>
@@ -370,7 +370,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="122" column="24" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="358" bodyend="361"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="122" column="24" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="358" bodyend="361"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a5c50e503e4640ce8eae408e167e53cb8" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type>const std::map&lt; str, <ref refid="classGambit_1_1ColliderBit_1_1Analysis" kindref="compound">Analysis</ref> * &gt; &amp;</type>
@@ -389,7 +389,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="124" column="24" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="364" bodyend="367"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="124" column="24" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="364" bodyend="367"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1ae918282166ace09e2491f4f529962350" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type>const std::map&lt; str, <ref refid="classGambit_1_1ColliderBit_1_1Analysis" kindref="compound">Analysis</ref> * &gt; &amp;</type>
@@ -404,7 +404,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="126" column="24" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="370" bodyend="373"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="126" column="24" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="370" bodyend="373"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1afc01bb6f68a4b87e59e0fbc0e082f0c5" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type>const std::map&lt; str, std::map&lt; str, <ref refid="classGambit_1_1ColliderBit_1_1Analysis" kindref="compound">Analysis</ref> * &gt; &gt; &amp;</type>
@@ -419,7 +419,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="128" column="24" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="376" bodyend="379"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="128" column="24" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="376" bodyend="379"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a2e8f74ac791510f96dce737695a48911" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -446,7 +446,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="131" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="382" bodyend="385"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="131" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="382" bodyend="385"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a67ece56885f549b8bffacdb9b899ff8f" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -470,7 +470,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="133" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="388" bodyend="394"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="133" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="388" bodyend="394"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1aa9d1b5be574977e35fda4e2e45cf1647" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -489,7 +489,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="135" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="397" bodyend="400"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="135" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="397" bodyend="400"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a12723af95c2e31d77d0c17d36ebeb5af" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -513,7 +513,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="139" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="404" bodyend="412"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="139" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="404" bodyend="412"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a8c91278b5f2d7acf39650961cce2bf6b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -532,7 +532,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="142" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="416" bodyend="423"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="142" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="416" bodyend="423"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a557e59b4124c5065a8854ca485191283" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -547,7 +547,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="145" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="427" bodyend="430"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="145" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="427" bodyend="430"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1aa699218b22ed8ce58792130f64ff811d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -574,7 +574,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="148" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="433" bodyend="436"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="148" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="433" bodyend="436"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1aaaf060bce94f21acb1064b9d3c4888bc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -597,7 +597,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="150" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="439" bodyend="446"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="150" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="439" bodyend="446"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a6b607e6b8815cce61ae958da12c2de91" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -616,7 +616,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="152" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="449" bodyend="452"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="152" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="449" bodyend="452"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a2ed26e615f0245f4152105065b8249ec" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -635,7 +635,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="154" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="455" bodyend="462"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="154" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/AnalysisContainer.cpp" bodystart="455" bodyend="462"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -643,7 +643,7 @@
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="56" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" bodystart="57" bodyend="156"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" line="56" column="5" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/AnalysisContainer.hpp" bodystart="57" bodyend="156"/>
     <listofallmembers>
       <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a004407c9e910847391ef49cb95f64b4d" prot="private" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>analyses_map</name></member>
       <member refid="classGambit_1_1ColliderBit_1_1AnalysisContainer_1a9fc754ef3a8ea67d4be4a0b0c73bbf70" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::AnalysisContainer</scope><name>AnalysisContainer</name></member>

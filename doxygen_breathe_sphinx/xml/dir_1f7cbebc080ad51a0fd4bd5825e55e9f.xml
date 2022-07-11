@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="dir_1f7cbebc080ad51a0fd4bd5825e55e9f" kind="dir">
-    <compoundname>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8</compoundname>
+    <compoundname>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8</compoundname>
     <innerfile refid="Py8Collider_8hpp">Py8Collider.hpp</innerfile>
     <innerfile refid="Py8EventConversions_8hpp">Py8EventConversions.hpp</innerfile>
     <innerfile refid="Py8Utils_8hpp">Py8Utils.hpp</innerfile>
@@ -10,6 +10,6 @@
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/"/>
   </compounddef>
 </doxygen>

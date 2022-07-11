@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="dir_43317e43f0d2f00527788176b6ed19bf" kind="dir">
-    <compoundname>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits</compoundname>
+    <compoundname>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/limits</compoundname>
     <innerfile refid="ALEPHSleptonLimits_8cpp">ALEPHSleptonLimits.cpp</innerfile>
     <innerfile refid="BaseLimitContainer_8cpp">BaseLimitContainer.cpp</innerfile>
     <innerfile refid="ImageLimit_8cpp">ImageLimit.cpp</innerfile>
@@ -14,6 +14,6 @@
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits/"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/limits/"/>
   </compounddef>
 </doxygen>

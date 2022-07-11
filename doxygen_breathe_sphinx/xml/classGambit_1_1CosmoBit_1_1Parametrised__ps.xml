@@ -1,0 +1,266 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classGambit_1_1CosmoBit_1_1Parametrised__ps" kind="class" language="C++" prot="public">
+    <compoundname>Gambit::CosmoBit::Parametrised_ps</compoundname>
+    <includes refid="CosmoBit__types_8hpp" local="no">CosmoBit_types.hpp</includes>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classGambit_1_1CosmoBit_1_1Parametrised__ps_1abe60547b686e3b03a48694f87f8294e7" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Gambit::CosmoBit::Parametrised_ps::N_pivot</definition>
+        <argsstring></argsstring>
+        <name>N_pivot</name>
+        <qualifiedname>Gambit::CosmoBit::Parametrised_ps::N_pivot</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="293" column="20" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="293" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a255d6473164ae59b7966e7897f45777d" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Gambit::CosmoBit::Parametrised_ps::n_s</definition>
+        <argsstring></argsstring>
+        <name>n_s</name>
+        <qualifiedname>Gambit::CosmoBit::Parametrised_ps::n_s</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="294" column="20" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="294" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a8463763ae1204dcc479bd56db7ff9bc9" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Gambit::CosmoBit::Parametrised_ps::ln10A_s</definition>
+        <argsstring></argsstring>
+        <name>ln10A_s</name>
+        <qualifiedname>Gambit::CosmoBit::Parametrised_ps::ln10A_s</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="295" column="20" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="295" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a1afa0fdf3f1e7c64d08d32977cb04191" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Gambit::CosmoBit::Parametrised_ps::r</definition>
+        <argsstring></argsstring>
+        <name>r</name>
+        <qualifiedname>Gambit::CosmoBit::Parametrised_ps::r</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="296" column="20" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="296" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a756b098212d08598fdd38ea31090c640" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::CosmoBit::Parametrised_ps::Parametrised_ps</definition>
+        <argsstring>()</argsstring>
+        <name>Parametrised_ps</name>
+        <qualifiedname>Gambit::CosmoBit::Parametrised_ps::Parametrised_ps</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="276" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="276" bodyend="276"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a2470db8483e391a1ae352634a0c47ae6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::CosmoBit::Parametrised_ps::~Parametrised_ps</definition>
+        <argsstring>()</argsstring>
+        <name>~Parametrised_ps</name>
+        <qualifiedname>Gambit::CosmoBit::Parametrised_ps::~Parametrised_ps</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="277" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="277" bodyend="277"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a7c41165e2916fc4e62731a5497289e76" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::Parametrised_ps::set_N_pivot</definition>
+        <argsstring>(double npiv)</argsstring>
+        <name>set_N_pivot</name>
+        <qualifiedname>Gambit::CosmoBit::Parametrised_ps::set_N_pivot</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>npiv</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="279" column="18" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="279" bodyend="279"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1Parametrised__ps_1ab1362c45fe6b7c069585cbb5fae044b6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::Parametrised_ps::set_n_s</definition>
+        <argsstring>(double ns)</argsstring>
+        <name>set_n_s</name>
+        <qualifiedname>Gambit::CosmoBit::Parametrised_ps::set_n_s</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>ns</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="280" column="18" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="280" bodyend="280"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a8badc6616b7d73a00f8916bce5818e1b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::Parametrised_ps::set_ln10A_s</definition>
+        <argsstring>(double ln10As)</argsstring>
+        <name>set_ln10A_s</name>
+        <qualifiedname>Gambit::CosmoBit::Parametrised_ps::set_ln10A_s</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>ln10As</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="281" column="18" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="281" bodyend="281"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1Parametrised__ps_1afa6675b0367ef7fbfbce3bde87cca48f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::Parametrised_ps::set_r</definition>
+        <argsstring>(double rr)</argsstring>
+        <name>set_r</name>
+        <qualifiedname>Gambit::CosmoBit::Parametrised_ps::set_r</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>rr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="282" column="18" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="282" bodyend="282"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a2abc51a322c35510f6c43224161fe804" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::CosmoBit::Parametrised_ps::get_N_pivot</definition>
+        <argsstring>()</argsstring>
+        <name>get_N_pivot</name>
+        <qualifiedname>Gambit::CosmoBit::Parametrised_ps::get_N_pivot</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="284" column="20" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="284" bodyend="284"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1Parametrised__ps_1ac6702c67dff57fa93948cb578b139095" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::CosmoBit::Parametrised_ps::get_n_s</definition>
+        <argsstring>()</argsstring>
+        <name>get_n_s</name>
+        <qualifiedname>Gambit::CosmoBit::Parametrised_ps::get_n_s</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="285" column="20" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="285" bodyend="285"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a5dbacc2581babe1d8703028d16e55472" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::CosmoBit::Parametrised_ps::get_ln10A_s</definition>
+        <argsstring>()</argsstring>
+        <name>get_ln10A_s</name>
+        <qualifiedname>Gambit::CosmoBit::Parametrised_ps::get_ln10A_s</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="286" column="20" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="286" bodyend="286"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a928d7bac85ab47a6fdfe1ea5481481d1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::CosmoBit::Parametrised_ps::get_r</definition>
+        <argsstring>()</argsstring>
+        <name>get_r</name>
+        <qualifiedname>Gambit::CosmoBit::Parametrised_ps::get_r</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="287" column="20" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="287" bodyend="287"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a467899c27f2db98ee7c243936c05d610" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>map_str_dbl</type>
+        <definition>map_str_dbl Gambit::CosmoBit::Parametrised_ps::get_parametrised_ps_map</definition>
+        <argsstring>()</argsstring>
+        <name>get_parametrised_ps_map</name>
+        <qualifiedname>Gambit::CosmoBit::Parametrised_ps::get_parametrised_ps_map</qualifiedname>
+        <briefdescription>
+<para>return members as str to double map for printing </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="290" column="25" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit_types.cpp" bodystart="206" bodyend="215"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Class containing the <emphasis>parametrised</emphasis> primordial power spectrum. Members:<itemizedlist>
+<listitem><para>spectral tilt n_s</para>
+</listitem><listitem><para>amplitude of scalar perturbations A_s [as ln(10^{10}A_s)]</para>
+</listitem><listitem><para>scalar to tensor ratio r </para>
+</listitem></itemizedlist>
+</para>
+    </detaileddescription>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="273" column="5" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="274" bodyend="297"/>
+    <listofallmembers>
+      <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a5dbacc2581babe1d8703028d16e55472" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::Parametrised_ps</scope><name>get_ln10A_s</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a2abc51a322c35510f6c43224161fe804" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::Parametrised_ps</scope><name>get_N_pivot</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1ac6702c67dff57fa93948cb578b139095" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::Parametrised_ps</scope><name>get_n_s</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a467899c27f2db98ee7c243936c05d610" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::Parametrised_ps</scope><name>get_parametrised_ps_map</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a928d7bac85ab47a6fdfe1ea5481481d1" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::Parametrised_ps</scope><name>get_r</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a8463763ae1204dcc479bd56db7ff9bc9" prot="private" virt="non-virtual"><scope>Gambit::CosmoBit::Parametrised_ps</scope><name>ln10A_s</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1abe60547b686e3b03a48694f87f8294e7" prot="private" virt="non-virtual"><scope>Gambit::CosmoBit::Parametrised_ps</scope><name>N_pivot</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a255d6473164ae59b7966e7897f45777d" prot="private" virt="non-virtual"><scope>Gambit::CosmoBit::Parametrised_ps</scope><name>n_s</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a756b098212d08598fdd38ea31090c640" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::Parametrised_ps</scope><name>Parametrised_ps</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a1afa0fdf3f1e7c64d08d32977cb04191" prot="private" virt="non-virtual"><scope>Gambit::CosmoBit::Parametrised_ps</scope><name>r</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a8badc6616b7d73a00f8916bce5818e1b" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::Parametrised_ps</scope><name>set_ln10A_s</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a7c41165e2916fc4e62731a5497289e76" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::Parametrised_ps</scope><name>set_N_pivot</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1ab1362c45fe6b7c069585cbb5fae044b6" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::Parametrised_ps</scope><name>set_n_s</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1afa6675b0367ef7fbfbce3bde87cca48f" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::Parametrised_ps</scope><name>set_r</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1Parametrised__ps_1a2470db8483e391a1ae352634a0c47ae6" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::Parametrised_ps</scope><name>~Parametrised_ps</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

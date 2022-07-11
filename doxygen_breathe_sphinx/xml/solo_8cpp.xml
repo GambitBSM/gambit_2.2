@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="solo_8cpp" kind="file" language="C++">
     <compoundname>solo.cpp</compoundname>
     <includes local="yes">gambit/Elements/standalone_module.hpp</includes>
@@ -8,7 +8,7 @@
     <includes local="yes">gambit/Utils/cats.hpp</includes>
     <incdepgraph>
       <node id="1">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/examples/solo.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/examples/solo.cpp</label>
         <link refid="solo_8cpp"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -430,7 +430,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/examples/solo.cpp" line="22" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/examples/solo.cpp" bodystart="22" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/examples/solo.cpp" line="22" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/examples/solo.cpp" bodystart="22" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="solo_8cpp_1a1dc02c6360b09a5d610af81f6c45104f" prot="public" static="no">
         <name>NULIKE_SAFE_VERSION</name>
@@ -441,7 +441,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/examples/solo.cpp" line="23" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/examples/solo.cpp" bodystart="23" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/examples/solo.cpp" line="23" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/examples/solo.cpp" bodystart="23" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="func">
@@ -466,7 +466,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/examples/solo.cpp" line="30" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/examples/solo.cpp" bodystart="30" bodyend="251"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/examples/solo.cpp" line="30" column="5" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/examples/solo.cpp" bodystart="30" bodyend="251"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -713,6 +713,6 @@
 <codeline lineno="251"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="252"><highlight class="normal"></highlight></codeline>
     </programlisting>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/examples/solo.cpp"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/examples/solo.cpp"/>
   </compounddef>
 </doxygen>

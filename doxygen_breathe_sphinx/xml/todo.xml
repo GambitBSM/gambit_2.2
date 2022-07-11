@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="todo" kind="page">
     <compoundname>todo</compoundname>
     <title>Todo List</title>
@@ -14,23 +14,23 @@
 <listitem><para><anchor id="todo_1_todo000045"/>Access by name, including merging disjoint region sets?  </para>
 </listitem>
 <varlistentry><term>Member <ref refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__0LEP__139invfb_1a6b00a5e7d6c430c08277fe0d6b4386b7" kindref="member">Gambit::ColliderBit::Analysis_ATLAS_13TeV_0LEP_139invfb::run</ref>  (const Event *event)</term></varlistentry>
-<listitem><para><anchor id="todo_1_todo000051"/>Use weighting instead </para>
-<para><anchor id="todo_1_todo000050"/>And tight ID for high purity... used where? </para>
-<para><anchor id="todo_1_todo000049"/>And tight ID for high purity... used where? </para>
-<para><anchor id="todo_1_todo000048"/>Apply a random 9% loss / 0.91 reweight for jet quality criteria? </para>
+<listitem><para><anchor id="todo_1_todo000049"/>And tight ID for high purity... used where? </para>
 <para><anchor id="todo_1_todo000047"/>Drop b-tag if pT &lt; 50 GeV or |eta| &gt; 2.5? </para>
-<para><anchor id="todo_1_todo000046"/>Compute from hard objects instead?  </para>
+<para><anchor id="todo_1_todo000048"/>Apply a random 9% loss / 0.91 reweight for jet quality criteria? </para>
+<para><anchor id="todo_1_todo000046"/>Compute from hard objects instead? </para>
+<para><anchor id="todo_1_todo000051"/>Use weighting instead </para>
+<para><anchor id="todo_1_todo000050"/>And tight ID for high purity... used where?  </para>
 </listitem>
 <varlistentry><term>Member <ref refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__0LEP__13invfb_1aa40e3d489a59153f5fab7bcac7338365" kindref="member">Gambit::ColliderBit::Analysis_ATLAS_13TeV_0LEP_13invfb::run</ref>  (const Event *event)</term></varlistentry>
-<listitem><para><anchor id="todo_1_todo000052"/>Drop b-tag if pT &lt; 50 GeV or |eta| &gt; 2.5? </para>
-<para><anchor id="todo_1_todo000053"/>Unless b-tagged (and pT &gt; 50 &amp;&amp; abseta &lt; 2.5) </para>
+<listitem><para><anchor id="todo_1_todo000053"/>Unless b-tagged (and pT &gt; 50 &amp;&amp; abseta &lt; 2.5) </para>
+<para><anchor id="todo_1_todo000052"/>Drop b-tag if pT &lt; 50 GeV or |eta| &gt; 2.5? </para>
 <para><anchor id="todo_1_todo000054"/>Actually only within 0.2<ndash/>0.4... </para>
 <para><anchor id="todo_1_todo000055"/>Actually only within 0.2<ndash/>0.4...  </para>
 </listitem>
 <varlistentry><term>Member <ref refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__0LEP__36invfb_1a6cb64d6869f9954d107bb23eddb7bb8e" kindref="member">Gambit::ColliderBit::Analysis_ATLAS_13TeV_0LEP_36invfb::run</ref>  (const Event *event)</term></varlistentry>
-<listitem><para><anchor id="todo_1_todo000056"/>Drop b-tag if pT &lt; 50 GeV or |eta| &gt; 2.5? </para>
+<listitem><para><anchor id="todo_1_todo000058"/>Actually only within 0.2<ndash/>0.4... </para>
+<para><anchor id="todo_1_todo000056"/>Drop b-tag if pT &lt; 50 GeV or |eta| &gt; 2.5? </para>
 <para><anchor id="todo_1_todo000057"/>Unless b-tagged (and pT &gt; 50 &amp;&amp; abseta &lt; 2.5) </para>
-<para><anchor id="todo_1_todo000058"/>Actually only within 0.2<ndash/>0.4... </para>
 <para><anchor id="todo_1_todo000059"/>Actually only within 0.2<ndash/>0.4...  </para>
 </listitem>
 <varlistentry><term>Member <ref refid="classGambit_1_1ColliderBit_1_1Analysis__ATLAS__13TeV__MultiLEP__strong__139invfb_1a1f09d689091069c70ae7a4a2a41deb02" kindref="member">Gambit::ColliderBit::Analysis_ATLAS_13TeV_MultiLEP_strong_139invfb::run</ref>  (const Event *event)</term></varlistentry>
@@ -39,14 +39,14 @@
 <para><anchor id="todo_1_todo000061"/>Use applyElectronIsolationEfficiency2019 or something similar?  </para>
 </listitem>
 <varlistentry><term>Member <ref refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__0LEP__137invfb_1ad49f1a2b3f8e677d1785d2764b20fa19" kindref="member">Gambit::ColliderBit::Analysis_CMS_13TeV_0LEP_137invfb::run</ref>  (const Event *event)</term></varlistentry>
-<listitem><para><anchor id="todo_1_todo000065"/>Sum should actually be over all calo particles </para>
-<para><anchor id="todo_1_todo000066"/>Sum should actually be over all non-e/mu calo particles </para>
-<para><anchor id="todo_1_todo000067"/>Sum should actually be over all non-e/mu calo particles  </para>
+<listitem><para><anchor id="todo_1_todo000066"/>Sum should actually be over all non-e/mu calo particles </para>
+<para><anchor id="todo_1_todo000067"/>Sum should actually be over all non-e/mu calo particles </para>
+<para><anchor id="todo_1_todo000065"/>Sum should actually be over all calo particles  </para>
 </listitem>
 <varlistentry><term>Member <ref refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__0LEP__13invfb_1a614ca0f22f7b27694732e47fa1a8d383" kindref="member">Gambit::ColliderBit::Analysis_CMS_13TeV_0LEP_13invfb::run</ref>  (const Event *event)</term></varlistentry>
-<listitem><para><anchor id="todo_1_todo000070"/>Need access to charged hadrons to do this isolation </para>
+<listitem><para><anchor id="todo_1_todo000068"/>Sum should actually be over all non-e/mu calo particles </para>
 <para><anchor id="todo_1_todo000069"/>Sum should actually be over all non-e/mu calo particles </para>
-<para><anchor id="todo_1_todo000068"/>Sum should actually be over all non-e/mu calo particles  </para>
+<para><anchor id="todo_1_todo000070"/>Need access to charged hadrons to do this isolation  </para>
 </listitem>
 <varlistentry><term>Member <ref refid="classGambit_1_1ColliderBit_1_1Analysis__CMS__13TeV__0LEP__36invfb_1a3d00c533a9a79121397dd01e7d751583" kindref="member">Gambit::ColliderBit::Analysis_CMS_13TeV_0LEP_36invfb::run</ref>  (const Event *event)</term></varlistentry>
 <listitem><para><anchor id="todo_1_todo000071"/>Sum should actually be over all non-e/mu calo particles </para>
@@ -100,61 +100,61 @@
 <listitem><para><anchor id="todo_1_todo000010"/>Is this the best way to smear? Should we preserve the mean jet energy, or pT, or direction?  </para>
 </listitem>
 <varlistentry><term>Member <ref refid="classGambit_1_1ColliderBit_1_1BuckFast_1a39363bb325b8bf55b6becc6995df8e2e" kindref="member">Gambit::ColliderBit::BuckFast::processEvent</ref>  (HEPUtils::Event &amp;) const</term></varlistentry>
-<listitem><para><anchor id="todo_1_todo000082"/>Run-dependence? </para>
-<para><anchor id="todo_1_todo000081"/>Run-dependence?  </para>
+<listitem><para><anchor id="todo_1_todo000081"/>Run-dependence? </para>
+<para><anchor id="todo_1_todo000082"/>Run-dependence?  </para>
 </listitem>
 <varlistentry><term>Member <ref refid="ColliderBit__InterpolatedYields_8cpp_1aa372076882c0888fc20fcf8f52a666e1" kindref="member">Gambit::ColliderBit::calc_loglikes_for_analysis</ref>  (const <ref refid="structGambit_1_1ColliderBit_1_1AnalysisData" kindref="compound">AnalysisData</ref> &amp;, bool, bool, bool, bool)</term></varlistentry>
-<listitem><para><anchor id="todo_1_todo000093"/>Only compute this once per run </para>
-<para><anchor id="todo_1_todo000085"/>Support NSL, i.e. skewness correction </para>
-<para><anchor id="todo_1_todo000086"/>Unify this for both cov and no-cov, feeding in one-element Eigen blocks as Ref&lt;&gt;s for the latter? </para>
-<para><anchor id="todo_1_todo000087"/>Compute the background-only covariance decomposition and likelihood only once </para>
-<para><anchor id="todo_1_todo000092"/>Only compute this once per run </para>
-<para><anchor id="todo_1_todo000091"/></para>
-<para><anchor id="todo_1_todo000090"/>Or compute all the exp DLLs first, then only the best-expected SR&apos;s obs DLL? </para>
+<listitem><para><anchor id="todo_1_todo000087"/>Compute the background-only covariance decomposition and likelihood only once </para>
+<para><anchor id="todo_1_todo000088"/>Only compute this once per run </para>
 <para><anchor id="todo_1_todo000089"/>Use newer (?) one-step Eigen constructors for (const) single-element arrays </para>
-<para><anchor id="todo_1_todo000088"/>Only compute this once per run  </para>
+<para><anchor id="todo_1_todo000090"/>Or compute all the exp DLLs first, then only the best-expected SR&apos;s obs DLL? </para>
+<para><anchor id="todo_1_todo000091"/></para>
+<para><anchor id="todo_1_todo000092"/>Only compute this once per run </para>
+<para><anchor id="todo_1_todo000093"/>Only compute this once per run </para>
+<para><anchor id="todo_1_todo000086"/>Unify this for both cov and no-cov, feeding in one-element Eigen blocks as Ref&lt;&gt;s for the latter? </para>
+<para><anchor id="todo_1_todo000085"/>Support NSL, i.e. skewness correction  </para>
 </listitem>
 <varlistentry><term>Member <ref refid="namespaceGambit_1_1ColliderBit_1_1CMS_1aa82b5cc950fdb91e31c9bb3ac7d26d80" kindref="member">Gambit::ColliderBit::CMS::smearJets</ref>  (std::vector&lt; HEPUtils::Jet * &gt; &amp;jets)</term></varlistentry>
-<listitem><para><anchor id="todo_1_todo000014"/>Update cf. Matthias study for <ref refid="namespaceGambit_1_1ColliderBit_1_1ATLAS" kindref="compound">ATLAS</ref> </para>
-<para><anchor id="todo_1_todo000015"/>This is the <ref refid="namespaceGambit_1_1ColliderBit_1_1ATLAS" kindref="compound">ATLAS</ref> number... I can&apos;t find values for the <ref refid="namespaceGambit_1_1ColliderBit_1_1CMS" kindref="compound">CMS</ref> parameterisation, cf. <ulink url="https://cds.cern.ch/record/1339945/files/JME-10-014-pas.pdf">https://cds.cern.ch/record/1339945/files/JME-10-014-pas.pdf</ulink> <ulink url="https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideJetResolution">https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideJetResolution</ulink> <ulink url="https://github.com/adrager/cmssw/blob/CMSSW_7_2_X/CondFormats/JetMETObjects/test/TestCorrections.C">https://github.com/adrager/cmssw/blob/CMSSW_7_2_X/CondFormats/JetMETObjects/test/TestCorrections.C</ulink>  </para>
+<listitem><para><anchor id="todo_1_todo000015"/>This is the <ref refid="namespaceGambit_1_1ColliderBit_1_1ATLAS" kindref="compound">ATLAS</ref> number... I can&apos;t find values for the <ref refid="namespaceGambit_1_1ColliderBit_1_1CMS" kindref="compound">CMS</ref> parameterisation, cf. <ulink url="https://cds.cern.ch/record/1339945/files/JME-10-014-pas.pdf">https://cds.cern.ch/record/1339945/files/JME-10-014-pas.pdf</ulink> <ulink url="https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideJetResolution">https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideJetResolution</ulink> <ulink url="https://github.com/adrager/cmssw/blob/CMSSW_7_2_X/CondFormats/JetMETObjects/test/TestCorrections.C">https://github.com/adrager/cmssw/blob/CMSSW_7_2_X/CondFormats/JetMETObjects/test/TestCorrections.C</ulink> </para>
+<para><anchor id="todo_1_todo000014"/>Update cf. Matthias study for <ref refid="namespaceGambit_1_1ColliderBit_1_1ATLAS" kindref="compound">ATLAS</ref>  </para>
 </listitem>
 <varlistentry><term>Member <ref refid="namespaceGambit_1_1ColliderBit_1_1CMS_1ac1abbb95c9de02059ac9b59bfdea20a2" kindref="member">Gambit::ColliderBit::CMS::smearTaus</ref>  (std::vector&lt; HEPUtils::Particle * &gt; &amp;taus)</term></varlistentry>
-<listitem><para><anchor id="todo_1_todo000016"/>Update cf. Matthias study for <ref refid="namespaceGambit_1_1ColliderBit_1_1ATLAS" kindref="compound">ATLAS</ref> </para>
-<para><anchor id="todo_1_todo000017"/>Is this the best way to smear? Should we preserve the mean jet energy, or pT, or direction?  </para>
+<listitem><para><anchor id="todo_1_todo000017"/>Is this the best way to smear? Should we preserve the mean jet energy, or pT, or direction? </para>
+<para><anchor id="todo_1_todo000016"/>Update cf. Matthias study for <ref refid="namespaceGambit_1_1ColliderBit_1_1ATLAS" kindref="compound">ATLAS</ref>  </para>
 </listitem>
 <varlistentry><term>Member <ref refid="Py8EventConversions_8hpp_1ab50b344a3140f50cdc0b43f1437274de" kindref="member">Gambit::ColliderBit::convertParticleEvent</ref>  (const EventT &amp;pevt, HEPUtils::Event &amp;result, double antiktR, double jet_pt_min)</term></varlistentry>
-<listitem><para><anchor id="todo_1_todo000026"/>Hard-coded radius!!! </para>
-<para><anchor id="todo_1_todo000028"/>Hard-coded radius!!! </para>
-<para><anchor id="todo_1_todo000019"/>Temporarily using quark-based tagging instead <ndash/> fix </para>
-<para><anchor id="todo_1_todo000020"/>Temporarily using quark-based tagging instead <ndash/> fix </para>
-<para><anchor id="todo_1_todo000021"/>What&apos;s wrong with having a W daughter? Doesn&apos;t that just mark a final tau? </para>
+<listitem><para><anchor id="todo_1_todo000028"/>Hard-coded radius!!! </para>
 <para><anchor id="todo_1_todo000027"/>Hard-coded radius!!! </para>
-<para><anchor id="todo_1_todo000025"/>Replace with HEPUtils::any(bhadrons, [&amp;](const auto&amp; pb){ pj.delta_R(pb) &lt; 0.4 }) </para>
+<para><anchor id="todo_1_todo000026"/>Hard-coded radius!!! </para>
 <para><anchor id="todo_1_todo000024"/>Use ghost tagging? </para>
 <para><anchor id="todo_1_todo000023"/>Choose jet algorithm via detector _settings? Run several algs? </para>
+<para><anchor id="todo_1_todo000022"/>Move out-of-acceptance MET contribution to <ref refid="classGambit_1_1ColliderBit_1_1BuckFast" kindref="compound">BuckFast</ref> </para>
+<para><anchor id="todo_1_todo000021"/>What&apos;s wrong with having a W daughter? Doesn&apos;t that just mark a final tau? </para>
+<para><anchor id="todo_1_todo000020"/>Temporarily using quark-based tagging instead <ndash/> fix </para>
+<para><anchor id="todo_1_todo000019"/>Temporarily using quark-based tagging instead <ndash/> fix </para>
 <para><anchor id="todo_1_todo000018"/>Overlap between jets and prompt containers: need some isolation in MET calculation </para>
-<para><anchor id="todo_1_todo000022"/>Move out-of-acceptance MET contribution to <ref refid="classGambit_1_1ColliderBit_1_1BuckFast" kindref="compound">BuckFast</ref>  </para>
+<para><anchor id="todo_1_todo000025"/>Replace with HEPUtils::any(bhadrons, [&amp;](const auto&amp; pb){ pj.delta_R(pb) &lt; 0.4 })  </para>
 </listitem>
 <varlistentry><term>Member <ref refid="Py8EventConversions_8hpp_1a42e166b5bdf2ffb8544b4a65edc89976" kindref="member">Gambit::ColliderBit::convertPartonEvent</ref>  (const EventT &amp;pevt, HEPUtils::Event &amp;result, double antiktR, double jet_pt_min)</term></varlistentry>
-<listitem><para><anchor id="todo_1_todo000033"/>Only include hadronic tau fraction? </para>
+<listitem><para><anchor id="todo_1_todo000029"/>We should leave this for the detector sim / analysis to deal with </para>
 <para><anchor id="todo_1_todo000034"/>choose jet algorithm via _settings? </para>
+<para><anchor id="todo_1_todo000033"/>Only include hadronic tau fraction? </para>
 <para><anchor id="todo_1_todo000032"/>Lepton dressing </para>
 <para><anchor id="todo_1_todo000031"/></para>
-<para><anchor id="todo_1_todo000030"/><emphasis>Some</emphasis> photons should be included in jets!!! Ignore for now since no FSR </para>
-<para><anchor id="todo_1_todo000029"/>We should leave this for the detector sim / analysis to deal with  </para>
+<para><anchor id="todo_1_todo000030"/><emphasis>Some</emphasis> photons should be included in jets!!! Ignore for now since no FSR  </para>
 </listitem>
 <varlistentry><term>Member <ref refid="structGambit_1_1ColliderBit_1_1Cutflows_1a7fcf067fd2e9497a59a59947a6383b2b" kindref="member">Gambit::ColliderBit::Cutflows::normalize</ref>  (double norm, size_t icut=0)</term></varlistentry>
 <listitem><para><anchor id="todo_1_todo000007"/>Provide a version that takes a vector of norms?  </para>
 </listitem>
-<varlistentry><term>Member <ref refid="Utils_8hpp_1a2413a535901135a74d4d20f101c78abd" kindref="member">Gambit::ColliderBit::filter_reject</ref>  (const JetPtrs &amp;jets, std::function&lt; bool(const Jet *)&gt; rejfn, bool do_delete=true)</term></varlistentry>
-<listitem><para><anchor id="todo_1_todo000042"/>Optimise by only copying those which are selected (filter_select is canonical)  </para>
-</listitem>
 <varlistentry><term>Member <ref refid="Utils_8hpp_1a1a018b09cbd8d1f85e2af56b717a5f6e" kindref="member">Gambit::ColliderBit::filter_reject</ref>  (const ParticlePtrs &amp;particles, std::function&lt; bool(const Particle *)&gt; rejfn, bool do_delete=true)</term></varlistentry>
 <listitem><para><anchor id="todo_1_todo000041"/>Optimise by only copying those which are selected (filter_select is canonical)  </para>
 </listitem>
+<varlistentry><term>Member <ref refid="Utils_8hpp_1a2413a535901135a74d4d20f101c78abd" kindref="member">Gambit::ColliderBit::filter_reject</ref>  (const JetPtrs &amp;jets, std::function&lt; bool(const Jet *)&gt; rejfn, bool do_delete=true)</term></varlistentry>
+<listitem><para><anchor id="todo_1_todo000042"/>Optimise by only copying those which are selected (filter_select is canonical)  </para>
+</listitem>
 <varlistentry><term>Member <ref refid="Py8Utils_8hpp_1afe3f3167e3fd6c6a40c811daf8049a9e" kindref="member">Gambit::ColliderBit::fromBottom</ref>  (int n, const EventT &amp;evt)</term></varlistentry>
-<listitem><para><anchor id="todo_1_todo000035"/>Rewrite using the Pythia &gt; 8.176 particle-based methods </para>
-<para><anchor id="todo_1_todo000036"/>What about partonic decays?  </para>
+<listitem><para><anchor id="todo_1_todo000036"/>What about partonic decays? </para>
+<para><anchor id="todo_1_todo000035"/>Rewrite using the Pythia &gt; 8.176 particle-based methods  </para>
 </listitem>
 <varlistentry><term>Member <ref refid="Py8Utils_8hpp_1aa7eb6fa6f85fb094a6b3eccf87c51913" kindref="member">Gambit::ColliderBit::fromHadron</ref>  (int n, const EventT &amp;evt)</term></varlistentry>
 <listitem><para><anchor id="todo_1_todo000038"/>Rewrite using the Pythia &gt; 8.176 particle-based methods  </para>

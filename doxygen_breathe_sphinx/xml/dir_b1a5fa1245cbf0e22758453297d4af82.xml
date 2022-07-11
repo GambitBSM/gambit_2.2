@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="dir_b1a5fa1245cbf0e22758453297d4af82" kind="dir">
+    <compoundname>C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit</compoundname>
+    <innerdir refid="dir_1ef626acfeeefe186ec3cc93aa0083c5">C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include</innerdir>
+    <innerdir refid="dir_c6c8e7eb6ca38d0550273d68b4b9515a">C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src</innerdir>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/"/>
+  </compounddef>
+</doxygen>

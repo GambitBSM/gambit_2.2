@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="ColliderBit__eventloop_8cpp" kind="file" language="C++">
     <compoundname>ColliderBit_eventloop.cpp</compoundname>
     <includes local="yes">gambit/Elements/gambit_module_headers.hpp</includes>
@@ -312,7 +312,7 @@
         </childnode>
       </node>
       <node id="1">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_eventloop.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_eventloop.cpp</label>
         <link refid="ColliderBit__eventloop_8cpp"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -425,7 +425,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_eventloop.cpp" line="41" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_eventloop.cpp" bodystart="41" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_eventloop.cpp" line="41" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_eventloop.cpp" bodystart="41" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -820,6 +820,6 @@
 <codeline lineno="387"><highlight class="normal"></highlight></codeline>
 <codeline lineno="388"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_eventloop.cpp"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_eventloop.cpp"/>
   </compounddef>
 </doxygen>

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV" kind="class" language="C++" prot="public">
     <compoundname>Gambit::ColliderBit::L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV</compoundname>
     <basecompoundref refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer" prot="public" virt="non-virtual">Gambit::ColliderBit::BaseLimitContainer</basecompoundref>
@@ -28,7 +28,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/L3SmallDeltaMGauginoLimits.hpp" line="14" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits/L3SmallDeltaMGauginoLimits.cpp" bodystart="7" bodyend="11"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/L3SmallDeltaMGauginoLimits.hpp" line="14" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/limits/L3SmallDeltaMGauginoLimits.cpp" bodystart="7" bodyend="11"/>
       </memberdef>
       <memberdef kind="function" id="classGambit_1_1ColliderBit_1_1L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV_1a11b73b724e593bb72090665ca91cbaea" prot="public" static="no" const="yes" explicit="no" inline="no" virt="virtual">
         <type>bool</type>
@@ -55,7 +55,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/L3SmallDeltaMGauginoLimits.hpp" line="16" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits/L3SmallDeltaMGauginoLimits.cpp" bodystart="13" bodyend="16"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/L3SmallDeltaMGauginoLimits.hpp" line="16" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/limits/L3SmallDeltaMGauginoLimits.cpp" bodystart="13" bodyend="16"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="user-defined">
@@ -72,7 +72,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/L3SmallDeltaMGauginoLimits.hpp" line="22" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits/L3SmallDeltaMGauginoLimits.cpp" bodystart="18" bodyend="110"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/L3SmallDeltaMGauginoLimits.hpp" line="22" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/limits/L3SmallDeltaMGauginoLimits.cpp" bodystart="18" bodyend="110"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -111,7 +111,7 @@
         <link refid="classGambit_1_1ColliderBit_1_1P2"/>
       </node>
     </collaborationgraph>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/L3SmallDeltaMGauginoLimits.hpp" line="9" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/L3SmallDeltaMGauginoLimits.hpp" bodystart="9" bodyend="24"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/L3SmallDeltaMGauginoLimits.hpp" line="9" column="5" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/L3SmallDeltaMGauginoLimits.hpp" bodystart="9" bodyend="24"/>
     <listofallmembers>
       <member refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1a92ac7a894497bba1d5ebb54bcc0cfe32" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV</scope><name>_externalPoint</name></member>
       <member refid="classGambit_1_1ColliderBit_1_1BaseLimitContainer_1ab5612b14cb0afa257d734db994f4cf9e" prot="protected" virt="non-virtual"><scope>Gambit::ColliderBit::L3ChargedGauginoSmallDeltaMWithHeavySneutrinoLimitAt188pt6GeV</scope><name>_limitContours</name></member>

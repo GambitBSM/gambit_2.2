@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="L3SmallDeltaMGauginoLimits_8hpp" kind="file" language="C++">
     <compoundname>L3SmallDeltaMGauginoLimits.hpp</compoundname>
     <includes refid="BaseLimitContainer_8hpp" local="yes">gambit/ColliderBit/limits/BaseLimitContainer.hpp</includes>
-    <includedby refid="L3SmallDeltaMGauginoLimits_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits/L3SmallDeltaMGauginoLimits.cpp</includedby>
+    <includedby refid="L3SmallDeltaMGauginoLimits_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/limits/L3SmallDeltaMGauginoLimits.cpp</includedby>
     <incdepgraph>
       <node id="2">
         <label>gambit/ColliderBit/limits/BaseLimitContainer.hpp</label>
@@ -34,7 +34,7 @@
         </childnode>
       </node>
       <node id="1">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/L3SmallDeltaMGauginoLimits.hpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/L3SmallDeltaMGauginoLimits.hpp</label>
         <link refid="L3SmallDeltaMGauginoLimits_8hpp"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -144,6 +144,6 @@
 <codeline lineno="65"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
 <codeline lineno="66"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/L3SmallDeltaMGauginoLimits.hpp"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/L3SmallDeltaMGauginoLimits.hpp"/>
   </compounddef>
 </doxygen>

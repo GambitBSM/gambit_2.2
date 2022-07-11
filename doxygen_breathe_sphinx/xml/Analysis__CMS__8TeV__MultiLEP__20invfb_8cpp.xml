@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="Analysis__CMS__8TeV__MultiLEP__20invfb_8cpp" kind="file" language="C++">
     <compoundname>Analysis_CMS_8TeV_MultiLEP_20invfb.cpp</compoundname>
     <includes local="no">vector</includes>
@@ -102,7 +102,7 @@
         </childnode>
       </node>
       <node id="1">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp</label>
         <link refid="Analysis__CMS__8TeV__MultiLEP__20invfb_8cpp"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -201,7 +201,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp" line="37" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp" bodystart="37" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp" line="37" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp" bodystart="37" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="Analysis__CMS__8TeV__MultiLEP__20invfb_8cpp_1af225189cd625714f0e37e21b2719af2c" prot="public" static="no">
         <name>ADD_RESULTS_SRGROUP_2</name>
@@ -237,7 +237,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp" line="81" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp" bodystart="81" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp" line="81" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp" bodystart="81" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="Analysis__CMS__8TeV__MultiLEP__20invfb_8cpp_1a1906b057fc23fbd43b68d66283b012ea" prot="public" static="no">
         <name>ADD_RESULTS_SRGROUP_3</name>
@@ -273,7 +273,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp" line="113" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp" bodystart="113" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp" line="113" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp" bodystart="113" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="Analysis__CMS__8TeV__MultiLEP__20invfb_8cpp_1a3df334c88594cb5172622ff35e4e92aa" prot="public" static="no">
         <name>ADD_RESULTS_SRGROUP_4</name>
@@ -309,7 +309,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp" line="145" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp" bodystart="145" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp" line="145" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp" bodystart="145" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="Analysis__CMS__8TeV__MultiLEP__20invfb_8cpp_1a564a2c7b6b722717bcc84d82dd787403" prot="public" static="no">
         <name>ADD_RESULTS_SRGROUP_5</name>
@@ -333,7 +333,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp" line="177" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp" bodystart="177" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp" line="177" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp" bodystart="177" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -1271,6 +1271,6 @@
 <codeline lineno="929"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
 <codeline lineno="930"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_MultiLEP_20invfb.cpp"/>
   </compounddef>
 </doxygen>

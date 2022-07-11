@@ -1,15 +1,15 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="Py8Utils_8hpp" kind="file" language="C++">
     <compoundname>Py8Utils.hpp</compoundname>
     <includes local="yes">HEPUtils/Event.h</includes>
     <includes local="yes">HEPUtils/Vectors.h</includes>
     <includes local="yes">HEPUtils/FastJet.h</includes>
     <includes local="yes">MCUtils/PIDUtils.h</includes>
-    <includedby refid="EventConversionUtils_8hpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp</includedby>
+    <includedby refid="EventConversionUtils_8hpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp</includedby>
     <incdepgraph>
       <node id="1">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Utils.hpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Utils.hpp</label>
         <link refid="Py8Utils_8hpp"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -35,13 +35,13 @@
     </incdepgraph>
     <invincdepgraph>
       <node id="2">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/EventConversionUtils.hpp</label>
         <link refid="EventConversionUtils_8hpp"/>
         <childnode refid="3" relation="include">
         </childnode>
       </node>
       <node id="3">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8EventConversions.hpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8EventConversions.hpp</label>
         <link refid="Py8EventConversions_8hpp"/>
         <childnode refid="4" relation="include">
         </childnode>
@@ -49,13 +49,13 @@
         </childnode>
       </node>
       <node id="1">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Utils.hpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Utils.hpp</label>
         <link refid="Py8Utils_8hpp"/>
         <childnode refid="2" relation="include">
         </childnode>
       </node>
       <node id="4">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/generateEventPy8Collider.hpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/generateEventPy8Collider.hpp</label>
         <link refid="generateEventPy8Collider_8hpp"/>
         <childnode refid="5" relation="include">
         </childnode>
@@ -63,15 +63,15 @@
         </childnode>
       </node>
       <node id="7">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getHepMCEvent.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/getHepMCEvent.cpp</label>
         <link refid="getHepMCEvent_8cpp"/>
       </node>
       <node id="5">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/models/SUSY.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/models/SUSY.cpp</label>
         <link refid="SUSY_8cpp"/>
       </node>
       <node id="6">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/models/SUSY_extras.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/models/SUSY_extras.cpp</label>
         <link refid="SUSY__extras_8cpp"/>
       </node>
     </invincdepgraph>
@@ -271,6 +271,6 @@
 <codeline lineno="198"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
 <codeline lineno="199"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Utils.hpp"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Utils.hpp"/>
   </compounddef>
 </doxygen>

@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="CosmoBit__utils_8hpp" kind="file" language="C++">
+    <compoundname>CosmoBit_utils.hpp</compoundname>
+    <includedby refid="CosmoALPs_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoALPs.cpp</includedby>
+    <includedby refid="CosmoBit__utils_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit_utils.cpp</includedby>
+    <invincdepgraph>
+      <node id="1">
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_utils.hpp</label>
+        <link refid="CosmoBit__utils_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoALPs.cpp</label>
+        <link refid="CosmoALPs_8cpp"/>
+      </node>
+      <node id="3">
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit_utils.cpp</label>
+        <link refid="CosmoBit__utils_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innernamespace refid="namespaceGambit">Gambit</innernamespace>
+    <innernamespace refid="namespaceGambit_1_1CosmoBit">Gambit::CosmoBit</innernamespace>
+    <innernamespace refid="namespaceGambit_1_1CosmoBit_1_1CosmoBit__utils">Gambit::CosmoBit::CosmoBit_utils</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Type definition header for utilities for module CosmoBit.</para>
+<para>Compile-time registration of type definitions required for the rest of the code to communicate with CosmoBit.</para>
+<para>Add to this if you want to define a new type for the functions in CosmoBit to return, but you don&apos;t expect that type to be needed by any other modules.</para>
+<para><hruler/>
+</para>
+<para>Authors (add name and date if you modify):</para>
+<para><simplesect kind="author"><para>Janina Renk (<ulink url="mailto:janina.renk@fysik.su.se">janina.renk@fysik.su.se</ulink>) </para>
+</simplesect>
+<simplesect kind="date"><para>2019 Mar </para>
+</simplesect>
+<simplesect kind="date"><para>2019 June</para>
+</simplesect>
+<hruler/>
+ </para>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">//<sp/><sp/><sp/>GAMBIT:<sp/>Global<sp/>and<sp/>Modular<sp/>BSM<sp/>Inference<sp/>Tool</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/>*********************************************</highlight></codeline>
+<codeline lineno="26"><highlight class="comment"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>__CosmoBit_utils_hpp__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__CosmoBit_utils_hpp__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespaceGambit" kindref="compound">Gambit</ref></highlight></codeline>
+<codeline lineno="32"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">CosmoBit</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">CosmoBit_utils</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>entropy_density_SM(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>T_in_eV=</highlight><highlight class="keyword">false</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="44"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//<sp/>defined<sp/>__CosmoBit_types_hpp__</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_utils.hpp"/>
+  </compounddef>
+</doxygen>

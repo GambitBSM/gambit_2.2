@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="structLester_1_1EllipseParams" kind="struct" language="C++" prot="public">
     <compoundname>Lester::EllipseParams</compoundname>
       <sectiondef kind="public-attrib">
@@ -15,7 +15,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="190" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="190" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="190" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="190" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structLester_1_1EllipseParams_1a494ff14d11c07b4428bca666ea8343b3" prot="public" static="no" mutable="no">
         <type>double</type>
@@ -29,7 +29,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="191" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="191" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="191" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="191" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structLester_1_1EllipseParams_1a4f0a5a453728e503760325677c01b713" prot="public" static="no" mutable="no">
         <type>double</type>
@@ -43,7 +43,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="192" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="192" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="192" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="192" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structLester_1_1EllipseParams_1a6c0631a050a6564c804c35aea4997c29" prot="public" static="no" mutable="no">
         <type>double</type>
@@ -57,7 +57,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="193" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="193" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="193" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="193" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structLester_1_1EllipseParams_1a8b000ff58e2ff2511da0f6234e191e6e" prot="public" static="no" mutable="no">
         <type>double</type>
@@ -71,7 +71,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="194" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="194" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="194" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="194" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structLester_1_1EllipseParams_1a86dd4c4bad1eee26d81071efa1137114" prot="public" static="no" mutable="no">
         <type>double</type>
@@ -85,7 +85,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="195" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="195" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="195" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="195" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structLester_1_1EllipseParams_1ad777140c2b6da121e1fa322b76b12a9e" prot="public" static="no" mutable="no">
         <type>double</type>
@@ -99,7 +99,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="196" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="196" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="196" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="196" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-func">
@@ -139,7 +139,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="138" column="3" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="138" bodyend="156"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="138" column="3" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="138" bodyend="156"/>
       </memberdef>
       <memberdef kind="function" id="structLester_1_1EllipseParams_1ae17c2aa371db1a0611c0751e3727ca68" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type></type>
@@ -153,7 +153,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="157" column="3" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="157" bodyend="158"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="157" column="3" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="157" bodyend="158"/>
       </memberdef>
       <memberdef kind="function" id="structLester_1_1EllipseParams_1ad4cc8073619a8224ece6e6bed8d3ccd2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -167,7 +167,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="159" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="159" bodyend="161"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="159" column="8" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="159" bodyend="161"/>
       </memberdef>
       <memberdef kind="function" id="structLester_1_1EllipseParams_1a74def2b1875f0381b692341826503035" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type></type>
@@ -189,7 +189,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="163" column="3" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="163" bodyend="173"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="163" column="3" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="163" bodyend="173"/>
       </memberdef>
       <memberdef kind="function" id="structLester_1_1EllipseParams_1a068ab36aa7c2247a31e94a9dd92eef3e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>double</type>
@@ -207,7 +207,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="174" column="10" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="174" bodyend="178"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="174" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="174" bodyend="178"/>
       </memberdef>
       <memberdef kind="function" id="structLester_1_1EllipseParams_1acaa9758a6fadc27ce54f5b16dc68e193" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>bool</type>
@@ -225,14 +225,14 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="179" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="179" bodyend="187"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="179" column="8" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="179" bodyend="187"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="130" column="1" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="130" bodyend="197"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" line="130" column="1" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/lester_mt2_bisect.h" bodystart="130" bodyend="197"/>
     <listofallmembers>
       <member refid="structLester_1_1EllipseParams_1a86dd4c4bad1eee26d81071efa1137114" prot="public" virt="non-virtual"><scope>Lester::EllipseParams</scope><name>c</name></member>
       <member refid="structLester_1_1EllipseParams_1a6c0631a050a6564c804c35aea4997c29" prot="public" virt="non-virtual"><scope>Lester::EllipseParams</scope><name>c_x</name></member>

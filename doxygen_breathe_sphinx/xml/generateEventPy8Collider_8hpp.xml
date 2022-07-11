@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="generateEventPy8Collider_8hpp" kind="file" language="C++">
     <compoundname>generateEventPy8Collider.hpp</compoundname>
     <includes refid="ColliderBit__eventloop_8hpp" local="yes">gambit/ColliderBit/ColliderBit_eventloop.hpp</includes>
     <includes refid="Py8EventConversions_8hpp" local="yes">gambit/ColliderBit/colliders/Pythia8/Py8EventConversions.hpp</includes>
-    <includedby refid="SUSY_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/models/SUSY.cpp</includedby>
-    <includedby refid="SUSY__extras_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/models/SUSY_extras.cpp</includedby>
+    <includedby refid="SUSY_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/models/SUSY.cpp</includedby>
+    <includedby refid="SUSY__extras_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/models/SUSY_extras.cpp</includedby>
     <incdepgraph>
       <node id="53">
         <label>gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp</label>
@@ -270,7 +270,7 @@
         </childnode>
       </node>
       <node id="1">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/generateEventPy8Collider.hpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/generateEventPy8Collider.hpp</label>
         <link refid="generateEventPy8Collider_8hpp"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -473,7 +473,7 @@
     </incdepgraph>
     <invincdepgraph>
       <node id="1">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/generateEventPy8Collider.hpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/generateEventPy8Collider.hpp</label>
         <link refid="generateEventPy8Collider_8hpp"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -481,11 +481,11 @@
         </childnode>
       </node>
       <node id="2">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/models/SUSY.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/models/SUSY.cpp</label>
         <link refid="SUSY_8cpp"/>
       </node>
       <node id="3">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/models/SUSY_extras.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/models/SUSY_extras.cpp</label>
         <link refid="SUSY__extras_8cpp"/>
       </node>
     </invincdepgraph>
@@ -501,7 +501,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/generateEventPy8Collider.hpp" line="48" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/generateEventPy8Collider.hpp" bodystart="48" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/generateEventPy8Collider.hpp" line="48" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/generateEventPy8Collider.hpp" bodystart="48" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="generateEventPy8Collider_8hpp_1aa0a7aeb7b1de3091b839d2f5eca4f532" prot="public" static="no">
         <name>GET_PYTHIA_EVENT</name>
@@ -520,7 +520,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/generateEventPy8Collider.hpp" line="201" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/generateEventPy8Collider.hpp" bodystart="201" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/generateEventPy8Collider.hpp" line="201" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/generateEventPy8Collider.hpp" bodystart="201" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -740,6 +740,6 @@
 <codeline lineno="211"><highlight class="normal"></highlight></codeline>
 <codeline lineno="212"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/generateEventPy8Collider.hpp"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/generateEventPy8Collider.hpp"/>
   </compounddef>
 </doxygen>

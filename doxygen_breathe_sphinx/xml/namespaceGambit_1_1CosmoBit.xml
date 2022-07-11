@@ -1,0 +1,1599 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="namespaceGambit_1_1CosmoBit" kind="namespace" language="C++">
+    <compoundname>Gambit::CosmoBit</compoundname>
+    <innerclass refid="classGambit_1_1CosmoBit_1_1Parametrised__ps" prot="public">Gambit::CosmoBit::Parametrised_ps</innerclass>
+    <innerclass refid="classGambit_1_1CosmoBit_1_1Primordial__ps" prot="public">Gambit::CosmoBit::Primordial_ps</innerclass>
+    <innerclass refid="classGambit_1_1CosmoBit_1_1SM__time__evo" prot="public">Gambit::CosmoBit::SM_time_evo</innerclass>
+    <innernamespace refid="namespaceGambit_1_1CosmoBit_1_1CosmoBit__utils">Gambit::CosmoBit::CosmoBit_utils</innernamespace>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="CosmoBit__types_8hpp_1a2af98ce9a357489cc8afbef0f10dc435" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>error &amp;</type>
+        <definition>error &amp; Gambit::CosmoBit::CosmoBit_error</definition>
+        <argsstring>()</argsstring>
+        <name>CosmoBit_error</name>
+        <qualifiedname>Gambit::CosmoBit::CosmoBit_error</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="68" column="11" declfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" declline="68" declcolumn="11"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit__types_8hpp_1a087a176fd5e519f64ea30545a3717597" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>warning &amp;</type>
+        <definition>warning &amp; Gambit::CosmoBit::CosmoBit_warning</definition>
+        <argsstring>()</argsstring>
+        <name>CosmoBit_warning</name>
+        <qualifiedname>Gambit::CosmoBit::CosmoBit_warning</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="69" column="13" declfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" declline="69" declcolumn="13"/>
+      </memberdef>
+      <memberdef kind="function" id="BBN_8cpp_1a3ebf770baad7bb35da04fbee353cd878" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::AlterBBN_Input</definition>
+        <argsstring>(map_str_dbl &amp;result)</argsstring>
+        <name>AlterBBN_Input</name>
+        <qualifiedname>Gambit::CosmoBit::AlterBBN_Input</qualifiedname>
+        <param>
+          <type>map_str_dbl &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Add parameters of relicparam structure that should be set to non-default values to the AlterBBN_input map. If you want to modify a parameter which has not been used in CosmoBit before, simply add it to the function &apos;fill_cosmomodel&apos; in &apos;AlterBBN_&lt;version&gt;.cpp&apos; and to the set of &apos;known&apos; parameters &apos;known_relicparam_options&apos;. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/BBN.cpp" line="72" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/BBN.cpp" bodystart="72" bodyend="130"/>
+      </memberdef>
+      <memberdef kind="function" id="BBN_8cpp_1a95f5ae56e3bf55300e89cecc069bf419" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::populate_correlation_matrix</definition>
+        <argsstring>(const std::map&lt; std::string, int &gt; &amp;abund_map, std::vector&lt; std::vector&lt; double &gt; &gt; &amp;corr, std::vector&lt; double &gt; &amp;errors, bool has_errors, const Options &amp;runOptions)</argsstring>
+        <name>populate_correlation_matrix</name>
+        <qualifiedname>Gambit::CosmoBit::populate_correlation_matrix</qualifiedname>
+        <param>
+          <type>const std::map&lt; std::string, int &gt; &amp;</type>
+          <declname>abund_map</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; std::vector&lt; double &gt; &gt; &amp;</type>
+          <declname>corr</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; double &gt; &amp;</type>
+          <declname>errors</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>has_errors</declname>
+        </param>
+        <param>
+          <type>const Options &amp;</type>
+          <declname>runOptions</declname>
+        </param>
+        <briefdescription>
+<para>Check the validity of a correlation matrix for AlterBBN likelihood calculations given in the YAML file, and use it to populate a correlation matrix object. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/BBN.cpp" line="134" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/BBN.cpp" bodystart="134" bodyend="252"/>
+      </memberdef>
+      <memberdef kind="function" id="BBN_8cpp_1a8ce69c1dbb535a29b938cf3ab124b576" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::compute_primordial_abundances_BBN</definition>
+        <argsstring>(BBN_container &amp;result)</argsstring>
+        <name>compute_primordial_abundances_BBN</name>
+        <qualifiedname>Gambit::CosmoBit::compute_primordial_abundances_BBN</qualifiedname>
+        <param>
+          <type>BBN_container &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Compute elemental abundances from BBN. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/BBN.cpp" line="255" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/BBN.cpp" bodystart="255" bodyend="464"/>
+      </memberdef>
+      <memberdef kind="function" id="BBN_8cpp_1ab2e86b23acefc249ca2d62a7ac9c083f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::primordial_abundances</definition>
+        <argsstring>(BBN_container &amp;result)</argsstring>
+        <name>primordial_abundances</name>
+        <qualifiedname>Gambit::CosmoBit::primordial_abundances</qualifiedname>
+        <param>
+          <type>BBN_container &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/BBN.cpp" line="467" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/BBN.cpp" bodystart="467" bodyend="471"/>
+      </memberdef>
+      <memberdef kind="function" id="BBN_8cpp_1af3e331c0d680697fa425af7876b19a38" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::primordial_abundances_decayingDM</definition>
+        <argsstring>(BBN_container &amp;result)</argsstring>
+        <name>primordial_abundances_decayingDM</name>
+        <qualifiedname>Gambit::CosmoBit::primordial_abundances_decayingDM</qualifiedname>
+        <param>
+          <type>BBN_container &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/BBN.cpp" line="475" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/BBN.cpp" bodystart="475" bodyend="581"/>
+      </memberdef>
+      <memberdef kind="function" id="BBN_8cpp_1a47ef444534fbbbc9ad910bdd9ff8c61e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::extract_helium_abundance</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>extract_helium_abundance</name>
+        <qualifiedname>Gambit::CosmoBit::extract_helium_abundance</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Extract helium-4 abundance from BBN abundance container. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/BBN.cpp" line="584" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/BBN.cpp" bodystart="584" bodyend="588"/>
+      </memberdef>
+      <memberdef kind="function" id="BBN_8cpp_1ad6c83a8c28c9f9140b212ee305448be9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::compute_BBN_LogLike</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>compute_BBN_LogLike</name>
+        <qualifiedname>Gambit::CosmoBit::compute_BBN_LogLike</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Compute the overall log-likelihood from BBN. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/BBN.cpp" line="591" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/BBN.cpp" bodystart="591" bodyend="754"/>
+      </memberdef>
+      <memberdef kind="function" id="CMB_8cpp_1afb447e2cabe6b1d54da0e0b3a6159b87" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::class_get_unlensed_Cl_TT</definition>
+        <argsstring>(std::vector&lt; double &gt; &amp;result)</argsstring>
+        <name>class_get_unlensed_Cl_TT</name>
+        <qualifiedname>Gambit::CosmoBit::class_get_unlensed_Cl_TT</qualifiedname>
+        <param>
+          <type>std::vector&lt; double &gt; &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Getter functions for CL spectra from classy. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Temperature autocorrelation </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" line="75" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" bodystart="75" bodyend="88"/>
+      </memberdef>
+      <memberdef kind="function" id="CMB_8cpp_1ac41dcccd4104d65aef0ea2050198efcc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::class_get_unlensed_Cl_TE</definition>
+        <argsstring>(std::vector&lt; double &gt; &amp;result)</argsstring>
+        <name>class_get_unlensed_Cl_TE</name>
+        <qualifiedname>Gambit::CosmoBit::class_get_unlensed_Cl_TE</qualifiedname>
+        <param>
+          <type>std::vector&lt; double &gt; &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Temperature &amp; E-mode cross-correlation. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" line="91" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" bodystart="91" bodyend="95"/>
+      </memberdef>
+      <memberdef kind="function" id="CMB_8cpp_1a0a19d07a7d9f580b99a16319ad948cd5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::class_get_unlensed_Cl_EE</definition>
+        <argsstring>(std::vector&lt; double &gt; &amp;result)</argsstring>
+        <name>class_get_unlensed_Cl_EE</name>
+        <qualifiedname>Gambit::CosmoBit::class_get_unlensed_Cl_EE</qualifiedname>
+        <param>
+          <type>std::vector&lt; double &gt; &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>E-mode autocorrelation. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" line="98" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" bodystart="98" bodyend="111"/>
+      </memberdef>
+      <memberdef kind="function" id="CMB_8cpp_1aca14b68823505f2748df073977d2db6e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::class_get_unlensed_Cl_BB</definition>
+        <argsstring>(std::vector&lt; double &gt; &amp;result)</argsstring>
+        <name>class_get_unlensed_Cl_BB</name>
+        <qualifiedname>Gambit::CosmoBit::class_get_unlensed_Cl_BB</qualifiedname>
+        <param>
+          <type>std::vector&lt; double &gt; &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>B-mode autocorrelation. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" line="114" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" bodystart="114" bodyend="127"/>
+      </memberdef>
+      <memberdef kind="function" id="CMB_8cpp_1ad4bfe9ed2a010bc707b5e03d8edb9522" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::class_get_unlensed_Cl_PhiPhi</definition>
+        <argsstring>(std::vector&lt; double &gt; &amp;result)</argsstring>
+        <name>class_get_unlensed_Cl_PhiPhi</name>
+        <qualifiedname>Gambit::CosmoBit::class_get_unlensed_Cl_PhiPhi</qualifiedname>
+        <param>
+          <type>std::vector&lt; double &gt; &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Lensing (Phi) autocorrelation. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" line="130" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" bodystart="130" bodyend="143"/>
+      </memberdef>
+      <memberdef kind="function" id="CMB_8cpp_1a571c3eab020d229468d2279b940da018" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::class_get_lensed_Cl_TT</definition>
+        <argsstring>(std::vector&lt; double &gt; &amp;result)</argsstring>
+        <name>class_get_lensed_Cl_TT</name>
+        <qualifiedname>Gambit::CosmoBit::class_get_lensed_Cl_TT</qualifiedname>
+        <param>
+          <type>std::vector&lt; double &gt; &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Temperature autocorrelation. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" line="148" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" bodystart="148" bodyend="161"/>
+      </memberdef>
+      <memberdef kind="function" id="CMB_8cpp_1a1454a8e415fe257d9ff8e9394d51a39d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::class_get_lensed_Cl_TE</definition>
+        <argsstring>(std::vector&lt; double &gt; &amp;result)</argsstring>
+        <name>class_get_lensed_Cl_TE</name>
+        <qualifiedname>Gambit::CosmoBit::class_get_lensed_Cl_TE</qualifiedname>
+        <param>
+          <type>std::vector&lt; double &gt; &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Temperature &amp; E-mode cross-correlation. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" line="164" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" bodystart="164" bodyend="168"/>
+      </memberdef>
+      <memberdef kind="function" id="CMB_8cpp_1aca4a50d8a2f1586c89af5502f494b895" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::class_get_lensed_Cl_EE</definition>
+        <argsstring>(std::vector&lt; double &gt; &amp;result)</argsstring>
+        <name>class_get_lensed_Cl_EE</name>
+        <qualifiedname>Gambit::CosmoBit::class_get_lensed_Cl_EE</qualifiedname>
+        <param>
+          <type>std::vector&lt; double &gt; &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>E-mode autocorrelation. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" line="171" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" bodystart="171" bodyend="184"/>
+      </memberdef>
+      <memberdef kind="function" id="CMB_8cpp_1a7dd47b138db77fd0879764c2d8043611" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::class_get_lensed_Cl_BB</definition>
+        <argsstring>(std::vector&lt; double &gt; &amp;result)</argsstring>
+        <name>class_get_lensed_Cl_BB</name>
+        <qualifiedname>Gambit::CosmoBit::class_get_lensed_Cl_BB</qualifiedname>
+        <param>
+          <type>std::vector&lt; double &gt; &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>B-mode autocorrelation. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" line="187" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" bodystart="187" bodyend="200"/>
+      </memberdef>
+      <memberdef kind="function" id="CMB_8cpp_1a0bfe5469c39cfe0f4e652391b0c95b5a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::class_get_lensed_Cl_PhiPhi</definition>
+        <argsstring>(std::vector&lt; double &gt; &amp;result)</argsstring>
+        <name>class_get_lensed_Cl_PhiPhi</name>
+        <qualifiedname>Gambit::CosmoBit::class_get_lensed_Cl_PhiPhi</qualifiedname>
+        <param>
+          <type>std::vector&lt; double &gt; &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Lensing (Phi) autocorrelation. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" line="203" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" bodystart="203" bodyend="216"/>
+      </memberdef>
+      <memberdef kind="function" id="CMB_8cpp_1ab1f3872e42d748b1af2eb07871a4b2f1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::energy_injection_efficiency_func</definition>
+        <argsstring>(DarkAges::Energy_injection_efficiency_table &amp;result)</argsstring>
+        <name>energy_injection_efficiency_func</name>
+        <qualifiedname>Gambit::CosmoBit::energy_injection_efficiency_func</qualifiedname>
+        <param>
+          <type>DarkAges::Energy_injection_efficiency_table &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>DarkAges ///. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Get the energy injection efficiency table from DarkAges. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" line="223" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" bodystart="223" bodyend="227"/>
+      </memberdef>
+      <memberdef kind="function" id="CMB_8cpp_1a0b5355bb26b9572bb6d11ac17cd32ec7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::f_eff_weighted</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>f_eff_weighted</name>
+        <qualifiedname>Gambit::CosmoBit::f_eff_weighted</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Calculate the effective energy injection efficiency by convulution of f_eff(z) with a weighting function W(z) that takes the sensitivity of the CMB for energy injection as a function of redshift into account. [cf. <ulink url="https://arxiv.org/abs/1506.03811">https://arxiv.org/abs/1506.03811</ulink>] </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" line="233" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" bodystart="233" bodyend="298"/>
+      </memberdef>
+      <memberdef kind="function" id="CMB_8cpp_1a57e43e66a1b97bb3745780e2deae5d9b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::f_eff_at_z</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>f_eff_at_z</name>
+        <qualifiedname>Gambit::CosmoBit::f_eff_at_z</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Calculate the effective energy injection efficiency by taking the value of f_eff(z) at given z. </para>
+        </detaileddescription>
+        <inbodydescription>
+<para>Set-up, do the interpolation, and claen-up</para>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" line="302" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" bodystart="302" bodyend="347"/>
+      </memberdef>
+      <memberdef kind="function" id="CMB_8cpp_1aab23e289803d72601caeffe4fe210907" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::f_eff_constant</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>f_eff_constant</name>
+        <qualifiedname>Gambit::CosmoBit::f_eff_constant</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Manually set the effective energy injection efficiency. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" line="350" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" bodystart="350" bodyend="353"/>
+      </memberdef>
+      <memberdef kind="function" id="CMB_8cpp_1aef38406c8553199b6dbe322658fb6259" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::p_ann</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>p_ann</name>
+        <qualifiedname>Gambit::CosmoBit::p_ann</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Calculate the annihilation rate p_ann = f_eff * f^2 * &lt;sv&gt;/m (Unit of result is: cm^3 s^-1 GeV^-1) </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" line="357" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" bodystart="357" bodyend="366"/>
+      </memberdef>
+      <memberdef kind="function" id="CMB_8cpp_1a006fec795eb5d414602b7415a1176cb6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::lnL_p_ann_P18_TTTEEE_lowE_lensing_BAO</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>lnL_p_ann_P18_TTTEEE_lowE_lensing_BAO</name>
+        <qualifiedname>Gambit::CosmoBit::lnL_p_ann_P18_TTTEEE_lowE_lensing_BAO</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" line="374" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" bodystart="374" bodyend="383"/>
+      </memberdef>
+      <memberdef kind="function" id="CMB_8cpp_1acb5dfbc21e6c1127adf37f493ca04c93" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::energy_injection_spectrum_AnnihilatingDM_mixture</definition>
+        <argsstring>(DarkAges::Energy_injection_spectrum &amp;spectrum)</argsstring>
+        <name>energy_injection_spectrum_AnnihilatingDM_mixture</name>
+        <qualifiedname>Gambit::CosmoBit::energy_injection_spectrum_AnnihilatingDM_mixture</qualifiedname>
+        <param>
+          <type>DarkAges::Energy_injection_spectrum &amp;</type>
+          <declname>spectrum</declname>
+        </param>
+        <briefdescription>
+<para>The energy injection spectrum from the AnnihilatingDM model hierarchy. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" line="386" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" bodystart="386" bodyend="423"/>
+      </memberdef>
+      <memberdef kind="function" id="CMB_8cpp_1a6c40184a628a57b0f32c0e7d01bbc0c6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::energy_injection_spectrum_DecayingDM_mixture</definition>
+        <argsstring>(DarkAges::Energy_injection_spectrum &amp;spectrum)</argsstring>
+        <name>energy_injection_spectrum_DecayingDM_mixture</name>
+        <qualifiedname>Gambit::CosmoBit::energy_injection_spectrum_DecayingDM_mixture</qualifiedname>
+        <param>
+          <type>DarkAges::Energy_injection_spectrum &amp;</type>
+          <declname>spectrum</declname>
+        </param>
+        <briefdescription>
+<para>The energy injection spectrum from the DecayingDM model hierarchy. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" line="426" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CMB.cpp" bodystart="426" bodyend="463"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoALPs_8cpp_1a0474ff60b3331feb935de5ac6b05add1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::lifetime_ALP_agg</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>lifetime_ALP_agg</name>
+        <qualifiedname>Gambit::CosmoBit::lifetime_ALP_agg</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Lifetime (in s) of an ALP if only the decay a -&gt; g g is open. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoALPs.cpp" line="63" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoALPs.cpp" bodystart="63" bodyend="90"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoALPs_8cpp_1aa2b2523653512c9cf7caea55f2c09028" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::minimum_abundance_ALP_analytical</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>minimum_abundance_ALP_analytical</name>
+        <qualifiedname>Gambit::CosmoBit::minimum_abundance_ALP_analytical</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Compute the abundance of ALPs expected from thermal production via Primakoff processes. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoALPs.cpp" line="93" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoALPs.cpp" bodystart="93" bodyend="106"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoALPs_8cpp_1aa9e6ea7bc54effdbd72fe1ec5b8bf33e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::minimum_abundance_ALP_numerical</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>minimum_abundance_ALP_numerical</name>
+        <qualifiedname>Gambit::CosmoBit::minimum_abundance_ALP_numerical</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Abundance of ALPs expected from thermal production via Primakoff processes as calculated by micrOMEGAs. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoALPs.cpp" line="109" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoALPs.cpp" bodystart="109" bodyend="169"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoALPs_8cpp_1adb4acdcb56ca1d9a69a8e3b4e7d2c601" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::minimum_fraction_ALP</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>minimum_fraction_ALP</name>
+        <qualifiedname>Gambit::CosmoBit::minimum_fraction_ALP</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Compute the minimal fraction of dark matter in ALPs expected from thermal production via Primakoff processes. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoALPs.cpp" line="172" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoALPs.cpp" bodystart="172" bodyend="187"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoALPs_8cpp_1a601ea554b4e0a8eadebb4b429993f454" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::DM_fraction_ALP</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>DM_fraction_ALP</name>
+        <qualifiedname>Gambit::CosmoBit::DM_fraction_ALP</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>The fraction of dark matter in decaying ALPs at the time of production. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoALPs.cpp" line="190" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoALPs.cpp" bodystart="190" bodyend="226"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoALPs_8cpp_1af4df8e1502b1bd760568b9076c482afc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::total_DM_abundance_ALP</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>total_DM_abundance_ALP</name>
+        <qualifiedname>Gambit::CosmoBit::total_DM_abundance_ALP</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Return the total abundance (Y = n/s) of ALPs We assume non relativistic ALPs such that rho = n * m </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoALPs.cpp" line="230" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoALPs.cpp" bodystart="230" bodyend="244"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoALPs_8cpp_1aa952767d5dbc77e15c1a06f2b9af12c4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::compute_dNeff_etaBBN_ALP</definition>
+        <argsstring>(map_str_dbl &amp;result)</argsstring>
+        <name>compute_dNeff_etaBBN_ALP</name>
+        <qualifiedname>Gambit::CosmoBit::compute_dNeff_etaBBN_ALP</qualifiedname>
+        <param>
+          <type>map_str_dbl &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>@TODO function definition needed </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoALPs.cpp" line="284" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoALPs.cpp" bodystart="284" bodyend="412"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoALPs_8cpp_1a7001accb67f2a8b5dd66a429526ebaa1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::eta_ratio_ALP</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>eta_ratio_ALP</name>
+        <qualifiedname>Gambit::CosmoBit::eta_ratio_ALP</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoALPs.cpp" line="414" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoALPs.cpp" bodystart="414" bodyend="417"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoALPs_8cpp_1abdadbda737b569e81406c3e2cbc7e1c5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::Neff_evolution_ALP</definition>
+        <argsstring>(map_str_dbl &amp;result)</argsstring>
+        <name>Neff_evolution_ALP</name>
+        <qualifiedname>Gambit::CosmoBit::Neff_evolution_ALP</qualifiedname>
+        <param>
+          <type>map_str_dbl &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoALPs.cpp" line="419" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoALPs.cpp" bodystart="419" bodyend="426"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit_8cpp_1a5a0a8523cc8027be8a6e2b5c6dc0a952" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::set_k_pivot</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>set_k_pivot</name>
+        <qualifiedname>Gambit::CosmoBit::set_k_pivot</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Function for setting k_pivot in Mpc^-1 for consistent use within CosmoBit (i.e. ensuring a consistent value is used by both CLASS and MultiModeCode) </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" line="76" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" bodystart="76" bodyend="79"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit_8cpp_1a438bb65390f62e34afd4e88519c6f3b3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::get_Neff_SM</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>get_Neff_SM</name>
+        <qualifiedname>Gambit::CosmoBit::get_Neff_SM</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" line="83" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" bodystart="83" bodyend="88"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit_8cpp_1a0ae5b166829b45f44af6f982b826db82" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::get_mNu_tot</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>get_mNu_tot</name>
+        <qualifiedname>Gambit::CosmoBit::get_mNu_tot</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" line="91" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" bodystart="91" bodyend="97"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit_8cpp_1ae2f550d3ba0a5fef8e465f3fbdcf0c4f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::get_N_ur</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>get_N_ur</name>
+        <qualifiedname>Gambit::CosmoBit::get_N_ur</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" line="100" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" bodystart="100" bodyend="168"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit_8cpp_1a18164b87eda42e4ac97c41f835a5086b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::T_ncdm_SM</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>T_ncdm_SM</name>
+        <qualifiedname>Gambit::CosmoBit::T_ncdm_SM</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Temperature of non-CDM in the (cosmological) SM. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" line="171" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" bodystart="171" bodyend="182"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit_8cpp_1a33caefbdcf53a0acb927b388bb859e4c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::T_ncdm</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>T_ncdm</name>
+        <qualifiedname>Gambit::CosmoBit::T_ncdm</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Temperature of non-CDM in non-standard theories. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" line="185" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" bodystart="185" bodyend="198"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit_8cpp_1abe44a9568eba8ec263653a25a83fd876" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::eta0_LCDM</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>eta0_LCDM</name>
+        <qualifiedname>Gambit::CosmoBit::eta0_LCDM</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Baryon-to-photon ratio (today) in LCDM. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" line="201" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" bodystart="201" bodyend="211"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit_8cpp_1afd08eb6a7cfcb77c451edbffdcd339db" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::compute_Omega0_b</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>compute_Omega0_b</name>
+        <qualifiedname>Gambit::CosmoBit::compute_Omega0_b</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>The total baryon content today. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" line="214" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" bodystart="214" bodyend="220"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit_8cpp_1a95066f8346ced17d98c88e438771fa61" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::compute_Omega0_cdm</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>compute_Omega0_cdm</name>
+        <qualifiedname>Gambit::CosmoBit::compute_Omega0_cdm</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>The total cold dark matter content today. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" line="223" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" bodystart="223" bodyend="229"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit_8cpp_1a00c4b35843eb635280709b23bd9d736d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::compute_Omega0_g</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>compute_Omega0_g</name>
+        <qualifiedname>Gambit::CosmoBit::compute_Omega0_g</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>The total photon content today. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" line="232" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" bodystart="232" bodyend="238"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit_8cpp_1ab1a2fdff0c64d34da5e4cfe9f31ed9ae" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::compute_n0_g</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>compute_n0_g</name>
+        <qualifiedname>Gambit::CosmoBit::compute_n0_g</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Number density of photons today. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" line="241" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" bodystart="241" bodyend="246"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit_8cpp_1abf2009730e77b857c809dc8f9a6d104e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::compute_Omega0_ur</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>compute_Omega0_ur</name>
+        <qualifiedname>Gambit::CosmoBit::compute_Omega0_ur</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>The total ultrarelativistic content today. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" line="249" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" bodystart="249" bodyend="256"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit_8cpp_1a6df4c09d7778f1b6c186f7def7e9981b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::get_H0_classy</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>get_H0_classy</name>
+        <qualifiedname>Gambit::CosmoBit::get_H0_classy</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Hubble. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" line="261" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" bodystart="261" bodyend="267"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit_8cpp_1ab860fb70388eef108998c536f45f6f5f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::get_H_at_z_classy</definition>
+        <argsstring>(daFunk::Funk &amp;result)</argsstring>
+        <name>get_H_at_z_classy</name>
+        <qualifiedname>Gambit::CosmoBit::get_H_at_z_classy</qualifiedname>
+        <param>
+          <type>daFunk::Funk &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Functor that calculates Hubble rate at redshift z [km/s/Mpc]. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" line="270" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" bodystart="270" bodyend="280"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit_8cpp_1ac8f03a4f9b7ab5c45c859b3b5aa809f8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::get_time_at_z_classy</definition>
+        <argsstring>(daFunk::Funk &amp;result)</argsstring>
+        <name>get_time_at_z_classy</name>
+        <qualifiedname>Gambit::CosmoBit::get_time_at_z_classy</qualifiedname>
+        <param>
+          <type>daFunk::Funk &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Functor that calculates time since big bang at redshift z [s]. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" line="283" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" bodystart="283" bodyend="293"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit_8cpp_1a2dddbdb45048037d102957d49f39d912" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::get_age_universe_from_time_at_z</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>get_age_universe_from_time_at_z</name>
+        <qualifiedname>Gambit::CosmoBit::get_age_universe_from_time_at_z</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Age of the universe (time since big bang at z=0) [s]. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" line="296" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" bodystart="296" bodyend="301"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit_8cpp_1a3df8338fc877e3bde7385dd592fe0908" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::get_Omega0_m_classy</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>get_Omega0_m_classy</name>
+        <qualifiedname>Gambit::CosmoBit::get_Omega0_m_classy</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Energy densities <emphasis>today</emphasis> (Omega0) </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Matter </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" line="316" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" bodystart="316" bodyend="321"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit_8cpp_1a518bc8084ee91e5a0f9ba590fb2e2e9d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::get_Omega0_r_classy</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>get_Omega0_r_classy</name>
+        <qualifiedname>Gambit::CosmoBit::get_Omega0_r_classy</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Radiation. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" line="324" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" bodystart="324" bodyend="329"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit_8cpp_1ad4b2082dba3a47c5bb4d4a6935b13f83" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::get_Omega0_ur_classy</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>get_Omega0_ur_classy</name>
+        <qualifiedname>Gambit::CosmoBit::get_Omega0_ur_classy</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Ultra-relativistic. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" line="332" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" bodystart="332" bodyend="337"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit_8cpp_1a7aa627982cef08cb1d48b3384b239aad" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::get_Omega0_ncdm_classy</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>get_Omega0_ncdm_classy</name>
+        <qualifiedname>Gambit::CosmoBit::get_Omega0_ncdm_classy</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Non-cold dark matter. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" line="340" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" bodystart="340" bodyend="345"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit_8cpp_1ace1118abbab14eef38bec6a6f4a0cd1e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::get_S8_classy</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>get_S8_classy</name>
+        <qualifiedname>Gambit::CosmoBit::get_S8_classy</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>returns S8 = sigma8 (Omega0_m/0.3)^0.5 (sigma8:root mean square fluctuations density fluctuations within spheres of radius 8/h Mpc) </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" line="350" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" bodystart="350" bodyend="358"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit_8cpp_1a2a88f8f81841fe52398c93027b7299db" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::get_Neff_classy</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>get_Neff_classy</name>
+        <qualifiedname>Gambit::CosmoBit::get_Neff_classy</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Effective number of neutrino species (mostly for cross-checking!) </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" line="362" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" bodystart="362" bodyend="367"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit_8cpp_1a42ce44adb1bfba7e5175bace0293b9f4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::get_tau_reio_classy</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>get_tau_reio_classy</name>
+        <qualifiedname>Gambit::CosmoBit::get_tau_reio_classy</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Optical depth at reionisation. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" line="370" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" bodystart="370" bodyend="375"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit_8cpp_1a3ba104c88040ebcd675c0aab10a7af90" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::get_z_reio_classy</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>get_z_reio_classy</name>
+        <qualifiedname>Gambit::CosmoBit::get_z_reio_classy</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>redshift of reionisation </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" line="378" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" bodystart="378" bodyend="383"/>
+      </memberdef>
+      <memberdef kind="function" id="CosmoBit_8cpp_1a0794f21c09bf6f8a4ebde48fbd77e612" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::get_rs_drag_classy</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>get_rs_drag_classy</name>
+        <qualifiedname>Gambit::CosmoBit::get_rs_drag_classy</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Comoving sound horizon at baryon drag epoch. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" line="386" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit.cpp" bodystart="386" bodyend="391"/>
+      </memberdef>
+      <memberdef kind="function" id="Inflation_8cpp_1a66206feaa2d5b45f0eb3898420e02679" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::string</type>
+        <definition>std::string Gambit::CosmoBit::multimode_error_handling</definition>
+        <argsstring>(int &amp;err)</argsstring>
+        <name>multimode_error_handling</name>
+        <qualifiedname>Gambit::CosmoBit::multimode_error_handling</qualifiedname>
+        <param>
+          <type>int &amp;</type>
+          <declname>err</declname>
+        </param>
+        <briefdescription>
+<para>Helper function for diagnosing MultiModeCode errors. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+<para><blockquote><para><zwj/>0 = &quot;failure; not fatal&quot; </para>
+</blockquote></para>
+<para>&lt; 0 = &quot;fatal&quot;</para>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Inflation.cpp" line="56" column="17" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Inflation.cpp" bodystart="56" bodyend="94"/>
+      </memberdef>
+      <memberdef kind="function" id="Inflation_8cpp_1a4916d381f2135badaa9c3866b7913246" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::set_multimode_inputs</definition>
+        <argsstring>(Multimode_inputs &amp;result)</argsstring>
+        <name>set_multimode_inputs</name>
+        <qualifiedname>Gambit::CosmoBit::set_multimode_inputs</qualifiedname>
+        <param>
+          <type>Multimode_inputs &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Inflation.cpp" line="100" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Inflation.cpp" bodystart="100" bodyend="190"/>
+      </memberdef>
+      <memberdef kind="function" id="Inflation_8cpp_1ab01c57be2efb6cdfe6e554f319bbffc2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::get_multimode_primordial_ps</definition>
+        <argsstring>(Primordial_ps &amp;result)</argsstring>
+        <name>get_multimode_primordial_ps</name>
+        <qualifiedname>Gambit::CosmoBit::get_multimode_primordial_ps</qualifiedname>
+        <param>
+          <type><ref refid="classGambit_1_1CosmoBit_1_1Primordial__ps" kindref="compound">Primordial_ps</ref> &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Use the inputs from the MultiModeCode initialisation function to compute a non-parametric primordial power spectrum. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Inflation.cpp" line="194" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Inflation.cpp" bodystart="194" bodyend="259"/>
+      </memberdef>
+      <memberdef kind="function" id="Inflation_8cpp_1a340938b83d9a3517bd08f3ea85640271" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::get_multimode_parametrised_ps</definition>
+        <argsstring>(ModelParameters &amp;result)</argsstring>
+        <name>get_multimode_parametrised_ps</name>
+        <qualifiedname>Gambit::CosmoBit::get_multimode_parametrised_ps</qualifiedname>
+        <param>
+          <type>ModelParameters &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Use the inputs from the MultiModeCode initialisation function to compute a parametrised primordial power spectrum. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Inflation.cpp" line="263" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Inflation.cpp" bodystart="263" bodyend="323"/>
+      </memberdef>
+      <memberdef kind="function" id="Planck_8cpp_1ac2a44d84a758e217b50af980871012fc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::compute_Planck_nuisance_prior_loglike</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>compute_Planck_nuisance_prior_loglike</name>
+        <qualifiedname>Gambit::CosmoBit::compute_Planck_nuisance_prior_loglike</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Apply Gaussian priors on some of the Planck nuisance parameters (cf. table 16 of 1907.1287) By default, the 2018 priors are used. If the 2015 priors should be considered, set &quot;version: 2015&quot; in the rules of this function. If needed, a custom file with the priors can be passed via the &quot;prior_file&quot; keyword in the rules. </para>
+        </detaileddescription>
+        <inbodydescription>
+<para>Loop over all parameters and apply the prior</para>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" line="66" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" bodystart="66" bodyend="132"/>
+      </memberdef>
+      <memberdef kind="function" id="Planck_8cpp_1ae58bd4da27a0bffaf9fcbd2e8d3de3f4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::compute_Planck_sz_prior</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>compute_Planck_sz_prior</name>
+        <qualifiedname>Gambit::CosmoBit::compute_Planck_sz_prior</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>SZ- prior: Prior on the tSZ and kSZ amplitudes. Correlation is unconstrained by Planck. Use prior based on SPT and ACT data. (cf. <ulink url="https://arxiv.org/pdf/1507.02704.pdf">https://arxiv.org/pdf/1507.02704.pdf</ulink> <ndash/> eq. 32) </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" line="137" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" bodystart="137" bodyend="144"/>
+      </memberdef>
+      <memberdef kind="function" id="Planck_8cpp_1a0ca4664f4c9128c0289e3fb894d5a190" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::function_Planck_lowl_TT_2018_loglike</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>function_Planck_lowl_TT_2018_loglike</name>
+        <qualifiedname>Gambit::CosmoBit::function_Planck_lowl_TT_2018_loglike</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Low-l TT likelihood (PR3 - 2018) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" line="150" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" bodystart="150" bodyend="204"/>
+      </memberdef>
+      <memberdef kind="function" id="Planck_8cpp_1abc0fa87b95f2e64c171885f44605b6df" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::function_Planck_lowl_EE_2018_loglike</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>function_Planck_lowl_EE_2018_loglike</name>
+        <qualifiedname>Gambit::CosmoBit::function_Planck_lowl_EE_2018_loglike</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Low-l E-mode polarisation likelihood (PR3 - 2018) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" line="207" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" bodystart="207" bodyend="261"/>
+      </memberdef>
+      <memberdef kind="function" id="Planck_8cpp_1a3ecedea9b896e34954f04f13b27bc36e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::function_Planck_lowl_TTEE_2018_loglike</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>function_Planck_lowl_TTEE_2018_loglike</name>
+        <qualifiedname>Gambit::CosmoBit::function_Planck_lowl_TTEE_2018_loglike</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Combined low-l TT and and E-mode polarisation likelihood (PR3 - 2018) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" line="264" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" bodystart="264" bodyend="348"/>
+      </memberdef>
+      <memberdef kind="function" id="Planck_8cpp_1aae61cd39a1f1246295a643a9cc8bc8eb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::function_Planck_highl_TT_2018_loglike</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>function_Planck_highl_TT_2018_loglike</name>
+        <qualifiedname>Gambit::CosmoBit::function_Planck_highl_TT_2018_loglike</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>High-l TT likelihood (PR3 - 2018) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" line="351" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" bodystart="351" bodyend="425"/>
+      </memberdef>
+      <memberdef kind="function" id="Planck_8cpp_1ac30bba4e1e7456e313411d88cb3a5ad5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::function_Planck_highl_TT_lite_2018_loglike</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>function_Planck_highl_TT_lite_2018_loglike</name>
+        <qualifiedname>Gambit::CosmoBit::function_Planck_highl_TT_lite_2018_loglike</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Marginalised version of the high-l TT likelihood (PR3 - 2018) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" line="428" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" bodystart="428" bodyend="483"/>
+      </memberdef>
+      <memberdef kind="function" id="Planck_8cpp_1abe8ecf200cc96fb9bc969d79a23f8287" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::function_Planck_highl_TTTEEE_2018_loglike</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>function_Planck_highl_TTTEEE_2018_loglike</name>
+        <qualifiedname>Gambit::CosmoBit::function_Planck_highl_TTTEEE_2018_loglike</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>High-l TT and polarisation likelihood (PR3 - 2018) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" line="486" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" bodystart="486" bodyend="585"/>
+      </memberdef>
+      <memberdef kind="function" id="Planck_8cpp_1ad5927068e2c1880de0a8b31b890ecf05" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::function_Planck_highl_TTTEEE_lite_2018_loglike</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>function_Planck_highl_TTTEEE_lite_2018_loglike</name>
+        <qualifiedname>Gambit::CosmoBit::function_Planck_highl_TTTEEE_lite_2018_loglike</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Marginalised version of the high-l TT and polarisation likelihood (PR3 - 2018) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" line="588" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" bodystart="588" bodyend="653"/>
+      </memberdef>
+      <memberdef kind="function" id="Planck_8cpp_1a880be75a1ac214558429281796cceda2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::function_Planck_lensing_2018_loglike</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>function_Planck_lensing_2018_loglike</name>
+        <qualifiedname>Gambit::CosmoBit::function_Planck_lensing_2018_loglike</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Lensing likelihood (PR3 - 2018) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" line="656" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" bodystart="656" bodyend="725"/>
+      </memberdef>
+      <memberdef kind="function" id="Planck_8cpp_1ab35a48f3c9ded8dc953be192f11f6421" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::function_Planck_lensing_marged_2018_loglike</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>function_Planck_lensing_marged_2018_loglike</name>
+        <qualifiedname>Gambit::CosmoBit::function_Planck_lensing_marged_2018_loglike</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Lensing Likelihood (marginalised over reference spectra for TT,EE, etc.) (PR3 - 2018) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" line="728" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" bodystart="728" bodyend="778"/>
+      </memberdef>
+      <memberdef kind="function" id="Planck_8cpp_1a6352dae0e140dff563a2a595e2a385a5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::function_Planck_lowl_TT_2015_loglike</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>function_Planck_lowl_TT_2015_loglike</name>
+        <qualifiedname>Gambit::CosmoBit::function_Planck_lowl_TT_2015_loglike</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Low-l TT likelihood (PR2 - 2015) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" line="783" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" bodystart="783" bodyend="837"/>
+      </memberdef>
+      <memberdef kind="function" id="Planck_8cpp_1a4e6a74f4fa163b17c253633ba09167dc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::function_Planck_lowl_TEB_2015_loglike</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>function_Planck_lowl_TEB_2015_loglike</name>
+        <qualifiedname>Gambit::CosmoBit::function_Planck_lowl_TEB_2015_loglike</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Low-l polarisation likelihood (PR2 - 2015) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" line="840" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" bodystart="840" bodyend="910"/>
+      </memberdef>
+      <memberdef kind="function" id="Planck_8cpp_1a3fe77b6f4072f60816422426a3305d89" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::function_Planck_highl_TT_2015_loglike</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>function_Planck_highl_TT_2015_loglike</name>
+        <qualifiedname>Gambit::CosmoBit::function_Planck_highl_TT_2015_loglike</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>High-l TT likelihood (PR2 - 2015) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" line="913" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" bodystart="913" bodyend="985"/>
+      </memberdef>
+      <memberdef kind="function" id="Planck_8cpp_1a754e46d253f28f3c7e3bbd6ce85bbdd3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::function_Planck_highl_TT_lite_2015_loglike</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>function_Planck_highl_TT_lite_2015_loglike</name>
+        <qualifiedname>Gambit::CosmoBit::function_Planck_highl_TT_lite_2015_loglike</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Marginalised version of high-l TT likelihood (PR2 - 2015) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" line="988" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" bodystart="988" bodyend="1043"/>
+      </memberdef>
+      <memberdef kind="function" id="Planck_8cpp_1a6f661de89156663708fce4d603e54f1e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::function_Planck_highl_TTTEEE_2015_loglike</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>function_Planck_highl_TTTEEE_2015_loglike</name>
+        <qualifiedname>Gambit::CosmoBit::function_Planck_highl_TTTEEE_2015_loglike</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>High-l TT and polarisation likelihood (PR2 - 2015) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" line="1046" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" bodystart="1046" bodyend="1145"/>
+      </memberdef>
+      <memberdef kind="function" id="Planck_8cpp_1a7bdada8272e97fe1d0d52d1cbc5b5ba7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::function_Planck_highl_TTTEEE_lite_2015_loglike</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>function_Planck_highl_TTTEEE_lite_2015_loglike</name>
+        <qualifiedname>Gambit::CosmoBit::function_Planck_highl_TTTEEE_lite_2015_loglike</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Marginalised version of high-l TT and polarisation likelihood (PR2 - 2015) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" line="1148" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" bodystart="1148" bodyend="1213"/>
+      </memberdef>
+      <memberdef kind="function" id="Planck_8cpp_1a40235ca6e28e5f160397ace93232227a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::function_Planck_lensing_2015_loglike</definition>
+        <argsstring>(double &amp;result)</argsstring>
+        <name>function_Planck_lensing_2015_loglike</name>
+        <qualifiedname>Gambit::CosmoBit::function_Planck_lensing_2015_loglike</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Lensing likelihood (PR2 - 2015) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" line="1216" column="10" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/Planck.cpp" bodystart="1216" bodyend="1285"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="64" column="3"/>
+  </compounddef>
+</doxygen>

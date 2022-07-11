@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="CosmoBit__utils_8cpp" kind="file" language="C++">
+    <compoundname>CosmoBit_utils.cpp</compoundname>
+    <includes refid="CosmoBit__utils_8hpp" local="yes">gambit/CosmoBit/CosmoBit_utils.hpp</includes>
+    <includes local="yes">gambit/Utils/numerical_constants.hpp</includes>
+    <incdepgraph>
+      <node id="2">
+        <label>gambit/CosmoBit/CosmoBit_utils.hpp</label>
+        <link refid="CosmoBit__utils_8hpp"/>
+      </node>
+      <node id="1">
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit_utils.cpp</label>
+        <link refid="CosmoBit__utils_8cpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>gambit/Utils/numerical_constants.hpp</label>
+      </node>
+    </incdepgraph>
+    <innernamespace refid="namespaceGambit">Gambit</innernamespace>
+    <innernamespace refid="namespaceGambit_1_1CosmoBit">Gambit::CosmoBit</innernamespace>
+    <innernamespace refid="namespaceGambit_1_1CosmoBit_1_1CosmoBit__utils">Gambit::CosmoBit::CosmoBit_utils</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Source code for utilities needed in module CosmoBit.</para>
+<para><hruler/>
+</para>
+<para>Authors (add name and date if you modify):</para>
+<para><simplesect kind="author"><para>Janina Renk (<ulink url="mailto:janina.renk@fysik.su.se">janina.renk@fysik.su.se</ulink>) </para>
+</simplesect>
+<simplesect kind="date"><para>20190 Mar, June <hruler/>
+ </para>
+</simplesect>
+</para>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">//<sp/><sp/><sp/>GAMBIT:<sp/>Global<sp/>and<sp/>Modular<sp/>BSM<sp/>Inference<sp/>Tool</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/>*********************************************</highlight></codeline>
+<codeline lineno="15"><highlight class="comment"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="CosmoBit__utils_8hpp" kindref="compound">gambit/CosmoBit/CosmoBit_utils.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;gambit/Utils/numerical_constants.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespaceGambit" kindref="compound">Gambit</ref></highlight></codeline>
+<codeline lineno="20"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">CosmoBit</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">CosmoBit_utils</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Return<sp/>entropy<sp/>density<sp/>of<sp/>SM<sp/>as<sp/>function<sp/>of<sp/>Temperature<sp/>T.<sp/>By<sp/>default:<sp/>T<sp/>interpreted<sp/>to<sp/>be<sp/>in<sp/>K,</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>set<sp/>T_in_eV<sp/>=<sp/>True<sp/>if<sp/>T<sp/>is<sp/>in<sp/>eV</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>entropy_density_SM(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>T_in_eV)</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>N_eff<sp/>=<sp/>3.045;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>gstar_s<sp/>=<sp/>2.<sp/>+<sp/>2.<sp/>*<sp/>N_eff<sp/>*<sp/>7./8.<sp/>*<sp/>4./11.;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(T_in_eV<sp/>==<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">)<sp/>{T<sp/>=<sp/>T/kB_eV_over_K;}</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(2.*pow(pi,2)/45.)<sp/>*<sp/>gstar_s<sp/>*<sp/>pow((kB_eV_over_K*T),3);</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="39"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit_utils.cpp"/>
+  </compounddef>
+</doxygen>

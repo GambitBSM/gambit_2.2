@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="dir_262b43c519d43214d405683c7e3a8f39" kind="dir">
-    <compoundname>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses</compoundname>
+    <compoundname>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses</compoundname>
     <innerfile refid="Analysis_8hpp">Analysis.hpp</innerfile>
     <innerfile refid="AnalysisContainer_8hpp">AnalysisContainer.hpp</innerfile>
     <innerfile refid="AnalysisData_8hpp">AnalysisData.hpp</innerfile>
@@ -13,6 +13,6 @@
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/"/>
   </compounddef>
 </doxygen>

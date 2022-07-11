@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="structGambit_1_1ColliderBit_1_1Cutflow" kind="struct" language="C++" prot="public">
     <compoundname>Gambit::ColliderBit::Cutflow</compoundname>
     <includes refid="Cutflow_8hpp" local="no">Cutflow.hpp</includes>
@@ -16,7 +16,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="197" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="197" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="197" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="197" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1Cutflow_1a1e6bcdc41b726d482027d8240ca2c513" prot="public" static="no" mutable="no">
         <type>size_t</type>
@@ -30,7 +30,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="198" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="198" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="198" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="198" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1Cutflow_1a8b262c2706c6edef591fb8a72941a9de" prot="public" static="no" mutable="no">
         <type>vector&lt; string &gt;</type>
@@ -44,7 +44,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="199" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="199" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="199" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="199" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1Cutflow_1a7ccabdb10937e639d498e63fa12d3c6f" prot="public" static="no" mutable="no">
         <type>vector&lt; double &gt;</type>
@@ -58,7 +58,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="200" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="200" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="200" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="200" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1Cutflow_1ac51f88e06e89b820136ba2eb30279c06" prot="public" static="no" mutable="no">
         <type>size_t</type>
@@ -72,7 +72,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="201" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="201" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="201" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="201" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-func">
@@ -90,7 +90,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="42" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="42" bodyend="42"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="42" column="7" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="42" bodyend="42"/>
       </memberdef>
       <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1Cutflow_1a514711ae64a1302d395c0c6631f1b313" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type></type>
@@ -113,7 +113,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="45" column="7" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="45" bodyend="47"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="45" column="7" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="45" bodyend="47"/>
       </memberdef>
       <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1Cutflow_1a24fd8ead47bad4975b81e07722777fe0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -133,7 +133,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="50" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="50" bodyend="54"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="50" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="50" bodyend="54"/>
       </memberdef>
       <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1Cutflow_1a9afc93f37d3d029081d33a4251d0f6cf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>bool</type>
@@ -165,7 +165,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="59" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="59" bodyend="66"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="59" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="59" bodyend="66"/>
       </memberdef>
       <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1Cutflow_1ab5c560142cf7adce7f53b70c6584e1b6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>bool</type>
@@ -192,7 +192,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="74" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="74" bodyend="77"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="74" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="74" bodyend="77"/>
       </memberdef>
       <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1Cutflow_1a8513d5fc7c235469277e2b03d6d74dfc" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>bool</type>
@@ -223,7 +223,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="82" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="82" bodyend="92"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="82" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="82" bodyend="92"/>
       </memberdef>
       <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1Cutflow_1a8f0ebe1072407635412004ddd6965de2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>bool</type>
@@ -247,7 +247,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="96" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="96" bodyend="102"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="96" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="96" bodyend="102"/>
       </memberdef>
       <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1Cutflow_1a16954505dd5adcd3bf869ab15e56aa6d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>bool</type>
@@ -274,7 +274,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="107" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="107" bodyend="110"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="107" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="107" bodyend="110"/>
       </memberdef>
       <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1Cutflow_1aa57daf461256c3c534480e0dd3681110" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>bool</type>
@@ -297,7 +297,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="115" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="115" bodyend="118"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="115" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="115" bodyend="118"/>
       </memberdef>
       <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1Cutflow_1a966e8cec61fa0927660275b0b436ea79" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>bool</type>
@@ -324,7 +324,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="123" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="123" bodyend="126"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="123" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="123" bodyend="126"/>
       </memberdef>
       <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1Cutflow_1acec1c53abc7d8c40feb7248f4af42e95" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>bool</type>
@@ -354,7 +354,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="138" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="138" bodyend="141"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="138" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="138" bodyend="141"/>
       </memberdef>
       <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1Cutflow_1af11b22d8c20d340b23dffd12bc3a172a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -373,7 +373,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="144" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="144" bodyend="147"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="144" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="144" bodyend="147"/>
       </memberdef>
       <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1Cutflow_1af2f953c433ccf19f6751bdb5212da144" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -397,7 +397,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="150" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="150" bodyend="153"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="150" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="150" bodyend="153"/>
       </memberdef>
       <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1Cutflow_1a75ba2919b5defc2c87bc231ca58e499e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>string</type>
@@ -412,7 +412,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="156" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="156" bodyend="189"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="156" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="156" bodyend="189"/>
       </memberdef>
       <memberdef kind="function" id="structGambit_1_1ColliderBit_1_1Cutflow_1aaf5dbfa69a9e708052c70edb2752af0d" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -431,7 +431,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="192" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="192" bodyend="195"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="192" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="192" bodyend="195"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -439,7 +439,7 @@
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="36" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="37" bodyend="203"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" line="36" column="5" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/analyses/Cutflow.hpp" bodystart="37" bodyend="203"/>
     <listofallmembers>
       <member refid="structGambit_1_1ColliderBit_1_1Cutflow_1a7ccabdb10937e639d498e63fa12d3c6f" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Cutflow</scope><name>counts</name></member>
       <member refid="structGambit_1_1ColliderBit_1_1Cutflow_1ae95a0c2238f10705042a35e5286f8586" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::Cutflow</scope><name>Cutflow</name></member>

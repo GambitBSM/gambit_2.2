@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="structGambit_1_1ColliderBit_1_1__gsl__target__func__params" kind="struct" language="C++" prot="public">
     <compoundname>Gambit::ColliderBit::_gsl_target_func_params</compoundname>
       <sectiondef kind="public-attrib">
@@ -15,7 +15,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" line="134" column="14" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" bodystart="134" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" line="134" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" bodystart="134" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1__gsl__target__func__params_1ad9d31c2f9d07f94b2a78aeeb0ec7ca04" prot="public" static="no" mutable="no">
         <type>AnalysisDataPointers</type>
@@ -29,7 +29,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" line="135" column="28" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" bodystart="135" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" line="135" column="28" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" bodystart="135" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1__gsl__target__func__params_1a7ef41fe61ad887ad95021c26745c4bea" prot="public" static="no" mutable="no">
         <type>std::vector&lt; str &gt;</type>
@@ -43,7 +43,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" line="136" column="19" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" bodystart="136" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" line="136" column="19" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" bodystart="136" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1__gsl__target__func__params_1a3ce86558bb89f61b022ec495d15061e5" prot="public" static="no" mutable="no">
         <type>bool</type>
@@ -57,7 +57,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" line="137" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" bodystart="137" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" line="137" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" bodystart="137" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1__gsl__target__func__params_1a6dcd0e1179519bcc97f38d7f0b547787" prot="public" static="no" mutable="no">
         <type>bool</type>
@@ -71,7 +71,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" line="138" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" bodystart="138" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" line="138" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" bodystart="138" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structGambit_1_1ColliderBit_1_1__gsl__target__func__params_1a2b349842b5c91e3b5ce69963d3003e39" prot="public" static="no" mutable="no">
         <type>bool</type>
@@ -85,7 +85,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" line="139" column="12" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" bodystart="139" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" line="139" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" bodystart="139" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -93,7 +93,7 @@
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" line="132" column="5" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" bodystart="133" bodyend="140"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" line="132" column="5" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp" bodystart="133" bodyend="140"/>
     <listofallmembers>
       <member refid="structGambit_1_1ColliderBit_1_1__gsl__target__func__params_1ad9d31c2f9d07f94b2a78aeeb0ec7ca04" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::_gsl_target_func_params</scope><name>adata_ptrs_original</name></member>
       <member refid="structGambit_1_1ColliderBit_1_1__gsl__target__func__params_1a2b349842b5c91e3b5ce69963d3003e39" prot="public" virt="non-virtual"><scope>Gambit::ColliderBit::_gsl_target_func_params</scope><name>combine_nocovar_SRs</name></member>

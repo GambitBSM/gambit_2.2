@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="dir_ebc0d8ef92b132863f07a78e664e2ed5" kind="dir">
-    <compoundname>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src</compoundname>
-    <innerdir refid="dir_ebf4efc09232e9b3baff73345d00af17">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses</innerdir>
-    <innerdir refid="dir_ec0001d0a47d8f5e87814a0c290a00e6">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/detectors</innerdir>
-    <innerdir refid="dir_43317e43f0d2f00527788176b6ed19bf">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits</innerdir>
-    <innerdir refid="dir_6a2ef1661f87480de03fb9e3f0a6d5bc">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/models</innerdir>
+    <compoundname>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src</compoundname>
+    <innerdir refid="dir_ebf4efc09232e9b3baff73345d00af17">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses</innerdir>
+    <innerdir refid="dir_ec0001d0a47d8f5e87814a0c290a00e6">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/detectors</innerdir>
+    <innerdir refid="dir_43317e43f0d2f00527788176b6ed19bf">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/limits</innerdir>
+    <innerdir refid="dir_6a2ef1661f87480de03fb9e3f0a6d5bc">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/models</innerdir>
     <innerfile refid="collider__event__weights_8cpp">collider_event_weights.cpp</innerfile>
     <innerfile refid="ColliderBit__dummy_8cpp">ColliderBit_dummy.cpp</innerfile>
     <innerfile refid="ColliderBit__eventloop_8cpp">ColliderBit_eventloop.cpp</innerfile>
@@ -36,6 +36,6 @@
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/"/>
   </compounddef>
 </doxygen>

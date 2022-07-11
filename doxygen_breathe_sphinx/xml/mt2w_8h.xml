@@ -1,16 +1,16 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="mt2w_8h" kind="file" language="C++">
     <compoundname>mt2w.h</compoundname>
     <includes refid="mt2w__bisect_8h" local="yes">mt2w_bisect.h</includes>
     <includes local="no">vector</includes>
     <includes local="yes">HEPUtils/MathUtils.h</includes>
     <includes local="yes">HEPUtils/Event.h</includes>
-    <includedby refid="Analysis__CMS__8TeV__1LEPDMTOP__20invfb_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_1LEPDMTOP_20invfb.cpp</includedby>
-    <includedby refid="mt2w_8cc" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2w.cc</includedby>
+    <includedby refid="Analysis__CMS__8TeV__1LEPDMTOP__20invfb_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/analyses/Analysis_CMS_8TeV_1LEPDMTOP_20invfb.cpp</includedby>
+    <includedby refid="mt2w_8cc" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/mt2w.cc</includedby>
     <incdepgraph>
       <node id="1">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w.h</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w.h</label>
         <link refid="mt2w_8h"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -67,7 +67,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w.h" line="8" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2w.cc" bodystart="3" bodyend="80" declfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w.h" declline="8" declcolumn="8"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w.h" line="8" column="8" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/mt2w.cc" bodystart="3" bodyend="80" declfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w.h" declline="8" declcolumn="8"/>
       </memberdef>
       <memberdef kind="function" id="mt2w_8h_1ad232ca7013f202adc10e0ca14d7a71da" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>double</type>
@@ -100,7 +100,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w.h" line="10" column="8" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/mt2w.cc" bodystart="84" bodyend="107" declfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w.h" declline="10" declcolumn="8"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w.h" line="10" column="8" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/mt2w.cc" bodystart="84" bodyend="107" declfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w.h" declline="10" declcolumn="8"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -119,6 +119,6 @@
 <codeline lineno="9"><highlight class="normal"></highlight></codeline>
 <codeline lineno="10"><highlight class="normal"></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>mt2wWrapperHepUtils(HEPUtils::P4&amp;<sp/>lep,<sp/>HEPUtils::P4&amp;<sp/>jet_o,<sp/>HEPUtils::P4&amp;<sp/>jet_b,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>met,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>metphi);</highlight></codeline>
     </programlisting>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w.h"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/mt2w.h"/>
   </compounddef>
 </doxygen>

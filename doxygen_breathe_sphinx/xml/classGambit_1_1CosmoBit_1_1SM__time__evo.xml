@@ -1,0 +1,550 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
+  <compounddef id="classGambit_1_1CosmoBit_1_1SM__time__evo" kind="class" language="C++" prot="public">
+    <compoundname>Gambit::CosmoBit::SM_time_evo</compoundname>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1af41d9896a3fad0f53550d7ba09ac515b" prot="private" static="no" mutable="no">
+        <type>size_t</type>
+        <definition>size_t Gambit::CosmoBit::SM_time_evo::grid_size</definition>
+        <argsstring></argsstring>
+        <name>grid_size</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::grid_size</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="134" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="134" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1ac177edc0878e133dc086876198f0933a" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Gambit::CosmoBit::SM_time_evo::Neff</definition>
+        <argsstring></argsstring>
+        <name>Neff</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::Neff</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="135" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="135" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1adc901a347036511f7f7f079cbff6c70f" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; double &gt;</type>
+        <definition>std::vector&lt;double&gt; Gambit::CosmoBit::SM_time_evo::t_grid</definition>
+        <argsstring></argsstring>
+        <name>t_grid</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::t_grid</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="137" column="19" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="137" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1adf84b9a2dcaf78e7e4204f869c4fc5d0" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; double &gt;</type>
+        <definition>std::vector&lt;double&gt; Gambit::CosmoBit::SM_time_evo::T_grid</definition>
+        <argsstring></argsstring>
+        <name>T_grid</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::T_grid</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="138" column="19" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="138" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1a9df2ed7c91be4aea79ae56b35eed4fc2" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; double &gt;</type>
+        <definition>std::vector&lt;double&gt; Gambit::CosmoBit::SM_time_evo::Tnu_grid</definition>
+        <argsstring></argsstring>
+        <name>Tnu_grid</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::Tnu_grid</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="139" column="19" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="139" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1a67b4d440335558f06816c2db0710d4d1" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; double &gt;</type>
+        <definition>std::vector&lt;double&gt; Gambit::CosmoBit::SM_time_evo::H_grid</definition>
+        <argsstring></argsstring>
+        <name>H_grid</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::H_grid</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="140" column="19" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="140" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1a70b274c851a14af98cdb34e95b777bb2" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; double &gt;</type>
+        <definition>std::vector&lt;double&gt; Gambit::CosmoBit::SM_time_evo::lnR_grid</definition>
+        <argsstring></argsstring>
+        <name>lnR_grid</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::lnR_grid</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="141" column="19" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="141" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1a1a3ebdb41368b61c696020f1b1f93445" prot="private" static="no" mutable="no">
+        <type>gsl_spline *</type>
+        <definition>gsl_spline* Gambit::CosmoBit::SM_time_evo::T_spline</definition>
+        <argsstring></argsstring>
+        <name>T_spline</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::T_spline</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="143" column="18" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="143" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1a425a3664d722ffc2144433eed63fdde9" prot="private" static="no" mutable="no">
+        <type>gsl_spline *</type>
+        <definition>gsl_spline* Gambit::CosmoBit::SM_time_evo::Tnu_spline</definition>
+        <argsstring></argsstring>
+        <name>Tnu_spline</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::Tnu_spline</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="144" column="18" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="144" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1ad3b70f05e46838f9f43e19bd1eff2424" prot="private" static="no" mutable="no">
+        <type>gsl_spline *</type>
+        <definition>gsl_spline* Gambit::CosmoBit::SM_time_evo::H_spline</definition>
+        <argsstring></argsstring>
+        <name>H_spline</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::H_spline</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="145" column="18" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="145" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1af0779276033fbb358c4ac4235665cea9" prot="private" static="no" mutable="no">
+        <type>gsl_spline *</type>
+        <definition>gsl_spline* Gambit::CosmoBit::SM_time_evo::lnR_spline</definition>
+        <argsstring></argsstring>
+        <name>lnR_spline</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::lnR_spline</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="146" column="18" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="146" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1a8a94cbf7fcbbf945bdc9690dc5f43117" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::CosmoBit::SM_time_evo::SM_time_evo</definition>
+        <argsstring>(size_t grid_size, double t0, double tf, double Neff_SM, double rnu, double dNeff)</argsstring>
+        <name>SM_time_evo</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::SM_time_evo</qualifiedname>
+        <param>
+          <type>size_t</type>
+          <declname>grid_size</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>t0</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>tf</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>Neff_SM</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>rnu</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>dNeff</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="88" column="7" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit_types.cpp" bodystart="45" bodyend="138"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1aa966ab800f393be2e615cc406ffde4bb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>Gambit::CosmoBit::SM_time_evo::~SM_time_evo</definition>
+        <argsstring>()</argsstring>
+        <name>~SM_time_evo</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::~SM_time_evo</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="89" column="7" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit_types.cpp" bodystart="140" bodyend="146"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1a341c83bf0114b185da18bf93d3e4779f" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const std::vector&lt; double &gt; &amp;</type>
+        <definition>const std::vector&lt; double &gt; &amp; Gambit::CosmoBit::SM_time_evo::get_t_grid</definition>
+        <argsstring>() const</argsstring>
+        <name>get_t_grid</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::get_t_grid</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="91" column="25" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="91" bodyend="91"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1a89ba9796b433f8f40615688e3a1a7908" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const std::vector&lt; double &gt; &amp;</type>
+        <definition>const std::vector&lt; double &gt; &amp; Gambit::CosmoBit::SM_time_evo::get_T_grid</definition>
+        <argsstring>() const</argsstring>
+        <name>get_T_grid</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::get_T_grid</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="92" column="25" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="92" bodyend="92"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1a9adbeae34222bfb257f748481a19b958" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const std::vector&lt; double &gt; &amp;</type>
+        <definition>const std::vector&lt; double &gt; &amp; Gambit::CosmoBit::SM_time_evo::get_Tnu_grid</definition>
+        <argsstring>() const</argsstring>
+        <name>get_Tnu_grid</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::get_Tnu_grid</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="93" column="25" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="93" bodyend="93"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1a5adad75d4269c7a8d46aa8c7cee57271" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const std::vector&lt; double &gt; &amp;</type>
+        <definition>const std::vector&lt; double &gt; &amp; Gambit::CosmoBit::SM_time_evo::get_H_grid</definition>
+        <argsstring>() const</argsstring>
+        <name>get_H_grid</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::get_H_grid</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="94" column="25" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="94" bodyend="94"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1a68b137493e1a21d4e5527815ad526030" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const std::vector&lt; double &gt; &amp;</type>
+        <definition>const std::vector&lt; double &gt; &amp; Gambit::CosmoBit::SM_time_evo::get_lnR_grid</definition>
+        <argsstring>() const</argsstring>
+        <name>get_lnR_grid</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::get_lnR_grid</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="95" column="25" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="95" bodyend="95"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1a13882adec37d0efcbb6d37ece58d7084" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::CosmoBit::SM_time_evo::T_at_t</definition>
+        <argsstring>(double t) const</argsstring>
+        <name>T_at_t</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::T_at_t</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>t</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="98" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="98" bodyend="101"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1a104b37e4f6f7a9111e986735a3b835e0" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::CosmoBit::SM_time_evo::Tnu_at_t</definition>
+        <argsstring>(double t) const</argsstring>
+        <name>Tnu_at_t</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::Tnu_at_t</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>t</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="104" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="104" bodyend="107"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1a8506079f0bf13be8f4fb4b31614dd08c" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::CosmoBit::SM_time_evo::H_at_t</definition>
+        <argsstring>(double t) const</argsstring>
+        <name>H_at_t</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::H_at_t</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>t</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="110" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="110" bodyend="113"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1ae4c719626e78deaba944d407b376467d" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::CosmoBit::SM_time_evo::lnR_at_t</definition>
+        <argsstring>(double t) const</argsstring>
+        <name>lnR_at_t</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::lnR_at_t</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>t</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="116" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="116" bodyend="119"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1a4b603154ac9977336f1e475106dd88f4" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::CosmoBit::SM_time_evo::t0</definition>
+        <argsstring>() const</argsstring>
+        <name>t0</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::t0</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="122" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="122" bodyend="122"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1a01f2ec4a385fcd7e8d10769459901af7" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::CosmoBit::SM_time_evo::tf</definition>
+        <argsstring>() const</argsstring>
+        <name>tf</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::tf</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="125" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="125" bodyend="125"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1a7dfb04f04046553a76ff0d690d65982c" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>size_t</type>
+        <definition>size_t Gambit::CosmoBit::SM_time_evo::size</definition>
+        <argsstring>() const</argsstring>
+        <name>size</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::size</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="128" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="128" bodyend="128"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1a677eaefb7a8f5947e4fb35dbd852a88b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::SM_time_evo::update_grid</definition>
+        <argsstring>(const std::vector&lt; double &gt; &amp;T_grid_new, const std::vector&lt; double &gt; &amp;Tnu_grid_new, const bool &amp;unchecked=true)</argsstring>
+        <name>update_grid</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::update_grid</qualifiedname>
+        <param>
+          <type>const std::vector&lt; double &gt; &amp;</type>
+          <declname>T_grid_new</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; double &gt; &amp;</type>
+          <declname>Tnu_grid_new</declname>
+        </param>
+        <param>
+          <type>const bool &amp;</type>
+          <declname>unchecked</declname>
+          <defval>true</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="131" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/src/CosmoBit_types.cpp" bodystart="148" bodyend="203"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1af50d78e9103492f75658dc45a88556fb" prot="private" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::CosmoBit::SM_time_evo::H_at_T_and_Tnu</definition>
+        <argsstring>(double T, double Tnu) const</argsstring>
+        <name>H_at_T_and_Tnu</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::H_at_T_and_Tnu</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>T</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>Tnu</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="149" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="149" bodyend="156"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1a5089073be6db206a77be66c8a7135c49" prot="private" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>interpolation_bound</type>
+        <definition>interpolation_bound Gambit::CosmoBit::SM_time_evo::interpolation_range_check</definition>
+        <argsstring>(double t) const</argsstring>
+        <name>interpolation_range_check</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::interpolation_range_check</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>t</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="158" column="27" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="158" bodyend="169"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1aca597469365088fe4b7b68c7c55cec14" prot="private" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Gambit::CosmoBit::SM_time_evo::safe_interpolation</definition>
+        <argsstring>(double t, const gsl_spline *spline_ptr) const</argsstring>
+        <name>safe_interpolation</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::safe_interpolation</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>t</declname>
+        </param>
+        <param>
+          <type>const gsl_spline *</type>
+          <declname>spline_ptr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="175" column="14" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="175" bodyend="215"/>
+      </memberdef>
+      <memberdef kind="function" id="classGambit_1_1CosmoBit_1_1SM__time__evo_1a4535f2af4d40c2919443d5f39ce038f9" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Gambit::CosmoBit::SM_time_evo::check_size</definition>
+        <argsstring>(const std::vector&lt; double &gt; &amp;new_grid, const std::string &amp;name)</argsstring>
+        <name>check_size</name>
+        <qualifiedname>Gambit::CosmoBit::SM_time_evo::check_size</qualifiedname>
+        <param>
+          <type>const std::vector&lt; double &gt; &amp;</type>
+          <declname>new_grid</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="220" column="12" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="220" bodyend="229"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" line="80" column="5" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/CosmoBit/include/gambit/CosmoBit/CosmoBit_types.hpp" bodystart="81" bodyend="230"/>
+    <listofallmembers>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a4535f2af4d40c2919443d5f39ce038f9" prot="private" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>check_size</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a5adad75d4269c7a8d46aa8c7cee57271" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>get_H_grid</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a68b137493e1a21d4e5527815ad526030" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>get_lnR_grid</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a341c83bf0114b185da18bf93d3e4779f" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>get_t_grid</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a89ba9796b433f8f40615688e3a1a7908" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>get_T_grid</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a9adbeae34222bfb257f748481a19b958" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>get_Tnu_grid</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1af41d9896a3fad0f53550d7ba09ac515b" prot="private" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>grid_size</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a8506079f0bf13be8f4fb4b31614dd08c" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>H_at_t</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1af50d78e9103492f75658dc45a88556fb" prot="private" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>H_at_T_and_Tnu</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a67b4d440335558f06816c2db0710d4d1" prot="private" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>H_grid</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1ad3b70f05e46838f9f43e19bd1eff2424" prot="private" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>H_spline</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a5089073be6db206a77be66c8a7135c49" prot="private" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>interpolation_range_check</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1ae4c719626e78deaba944d407b376467d" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>lnR_at_t</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a70b274c851a14af98cdb34e95b777bb2" prot="private" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>lnR_grid</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1af0779276033fbb358c4ac4235665cea9" prot="private" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>lnR_spline</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1ac177edc0878e133dc086876198f0933a" prot="private" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>Neff</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1aca597469365088fe4b7b68c7c55cec14" prot="private" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>safe_interpolation</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a7dfb04f04046553a76ff0d690d65982c" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>size</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a8a94cbf7fcbbf945bdc9690dc5f43117" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>SM_time_evo</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a4b603154ac9977336f1e475106dd88f4" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>t0</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a13882adec37d0efcbb6d37ece58d7084" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>T_at_t</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1adc901a347036511f7f7f079cbff6c70f" prot="private" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>t_grid</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1adf84b9a2dcaf78e7e4204f869c4fc5d0" prot="private" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>T_grid</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a1a3ebdb41368b61c696020f1b1f93445" prot="private" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>T_spline</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a01f2ec4a385fcd7e8d10769459901af7" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>tf</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a104b37e4f6f7a9111e986735a3b835e0" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>Tnu_at_t</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a9df2ed7c91be4aea79ae56b35eed4fc2" prot="private" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>Tnu_grid</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a425a3664d722ffc2144433eed63fdde9" prot="private" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>Tnu_spline</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1a677eaefb7a8f5947e4fb35dbd852a88b" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>update_grid</name></member>
+      <member refid="classGambit_1_1CosmoBit_1_1SM__time__evo_1aa966ab800f393be2e615cc406ffde4bb" prot="public" virt="non-virtual"><scope>Gambit::CosmoBit::SM_time_evo</scope><name>~SM_time_evo</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

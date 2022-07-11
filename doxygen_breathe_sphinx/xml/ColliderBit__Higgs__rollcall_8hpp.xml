@@ -1,17 +1,17 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="ColliderBit__Higgs__rollcall_8hpp" kind="file" language="C++">
     <compoundname>ColliderBit_Higgs_rollcall.hpp</compoundname>
-    <includedby refid="ColliderBit__rollcall_8hpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_rollcall.hpp</includedby>
+    <includedby refid="ColliderBit__rollcall_8hpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_rollcall.hpp</includedby>
     <invincdepgraph>
       <node id="1">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp</label>
         <link refid="ColliderBit__Higgs__rollcall_8hpp"/>
         <childnode refid="2" relation="include">
         </childnode>
       </node>
       <node id="3">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_eventloop.hpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_eventloop.hpp</label>
         <link refid="ColliderBit__eventloop_8hpp"/>
         <childnode refid="4" relation="include">
         </childnode>
@@ -41,7 +41,7 @@
         </childnode>
       </node>
       <node id="2">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_rollcall.hpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_rollcall.hpp</label>
         <link refid="ColliderBit__rollcall_8hpp"/>
         <childnode refid="3" relation="include">
         </childnode>
@@ -59,7 +59,7 @@
         </childnode>
       </node>
       <node id="4">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/generateEventPy8Collider.hpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/generateEventPy8Collider.hpp</label>
         <link refid="generateEventPy8Collider_8hpp"/>
         <childnode refid="5" relation="include">
         </childnode>
@@ -67,7 +67,7 @@
         </childnode>
       </node>
       <node id="7">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/getPy8Collider.hpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/getPy8Collider.hpp</label>
         <link refid="getPy8Collider_8hpp"/>
         <childnode refid="5" relation="include">
         </childnode>
@@ -75,79 +75,79 @@
         </childnode>
       </node>
       <node id="19">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_Higgs.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_Higgs.cpp</label>
         <link refid="ColliderBit__Higgs_8cpp"/>
       </node>
       <node id="20">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp</label>
         <link refid="ColliderBit__InterpolatedYields_8cpp"/>
       </node>
       <node id="21">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_LEP.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_LEP.cpp</label>
         <link refid="ColliderBit__LEP_8cpp"/>
       </node>
       <node id="22">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_dummy.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_dummy.cpp</label>
         <link refid="ColliderBit__dummy_8cpp"/>
       </node>
       <node id="8">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_eventloop.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_eventloop.cpp</label>
         <link refid="ColliderBit__eventloop_8cpp"/>
       </node>
       <node id="23">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/LHC_likelihoods.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/LHC_likelihoods.cpp</label>
         <link refid="LHC__likelihoods_8cpp"/>
       </node>
       <node id="9">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/collider_event_weights.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/collider_event_weights.cpp</label>
         <link refid="collider__event__weights_8cpp"/>
       </node>
       <node id="10">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getActiveProcessCodes.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/getActiveProcessCodes.cpp</label>
         <link refid="getActiveProcessCodes_8cpp"/>
       </node>
       <node id="11">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getAnalysisContainer.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/getAnalysisContainer.cpp</label>
         <link refid="getAnalysisContainer_8cpp"/>
       </node>
       <node id="12">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getBuckFast.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/getBuckFast.cpp</label>
         <link refid="getBuckFast_8cpp"/>
       </node>
       <node id="13">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getHepMCEvent.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/getHepMCEvent.cpp</label>
         <link refid="getHepMCEvent_8cpp"/>
       </node>
       <node id="14">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getLHEvent.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/getLHEvent.cpp</label>
         <link refid="getLHEvent_8cpp"/>
       </node>
       <node id="15">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getxsec.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/getxsec.cpp</label>
         <link refid="getxsec_8cpp"/>
       </node>
       <node id="24">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/lep_mssm_xsecs.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/lep_mssm_xsecs.cpp</label>
         <link refid="lep__mssm__xsecs_8cpp"/>
       </node>
       <node id="5">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/models/SUSY.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/models/SUSY.cpp</label>
         <link refid="SUSY_8cpp"/>
       </node>
       <node id="6">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/models/SUSY_extras.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/models/SUSY_extras.cpp</label>
         <link refid="SUSY__extras_8cpp"/>
       </node>
       <node id="16">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/process_code_PID_pair_mapping.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/process_code_PID_pair_mapping.cpp</label>
         <link refid="process__code__PID__pair__mapping_8cpp"/>
       </node>
       <node id="17">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/runAnalyses.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/runAnalyses.cpp</label>
         <link refid="runAnalyses_8cpp"/>
       </node>
       <node id="18">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/smearEvent.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/smearEvent.cpp</label>
         <link refid="smearEvent_8cpp"/>
       </node>
     </invincdepgraph>
@@ -161,7 +161,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="31" column="9" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="31" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="31" column="9" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="31" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="ColliderBit__Higgs__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" prot="public" static="no">
         <name>CAPABILITY</name>
@@ -172,7 +172,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="34" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="112" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="34" column="11" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="112" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="ColliderBit__Higgs__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
         <name>FUNCTION</name>
@@ -183,7 +183,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="38" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="114" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="38" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="114" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="ColliderBit__Higgs__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
         <name>FUNCTION</name>
@@ -194,7 +194,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="48" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="114" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="48" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="114" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="ColliderBit__Higgs__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" prot="public" static="no">
         <name>CAPABILITY</name>
@@ -205,7 +205,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="59" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="112" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="59" column="11" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="112" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="ColliderBit__Higgs__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
         <name>FUNCTION</name>
@@ -216,7 +216,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="62" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="114" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="62" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="114" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="ColliderBit__Higgs__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" prot="public" static="no">
         <name>CAPABILITY</name>
@@ -227,7 +227,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="85" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="112" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="85" column="11" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="112" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="ColliderBit__Higgs__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
         <name>FUNCTION</name>
@@ -238,7 +238,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="88" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="114" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="88" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="114" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="ColliderBit__Higgs__rollcall_8hpp_1a99414bf65bb722f6204c37c7a507b92f" prot="public" static="no">
         <name>CAPABILITY</name>
@@ -249,7 +249,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="112" column="11" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="112" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="112" column="11" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="112" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="ColliderBit__Higgs__rollcall_8hpp_1aee0cf83ee6d754df700e396da8987f1f" prot="public" static="no">
         <name>FUNCTION</name>
@@ -260,7 +260,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="114" column="13" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="114" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="114" column="13" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="114" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="var">
@@ -275,7 +275,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="72" column="6" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="72" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="72" column="6" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="72" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="ColliderBit__Higgs__rollcall_8hpp_1a4d6f9cba7a867b5ab9a7f41353932d9a" prot="public" static="no" mutable="no">
         <type></type>
@@ -288,7 +288,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="72" column="21" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="72" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="72" column="21" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="72" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="ColliderBit__Higgs__rollcall_8hpp_1a2318686539a3dfadc0634669cbaa02c2" prot="public" static="no" mutable="no">
         <type></type>
@@ -301,7 +301,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="98" column="6" bodyfile="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="98" bodyend="-1"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="98" column="6" bodyfile="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" bodystart="98" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="func">
@@ -328,7 +328,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="65" column="5"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="65" column="5"/>
       </memberdef>
       <memberdef kind="function" id="ColliderBit__Higgs__rollcall_8hpp_1a5ea6164ddb0bad4bec961e815e4af3a2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>double double double double double double double double *</type>
@@ -353,7 +353,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="75" column="5"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="75" column="5"/>
       </memberdef>
       <memberdef kind="function" id="ColliderBit__Higgs__rollcall_8hpp_1ac52848c28e7dc3216830e341c7564434" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>double double double double double double double double int int double int &amp;</type>
@@ -378,7 +378,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="77" column="5"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="77" column="5"/>
       </memberdef>
       <memberdef kind="function" id="ColliderBit__Higgs__rollcall_8hpp_1a5b00f170a307a213d8ff9c222b859fa5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -403,7 +403,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="91" column="5"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="91" column="5"/>
       </memberdef>
       <memberdef kind="function" id="ColliderBit__Higgs__rollcall_8hpp_1a63c81cb40f64b6aac260f8e034429169" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>double double double double double double double double *</type>
@@ -428,7 +428,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="101" column="5"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="101" column="5"/>
       </memberdef>
       <memberdef kind="function" id="ColliderBit__Higgs__rollcall_8hpp_1a0bb8d141c7ea7998209befa9d16ac1f1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>double double double double double double double double double *</type>
@@ -453,7 +453,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="103" column="5"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="103" column="5"/>
       </memberdef>
       <memberdef kind="function" id="ColliderBit__Higgs__rollcall_8hpp_1a0c73275e08ea80a7ec5a209dcf5cddc7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -478,7 +478,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="116" column="5"/>
+        <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp" line="116" column="5"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -606,6 +606,6 @@
 <codeline lineno="121"><highlight class="normal"></highlight></codeline>
 <codeline lineno="122"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>MODULE</highlight></codeline>
     </programlisting>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_Higgs_rollcall.hpp"/>
   </compounddef>
 </doxygen>

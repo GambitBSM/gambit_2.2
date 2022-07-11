@@ -1,13 +1,13 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="ALEPHSleptonLimits_8hpp" kind="file" language="C++">
     <compoundname>ALEPHSleptonLimits.hpp</compoundname>
     <includes refid="BaseLimitContainer_8hpp" local="yes">gambit/ColliderBit/limits/BaseLimitContainer.hpp</includes>
-    <includedby refid="ColliderBit__types_8hpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_types.hpp</includedby>
-    <includedby refid="ALEPHSleptonLimits_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/limits/ALEPHSleptonLimits.cpp</includedby>
+    <includedby refid="ColliderBit__types_8hpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_types.hpp</includedby>
+    <includedby refid="ALEPHSleptonLimits_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/limits/ALEPHSleptonLimits.cpp</includedby>
     <incdepgraph>
       <node id="1">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/ALEPHSleptonLimits.hpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/ALEPHSleptonLimits.hpp</label>
         <link refid="ALEPHSleptonLimits_8hpp"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -91,7 +91,7 @@
     </incdepgraph>
     <invincdepgraph>
       <node id="4">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_eventloop.hpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_eventloop.hpp</label>
         <link refid="ColliderBit__eventloop_8hpp"/>
         <childnode refid="5" relation="include">
         </childnode>
@@ -121,7 +121,7 @@
         </childnode>
       </node>
       <node id="3">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_rollcall.hpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_rollcall.hpp</label>
         <link refid="ColliderBit__rollcall_8hpp"/>
         <childnode refid="4" relation="include">
         </childnode>
@@ -139,7 +139,7 @@
         </childnode>
       </node>
       <node id="2">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_types.hpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/ColliderBit_types.hpp</label>
         <link refid="ColliderBit__types_8hpp"/>
         <childnode refid="3" relation="include">
         </childnode>
@@ -147,7 +147,7 @@
         </childnode>
       </node>
       <node id="26">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/complete_process_PID_pair_multimaps.hpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/complete_process_PID_pair_multimaps.hpp</label>
         <link refid="complete__process__PID__pair__multimaps_8hpp"/>
         <childnode refid="27" relation="include">
         </childnode>
@@ -157,7 +157,7 @@
         </childnode>
       </node>
       <node id="5">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/generateEventPy8Collider.hpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/generateEventPy8Collider.hpp</label>
         <link refid="generateEventPy8Collider_8hpp"/>
         <childnode refid="6" relation="include">
         </childnode>
@@ -165,7 +165,7 @@
         </childnode>
       </node>
       <node id="8">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/getPy8Collider.hpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/getPy8Collider.hpp</label>
         <link refid="getPy8Collider_8hpp"/>
         <childnode refid="6" relation="include">
         </childnode>
@@ -173,89 +173,89 @@
         </childnode>
       </node>
       <node id="1">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/ALEPHSleptonLimits.hpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/ALEPHSleptonLimits.hpp</label>
         <link refid="ALEPHSleptonLimits_8hpp"/>
         <childnode refid="2" relation="include">
         </childnode>
       </node>
       <node id="20">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_Higgs.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_Higgs.cpp</label>
         <link refid="ColliderBit__Higgs_8cpp"/>
       </node>
       <node id="21">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_InterpolatedYields.cpp</label>
         <link refid="ColliderBit__InterpolatedYields_8cpp"/>
       </node>
       <node id="22">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_LEP.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_LEP.cpp</label>
         <link refid="ColliderBit__LEP_8cpp"/>
       </node>
       <node id="23">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_dummy.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_dummy.cpp</label>
         <link refid="ColliderBit__dummy_8cpp"/>
       </node>
       <node id="9">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_eventloop.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/ColliderBit_eventloop.cpp</label>
         <link refid="ColliderBit__eventloop_8cpp"/>
       </node>
       <node id="24">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/LHC_likelihoods.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/LHC_likelihoods.cpp</label>
         <link refid="LHC__likelihoods_8cpp"/>
       </node>
       <node id="10">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/collider_event_weights.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/collider_event_weights.cpp</label>
         <link refid="collider__event__weights_8cpp"/>
       </node>
       <node id="27">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/complete_process_PID_pair_multimaps.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/complete_process_PID_pair_multimaps.cpp</label>
         <link refid="complete__process__PID__pair__multimaps_8cpp"/>
       </node>
       <node id="11">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getActiveProcessCodes.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/getActiveProcessCodes.cpp</label>
         <link refid="getActiveProcessCodes_8cpp"/>
       </node>
       <node id="12">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getAnalysisContainer.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/getAnalysisContainer.cpp</label>
         <link refid="getAnalysisContainer_8cpp"/>
       </node>
       <node id="13">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getBuckFast.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/getBuckFast.cpp</label>
         <link refid="getBuckFast_8cpp"/>
       </node>
       <node id="14">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getHepMCEvent.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/getHepMCEvent.cpp</label>
         <link refid="getHepMCEvent_8cpp"/>
       </node>
       <node id="15">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getLHEvent.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/getLHEvent.cpp</label>
         <link refid="getLHEvent_8cpp"/>
       </node>
       <node id="16">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getxsec.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/getxsec.cpp</label>
         <link refid="getxsec_8cpp"/>
       </node>
       <node id="25">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/lep_mssm_xsecs.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/lep_mssm_xsecs.cpp</label>
         <link refid="lep__mssm__xsecs_8cpp"/>
       </node>
       <node id="6">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/models/SUSY.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/models/SUSY.cpp</label>
         <link refid="SUSY_8cpp"/>
       </node>
       <node id="7">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/models/SUSY_extras.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/models/SUSY_extras.cpp</label>
         <link refid="SUSY__extras_8cpp"/>
       </node>
       <node id="17">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/process_code_PID_pair_mapping.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/process_code_PID_pair_mapping.cpp</label>
         <link refid="process__code__PID__pair__mapping_8cpp"/>
       </node>
       <node id="18">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/runAnalyses.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/runAnalyses.cpp</label>
         <link refid="runAnalyses_8cpp"/>
       </node>
       <node id="19">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/smearEvent.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/smearEvent.cpp</label>
         <link refid="smearEvent_8cpp"/>
       </node>
     </invincdepgraph>
@@ -315,6 +315,6 @@
 <codeline lineno="65"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
 <codeline lineno="66"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/ALEPHSleptonLimits.hpp"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/limits/ALEPHSleptonLimits.hpp"/>
   </compounddef>
 </doxygen>

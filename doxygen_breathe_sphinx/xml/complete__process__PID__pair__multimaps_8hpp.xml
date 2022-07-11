@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.5" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.4" xml:lang="en-US">
   <compounddef id="complete__process__PID__pair__multimaps_8hpp" kind="file" language="C++">
     <compoundname>complete_process_PID_pair_multimaps.hpp</compoundname>
     <includes refid="ColliderBit__types_8hpp" local="yes">gambit/ColliderBit/ColliderBit_types.hpp</includes>
-    <includedby refid="complete__process__PID__pair__multimaps_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/complete_process_PID_pair_multimaps.cpp</includedby>
-    <includedby refid="getxsec_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getxsec.cpp</includedby>
-    <includedby refid="process__code__PID__pair__mapping_8cpp" local="yes">/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/process_code_PID_pair_mapping.cpp</includedby>
+    <includedby refid="complete__process__PID__pair__multimaps_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/complete_process_PID_pair_multimaps.cpp</includedby>
+    <includedby refid="getxsec_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/getxsec.cpp</includedby>
+    <includedby refid="process__code__PID__pair__mapping_8cpp" local="yes">C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/process_code_PID_pair_mapping.cpp</includedby>
     <incdepgraph>
       <node id="2">
         <label>gambit/ColliderBit/ColliderBit_types.hpp</label>
@@ -156,7 +156,7 @@
         </childnode>
       </node>
       <node id="1">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/complete_process_PID_pair_multimaps.hpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/complete_process_PID_pair_multimaps.hpp</label>
         <link refid="complete__process__PID__pair__multimaps_8hpp"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -361,7 +361,7 @@
     </incdepgraph>
     <invincdepgraph>
       <node id="1">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/complete_process_PID_pair_multimaps.hpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/complete_process_PID_pair_multimaps.hpp</label>
         <link refid="complete__process__PID__pair__multimaps_8hpp"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -371,15 +371,15 @@
         </childnode>
       </node>
       <node id="2">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/complete_process_PID_pair_multimaps.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/complete_process_PID_pair_multimaps.cpp</label>
         <link refid="complete__process__PID__pair__multimaps_8cpp"/>
       </node>
       <node id="3">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/getxsec.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/getxsec.cpp</label>
         <link refid="getxsec_8cpp"/>
       </node>
       <node id="4">
-        <label>/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/src/process_code_PID_pair_mapping.cpp</label>
+        <label>C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/src/process_code_PID_pair_mapping.cpp</label>
         <link refid="process__code__PID__pair__mapping_8cpp"/>
       </node>
     </invincdepgraph>
@@ -946,6 +946,6 @@
 <codeline lineno="561"><highlight class="normal"></highlight></codeline>
 <codeline lineno="562"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">/*<sp/>defined<sp/>__all_process_codes_to_PID_pairs_hpp__<sp/>*/</highlight><highlight class="preprocessor"></highlight></codeline>
     </programlisting>
-    <location file="/home/ppe/r/rsclark/gambitvenv/doc_stuff/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/complete_process_PID_pair_multimaps.hpp"/>
+    <location file="C:/Hugo/Sites/gambit_2.2_sphinx/ColliderBit/include/gambit/ColliderBit/complete_process_PID_pair_multimaps.hpp"/>
   </compounddef>
 </doxygen>
